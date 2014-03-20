@@ -9,7 +9,7 @@ import android.graphics.RectF;
  * @Date 11:36:03 AM Mar 20, 2014
  * @Comments:GLCanvas gives a convenient interface to draw using OpenGL.
  */
-public interface GLCanvas {
+public interface GLESCanvas {
 
     public GLId getGLId();
 
