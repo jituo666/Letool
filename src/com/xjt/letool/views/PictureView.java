@@ -2,6 +2,7 @@ package com.xjt.letool.views;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
 
 import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.opengl.GLES11Canvas;
@@ -14,7 +15,8 @@ import android.view.MotionEvent;
 
 /**
  * @Author Jituo.Xuan
- * @Date 11:29:54 AM Mar 20, 2014
+ * @Date 6:35:55 PM Mar 20, 2014
+ * @Comments:null
  */
 public class PictureView extends GLSurfaceView implements GLSurfaceView.Renderer {
 
@@ -31,8 +33,9 @@ public class PictureView extends GLSurfaceView implements GLSurfaceView.Renderer
     }
 
     @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        mCanvas = ApiHelper.HAS_GLES20_REQUIRED ? new GLES20Canvas() : new GLES11Canvas();
+    public void onSurfaceCreated(GL10 gl10, EGLConfig config) {
+        GL11 gl11 = (GL11) gl10;
+        mCanvas = ApiHelper.HAS_GLES20_REQUIRED ? new GLES20Canvas() : new GLES11Canvas(gl11);
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
     }
 

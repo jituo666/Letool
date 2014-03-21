@@ -42,7 +42,7 @@ public interface GLESCanvas {
 
     public abstract void rotate(float angle, float x, float y, float z);
 
-    public abstract void multiplyMatrix(float[] mMatrix, int offset);
+    public abstract void multiplyMatrix(float[] matrix, int offset);
 
     // Pushes the configuration state (matrix, and alpha) onto
     // a private stack.
