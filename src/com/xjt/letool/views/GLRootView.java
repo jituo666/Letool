@@ -1,0 +1,338 @@
+package com.xjt.letool.views;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
+
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
+import javax.microedition.khronos.opengles.GL11;
+
+import com.xjt.letool.anims.AnimationTime;
+import com.xjt.letool.anims.CanvasAnimation;
+import com.xjt.letool.common.ApiHelper;
+import com.xjt.letool.opengl.BasicTexture;
+import com.xjt.letool.opengl.GLES11Canvas;
+import com.xjt.letool.opengl.GLES20Canvas;
+import com.xjt.letool.opengl.GLESCanvas;
+import com.xjt.letool.opengl.UploadedTexture;
+
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Matrix;
+import android.graphics.PixelFormat;
+import android.opengl.GLSurfaceView;
+import android.os.SystemClock;
+import android.view.MotionEvent;
+
+/**
+ * @Author Jituo.Xuan
+ * @Date 6:35:55 PM Mar 20, 2014
+ * @Comments:null
+ */
+public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer, GLController {
+
+    private static final int FLAG_INITIALIZED = 1;
+    private static final int FLAG_NEED_LAYOUT = 2;
+
+    private GLESCanvas mCanvas;
+
+    private GLView mContentView;
+    private OrientationSource mOrientationSource;
+    // mCompensation is the difference between the UI orientation on GLCanvas
+    // and the framework orientation. See OrientationManager for details.
+    private int mCompensation;
+    // mCompensationMatrix maps the coordinates of touch events. It is kept sync
+    // with mCompensation.
+    private Matrix mCompensationMatrix = new Matrix();
+    private int mDisplayRotation;
+
+    private int mFlags = FLAG_NEED_LAYOUT;
+    private volatile boolean mRenderRequested = false;
+    private boolean mInDownState = false;
+    private final ReentrantLock mRenderLock = new ReentrantLock();
+    private final Condition mFreezeCondition = mRenderLock.newCondition();
+    private boolean mFreeze;
+    private final ArrayList<CanvasAnimation> mAnimations = new ArrayList<CanvasAnimation>();
+
+    private final ArrayDeque<OnGLIdleListener> mIdleListeners = new ArrayDeque<OnGLIdleListener>();
+
+    private final IdleRunner mIdleRunner = new IdleRunner();
+
+    public GLRootView(Context context) {
+        super(context);
+        mFlags |= FLAG_INITIALIZED;
+        setEGLContextClientVersion(ApiHelper.HAS_GLES20_REQUIRED ? 2 : 1);
+        if (ApiHelper.USE_888_PIXEL_FORMAT) {
+            setEGLConfigChooser(8, 8, 8, 0, 0, 0);
+        } else {
+            setEGLConfigChooser(5, 6, 5, 0, 0, 0);
+        }
+        setRenderer(this);
+        if (ApiHelper.USE_888_PIXEL_FORMAT) {
+            getHolder().setFormat(PixelFormat.RGB_888);
+        } else {
+            getHolder().setFormat(PixelFormat.RGB_565);
+        }
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        if (changed)
+            requestLayoutContentPane();
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        boolean handled = false;
+        return handled;
+    }
+
+    @SuppressLint("NewApi")
+    @Override
+    public void requestRender() {
+        if (mRenderRequested)
+            return;
+        mRenderRequested = true;
+        if (ApiHelper.HAS_POST_ON_ANIMATION) {
+            postOnAnimation(mRequestRenderOnAnimationFrame);
+        } else {
+            super.requestRender();
+        }
+    }
+
+    private Runnable mRequestRenderOnAnimationFrame = new Runnable() {
+        @Override
+        public void run() {
+            superRequestRender();
+        }
+    };
+
+    private void superRequestRender() {
+        super.requestRender();
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public void onSurfaceCreated(GL10 gl10, EGLConfig config) {
+        GL11 gl11 = (GL11) gl10;
+        mCanvas = ApiHelper.HAS_GLES20_REQUIRED ? new GLES20Canvas() : new GLES11Canvas(gl11);
+        setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+    }
+
+    @Override
+    public void onSurfaceChanged(GL10 gl, int width, int height) {
+        mCanvas.setSize(width, height);
+    }
+
+    @Override
+    public void onDrawFrame(GL10 gl) {
+        AnimationTime.update();
+        mRenderLock.lock();
+
+        while (mFreeze) {
+            mFreezeCondition.awaitUninterruptibly();
+        }
+        try {
+            onDrawFrameLocked(gl);
+        } finally {
+            mRenderLock.unlock();
+        }
+    }
+
+    private void onDrawFrameLocked(GL10 gl) {
+
+        // release the unbound textures and deleted buffers.
+        mCanvas.deleteRecycledResources();
+
+        // reset texture upload limit
+        UploadedTexture.resetUploadLimit();
+
+        mRenderRequested = false;
+
+        if ((mOrientationSource != null && mDisplayRotation != mOrientationSource.getDisplayRotation())
+                || (mFlags & FLAG_NEED_LAYOUT) != 0) {
+            layoutContentPane();
+        }
+
+        mCanvas.save(GLESCanvas.SAVE_FLAG_ALL);
+        rotateCanvas(-mCompensation);
+        if (mContentView != null) {
+            mContentView.render(mCanvas);
+        } else {
+            // Make sure we always draw something to prevent displaying garbage
+            mCanvas.clearBuffer();
+        }
+        mCanvas.restore();
+
+        if (!mAnimations.isEmpty()) {
+            long now = AnimationTime.get();
+            for (int i = 0, n = mAnimations.size(); i < n; i++) {
+                mAnimations.get(i).setStartTime(now);
+            }
+            mAnimations.clear();
+        }
+
+        if (UploadedTexture.uploadLimitReached()) {
+            requestRender();
+        }
+
+        synchronized (mIdleListeners) {
+            if (!mIdleListeners.isEmpty())
+                mIdleRunner.enable();
+        }
+
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public void registerLaunchedAnimation(CanvasAnimation animation) {
+        // Register the newly launched animation so that we can set the start
+        // time more precisely. (Usually, it takes much longer for first
+        // rendering, so we set the animation start time as the time we
+        // complete rendering)
+        mAnimations.add(animation);
+    }
+
+    @Override
+    public void addOnGLIdleListener(OnGLIdleListener listener) {
+        synchronized (mIdleListeners) {
+            mIdleListeners.addLast(listener);
+            mIdleRunner.enable();
+        }
+    }
+
+    @Override
+    public void requestRenderForced() {
+        superRequestRender();
+
+    }
+
+    @Override
+    public void requestLayoutContentPane() {
+        mRenderLock.lock();
+        try {
+            if (mContentView == null || (mFlags & FLAG_NEED_LAYOUT) != 0)
+                return;
+            // "View" system will invoke onLayout() for initialization(bug ?), we have to ignore it since the GLThread is not ready yet.
+            if ((mFlags & FLAG_INITIALIZED) == 0)
+                return;
+            mFlags |= FLAG_NEED_LAYOUT;
+            requestRender();
+        } finally {
+            mRenderLock.unlock();
+        }
+
+    }
+
+    @Override
+    public void lockRenderThread() {
+        mRenderLock.lock();
+    }
+
+    @Override
+    public void unlockRenderThread() {
+        mRenderLock.unlock();
+    }
+
+    @Override
+    public void setContentPane(GLView content) {
+        if (mContentView == content)
+            return;
+        if (mContentView != null) {
+            if (mInDownState) {
+                long now = SystemClock.uptimeMillis();
+                MotionEvent cancelEvent = MotionEvent.obtain(now, now, MotionEvent.ACTION_CANCEL, 0, 0, 0);
+                mContentView.dispatchTouchEvent(cancelEvent);
+                cancelEvent.recycle();
+                mInDownState = false;
+            }
+            mContentView.detachFromRoot();
+            BasicTexture.yieldAllTextures();
+        }
+        mContentView = content;
+        if (content != null) {
+            content.attachToRoot(this);
+            requestLayoutContentPane();
+        }
+    }
+
+    @Override
+    public void setOrientationSource(OrientationSource source) {
+        mOrientationSource = source;
+    }
+
+    @Override
+    public int getDisplayRotation() {
+        return mDisplayRotation;
+    }
+
+    @Override
+    public int getCompensation() {
+        return mCompensation;
+    }
+
+    @Override
+    public Matrix getCompensationMatrix() {
+        return mCompensationMatrix;
+    }
+
+    @Override
+    public void freeze() {
+        mRenderLock.lock();
+        mFreeze = true;
+        mRenderLock.unlock();
+    }
+
+    @Override
+    public void unfreeze() {
+        mRenderLock.lock();
+        mFreeze = false;
+        mFreezeCondition.signalAll();
+        mRenderLock.unlock();
+    }
+
+    @Override
+    public void setLightsOutMode(boolean enabled) {
+
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    private class IdleRunner implements Runnable {
+        // true if the idle runner is in the queue
+        private boolean mActive = false;
+
+        @Override
+        public void run() {
+            OnGLIdleListener listener;
+            synchronized (mIdleListeners) {
+                mActive = false;
+                if (mIdleListeners.isEmpty())
+                    return;
+                listener = mIdleListeners.removeFirst();
+            }
+            mRenderLock.lock();
+            boolean keepInQueue;
+            try {
+                keepInQueue = listener.onGLIdle(mCanvas, mRenderRequested);
+            } finally {
+                mRenderLock.unlock();
+            }
+            synchronized (mIdleListeners) {
+                if (keepInQueue)
+                    mIdleListeners.addLast(listener);
+                if (!mRenderRequested && !mIdleListeners.isEmpty())
+                    enable();
+            }
+        }
+
+        public void enable() {
+            // Who gets the flag can add it to the queue
+            if (mActive)
+                return;
+            mActive = true;
+            queueEvent(this);
+        }
+    }
+}
