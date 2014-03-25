@@ -22,7 +22,7 @@ public interface GLController {
     public void lockRenderThread();
     public void unlockRenderThread();
 
-    public void setContentPane(GLView content);
+    public void setContentPane(GLImageView content);
     public void setOrientationSource(OrientationSource source);
     public int getDisplayRotation();
     public int getCompensation();

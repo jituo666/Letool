@@ -2,7 +2,7 @@ package com.xjt.letool.anims;
 
 import com.xjt.letool.opengl.GLESCanvas;
 import com.xjt.letool.opengl.RawTexture;
-import com.xjt.letool.views.GLView;
+import com.xjt.letool.views.GLImageView;
 
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -14,10 +14,7 @@ public class StateTransitionAnimation extends Animation {
         public static final Spec OUTGOING;
         public static final Spec INCOMING;
         public static final Spec PHOTO_INCOMING;
-
-        private static final Interpolator DEFAULT_INTERPOLATOR =
-                new DecelerateInterpolator();
-
+        private static final Interpolator DEFAULT_INTERPOLATOR = new DecelerateInterpolator();
         public int duration = 330;
         public float backgroundAlphaFrom = 0;
         public float backgroundAlphaTo = 0;
@@ -92,7 +89,7 @@ public class StateTransitionAnimation extends Animation {
         setDuration(mTransitionSpec.duration);
         setInterpolator(mTransitionSpec.interpolator);
         mOldScreenTexture = oldScreen;
-        TiledScreenNail.disableDrawPlaceholder();
+        //TiledScreenNail.disableDrawPlaceholder();
     }
 
     @Override
@@ -103,7 +100,7 @@ public class StateTransitionAnimation extends Animation {
                 mOldScreenTexture.recycle();
                 mOldScreenTexture = null;
             }
-            TiledScreenNail.enableDrawPlaceholder();
+            //TiledScreenNail.enableDrawPlaceholder();
         }
         return retval;
     }
@@ -126,7 +123,7 @@ public class StateTransitionAnimation extends Animation {
                 + (mTransitionSpec.overlayAlphaTo - mTransitionSpec.overlayAlphaFrom) * progress;
     }
 
-    private void applyOldTexture(GLView view, GLESCanvas canvas, float alpha, float scale, boolean clear) {
+    private void applyOldTexture(GLImageView view, GLESCanvas canvas, float alpha, float scale, boolean clear) {
         if (mOldScreenTexture == null)
             return;
         if (clear) canvas.clearBuffer(view.getBackgroundColor());
@@ -140,13 +137,13 @@ public class StateTransitionAnimation extends Animation {
         canvas.restore();
     }
 
-    public void applyBackground(GLView view, GLESCanvas canvas) {
+    public void applyBackground(GLImageView view, GLESCanvas canvas) {
         if (mCurrentBackgroundAlpha > 0f) {
             applyOldTexture(view, canvas, mCurrentBackgroundAlpha, mCurrentBackgroundScale, true);
         }
     }
 
-    public void applyContentTransform(GLView view, GLESCanvas canvas) {
+    public void applyContentTransform(GLImageView view, GLESCanvas canvas) {
         int xOffset = view.getWidth() / 2;
         int yOffset = view.getHeight() / 2;
         canvas.translate(xOffset, yOffset);
@@ -155,7 +152,7 @@ public class StateTransitionAnimation extends Animation {
         canvas.setAlpha(mCurrentContentAlpha);
     }
 
-    public void applyOverlay(GLView view, GLESCanvas canvas) {
+    public void applyOverlay(GLImageView view, GLESCanvas canvas) {
         if (mCurrentOverlayAlpha > 0f) {
             applyOldTexture(view, canvas, mCurrentOverlayAlpha, mCurrentOverlayScale, false);
         }

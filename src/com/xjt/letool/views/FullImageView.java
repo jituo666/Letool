@@ -1,5 +1,5 @@
 package com.xjt.letool.views;
 
-public class FullImageView extends GLView {
+public class FullImageView extends GLImageView {
 
 }

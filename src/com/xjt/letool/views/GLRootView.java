@@ -12,11 +12,13 @@ import javax.microedition.khronos.opengles.GL11;
 import com.xjt.letool.anims.AnimationTime;
 import com.xjt.letool.anims.CanvasAnimation;
 import com.xjt.letool.common.ApiHelper;
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.opengl.BasicTexture;
 import com.xjt.letool.opengl.GLES11Canvas;
 import com.xjt.letool.opengl.GLES20Canvas;
 import com.xjt.letool.opengl.GLESCanvas;
 import com.xjt.letool.opengl.UploadedTexture;
+import com.xjt.letool.utils.MotionEventHelper;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -33,18 +35,19 @@ import android.view.MotionEvent;
  */
 public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer, GLController {
 
+    private static final String TAG = "GLView";
+
     private static final int FLAG_INITIALIZED = 1;
     private static final int FLAG_NEED_LAYOUT = 2;
 
     private GLESCanvas mCanvas;
 
-    private GLView mContentView;
+    private GLImageView mContentView;
     private OrientationSource mOrientationSource;
     // mCompensation is the difference between the UI orientation on GLCanvas
     // and the framework orientation. See OrientationManager for details.
     private int mCompensation;
-    // mCompensationMatrix maps the coordinates of touch events. It is kept sync
-    // with mCompensation.
+    // mCompensationMatrix maps the coordinates of touch events. It is kept sync with mCompensation.
     private Matrix mCompensationMatrix = new Matrix();
     private int mDisplayRotation;
 
@@ -85,8 +88,30 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        boolean handled = false;
-        return handled;
+        if (!isEnabled()) return false;
+
+        int action = event.getAction();
+        if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
+            mInDownState = false;
+        } else if (!mInDownState && action != MotionEvent.ACTION_DOWN) {
+            return false;
+        }
+
+        if (mCompensation != 0) {
+            event = MotionEventHelper.transformEvent(event, mCompensationMatrix);
+        }
+
+        mRenderLock.lock();
+        try {
+            // If this has been detached from root, we don't need to handle event
+            boolean handled = mContentView != null && mContentView.dispatchTouchEvent(event);
+            if (action == MotionEvent.ACTION_DOWN && handled) {
+                mInDownState = true;
+            }
+            return handled;
+        } finally {
+            mRenderLock.unlock();
+        }
     }
 
     @SuppressLint("NewApi")
@@ -185,13 +210,30 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
 
     }
 
+    private void rotateCanvas(int degrees) {
+        if (degrees == 0)
+            return;
+        int w = getWidth();
+        int h = getHeight();
+        int cx = w / 2;
+        int cy = h / 2;
+        mCanvas.translate(cx, cy);
+        mCanvas.rotate(degrees, 0, 0, 1);
+        if (degrees % 180 != 0) {
+            mCanvas.translate(-cy, -cx);
+        } else {
+            mCanvas.translate(-cx, -cy);
+        }
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Register the newly launched animation so that we can set the start
+    // time more precisely. (Usually, it takes much longer for first
+    // rendering, so we set the animation start time as the time we
+    // complete rendering)
     @Override
     public void registerLaunchedAnimation(CanvasAnimation animation) {
-        // Register the newly launched animation so that we can set the start
-        // time more precisely. (Usually, it takes much longer for first
-        // rendering, so we set the animation start time as the time we
-        // complete rendering)
         mAnimations.add(animation);
     }
 
@@ -226,6 +268,52 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
 
     }
 
+    private void layoutContentPane() {
+        mFlags &= ~FLAG_NEED_LAYOUT;
+
+        int w = getWidth();
+        int h = getHeight();
+        int displayRotation = 0;
+        int compensation = 0;
+
+        // Get the new orientation values
+        if (mOrientationSource != null) {
+            displayRotation = mOrientationSource.getDisplayRotation();
+            compensation = mOrientationSource.getCompensation();
+        } else {
+            displayRotation = 0;
+            compensation = 0;
+        }
+
+        if (mCompensation != compensation) {
+            mCompensation = compensation;
+            if (mCompensation % 180 != 0) {
+                mCompensationMatrix.setRotate(mCompensation);
+                // move center to origin before rotation
+                mCompensationMatrix.preTranslate(-w / 2, -h / 2);
+                // align with the new origin after rotation
+                mCompensationMatrix.postTranslate(h / 2, w / 2);
+            } else {
+                mCompensationMatrix.setRotate(mCompensation, w / 2, h / 2);
+            }
+        }
+        mDisplayRotation = displayRotation;
+
+        // Do the actual layout.
+        if (mCompensation % 180 != 0) {
+            int tmp = w;
+            w = h;
+            h = tmp;
+        }
+        LLog.i(TAG, "layout content pane " + w + "x" + h
+                + " (compensation " + mCompensation + ")");
+        if (mContentView != null && w != 0 && h != 0) {
+            mContentView.layout(0, 0, w, h);
+        }
+        // Uncomment this to dump the view hierarchy.
+        //mContentView.dumpTree("");
+    }
+
     @Override
     public void lockRenderThread() {
         mRenderLock.lock();
@@ -237,7 +325,7 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
     }
 
     @Override
-    public void setContentPane(GLView content) {
+    public void setContentPane(GLImageView content) {
         if (mContentView == content)
             return;
         if (mContentView != null) {
