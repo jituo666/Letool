@@ -1,6 +1,9 @@
-package com.xjt.letool;
+package com.xjt.letool.pages;
 
-import com.xjt.letool.anims.StateTransitionAnimation;
+import com.xjt.letool.LetoolActivity;
+import com.xjt.letool.R;
+import com.xjt.letool.R.color;
+import com.xjt.letool.anims.StateTransAnim;
 import com.xjt.letool.opengl.RawTexture;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.views.GLImageView;
@@ -48,9 +51,9 @@ abstract public class PageState {
 
     private static final String KEY_TRANSITION_IN = "transition-in";
 
-    private StateTransitionAnimation.Transition mNextTransition =
-            StateTransitionAnimation.Transition.None;
-    private StateTransitionAnimation mIntroAnimation;
+    private StateTransAnim.Transition mNextTransition =
+            StateTransAnim.Transition.None;
+    private StateTransAnim mIntroAnimation;
     private GLImageView mContentPane;
 
     protected PageState() {
@@ -150,14 +153,14 @@ abstract public class PageState {
     }
 
     protected void transitionOnNextPause(Class<? extends PageState> outgoing,
-            Class<? extends PageState> incoming, StateTransitionAnimation.Transition hint) {
-        if (outgoing == SinglePhotoPage.class && incoming == AlbumPage.class) {
-            mNextTransition = StateTransitionAnimation.Transition.Outgoing;
-        } else if (outgoing == AlbumPage.class && incoming == SinglePhotoPage.class) {
-            mNextTransition = StateTransitionAnimation.Transition.PhotoIncoming;
-        } else {
-            mNextTransition = hint;
-        }
+            Class<? extends PageState> incoming, StateTransAnim.Transition hint) {
+//        if (outgoing == SinglePhotoPage.class && incoming == AlbumPage.class) {
+//            mNextTransition = StateTransAnim.Transition.Outgoing;
+//        } else if (outgoing == AlbumPage.class && incoming == SinglePhotoPage.class) {
+//            mNextTransition = StateTransAnim.Transition.PhotoIncoming;
+//        } else {
+//            mNextTransition = hint;
+//        }
     }
 
     protected void performHapticFeedback(int feedbackConstant) {
@@ -169,10 +172,10 @@ abstract public class PageState {
         if (0 != (mFlags & FLAG_SCREEN_ON_WHEN_PLUGGED)) {
             ((Activity) mActivity).unregisterReceiver(mPowerIntentReceiver);
         }
-        if (mNextTransition != StateTransitionAnimation.Transition.None) {
+        if (mNextTransition != StateTransAnim.Transition.None) {
             mActivity.getTransitionStore().put(KEY_TRANSITION_IN, mNextTransition);
-            PreparePageFadeoutTexture.prepareFadeOutTexture(mActivity, mContentPane);
-            mNextTransition = StateTransitionAnimation.Transition.None;
+            //PreparePageFadeoutTexture.prepareFadeOutTexture(mActivity, mContentPane);
+            mNextTransition = StateTransAnim.Transition.None;
         }
     }
 
@@ -220,13 +223,13 @@ abstract public class PageState {
 
     // a subclass of ActivityState should override the method to resume itself
     protected void onResume() {
-        RawTexture fade = mActivity.getTransitionStore().get(PreparePageFadeoutTexture.KEY_FADE_TEXTURE);
-        mNextTransition = mActivity.getTransitionStore().get(
-                KEY_TRANSITION_IN, StateTransitionAnimation.Transition.None);
-        if (mNextTransition != StateTransitionAnimation.Transition.None) {
-            mIntroAnimation = new StateTransitionAnimation(mNextTransition, fade);
-            mNextTransition = StateTransitionAnimation.Transition.None;
-        }
+//        RawTexture fade = mActivity.getTransitionStore().get(PreparePageFadeoutTexture.KEY_FADE_TEXTURE);
+//        mNextTransition = mActivity.getTransitionStore().get(
+//                KEY_TRANSITION_IN, StateTransAnim.Transition.None);
+//        if (mNextTransition != StateTransAnim.Transition.None) {
+//            mIntroAnimation = new StateTransAnim(mNextTransition, fade);
+//            mNextTransition = StateTransAnim.Transition.None;
+//        }
     }
 
     protected boolean onCreateActionBar(Menu menu) {

@@ -1,5 +1,6 @@
 package com.xjt.letool;
 
+import com.xjt.letool.pages.PageManager;
 import com.xjt.letool.views.GLController;
 import com.xjt.letool.views.GLRootView;
 
@@ -149,8 +150,8 @@ public class LetoolActivity extends Activity implements LetoolContext {
         } finally {
             mGLRootView.unlockRenderThread();
         }
-//        GalleryBitmapPool.getInstance().clear();
-//        MediaItem.getBytesBufferPool().clear();
+        //        GalleryBitmapPool.getInstance().clear();
+        //        MediaItem.getBytesBufferPool().clear();
     }
 
     @Override

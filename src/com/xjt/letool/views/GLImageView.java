@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import com.xjt.letool.anims.AnimationTime;
 import com.xjt.letool.anims.CanvasAnimation;
-import com.xjt.letool.anims.StateTransitionAnimation;
+import com.xjt.letool.anims.StateTransAnim;
 import com.xjt.letool.opengl.GLESCanvas;
 import com.xjt.letool.utils.Utils;
 
@@ -50,7 +50,7 @@ public class GLImageView {
     protected int mScrollWidth = 0;
 
     private float[] mBackgroundColor;
-    private StateTransitionAnimation mTransition;
+    private StateTransAnim mTransition;
 
     public boolean getBoundsOf(GLImageView descendant, Rect out) {
         int xoffset = 0;
@@ -277,7 +277,7 @@ public class GLImageView {
         }
     }
 
-    public void setIntroAnimation(StateTransitionAnimation intro) {
+    public void setIntroAnimation(StateTransAnim intro) {
         mTransition = intro;
         if (mTransition != null)
             mTransition.start();

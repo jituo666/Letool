@@ -136,12 +136,12 @@ public class LetoolActionBar implements OnNavigationListener {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.action_bar_two_line_text, parent, false);
-            }
-            TwoLineListItem view = (TwoLineListItem) convertView;
-            view.getText1().setText(mActionBar.getTitle());
-            view.getText2().setText((CharSequence) getItem(position));
+//            if (convertView == null) {
+//                convertView = mInflater.inflate(R.layout.action_bar_two_line_text, parent, false);
+//            }
+//            TwoLineListItem view = (TwoLineListItem) convertView;
+//            view.getText1().setText(mActionBar.getTitle());
+//            view.getText2().setText((CharSequence) getItem(position));
             return convertView;
         }
 
@@ -376,26 +376,26 @@ public class LetoolActionBar implements OnNavigationListener {
     private Intent mShareIntent;
 
     public void createActionBarMenu(int menuRes, Menu menu) {
-        mActivity.getMenuInflater().inflate(menuRes, menu);
-        mActionBarMenu = menu;
-
-        MenuItem item = menu.findItem(R.id.action_share_panorama);
-        if (item != null) {
-            mSharePanoramaActionProvider = (ShareActionProvider)
-                item.getActionProvider();
-            mSharePanoramaActionProvider
-                .setShareHistoryFileName("panorama_share_history.xml");
-            mSharePanoramaActionProvider.setShareIntent(mSharePanoramaIntent);
-        }
-
-        item = menu.findItem(R.id.action_share);
-        if (item != null) {
-            mShareActionProvider = (ShareActionProvider)
-                item.getActionProvider();
-            mShareActionProvider
-                .setShareHistoryFileName("share_history.xml");
-            mShareActionProvider.setShareIntent(mShareIntent);
-        }
+//        mActivity.getMenuInflater().inflate(menuRes, menu);
+//        mActionBarMenu = menu;
+//
+//        MenuItem item = menu.findItem(R.id.action_share_panorama);
+//        if (item != null) {
+//            mSharePanoramaActionProvider = (ShareActionProvider)
+//                item.getActionProvider();
+//            mSharePanoramaActionProvider
+//                .setShareHistoryFileName("panorama_share_history.xml");
+//            mSharePanoramaActionProvider.setShareIntent(mSharePanoramaIntent);
+//        }
+//
+//        item = menu.findItem(R.id.action_share);
+//        if (item != null) {
+//            mShareActionProvider = (ShareActionProvider)
+//                item.getActionProvider();
+//            mShareActionProvider
+//                .setShareHistoryFileName("share_history.xml");
+//            mShareActionProvider.setShareIntent(mShareIntent);
+//        }
     }
 
     public Menu getMenu() {

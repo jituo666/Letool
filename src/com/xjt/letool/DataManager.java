@@ -1,5 +1,7 @@
 package com.xjt.letool;
 
+import android.content.Context;
+
 public class DataManager {
     public static final int INCLUDE_IMAGE = 1;
     public static final int INCLUDE_VIDEO = 2;
@@ -11,6 +13,10 @@ public class DataManager {
             INCLUDE_LOCAL_ONLY | INCLUDE_VIDEO;
     public static final int INCLUDE_LOCAL_ALL_ONLY =
             INCLUDE_LOCAL_ONLY | INCLUDE_IMAGE | INCLUDE_VIDEO;
+
+    public DataManager(Context context) {
+
+    }
 
     public void resume() {
     }

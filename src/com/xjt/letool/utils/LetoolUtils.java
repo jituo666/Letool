@@ -31,6 +31,7 @@ import com.xjt.letool.R;
 import com.xjt.letool.ThreadPool.CancelListener;
 import com.xjt.letool.ThreadPool.JobContext;
 import com.xjt.letool.common.ApiHelper;
+import com.xjt.letool.common.PackagesMonitor;
 
 public class LetoolUtils {
     private static final String TAG = "GalleryUtils";
@@ -63,7 +64,7 @@ public class LetoolUtils {
         wm.getDefaultDisplay().getMetrics(metrics);
         sPixelDensity = metrics.density;
         Resources r = context.getResources();
-        TiledScreenNail.setPlaceholderColor(r.getColor(R.color.bitmap_screennail_placeholder));
+        //TiledScreenNail.setPlaceholderColor(r.getColor(R.color.bitmap_screennail_placeholder));
         initializeThumbnailSizes(metrics, r);
     }
 
@@ -71,8 +72,8 @@ public class LetoolUtils {
         int maxPixels = Math.max(metrics.heightPixels, metrics.widthPixels);
 
         // For screen-nails, we never need to completely fill the screen
-        MediaItem.setThumbnailSizes(maxPixels / 2, maxPixels / 5);
-        TiledScreenNail.setMaxSide(maxPixels / 2);
+        //MediaItem.setThumbnailSizes(maxPixels / 2, maxPixels / 5);
+        //TiledScreenNail.setMaxSide(maxPixels / 2);
     }
 
     public static float[] intColorToFloatARGBArray(int from) {
@@ -244,7 +245,7 @@ public class LetoolUtils {
 
     public static boolean isValidLocation(double latitude, double longitude) {
         // TODO: change || to && after we fix the default location issue
-        return (latitude != MediaItem.INVALID_LATLNG || longitude != MediaItem.INVALID_LATLNG);
+        return true;//(latitude != MediaItem.INVALID_LATLNG || longitude != MediaItem.INVALID_LATLNG);
     }
 
     public static String formatLatitudeLongitude(String format, double latitude,
@@ -378,11 +379,11 @@ public class LetoolUtils {
         }
         return false;
     }
-
-    public static boolean isPanorama(MediaItem item) {
-        if (item == null) return false;
-        int w = item.getWidth();
-        int h = item.getHeight();
-        return (h > 0 && w / h >= 2);
-    }
+//
+//    public static boolean isPanorama(MediaItem item) {
+//        if (item == null) return false;
+//        int w = item.getWidth();
+//        int h = item.getHeight();
+//        return (h > 0 && w / h >= 2);
+//    }
 }

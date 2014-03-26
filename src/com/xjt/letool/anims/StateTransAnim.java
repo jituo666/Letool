@@ -8,7 +8,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
-public class StateTransitionAnimation extends Animation {
+public class StateTransAnim extends Animation {
 
     public static class Spec {
         public static final Spec OUTGOING;
@@ -80,11 +80,11 @@ public class StateTransitionAnimation extends Animation {
     private float mCurrentOverlayAlpha;
     private RawTexture mOldScreenTexture;
 
-    public StateTransitionAnimation(Transition t, RawTexture oldScreen) {
+    public StateTransAnim(Transition t, RawTexture oldScreen) {
         this(Spec.specForTransition(t), oldScreen);
     }
 
-    public StateTransitionAnimation(Spec spec, RawTexture oldScreen) {
+    public StateTransAnim(Spec spec, RawTexture oldScreen) {
         mTransitionSpec = spec != null ? spec : Spec.OUTGOING;
         setDuration(mTransitionSpec.duration);
         setInterpolator(mTransitionSpec.interpolator);

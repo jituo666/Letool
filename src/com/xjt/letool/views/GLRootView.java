@@ -26,6 +26,7 @@ import android.graphics.Matrix;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.os.SystemClock;
+import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 /**
@@ -64,7 +65,11 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
     private final IdleRunner mIdleRunner = new IdleRunner();
 
     public GLRootView(Context context) {
-        super(context);
+        this(context, null);
+    }
+    
+    public GLRootView(Context context, AttributeSet attrs) {
+        super(context, attrs);
         mFlags |= FLAG_INITIALIZED;
         setEGLContextClientVersion(ApiHelper.HAS_GLES20_REQUIRED ? 2 : 1);
         if (ApiHelper.USE_888_PIXEL_FORMAT) {

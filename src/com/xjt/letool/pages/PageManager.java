@@ -1,7 +1,8 @@
-package com.xjt.letool;
+package com.xjt.letool.pages;
 
 import java.util.Stack;
 
+import com.xjt.letool.LetoolActivity;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.utils.UsageStatistics;
 import com.xjt.letool.utils.Utils;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.xjt.letool.anims.StateTransAnim;
 
 public class PageManager {
     @SuppressWarnings("unused")
@@ -43,7 +45,7 @@ public class PageManager {
         }
         if (!mStack.isEmpty()) {
             PageState top = getTopState();
-            top.transitionOnNextPause(top.getClass(), klass, StateTransitionAnimation.Transition.Incoming);
+            top.transitionOnNextPause(top.getClass(), klass, StateTransAnim.Transition.Incoming);
             if (mIsResumed) top.onPause();
         }
 
@@ -70,7 +72,7 @@ public class PageManager {
 
         if (!mStack.isEmpty()) {
             PageState as = getTopState();
-            as.transitionOnNextPause(as.getClass(), klass, StateTransitionAnimation.Transition.Incoming);
+            as.transitionOnNextPause(as.getClass(), klass, StateTransAnim.Transition.Incoming);
             as.mReceivedResults = state.mResult;
             if (mIsResumed) as.onPause();
         } else {
@@ -186,7 +188,7 @@ public class PageManager {
         PageState top = !mStack.isEmpty() ? mStack.peek().activityState : null;
         if (mIsResumed && fireOnPause) {
             if (top != null) {
-                state.transitionOnNextPause(state.getClass(), top.getClass(), StateTransitionAnimation.Transition.Outgoing);
+                state.transitionOnNextPause(state.getClass(), top.getClass(), StateTransAnim.Transition.Outgoing);
             }
             state.onPause();
         }
@@ -210,10 +212,10 @@ public class PageManager {
         }
         // Remove the top state.
         mStack.pop();
-        if (!data.containsKey(PhotoPage.KEY_APP_BRIDGE)) {
-            // Do not do the fade out stuff when we are switching camera modes
-            oldState.transitionOnNextPause(oldState.getClass(), klass, StateTransitionAnimation.Transition.Incoming);
-        }
+//        if (!data.containsKey(PhotoPage.KEY_APP_BRIDGE)) {
+//            // Do not do the fade out stuff when we are switching camera modes
+//            oldState.transitionOnNextPause(oldState.getClass(), klass, StateTransAnim.Transition.Incoming);
+//        }
         if (mIsResumed) oldState.onPause();
         oldState.onDestroy();
 
