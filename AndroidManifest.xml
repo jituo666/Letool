@@ -18,7 +18,7 @@
         android:restoreAnyVersion="true"
         android:supportsRtl="true">
         <activity
-            android:name="com.xjt.letool.MainActivity"
+            android:name="com.xjt.letool.LetoolMainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

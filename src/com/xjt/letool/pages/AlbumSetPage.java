@@ -6,6 +6,8 @@ import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.views.GLImageView;
 import com.xjt.letool.views.ThumbnailView;
 import com.xjt.letool.views.ViewConfigs;
+import com.xjt.letool.views.layout.ThumbnailContractLayout;
+import com.xjt.letool.views.render.ThumbnailViewRenderer;
 
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,6 +18,7 @@ public class AlbumSetPage extends PageState {
     private boolean mIsActive = false;
     private ViewConfigs.AlbumSetPage mConfig;
     private LetoolActionBar mActionBar;
+    private ThumbnailViewRenderer mThumbnailViewRenderer;
 
     // The eyes' position of the user, the origin is at the center of the
     // device and the unit is in pixels.
@@ -27,8 +30,7 @@ public class AlbumSetPage extends PageState {
         private final float mMatrix[] = new float[16];
 
         @Override
-        protected void onLayout(
-                boolean changed, int left, int top, int right, int bottom) {
+        protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
 
             int slotViewTop = mActionBar.getHeight() + mConfig.paddingTop;
             int slotViewBottom = bottom - top - mConfig.paddingBottom;
@@ -54,13 +56,17 @@ public class AlbumSetPage extends PageState {
     };
 
     private void initializeViews() {
-        mThumbnailView = new ThumbnailView(mActivity, null);
+        mConfig = ViewConfigs.AlbumSetPage.get(mActivity);
+        mThumbnailView = new ThumbnailView(mActivity, new ThumbnailContractLayout(mConfig.albumSetSpec));
+        mThumbnailViewRenderer = new ThumbnailViewRenderer( mActivity,  mThumbnailView);
+        mThumbnailView.setThumbnailRenderer(mThumbnailViewRenderer);
         mRootPane.addComponent(mThumbnailView);
     }
 
     @Override
     public void onCreate(Bundle data, Bundle restoreState) {
         initializeViews();
+        mActionBar = mActivity.getLetoolActionBar();
     }
 
     @Override

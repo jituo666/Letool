@@ -20,6 +20,34 @@ public class GLES20Canvas implements GLESCanvas {
     private static final int INITIAL_RESTORE_STATE_SIZE = 8;
     private static final int MATRIX_SIZE = 16;
     private static final int FLOAT_SIZE = Float.SIZE / Byte.SIZE;
+
+    private static final int COUNT_FILL_VERTEX = 4;
+    private static final int COUNT_LINE_VERTEX = 2;
+    private static final int COUNT_RECT_VERTEX = 4;
+    private static final int OFFSET_FILL_RECT = 0;
+    private static final int OFFSET_DRAW_LINE = OFFSET_FILL_RECT + COUNT_FILL_VERTEX;
+    private static final int OFFSET_DRAW_RECT = OFFSET_DRAW_LINE + COUNT_LINE_VERTEX;
+
+    private static final float[] BOUNDS_COORDINATES = {
+            0, 0, 0, 1,
+            1, 1, 0, 1,
+    };
+
+    // Handle indices -- common
+    private static final int INDEX_POSITION = 0;
+    private static final int INDEX_MATRIX = 1;
+
+    // Handle indices -- draw
+    private static final int INDEX_COLOR = 2;
+
+    // Handle indices -- texture
+    private static final int INDEX_TEXTURE_MATRIX = 2;
+    private static final int INDEX_TEXTURE_SAMPLER = 3;
+    private static final int INDEX_ALPHA = 4;
+
+    private static final int COORDS_PER_VERTEX = 2;
+    private static final int VERTEX_STRIDE = COORDS_PER_VERTEX * FLOAT_SIZE;
+
     // Keep track of restore state
     private float[] mMatrices = new float[INITIAL_RESTORE_STATE_SIZE * MATRIX_SIZE];
     private float[] mAlphas = new float[INITIAL_RESTORE_STATE_SIZE];
@@ -42,10 +70,16 @@ public class GLES20Canvas implements GLESCanvas {
     private int mOesTextureProgram;
     private int mMeshProgram;
 
+    // Keep track of statistics for debugging
+    private int mCountDrawMesh = 0;
+    private int mCountTextureRect = 0;
+    private int mCountFillRect = 0;
+    private int mCountDrawLine = 0;
+
     // GL buffer containing BOX_COORDINATES
     private int mBoxCoordinates;
     // Bound textures.
-    private ArrayList<Texture> mTargetTextures = new ArrayList<Texture>();
+    private ArrayList<BasicTexture> mTargetTextures = new ArrayList<BasicTexture>();
 
     // Temporary variables used within calculations
     private final float[] mTempMatrix = new float[32];
@@ -245,7 +279,7 @@ public class GLES20Canvas implements GLESCanvas {
         return program;
     }
 
-    private Texture getTargetTexture() {
+    private BasicTexture getTargetTexture() {
         return mTargetTextures.get(mTargetTextures.size() - 1);
     }
 
@@ -380,50 +414,129 @@ public class GLES20Canvas implements GLESCanvas {
 
     }
 
+    private float[] getColor(int color) {
+        float alpha = ((color >>> 24) & 0xFF) / 255f * getAlpha();
+        float red = ((color >>> 16) & 0xFF) / 255f * alpha;
+        float green = ((color >>> 8) & 0xFF) / 255f * alpha;
+        float blue = (color & 0xFF) / 255f * alpha;
+        mTempColor[0] = red;
+        mTempColor[1] = green;
+        mTempColor[2] = blue;
+        mTempColor[3] = alpha;
+        return mTempColor;
+    }
+
+    private void enableBlending(boolean enableBlending) {
+        if (enableBlending) {
+            GLES20.glEnable(GLES20.GL_BLEND);
+            checkError();
+        } else {
+            GLES20.glDisable(GLES20.GL_BLEND);
+            checkError();
+        }
+    }
+
+    private void setPosition(ShaderParameter[] params, int offset) {
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, mBoxCoordinates);
+        checkError();
+        GLES20.glVertexAttribPointer(params[INDEX_POSITION].handle, COORDS_PER_VERTEX,
+                GLES20.GL_FLOAT, false, VERTEX_STRIDE, offset * VERTEX_STRIDE);
+        checkError();
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
+        checkError();
+    }
+
+    private void prepareDraw(int offset, int color, float lineWidth) {
+        GLES20.glUseProgram(mDrawProgram);
+        checkError();
+        if (lineWidth > 0) {
+            GLES20.glLineWidth(lineWidth);
+            checkError();
+        }
+        float[] colorArray = getColor(color);
+        boolean blendingEnabled = (colorArray[3] < 1f);
+        enableBlending(blendingEnabled);
+        if (blendingEnabled) {
+            GLES20.glBlendColor(colorArray[0], colorArray[1], colorArray[2], colorArray[3]);
+            checkError();
+        }
+
+        GLES20.glUniform4fv(mDrawParameters[INDEX_COLOR].handle, 1, colorArray, 0);
+        setPosition(mDrawParameters, offset);
+        checkError();
+    }
+
+    private void setMatrix(ShaderParameter[] params, float x, float y, float width, float height) {
+        Matrix.translateM(mTempMatrix, 0, mMatrices, mCurrentMatrixIndex, x, y, 0f);
+        Matrix.scaleM(mTempMatrix, 0, width, height, 1f);
+        Matrix.multiplyMM(mTempMatrix, MATRIX_SIZE, mProjectionMatrix, 0, mTempMatrix, 0);
+        GLES20.glUniformMatrix4fv(params[INDEX_MATRIX].handle, 1, false, mTempMatrix, MATRIX_SIZE);
+        checkError();
+    }
+
+    private void draw(ShaderParameter[] params, int type, int count, float x, float y, float width,
+            float height) {
+        setMatrix(params, x, y, width, height);
+        int positionHandle = params[INDEX_POSITION].handle;
+        GLES20.glEnableVertexAttribArray(positionHandle);
+        checkError();
+        GLES20.glDrawArrays(type, 0, count);
+        checkError();
+        GLES20.glDisableVertexAttribArray(positionHandle);
+        checkError();
+    }
+
+    private void draw(int type, int offset, int count, float x, float y, float width, float height,
+            int color, float lineWidth) {
+        prepareDraw(offset, color, lineWidth);
+        draw(mDrawParameters, type, count, x, y, width, height);
+    }
+
     @Override
     public void fillRect(float x, float y, float width, float height, int color) {
+        draw(GLES20.GL_TRIANGLE_STRIP, OFFSET_FILL_RECT, COUNT_FILL_VERTEX, x, y, width, height,
+                color, 0f);
+        mCountFillRect++;
+    }
+
+    @Override
+    public void drawTexture(BasicTexture texture, int x, int y, int width, int height) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void drawTexture(Texture texture, int x, int y, int width, int height) {
+    public void drawMesh(BasicTexture tex, int x, int y, int xyBuffer, int uvBuffer, int indexBuffer, int indexCount) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void drawMesh(Texture tex, int x, int y, int xyBuffer, int uvBuffer, int indexBuffer, int indexCount) {
+    public void drawTexture(BasicTexture texture, RectF source, RectF target) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void drawTexture(Texture texture, RectF source, RectF target) {
+    public void drawTexture(BasicTexture texture, float[] mTextureTransform, int x, int y, int w, int h) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void drawTexture(Texture texture, float[] mTextureTransform, int x, int y, int w, int h) {
+    public void drawMixed(BasicTexture from, int toColor, float ratio, int x, int y, int w, int h) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void drawMixed(Texture from, int toColor, float ratio, int x, int y, int w, int h) {
+    public void drawMixed(BasicTexture from, int toColor, float ratio, RectF src, RectF target) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void drawMixed(Texture from, int toColor, float ratio, RectF src, RectF target) {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public boolean unloadTexture(Texture texture) {
+    public boolean unloadTexture(BasicTexture texture) {
         // TODO Auto-generated method stub
         return false;
     }
@@ -447,7 +560,7 @@ public class GLES20Canvas implements GLESCanvas {
     }
 
     @Override
-    public void beginRenderTarget(Texture texture) {
+    public void beginRenderTarget(BasicTexture texture) {
         // TODO Auto-generated method stub
 
     }
@@ -459,25 +572,25 @@ public class GLES20Canvas implements GLESCanvas {
     }
 
     @Override
-    public void setTextureParameters(Texture texture) {
+    public void setTextureParameters(BasicTexture texture) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void initializeTextureSize(Texture texture, int format, int type) {
+    public void initializeTextureSize(BasicTexture texture, int format, int type) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void initializeTexture(Texture texture, Bitmap bitmap) {
+    public void initializeTexture(BasicTexture texture, Bitmap bitmap) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void texSubImage2D(Texture texture, int xOffset, int yOffset, Bitmap bitmap, int format, int type) {
+    public void texSubImage2D(BasicTexture texture, int xOffset, int yOffset, Bitmap bitmap, int format, int type) {
         // TODO Auto-generated method stub
 
     }

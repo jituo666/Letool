@@ -1,6 +1,6 @@
 package com.xjt.letool.pages;
 
-import com.xjt.letool.LetoolActivity;
+import com.xjt.letool.LetoolBaseActivity;
 import com.xjt.letool.R;
 import com.xjt.letool.R.color;
 import com.xjt.letool.anims.StateTransAnim;
@@ -32,7 +32,7 @@ abstract public class PageState {
     protected static final int FLAG_ALLOW_LOCK_WHILE_SCREEN_ON = 16;
     protected static final int FLAG_SHOW_WHEN_LOCKED = 32;
 
-    protected LetoolActivity mActivity;
+    protected LetoolBaseActivity mActivity;
     protected Bundle mData;
     protected int mFlags;
 
@@ -69,7 +69,7 @@ abstract public class PageState {
         mActivity.getGLController().setContentPane(mContentPane);
     }
 
-    void initialize(LetoolActivity activity, Bundle data) {
+    void initialize(LetoolBaseActivity activity, Bundle data) {
         mActivity = activity;
         mData = data;
     }
@@ -181,7 +181,7 @@ abstract public class PageState {
 
     // should only be called by StateManager
     void resume() {
-        LetoolActivity activity = mActivity;
+        LetoolBaseActivity activity = mActivity;
         ActionBar actionBar = activity.getActionBar();
         if (actionBar != null) {
             if ((mFlags & FLAG_HIDE_ACTION_BAR) != 0) {
@@ -190,7 +190,7 @@ abstract public class PageState {
                 actionBar.show();
             }
             int stateCount = mActivity.getPageManager().getStateCount();
-            mActivity.getGalleryActionBar().setDisplayOptions(stateCount > 1, true);
+            mActivity.getLetoolActionBar().setDisplayOptions(stateCount > 1, true);
             // Default behavior, this can be overridden in ActivityState's onResume.
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         }

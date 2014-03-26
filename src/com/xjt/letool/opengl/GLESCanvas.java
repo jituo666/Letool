@@ -74,36 +74,36 @@ public interface GLESCanvas {
 
     // Draws a texture to the specified rectangle.
     public abstract void drawTexture(
-            Texture texture, int x, int y, int width, int height);
+            BasicTexture texture, int x, int y, int width, int height);
 
-    public abstract void drawMesh(Texture tex, int x, int y, int xyBuffer,
+    public abstract void drawMesh(BasicTexture tex, int x, int y, int xyBuffer,
             int uvBuffer, int indexBuffer, int indexCount);
 
     // Draws the source rectangle part of the texture to the target rectangle.
-    public abstract void drawTexture(Texture texture, RectF source, RectF target);
+    public abstract void drawTexture(BasicTexture texture, RectF source, RectF target);
 
     // Draw a texture with a specified texture transform.
-    public abstract void drawTexture(Texture texture, float[] mTextureTransform,
+    public abstract void drawTexture(BasicTexture texture, float[] mTextureTransform,
                 int x, int y, int w, int h);
 
     // Draw two textures to the specified rectangle. The actual texture used is
     // from * (1 - ratio) + to * ratio
     // The two textures must have the same size.
-    public abstract void drawMixed(Texture from, int toColor,
+    public abstract void drawMixed(BasicTexture from, int toColor,
             float ratio, int x, int y, int w, int h);
 
     // Draw a region of a texture and a specified color to the specified
     // rectangle. The actual color used is from * (1 - ratio) + to * ratio.
     // The region of the texture is defined by parameter "src". The target
     // rectangle is specified by parameter "target".
-    public abstract void drawMixed(Texture from, int toColor,
+    public abstract void drawMixed(BasicTexture from, int toColor,
             float ratio, RectF src, RectF target);
 
     // Unloads the specified texture from the canvas. The resource allocated
     // to draw the texture will be released. The specified texture will return
     // to the unloaded state. This function should be called only from
-    // Texture or its descendant
-    public abstract boolean unloadTexture(Texture texture);
+    // BasicTexture or its descendant
+    public abstract boolean unloadTexture(BasicTexture texture);
 
     // Delete the specified buffer object, similar to unloadTexture.
     public abstract void deleteBuffer(int bufferId);
@@ -115,7 +115,7 @@ public interface GLESCanvas {
     // Dump statistics information and clear the counters. For debug only.
     public abstract void dumpStatisticsAndClear();
 
-    public abstract void beginRenderTarget(Texture texture);
+    public abstract void beginRenderTarget(BasicTexture texture);
 
     public abstract void endRenderTarget();
 
@@ -127,7 +127,7 @@ public interface GLESCanvas {
      *
      * @param texture The texture to set parameters on.
      */
-    public abstract void setTextureParameters(Texture texture);
+    public abstract void setTextureParameters(BasicTexture texture);
 
     /**
      * Initializes the texture to a size by calling texImage2D on it.
@@ -136,7 +136,7 @@ public interface GLESCanvas {
      * @param format The texture format (e.g. GL_RGBA)
      * @param type The texture type (e.g. GL_UNSIGNED_BYTE)
      */
-    public abstract void initializeTextureSize(Texture texture, int format, int type);
+    public abstract void initializeTextureSize(BasicTexture texture, int format, int type);
 
     /**
      * Initializes the texture to a size by calling texImage2D on it.
@@ -144,7 +144,7 @@ public interface GLESCanvas {
      * @param texture The texture to initialize the size.
      * @param bitmap The bitmap to initialize the bitmap with.
      */
-    public abstract void initializeTexture(Texture texture, Bitmap bitmap);
+    public abstract void initializeTexture(BasicTexture texture, Bitmap bitmap);
 
     /**
      * Calls glTexSubImage2D to upload a bitmap to the texture.
@@ -157,7 +157,7 @@ public interface GLESCanvas {
      * @param format The texture format (e.g. GL_RGBA)
      * @param type The texture type (e.g. GL_UNSIGNED_BYTE)
      */
-    public abstract void texSubImage2D(Texture texture, int xOffset, int yOffset,
+    public abstract void texSubImage2D(BasicTexture texture, int xOffset, int yOffset,
             Bitmap bitmap,
             int format, int type);
 

@@ -4,14 +4,18 @@ import android.graphics.Rect;
 
 public class ThumbnailExpandLayout extends ThumbnailLayout {
 
+    public ThumbnailExpandLayout(ThumbnailLayoutSpec spec) {
+        mSpec = spec;
+    }
+    
     @Override
-    public Rect getSlotRect(int index, Rect rect) {
+    public Rect getThumbnailRect(int index, Rect rect) {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public int getSlotIndexByPosition(float x, float y) {
+    public int getThumbnailIndexByPosition(float x, float y) {
         // TODO Auto-generated method stub
         return 0;
     }
@@ -23,7 +27,7 @@ public class ThumbnailExpandLayout extends ThumbnailLayout {
     }
 
     @Override
-    protected void updateVisibleSlotRange() {
+    protected void updateVisibleThumbnailRange() {
         // TODO Auto-generated method stub
         
     }

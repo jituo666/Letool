@@ -19,7 +19,7 @@ import android.view.Menu;
 import android.view.Window;
 import android.view.WindowManager;
 
-public class LetoolActivity extends Activity implements LetoolContext {
+public class LetoolBaseActivity extends Activity implements LetoolContext {
 
     private GLRootView mGLRootView;
     private PageManager mPageManager;
@@ -82,7 +82,7 @@ public class LetoolActivity extends Activity implements LetoolContext {
     public void onConfigurationChanged(Configuration config) {
         super.onConfigurationChanged(config);
         mPageManager.onConfigurationChange(config);
-        getGalleryActionBar().onConfigurationChanged();
+        getLetoolActionBar().onConfigurationChanged();
         invalidateOptionsMenu();
         toggleStatusBarByOrientation();
     }
@@ -224,7 +224,7 @@ public class LetoolActivity extends Activity implements LetoolContext {
         return mTransitionStore;
     }
 
-    public LetoolActionBar getGalleryActionBar() {
+    public LetoolActionBar getLetoolActionBar() {
         if (mActionBar == null) {
             mActionBar = new LetoolActionBar(this);
         }

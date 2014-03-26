@@ -1,15 +1,18 @@
 package com.xjt.letool.views;
 
-import com.xjt.letool.LetoolActivity;
+import com.xjt.letool.LetoolBaseActivity;
 import com.xjt.letool.SynchronizedHandler;
+import com.xjt.letool.anims.Animation;
+import com.xjt.letool.anims.AnimationTime;
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.opengl.GLESCanvas;
 import com.xjt.letool.utils.Utils;
 import com.xjt.letool.views.layout.ThumbnailLayout;
-import com.xjt.letool.views.layout.ThumbnailLayoutSpec;
 
 import android.graphics.Rect;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.animation.DecelerateInterpolator;
 
 /**
  * @Author Jituo.Xuan
@@ -23,11 +26,18 @@ import android.view.MotionEvent;
  */
 public class ThumbnailView extends GLImageView {
 
+    private static final String TAG = "ThumbnailView";
+
     public static final int OVERSCROLL_3D = 0;
     public static final int OVERSCROLL_SYSTEM = 1;
     public static final int OVERSCROLL_NONE = 2;
 
+    public static final int RENDER_MORE_PASS = 1;
+    public static final int RENDER_MORE_FRAME = 2;
+
+    private int mStartIndex = ThumbnailLayout.INDEX_NONE;
     // to prevent allocating memory
+    private ThumbnailViewAnim mAnimation = null;
     private final Rect mTempRect = new Rect();
     private boolean mDownInScrolling;
     private int mOverscrollEffect = OVERSCROLL_3D;
@@ -38,8 +48,68 @@ public class ThumbnailView extends GLImageView {
     private SynchronizedHandler mHandler;
     private Listener mListener;
     private ThumbnailLayout mLayout;
-    private ThumbnailRenderer mRenderer;
+    private Render mRenderer;
 
+    //////////////////////////////////////////////////////////////Animations////////////////////////////////////////////////////////////////////
+
+    public void startScatteringAnimation(RelativePosition position) {
+        mAnimation = new ScatteringAnimation(position);
+        mAnimation.start();
+        if (mLayout.getThumbnailHeight() != 0)
+            invalidate();
+    }
+
+    public void startRisingAnimation() {
+        mAnimation = new RisingAnimation();
+        mAnimation.start();
+        if (mLayout.getThumbnailCount() != 0)
+            invalidate();
+    }
+
+    public static abstract class ThumbnailViewAnim extends Animation {
+        protected float mProgress = 0;
+
+        public ThumbnailViewAnim() {
+            setInterpolator(new DecelerateInterpolator(4));
+            setDuration(1500);
+        }
+
+        @Override
+        protected void onCalculate(float progress) {
+            mProgress = progress;
+        }
+
+        abstract public void apply(GLESCanvas canvas, int slotIndex, Rect target);
+    }
+
+    public static class RisingAnimation extends ThumbnailViewAnim {
+        private static final int RISING_DISTANCE = 128;
+
+        @Override
+        public void apply(GLESCanvas canvas, int slotIndex, Rect target) {
+            canvas.translate(0, 0, RISING_DISTANCE * (1 - mProgress));
+        }
+    }
+
+    public static class ScatteringAnimation extends ThumbnailViewAnim {
+        private int PHOTO_DISTANCE = 1000;
+        private RelativePosition mCenter;
+
+        public ScatteringAnimation(RelativePosition center) {
+            mCenter = center;
+        }
+
+        @Override
+        public void apply(GLESCanvas canvas, int slotIndex, Rect target) {
+            canvas.translate(
+                    (mCenter.getX() - target.centerX()) * (1 - mProgress),
+                    (mCenter.getY() - target.centerY()) * (1 - mProgress),
+                    slotIndex * PHOTO_DISTANCE * (1 - mProgress));
+            canvas.setAlpha(mProgress);
+        }
+    }
+
+    //////////////////////////////////////////////////////////////Event Handler//////////////////////////////////////////////////////////////
     public interface Listener {
         public void onDown(int index);
 
@@ -74,16 +144,6 @@ public class ThumbnailView extends GLImageView {
         }
     }
 
-    public static interface ThumbnailRenderer {
-        public void prepareDrawing();
-
-        public void onVisibleRangeChanged(int visibleStart, int visibleEnd);
-
-        public void onSlotSizeChanged(int width, int height);
-
-        public int renderSlot(GLESCanvas canvas, int index, int pass, int width, int height);
-    }
-
     private class MyGestureListener implements GestureDetector.OnGestureListener {
         private boolean isDown;
 
@@ -91,6 +151,7 @@ public class ThumbnailView extends GLImageView {
             if (!isDown)
                 return;
             isDown = false;
+            if (mListener != null)
             mListener.onUp(byLongPress);
         }
 
@@ -101,6 +162,7 @@ public class ThumbnailView extends GLImageView {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            LLog.i(TAG, "onFling");
             cancelDown(false);
             int scrollLimit = mLayout.getScrollLimit();
             if (scrollLimit == 0)
@@ -115,13 +177,14 @@ public class ThumbnailView extends GLImageView {
 
         @Override
         public void onLongPress(MotionEvent e) {
+            LLog.i(TAG, "onLongPress");
             cancelDown(true);
             if (mDownInScrolling)
                 return;
             lockRendering();
             try {
-                int index = mLayout.getSlotIndexByPosition(e.getX(), e.getY());
-                if (index != ThumbnailLayout.INDEX_NONE)
+                int index = mLayout.getThumbnailIndexByPosition(e.getX(), e.getY());
+                if (index != ThumbnailLayout.INDEX_NONE &&  mListener != null)
                     mListener.onLongTap(index);
             } finally {
                 unlockRendering();
@@ -130,6 +193,7 @@ public class ThumbnailView extends GLImageView {
 
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            LLog.i(TAG, "onScroll");
             cancelDown(false);
             float distance = ThumbnailLayout.WIDE ? distanceX : distanceY;
             int overDistance = mScroller.startScroll(
@@ -148,7 +212,7 @@ public class ThumbnailView extends GLImageView {
             try {
                 if (isDown)
                     return;
-                int index = mLayout.getSlotIndexByPosition(e.getX(), e.getY());
+                int index = mLayout.getThumbnailIndexByPosition(e.getX(), e.getY());
                 if (index != ThumbnailLayout.INDEX_NONE) {
                     isDown = true;
                     mListener.onDown(index);
@@ -161,27 +225,16 @@ public class ThumbnailView extends GLImageView {
 
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
+            LLog.i(TAG, "onSingleTapUp");
             cancelDown(false);
             if (mDownInScrolling)
                 return true;
-            int index = mLayout.getSlotIndexByPosition(e.getX(), e.getY());
+            int index = mLayout.getThumbnailIndexByPosition(e.getX(), e.getY());
             if (index != ThumbnailLayout.INDEX_NONE)
                 mListener.onSingleTapUp(index);
             return true;
         }
 
-    }
-
-    public void setThumbnailLayoutSpec(ThumbnailLayoutSpec spec) {
-        mLayout.setSlotSpec(spec);
-    }
-
-    public void setThumbnailRenderer(ThumbnailRenderer render) {
-        mRenderer = render;
-        if (mRenderer != null) {
-            mRenderer.onSlotSizeChanged(mLayout.getSlotWidth(), mLayout.getSlotHeight());
-            mRenderer.onVisibleRangeChanged(getVisibleStart(), getVisibleEnd());
-        }
     }
 
     public void setListener(Listener listener) {
@@ -192,6 +245,128 @@ public class ThumbnailView extends GLImageView {
         mUIListener = listener;
     }
 
+    @Override
+    protected boolean onTouch(MotionEvent event) {
+        if (mUIListener != null)
+            mUIListener.onUserInteraction();
+        mGestureDetector.onTouchEvent(event);
+        switch (event.getAction()) {
+        case MotionEvent.ACTION_DOWN:
+            mDownInScrolling = !mScroller.isFinished();
+            mScroller.forceFinished();
+            break;
+        case MotionEvent.ACTION_UP:
+            mPaper.onRelease();
+            invalidate();
+            break;
+        }
+        return true;
+    }
+
+    ////////////////////////////////////////////////////////////////Render///////////////////////////////////////////////////////
+
+    public static interface Render {
+        public void prepareDrawing();
+
+        public void onVisibleRangeChanged(int visibleStart, int visibleEnd);
+
+        public void onThumbnailSizeChanged(int width, int height);
+
+        public int renderThumbnail(GLESCanvas canvas, int index, int pass, int width, int height);
+    }
+
+    public void setThumbnailRenderer(Render render) {
+        mRenderer = render;
+        if (mRenderer != null) {
+            mRenderer.onThumbnailSizeChanged(mLayout.getThumbnailWidth(), mLayout.getThumbnailHeight());
+            mRenderer.onVisibleRangeChanged(getVisibleStart(), getVisibleEnd());
+        }
+    }
+
+    @Override
+    protected void render(GLESCanvas canvas) {
+        super.render(canvas);
+        if (mRenderer == null)
+            return;
+        mRenderer.prepareDrawing();
+        long animTime = AnimationTime.get();
+        boolean more = mScroller.advanceAnimation(animTime);
+        more |= mLayout.advanceAnimation(animTime);
+        updateScrollPosition(mScroller.getPosition(), false);
+
+        if (mAnimation != null) {
+            more |= mAnimation.calculate(animTime);
+        }
+
+        canvas.translate(-mScrollX, -mScrollY);
+
+        for (int i = mLayout.getVisibleEnd() - 1; i >= mLayout.getVisibleStart(); --i) {
+            int r = renderItem(canvas, i, 0);
+            if ((r & RENDER_MORE_FRAME) != 0)
+                more = true;
+        }
+        canvas.translate(mScrollX, mScrollY);
+
+        if (more)
+            invalidate();
+    }
+
+    private int renderItem(GLESCanvas canvas, int index, int pass) {
+        canvas.save(GLESCanvas.SAVE_FLAG_ALPHA | GLESCanvas.SAVE_FLAG_MATRIX);
+        Rect rect = mLayout.getThumbnailRect(index, mTempRect);
+        canvas.translate(rect.left, rect.top, 0);
+        if (mAnimation != null && mAnimation.isActive()) {
+            mAnimation.apply(canvas, index, rect);
+        }
+        int result = mRenderer.renderThumbnail(canvas, index, pass, rect.right - rect.left, rect.bottom - rect.top);
+        canvas.restore();
+        return result;
+    }
+
+    ////////////////////////////////////////////////////////////Layout//////////////////////////////////////////////////////////
+
+    public ThumbnailView(LetoolBaseActivity activity, ThumbnailLayout layout) {
+        mGestureDetector = new GestureDetector(activity, new MyGestureListener());
+        mScroller = new ScrollerHelper(activity);
+        mHandler = new SynchronizedHandler(activity.getGLController());
+        mLayout = layout;
+        setThumbnailCount(100);
+    }
+
+    // Return true if the layout parameters have been changed
+    public boolean setThumbnailCount(int slotCount) {
+        boolean changed = mLayout.setThumbnailCount(slotCount);
+        // mStartIndex is applied the first time setSlotCount is called.
+        if (mStartIndex != ThumbnailLayout.INDEX_NONE) {
+            setCenterIndex(mStartIndex);
+            mStartIndex = ThumbnailLayout.INDEX_NONE;
+        }
+        // Reset the scroll position to avoid scrolling over the updated limit.
+        setScrollPosition(ThumbnailLayout.WIDE ? mScrollX : mScrollY);
+        return changed;
+    }
+
+    public void setCenterIndex(int index) {
+        int slotCount = mLayout.getThumbnailCount();
+        if (index < 0 || index >= slotCount) {
+            return;
+        }
+        Rect rect = mLayout.getThumbnailRect(index, mTempRect);
+        int position = ThumbnailLayout.WIDE
+                ? (rect.left + rect.right - getWidth()) / 2
+                : (rect.top + rect.bottom - getHeight()) / 2;
+    }
+
+    // Make sure we are still at a resonable scroll position after the size
+    // is changed (like orientation change). We choose to keep the center
+    // visible slot still visible. This is arbitrary but reasonable.
+    @Override
+    protected void onLayout(boolean changeSize, int l, int t, int r, int b) {
+        mLayout.setSize(r - l, b - t);
+        int visibleIndex = (mLayout.getVisibleStart() + mLayout.getVisibleEnd()) / 2;
+        resetVisibleRange(visibleIndex);
+    }
+
     public int getVisibleStart() {
         return mLayout.getVisibleStart();
     }
@@ -200,16 +375,10 @@ public class ThumbnailView extends GLImageView {
         return mLayout.getVisibleEnd();
     }
 
-    public ThumbnailView(LetoolActivity activity, ThumbnailLayoutSpec spec) {
-        mGestureDetector = new GestureDetector(activity, new MyGestureListener());
-        mScroller = new ScrollerHelper(activity);
-        mHandler = new SynchronizedHandler(activity.getGLController());
-        setThumbnailLayoutSpec(spec);
-    }
-
     protected void onScrollPositionChanged(int newPosition) {
         int limit = mLayout.getScrollLimit();
-        mListener.onScrollPositionChanged(newPosition, limit);
+        if (mListener != null)
+            mListener.onScrollPositionChanged(newPosition, limit);
     }
 
     private void updateScrollPosition(int position, boolean force) {
@@ -230,8 +399,8 @@ public class ThumbnailView extends GLImageView {
         updateScrollPosition(position, false);
     }
 
-    public void makeThumbnailVisible(int index) {
-        Rect rect = mLayout.getSlotRect(index, mTempRect);
+    public void resetVisibleRange(int centerIndex) {
+        Rect rect = mLayout.getThumbnailRect(centerIndex, mTempRect);
         int visibleBegin = ThumbnailLayout.WIDE ? mScrollX : mScrollY;
         int visibleLength = ThumbnailLayout.WIDE ? getWidth() : getHeight();
         int visibleEnd = visibleBegin + visibleLength;
@@ -246,27 +415,6 @@ public class ThumbnailView extends GLImageView {
         } else if (slotEnd > visibleEnd) {
             position = slotEnd - visibleLength;
         }
-
         setScrollPosition(position);
-    }
-
-    // Make sure we are still at a resonable scroll position after the size
-    // is changed (like orientation change). We choose to keep the center
-    // visible slot still visible. This is arbitrary but reasonable.
-    @Override
-    protected void onLayout(boolean changeSize, int l, int t, int r, int b) {
-        mLayout.setSize(r - l, b - t);
-        int visibleIndex = (mLayout.getVisibleStart() + mLayout.getVisibleEnd()) / 2;
-        makeThumbnailVisible(visibleIndex);
-    }
-
-    @Override
-    protected boolean onTouch(MotionEvent event) {
-        return true;
-    }
-
-    @Override
-    protected void render(GLESCanvas canvas) {
-
     }
 }

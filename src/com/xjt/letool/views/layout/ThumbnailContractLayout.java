@@ -4,6 +4,10 @@ import android.graphics.Rect;
 
 public class ThumbnailContractLayout extends ThumbnailLayout {
 
+    public ThumbnailContractLayout(ThumbnailLayoutSpec spec) {
+        mSpec = spec;
+    }
+
     // Calculate
     // (1) mUnitCount: the number of slots we can fit into one column (or row).
     // (2) mContentLength: the width (or height) we need to display all the
@@ -20,20 +24,20 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
             int majorLength, int minorLength, /* The view width and height */
             int majorUnitSize, int minorUnitSize, /* The slot width and height */
             int[] padding) {
-        int unitCount = (minorLength + mSlotGap) / (minorUnitSize + mSlotGap);
+        int unitCount = (minorLength + mThumbnailGap) / (minorUnitSize + mThumbnailGap);
         if (unitCount == 0)
             unitCount = 1;
         mUnitCount = unitCount;
 
         // We put extra padding above and below the column.
-        int availableUnits = Math.min(mUnitCount, mSlotCount);
+        int availableUnits = Math.min(mUnitCount, mThumbnailCount);
         int usedMinorLength = availableUnits * minorUnitSize +
-                (availableUnits - 1) * mSlotGap;
+                (availableUnits - 1) * mThumbnailGap;
         padding[0] = (minorLength - usedMinorLength) / 2;
 
         // Then calculate how many columns we need for all slots.
-        int count = ((mSlotCount + mUnitCount - 1) / mUnitCount);
-        mContentLength = count * majorUnitSize + (count - 1) * mSlotGap;
+        int count = ((mThumbnailCount + mUnitCount - 1) / mUnitCount);
+        mContentLength = count * majorUnitSize + (count - 1) * mThumbnailGap;
 
         // If the content length is less then the screen width, put
         // extra padding in left and right.
@@ -42,37 +46,37 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
 
     @Override
     protected void initLayoutParameters() {
-        // Initialize mSlotWidth and mSlotHeight from mSpec
+        // Initialize mThumbnailWidth and mThumbnailHeight from mSpec
         if (mSpec.slotWidth != -1) {
-            mSlotGap = 0;
-            mSlotWidth = mSpec.slotWidth;
-            mSlotHeight = mSpec.slotHeight;
+            mThumbnailGap = 0;
+            mThumbnailWidth = mSpec.slotWidth;
+            mThumbnailHeight = mSpec.slotHeight;
         } else {
             int rows = (mWidth > mHeight) ? mSpec.rowsLand : mSpec.rowsPort;
-            mSlotGap = mSpec.slotGap;
-            mSlotHeight = Math.max(1, (mHeight - (rows - 1) * mSlotGap) / rows);
-            mSlotWidth = mSlotHeight - mSpec.slotHeightAdditional;
+            mThumbnailGap = mSpec.slotGap;
+            mThumbnailHeight = Math.max(1, (mHeight - (rows - 1) * mThumbnailGap) / rows);
+            mThumbnailWidth = mThumbnailHeight - mSpec.slotHeightAdditional;
         }
 
         if (mRenderer != null) {
-            mRenderer.onSlotSizeChanged(mSlotWidth, mSlotHeight);
+            mRenderer.onThumbnailSizeChanged(mThumbnailWidth, mThumbnailHeight);
         }
 
         int[] padding = new int[2];
         if (WIDE) {
-            initLayoutParameters(mWidth, mHeight, mSlotWidth, mSlotHeight, padding);
+            initLayoutParameters(mWidth, mHeight, mThumbnailWidth, mThumbnailHeight, padding);
             mVerticalPadding.startAnimateTo(padding[0]);
             mHorizontalPadding.startAnimateTo(padding[1]);
         } else {
-            initLayoutParameters(mHeight, mWidth, mSlotHeight, mSlotWidth, padding);
+            initLayoutParameters(mHeight, mWidth, mThumbnailHeight, mThumbnailWidth, padding);
             mVerticalPadding.startAnimateTo(padding[1]);
             mHorizontalPadding.startAnimateTo(padding[0]);
         }
-        updateVisibleSlotRange();
+        updateVisibleThumbnailRange();
     }
 
     @Override
-    public Rect getSlotRect(int index, Rect rect) {
+    public Rect getThumbnailRect(int index, Rect rect) {
         int col, row;
         if (WIDE) {
             col = index / mUnitCount;
@@ -82,14 +86,14 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
             col = index - row * mUnitCount;
         }
 
-        int x = mHorizontalPadding.get() + col * (mSlotWidth + mSlotGap);
-        int y = mVerticalPadding.get() + row * (mSlotHeight + mSlotGap);
-        rect.set(x, y, x + mSlotWidth, y + mSlotHeight);
+        int x = mHorizontalPadding.get() + col * (mThumbnailWidth + mThumbnailGap);
+        int y = mVerticalPadding.get() + row * (mThumbnailHeight + mThumbnailGap);
+        rect.set(x, y, x + mThumbnailWidth, y + mThumbnailHeight);
         return rect;
     }
 
     @Override
-    public int getSlotIndexByPosition(float x, float y) {
+    public int getThumbnailIndexByPosition(float x, float y) {
         int absoluteX = Math.round(x) + (WIDE ? mScrollPosition : 0);
         int absoluteY = Math.round(y) + (WIDE ? 0 : mScrollPosition);
 
@@ -100,8 +104,8 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
             return INDEX_NONE;
         }
 
-        int columnIdx = absoluteX / (mSlotWidth + mSlotGap);
-        int rowIdx = absoluteY / (mSlotHeight + mSlotGap);
+        int columnIdx = absoluteX / (mThumbnailWidth + mThumbnailGap);
+        int rowIdx = absoluteY / (mThumbnailHeight + mThumbnailGap);
 
         if (!WIDE && columnIdx >= mUnitCount) {
             return INDEX_NONE;
@@ -111,11 +115,11 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
             return INDEX_NONE;
         }
 
-        if (absoluteX % (mSlotWidth + mSlotGap) >= mSlotWidth) {
+        if (absoluteX % (mThumbnailWidth + mThumbnailGap) >= mThumbnailWidth) {
             return INDEX_NONE;
         }
 
-        if (absoluteY % (mSlotHeight + mSlotGap) >= mSlotHeight) {
+        if (absoluteY % (mThumbnailHeight + mThumbnailGap) >= mThumbnailHeight) {
             return INDEX_NONE;
         }
 
@@ -123,26 +127,26 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
                 ? (columnIdx * mUnitCount + rowIdx)
                 : (rowIdx * mUnitCount + columnIdx);
 
-        return index >= mSlotCount ? INDEX_NONE : index;
+        return index >= mThumbnailCount ? INDEX_NONE : index;
     }
 
     @Override
-    protected void updateVisibleSlotRange() {
+    protected void updateVisibleThumbnailRange() {
         int position = mScrollPosition;
 
         if (WIDE) {
-            int startCol = position / (mSlotWidth + mSlotGap);
+            int startCol = position / (mThumbnailWidth + mThumbnailGap);
             int start = Math.max(0, mUnitCount * startCol);
-            int endCol = (position + mWidth + mSlotWidth + mSlotGap - 1) /
-                    (mSlotWidth + mSlotGap);
-            int end = Math.min(mSlotCount, mUnitCount * endCol);
+            int endCol = (position + mWidth + mThumbnailWidth + mThumbnailGap - 1) /
+                    (mThumbnailWidth + mThumbnailGap);
+            int end = Math.min(mThumbnailCount, mUnitCount * endCol);
             setVisibleRange(start, end);
         } else {
-            int startRow = position / (mSlotHeight + mSlotGap);
+            int startRow = position / (mThumbnailHeight + mThumbnailGap);
             int start = Math.max(0, mUnitCount * startRow);
-            int endRow = (position + mHeight + mSlotHeight + mSlotGap - 1) /
-                    (mSlotHeight + mSlotGap);
-            int end = Math.min(mSlotCount, mUnitCount * endRow);
+            int endRow = (position + mHeight + mThumbnailHeight + mThumbnailGap - 1) /
+                    (mThumbnailHeight + mThumbnailGap);
+            int end = Math.min(mThumbnailCount, mUnitCount * endRow);
             setVisibleRange(start, end);
         }
     }

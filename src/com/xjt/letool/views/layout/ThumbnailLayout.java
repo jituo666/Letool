@@ -3,23 +3,25 @@ package com.xjt.letool.views.layout;
 import android.graphics.Rect;
 
 import com.xjt.letool.anims.Animation;
-import com.xjt.letool.views.ThumbnailView.ThumbnailRenderer;
+import com.xjt.letool.views.ThumbnailView.Render;
 
 public abstract class ThumbnailLayout {
 
-    public static final boolean WIDE = true;
+    private static final String TAG = "ThumbnailLayout";
+
+    public static final boolean WIDE = false;
     public static final int INDEX_NONE = -1;
 
     protected int mVisibleStart;
     protected int mVisibleEnd;
 
-    protected int mSlotCount;
-    protected int mSlotWidth;
-    protected int mSlotHeight;
-    protected int mSlotGap;
+    protected int mThumbnailCount;
+    protected int mThumbnailWidth;
+    protected int mThumbnailHeight;
+    protected int mThumbnailGap;
 
     protected ThumbnailLayoutSpec mSpec;
-    protected ThumbnailRenderer mRenderer;
+    protected Render mRenderer;
 
     protected int mWidth;
     protected int mHeight;
@@ -30,16 +32,16 @@ public abstract class ThumbnailLayout {
     protected IntegerAnimation mVerticalPadding = new IntegerAnimation();
     protected IntegerAnimation mHorizontalPadding = new IntegerAnimation();
 
-    public void setSlotSpec(ThumbnailLayoutSpec spec) {
-        mSpec = spec;
+    public int getThumbnailCount() {
+        return mThumbnailCount;
     }
 
-    public int getSlotWidth() {
-        return mSlotWidth;
+    public int getThumbnailWidth() {
+        return mThumbnailWidth;
     }
 
-    public int getSlotHeight() {
-        return mSlotHeight;
+    public int getThumbnailHeight() {
+        return mThumbnailHeight;
     }
 
     public int getVisibleStart() {
@@ -54,15 +56,16 @@ public abstract class ThumbnailLayout {
         int limit = WIDE ? mContentLength - mWidth : mContentLength - mHeight;
         return limit <= 0 ? 0 : limit;
     }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public boolean setSlotCount(int slotCount) {
-        if (slotCount == mSlotCount)
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public boolean setThumbnailCount(int slotCount) {
+        if (slotCount == mThumbnailCount)
             return false;
-        if (mSlotCount != 0) {
+        if (mThumbnailCount != 0) {
             mHorizontalPadding.setEnabled(true);
             mVerticalPadding.setEnabled(true);
         }
-        mSlotCount = slotCount;
+        mThumbnailCount = slotCount;
         int hPadding = mHorizontalPadding.getTarget();
         int vPadding = mVerticalPadding.getTarget();
         initLayoutParameters();
@@ -79,16 +82,17 @@ public abstract class ThumbnailLayout {
         if (mScrollPosition == position)
             return;
         mScrollPosition = position;
-        updateVisibleSlotRange();
+        updateVisibleThumbnailRange();
     }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public abstract Rect getSlotRect(int index, Rect rect);
 
-    public abstract int getSlotIndexByPosition(float x, float y);
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public abstract Rect getThumbnailRect(int index, Rect rect);
+
+    public abstract int getThumbnailIndexByPosition(float x, float y);
 
     protected abstract void initLayoutParameters();
 
-    protected abstract void updateVisibleSlotRange();
+    protected abstract void updateVisibleThumbnailRange();
 
     protected void setVisibleRange(int start, int end) {
         if (start == mVisibleStart && end == mVisibleEnd)

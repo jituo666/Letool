@@ -2,7 +2,7 @@ package com.xjt.letool.pages;
 
 import java.util.Stack;
 
-import com.xjt.letool.LetoolActivity;
+import com.xjt.letool.LetoolBaseActivity;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.utils.UsageStatistics;
 import com.xjt.letool.utils.Utils;
@@ -26,11 +26,11 @@ public class PageManager {
     private static final String KEY_STATE = "bundle";
     private static final String KEY_CLASS = "class";
 
-    private LetoolActivity mActivity;
+    private LetoolBaseActivity mActivity;
     private Stack<StateEntry> mStack = new Stack<StateEntry>();
     private PageState.ResultEntry mResult;
 
-    public PageManager(LetoolActivity activity) {
+    public PageManager(LetoolBaseActivity activity) {
         mActivity = activity;
     }
 

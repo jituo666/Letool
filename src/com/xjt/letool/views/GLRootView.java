@@ -36,13 +36,13 @@ import android.view.MotionEvent;
  */
 public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer, GLController {
 
-    private static final String TAG = "GLView";
+    private static final String TAG = "GLRootView";
 
     private static final int FLAG_INITIALIZED = 1;
     private static final int FLAG_NEED_LAYOUT = 2;
 
+    private GL11 mGL;
     private GLESCanvas mCanvas;
-
     private GLImageView mContentView;
     private OrientationSource mOrientationSource;
     // mCompensation is the difference between the UI orientation on GLCanvas
@@ -145,9 +145,19 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @Override
-    public void onSurfaceCreated(GL10 gl10, EGLConfig config) {
-        GL11 gl11 = (GL11) gl10;
-        mCanvas = ApiHelper.HAS_GLES20_REQUIRED ? new GLES20Canvas() : new GLES11Canvas(gl11);
+    public void onSurfaceCreated(GL10 gl1, EGLConfig config) {
+        GL11 gl = (GL11) gl1;
+        if (mGL != null) {
+            LLog.i(TAG, "GLObject has changed from " + mGL + " to " + gl);// The GL Object has changed
+        }
+        mRenderLock.lock();
+        try {
+            mGL = gl;
+            mCanvas = ApiHelper.HAS_GLES20_REQUIRED ? new GLES20Canvas() : new GLES11Canvas(gl);
+            BasicTexture.invalidateAllTextures();
+        } finally {
+            mRenderLock.unlock();
+        }
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
     }
 
@@ -181,8 +191,7 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
 
         mRenderRequested = false;
 
-        if ((mOrientationSource != null && mDisplayRotation != mOrientationSource.getDisplayRotation())
-                || (mFlags & FLAG_NEED_LAYOUT) != 0) {
+        if ((mOrientationSource != null && mDisplayRotation != mOrientationSource.getDisplayRotation()) || (mFlags & FLAG_NEED_LAYOUT) != 0) {
             layoutContentPane();
         }
 
