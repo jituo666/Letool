@@ -9,7 +9,7 @@ public abstract class ThumbnailLayout {
 
     private static final String TAG = "ThumbnailLayout";
 
-    public static final boolean WIDE = false;
+    public static final boolean WIDE = true;
     public static final int INDEX_NONE = -1;
 
     protected int mVisibleStart;

@@ -1,5 +1,7 @@
 package com.xjt.letool.views.render;
 
+import android.graphics.Color;
+
 import com.xjt.letool.LetoolBaseActivity;
 import com.xjt.letool.opengl.ColorTexture;
 import com.xjt.letool.opengl.GLESCanvas;
@@ -24,7 +26,7 @@ public class ThumbnailViewRenderer implements ThumbnailView.Render {
     public ThumbnailViewRenderer(LetoolBaseActivity activity, ThumbnailView thumbnailView) {
         mActivity = activity;
         mThumbnailView = thumbnailView;
-        mPlaceholderColor = 0xFFFF0000;
+        mPlaceholderColor = Color.GRAY;
 
         mWaitLoadingTexture = new ColorTexture(mPlaceholderColor);
         mWaitLoadingTexture.setSize(1, 1);
