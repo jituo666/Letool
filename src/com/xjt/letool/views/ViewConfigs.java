@@ -31,8 +31,8 @@ public final class ViewConfigs {
             albumSetSpec = new ThumbnailLayoutSpec();
             albumSetSpec.rowsLand = r.getInteger(R.integer.albumset_rows_land);
             albumSetSpec.rowsPort = r.getInteger(R.integer.albumset_rows_port);
-            albumSetSpec.slotGap = r.getDimensionPixelSize(R.dimen.albumset_slot_gap);
-            albumSetSpec.slotHeightAdditional = 0;
+            albumSetSpec.thumbnailGap = r.getDimensionPixelSize(R.dimen.albumset_slot_gap);
+            albumSetSpec.thumbnailHeightAdditional = 0;
 
             paddingTop = r.getDimensionPixelSize(R.dimen.albumset_padding_top);
             paddingBottom = r.getDimensionPixelSize(R.dimen.albumset_padding_bottom);
@@ -82,7 +82,7 @@ public final class ViewConfigs {
             albumSetSpec = new ThumbnailLayoutSpec();
             albumSetSpec.rowsLand = r.getInteger(R.integer.album_rows_land);
             albumSetSpec.rowsPort = r.getInteger(R.integer.album_rows_port);
-            albumSetSpec.slotGap = r.getDimensionPixelSize(R.dimen.album_slot_gap);
+            albumSetSpec.thumbnailGap = r.getDimensionPixelSize(R.dimen.album_slot_gap);
         }
     }
 

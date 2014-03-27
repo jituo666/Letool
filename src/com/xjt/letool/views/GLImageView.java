@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.xjt.letool.anims.AnimationTime;
 import com.xjt.letool.anims.CanvasAnimation;
 import com.xjt.letool.anims.StateTransAnim;
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.opengl.GLESCanvas;
 import com.xjt.letool.utils.Utils;
 
@@ -222,6 +223,7 @@ public class GLImageView {
     }
 
     protected void render(GLESCanvas canvas) {
+
         boolean transitionActive = false;
         if (mTransition != null && mTransition.calculate(AnimationTime.get())) {
             invalidate();
@@ -270,6 +272,7 @@ public class GLImageView {
     protected void renderBackground(GLESCanvas view) {
         if (mBackgroundColor != null) {
             view.clearBuffer(mBackgroundColor);
+            LLog.i(TAG, "");
         }
         if (mTransition != null && mTransition.isActive()) {
             mTransition.applyBackground(this, view);

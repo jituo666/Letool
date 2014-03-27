@@ -2,9 +2,8 @@ package com.xjt.letool.pages;
 
 import com.xjt.letool.LetoolBaseActivity;
 import com.xjt.letool.R;
-import com.xjt.letool.R.color;
 import com.xjt.letool.anims.StateTransAnim;
-import com.xjt.letool.opengl.RawTexture;
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.views.GLImageView;
 
@@ -25,6 +24,8 @@ import android.view.Window;
 import android.view.WindowManager;
 
 abstract public class PageState {
+    private static final String TAG = "PageState";
+
     protected static final int FLAG_HIDE_ACTION_BAR = 1;
     protected static final int FLAG_HIDE_STATUS_BAR = 2;
     protected static final int FLAG_SCREEN_ON_WHEN_PLUGGED = 4;
@@ -65,6 +66,7 @@ abstract public class PageState {
             mContentPane.setIntroAnimation(mIntroAnimation);
             mIntroAnimation = null;
         }
+
         mContentPane.setBackgroundColor(getBackgroundColor());
         mActivity.getGLController().setContentPane(mContentPane);
     }
@@ -83,7 +85,8 @@ abstract public class PageState {
     }
 
     protected void setStateResult(int resultCode, Intent data) {
-        if (mResult == null) return;
+        if (mResult == null)
+            return;
         mResult.resultCode = resultCode;
         mResult.resultData = data;
     }
@@ -108,8 +111,7 @@ abstract public class PageState {
     }
 
     protected void onCreate(Bundle data, Bundle storedState) {
-        mBackgroundColor = LetoolUtils.intColorToFloatARGBArray(
-                mActivity.getResources().getColor(getBackgroundColorId()));
+        mBackgroundColor = LetoolUtils.intColorToFloatARGBArray(mActivity.getResources().getColor(getBackgroundColorId()));
     }
 
     protected void clearStateResult() {
@@ -154,13 +156,13 @@ abstract public class PageState {
 
     protected void transitionOnNextPause(Class<? extends PageState> outgoing,
             Class<? extends PageState> incoming, StateTransAnim.Transition hint) {
-//        if (outgoing == SinglePhotoPage.class && incoming == AlbumPage.class) {
-//            mNextTransition = StateTransAnim.Transition.Outgoing;
-//        } else if (outgoing == AlbumPage.class && incoming == SinglePhotoPage.class) {
-//            mNextTransition = StateTransAnim.Transition.PhotoIncoming;
-//        } else {
-//            mNextTransition = hint;
-//        }
+        //        if (outgoing == SinglePhotoPage.class && incoming == AlbumPage.class) {
+        //            mNextTransition = StateTransAnim.Transition.Outgoing;
+        //        } else if (outgoing == AlbumPage.class && incoming == SinglePhotoPage.class) {
+        //            mNextTransition = StateTransAnim.Transition.PhotoIncoming;
+        //        } else {
+        //            mNextTransition = hint;
+        //        }
     }
 
     protected void performHapticFeedback(int feedbackConstant) {
@@ -223,18 +225,16 @@ abstract public class PageState {
 
     // a subclass of ActivityState should override the method to resume itself
     protected void onResume() {
-//        RawTexture fade = mActivity.getTransitionStore().get(PreparePageFadeoutTexture.KEY_FADE_TEXTURE);
-//        mNextTransition = mActivity.getTransitionStore().get(
-//                KEY_TRANSITION_IN, StateTransAnim.Transition.None);
-//        if (mNextTransition != StateTransAnim.Transition.None) {
-//            mIntroAnimation = new StateTransAnim(mNextTransition, fade);
-//            mNextTransition = StateTransAnim.Transition.None;
-//        }
+        //        RawTexture fade = mActivity.getTransitionStore().get(PreparePageFadeoutTexture.KEY_FADE_TEXTURE);
+        //        mNextTransition = mActivity.getTransitionStore().get(
+        //                KEY_TRANSITION_IN, StateTransAnim.Transition.None);
+        //        if (mNextTransition != StateTransAnim.Transition.None) {
+        //            mIntroAnimation = new StateTransAnim(mNextTransition, fade);
+        //            mNextTransition = StateTransAnim.Transition.None;
+        //        }
     }
 
     protected boolean onCreateActionBar(Menu menu) {
-        // TODO: we should return false if there is no menu to show
-        //       this is a workaround for a bug in system
         return true;
     }
 

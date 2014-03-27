@@ -17,11 +17,13 @@ import com.xjt.letool.opengl.BasicTexture;
 import com.xjt.letool.opengl.GLES11Canvas;
 import com.xjt.letool.opengl.GLES20Canvas;
 import com.xjt.letool.opengl.GLESCanvas;
+import com.xjt.letool.opengl.LetoolEGLChooser;
 import com.xjt.letool.opengl.UploadedTexture;
 import com.xjt.letool.utils.MotionEventHelper;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
@@ -64,10 +66,12 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
 
     private final IdleRunner mIdleRunner = new IdleRunner();
 
+    private LetoolEGLChooser mLetoolEGLChooser = new LetoolEGLChooser();
+
     public GLRootView(Context context) {
         this(context, null);
     }
-    
+
     public GLRootView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mFlags |= FLAG_INITIALIZED;
@@ -77,6 +81,7 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
         } else {
             setEGLConfigChooser(5, 6, 5, 0, 0, 0);
         }
+        //setEGLConfigChooser(mLetoolEGLChooser);
         setRenderer(this);
         if (ApiHelper.USE_888_PIXEL_FORMAT) {
             getHolder().setFormat(PixelFormat.RGB_888);
@@ -93,7 +98,8 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        if (!isEnabled()) return false;
+        if (!isEnabled())
+            return false;
 
         int action = event.getAction();
         if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
@@ -154,7 +160,9 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
         try {
             mGL = gl;
             mCanvas = ApiHelper.HAS_GLES20_REQUIRED ? new GLES20Canvas() : new GLES11Canvas(gl);
+            //mCanvas = new GLES11Canvas(gl);
             BasicTexture.invalidateAllTextures();
+
         } finally {
             mRenderLock.unlock();
         }
@@ -196,7 +204,9 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
         }
 
         mCanvas.save(GLESCanvas.SAVE_FLAG_ALL);
+
         rotateCanvas(-mCompensation);
+
         if (mContentView != null) {
             mContentView.render(mCanvas);
         } else {

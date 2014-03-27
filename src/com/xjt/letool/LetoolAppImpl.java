@@ -1,5 +1,7 @@
 package com.xjt.letool;
 
+import com.xjt.letool.utils.LetoolUtils;
+
 import android.app.Application;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -14,7 +16,8 @@ public class LetoolAppImpl extends Application implements LetoolApp {
 
     @Override
     public void onCreate() {
-
+        super.onCreate();
+        LetoolUtils.initialize(this);
     }
 
     @Override

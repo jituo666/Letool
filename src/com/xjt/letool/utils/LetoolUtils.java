@@ -63,6 +63,7 @@ public class LetoolUtils {
                 context.getSystemService(Context.WINDOW_SERVICE);
         wm.getDefaultDisplay().getMetrics(metrics);
         sPixelDensity = metrics.density;
+        Log.i("letooltag", " resume sPixelDensity:" + sPixelDensity);
         Resources r = context.getResources();
         //TiledScreenNail.setPlaceholderColor(r.getColor(R.color.bitmap_screennail_placeholder));
         initializeThumbnailSizes(metrics, r);

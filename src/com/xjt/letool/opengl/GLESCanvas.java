@@ -115,7 +115,7 @@ public interface GLESCanvas {
     // Dump statistics information and clear the counters. For debug only.
     public abstract void dumpStatisticsAndClear();
 
-    public abstract void beginRenderTarget(BasicTexture texture);
+    public abstract void beginRenderTarget(RawTexture texture);
 
     public abstract void endRenderTarget();
 

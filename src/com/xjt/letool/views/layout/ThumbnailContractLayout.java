@@ -1,19 +1,23 @@
 package com.xjt.letool.views.layout;
 
+import com.xjt.letool.common.LLog;
+
 import android.graphics.Rect;
 
 public class ThumbnailContractLayout extends ThumbnailLayout {
 
+    private static final String TAG = "ThumbnailContractLayout";
+    
     public ThumbnailContractLayout(ThumbnailLayoutSpec spec) {
         mSpec = spec;
     }
 
     // Calculate
-    // (1) mUnitCount: the number of slots we can fit into one column (or row).
+    // (1) mUnitCount: the number of thumbnails we can fit into one column (or row).
     // (2) mContentLength: the width (or height) we need to display all the
     //     columns (rows).
     // (3) padding[]: the vertical and horizontal padding we need in order
-    //     to put the slots towards to the center of the display.
+    //     to put the thumbnails towards to the center of the display.
     //
     // The "major" direction is the direction the user can scroll. The other
     // direction is the "minor" direction.
@@ -22,8 +26,7 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
     // directon is horizontal (X), and the minor directon is vertical (Y).
     private void initLayoutParameters(
             int majorLength, int minorLength, /* The view width and height */
-            int majorUnitSize, int minorUnitSize, /* The slot width and height */
-            int[] padding) {
+            int majorUnitSize, int minorUnitSize, /* The thumbnail width and height */ int[] padding) {
         int unitCount = (minorLength + mThumbnailGap) / (minorUnitSize + mThumbnailGap);
         if (unitCount == 0)
             unitCount = 1;
@@ -31,31 +34,30 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
 
         // We put extra padding above and below the column.
         int availableUnits = Math.min(mUnitCount, mThumbnailCount);
-        int usedMinorLength = availableUnits * minorUnitSize +
-                (availableUnits - 1) * mThumbnailGap;
+        int usedMinorLength = availableUnits * minorUnitSize + (availableUnits - 1) * mThumbnailGap;
         padding[0] = (minorLength - usedMinorLength) / 2;
 
-        // Then calculate how many columns we need for all slots.
+        // Then calculate how many columns we need for all thumbnails.
         int count = ((mThumbnailCount + mUnitCount - 1) / mUnitCount);
         mContentLength = count * majorUnitSize + (count - 1) * mThumbnailGap;
 
-        // If the content length is less then the screen width, put
-        // extra padding in left and right.
+        // If the content length is less then the screen width, put extra padding in left and right.
         padding[1] = Math.max(0, (majorLength - mContentLength) / 2);
+        LLog.i(TAG, " initLayoutParameters rows:" + count + " column;" + unitCount);
     }
 
     @Override
     protected void initLayoutParameters() {
         // Initialize mThumbnailWidth and mThumbnailHeight from mSpec
-        if (mSpec.slotWidth != -1) {
+        if (mSpec.thumbnailWidth != -1) {
             mThumbnailGap = 0;
-            mThumbnailWidth = mSpec.slotWidth;
-            mThumbnailHeight = mSpec.slotHeight;
+            mThumbnailWidth = mSpec.thumbnailWidth;
+            mThumbnailHeight = mSpec.thumbnailHeight;
         } else {
             int rows = (mWidth > mHeight) ? mSpec.rowsLand : mSpec.rowsPort;
-            mThumbnailGap = mSpec.slotGap;
+            mThumbnailGap = mSpec.thumbnailGap;
             mThumbnailHeight = Math.max(1, (mHeight - (rows - 1) * mThumbnailGap) / rows);
-            mThumbnailWidth = mThumbnailHeight - mSpec.slotHeightAdditional;
+            mThumbnailWidth = mThumbnailHeight - mSpec.thumbnailHeightAdditional;
         }
 
         if (mRenderer != null) {

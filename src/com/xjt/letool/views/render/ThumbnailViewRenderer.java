@@ -1,9 +1,6 @@
 package com.xjt.letool.views.render;
 
-import android.graphics.Color;
-
 import com.xjt.letool.LetoolBaseActivity;
-import com.xjt.letool.common.LLog;
 import com.xjt.letool.opengl.ColorTexture;
 import com.xjt.letool.opengl.GLESCanvas;
 import com.xjt.letool.opengl.Texture;
@@ -27,7 +24,7 @@ public class ThumbnailViewRenderer implements ThumbnailView.Render {
     public ThumbnailViewRenderer(LetoolBaseActivity activity, ThumbnailView thumbnailView) {
         mActivity = activity;
         mThumbnailView = thumbnailView;
-        mPlaceholderColor = Color.RED;
+        mPlaceholderColor = 0xFFFF0000;
 
         mWaitLoadingTexture = new ColorTexture(mPlaceholderColor);
         mWaitLoadingTexture.setSize(1, 1);
@@ -57,7 +54,6 @@ public class ThumbnailViewRenderer implements ThumbnailView.Render {
 
     protected int renderContent(GLESCanvas canvas, int width, int height) {
         int renderRequestFlags = 0;
-        LLog.i(TAG, " renderContent width:" + width + " height:" + height);
         drawContent(canvas, mWaitLoadingTexture, width, height, 0);
         return renderRequestFlags;
     }
@@ -73,6 +69,7 @@ public class ThumbnailViewRenderer implements ThumbnailView.Render {
         }
         // Fit the content into the box
         float scale = Math.min((float) width / content.getWidth(), (float) height / content.getHeight());
+        //LLog.i(TAG, "scale:" + scale);
         canvas.scale(scale, scale, 1);
         content.draw(canvas, 0, 0);
         canvas.restore();

@@ -147,22 +147,8 @@ public class ThumbnailView extends GLImageView {
     private class MyGestureListener implements GestureDetector.OnGestureListener {
         private boolean isDown;
 
-        private void cancelDown(boolean byLongPress) {
-            if (!isDown)
-                return;
-            isDown = false;
-            if (mListener != null)
-            mListener.onUp(byLongPress);
-        }
-
-        @Override
-        public boolean onDown(MotionEvent arg0) {
-            return false;
-        }
-
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            LLog.i(TAG, "onFling");
             cancelDown(false);
             int scrollLimit = mLayout.getScrollLimit();
             if (scrollLimit == 0)
@@ -176,6 +162,43 @@ public class ThumbnailView extends GLImageView {
         }
 
         @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+            cancelDown(false);
+            float distance = ThumbnailLayout.WIDE ? distanceX : distanceY;
+            int overDistance = mScroller.startScroll(Math.round(distance), 0, mLayout.getScrollLimit());
+            if (mOverscrollEffect == OVERSCROLL_3D && overDistance != 0) {
+                mPaper.overScroll(overDistance);
+            }
+            invalidate();
+            return true;
+        }
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent e) {
+            LLog.i(TAG, "onSingleTapUp");
+            cancelDown(false);
+            if (mDownInScrolling)
+                return true;
+            int index = mLayout.getThumbnailIndexByPosition(e.getX(), e.getY());
+            if (index != ThumbnailLayout.INDEX_NONE && mListener != null)
+                mListener.onSingleTapUp(index);
+            return true;
+        }
+
+        private void cancelDown(boolean byLongPress) {
+            if (!isDown)
+                return;
+            isDown = false;
+            if (mListener != null)
+                mListener.onUp(byLongPress);
+        }
+
+        @Override
+        public boolean onDown(MotionEvent arg0) {
+            return false;
+        }
+
+        @Override
         public void onLongPress(MotionEvent e) {
             LLog.i(TAG, "onLongPress");
             cancelDown(true);
@@ -184,25 +207,11 @@ public class ThumbnailView extends GLImageView {
             lockRendering();
             try {
                 int index = mLayout.getThumbnailIndexByPosition(e.getX(), e.getY());
-                if (index != ThumbnailLayout.INDEX_NONE &&  mListener != null)
+                if (index != ThumbnailLayout.INDEX_NONE && mListener != null)
                     mListener.onLongTap(index);
             } finally {
                 unlockRendering();
             }
-        }
-
-        @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            LLog.i(TAG, "onScroll");
-            cancelDown(false);
-            float distance = ThumbnailLayout.WIDE ? distanceX : distanceY;
-            int overDistance = mScroller.startScroll(
-                    Math.round(distance), 0, mLayout.getScrollLimit());
-            if (mOverscrollEffect == OVERSCROLL_3D && overDistance != 0) {
-                mPaper.overScroll(overDistance);
-            }
-            invalidate();
-            return true;
         }
 
         @Override
@@ -215,24 +224,13 @@ public class ThumbnailView extends GLImageView {
                 int index = mLayout.getThumbnailIndexByPosition(e.getX(), e.getY());
                 if (index != ThumbnailLayout.INDEX_NONE) {
                     isDown = true;
-                    mListener.onDown(index);
+                    if (mListener != null)
+                        mListener.onDown(index);
                 }
             } finally {
                 root.unlockRenderThread();
             }
 
-        }
-
-        @Override
-        public boolean onSingleTapUp(MotionEvent e) {
-            LLog.i(TAG, "onSingleTapUp");
-            cancelDown(false);
-            if (mDownInScrolling)
-                return true;
-            int index = mLayout.getThumbnailIndexByPosition(e.getX(), e.getY());
-            if (index != ThumbnailLayout.INDEX_NONE)
-                mListener.onSingleTapUp(index);
-            return true;
         }
 
     }
@@ -297,7 +295,6 @@ public class ThumbnailView extends GLImageView {
         if (mAnimation != null) {
             more |= mAnimation.calculate(animTime);
         }
-
         canvas.translate(-mScrollX, -mScrollY);
 
         for (int i = mLayout.getVisibleEnd() - 1; i >= mLayout.getVisibleStart(); --i) {
@@ -330,7 +327,6 @@ public class ThumbnailView extends GLImageView {
         mScroller = new ScrollerHelper(activity);
         mHandler = new SynchronizedHandler(activity.getGLController());
         mLayout = layout;
-        setThumbnailCount(100);
     }
 
     // Return true if the layout parameters have been changed
@@ -347,14 +343,15 @@ public class ThumbnailView extends GLImageView {
     }
 
     public void setCenterIndex(int index) {
-        int slotCount = mLayout.getThumbnailCount();
-        if (index < 0 || index >= slotCount) {
+        int thumbnailCount = mLayout.getThumbnailCount();
+        if (index < 0 || index >= thumbnailCount) {
             return;
         }
         Rect rect = mLayout.getThumbnailRect(index, mTempRect);
         int position = ThumbnailLayout.WIDE
                 ? (rect.left + rect.right - getWidth()) / 2
                 : (rect.top + rect.bottom - getHeight()) / 2;
+        setScrollPosition(position);
     }
 
     // Make sure we are still at a resonable scroll position after the size
