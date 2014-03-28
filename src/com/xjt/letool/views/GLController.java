@@ -1,6 +1,6 @@
 package com.xjt.letool.views;
 
-import com.xjt.letool.anims.CanvasAnimation;
+import com.xjt.letool.anims.CanvasAnim;
 import com.xjt.letool.opengl.GLESCanvas;
 
 import android.content.Context;
@@ -14,7 +14,7 @@ public interface GLController {
     }
 
     public void addOnGLIdleListener(OnGLIdleListener listener);
-    public void registerLaunchedAnimation(CanvasAnimation animation);
+    public void registerLaunchedAnimation(CanvasAnim animation);
     public void requestRenderForced();
     public void requestRender();
     public void requestLayoutContentPane();

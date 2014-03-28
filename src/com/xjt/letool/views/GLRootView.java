@@ -10,7 +10,7 @@ import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
 import com.xjt.letool.anims.AnimationTime;
-import com.xjt.letool.anims.CanvasAnimation;
+import com.xjt.letool.anims.CanvasAnim;
 import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.opengl.BasicTexture;
@@ -59,7 +59,7 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
     private final ReentrantLock mRenderLock = new ReentrantLock();
     private final Condition mFreezeCondition = mRenderLock.newCondition();
     private boolean mFreeze;
-    private final ArrayList<CanvasAnimation> mAnimations = new ArrayList<CanvasAnimation>();
+    private final ArrayList<CanvasAnim> mAnimations = new ArrayList<CanvasAnim>();
 
     private final ArrayDeque<OnGLIdleListener> mIdleListeners = new ArrayDeque<OnGLIdleListener>();
 
@@ -256,7 +256,7 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
     // rendering, so we set the animation start time as the time we
     // complete rendering)
     @Override
-    public void registerLaunchedAnimation(CanvasAnimation animation) {
+    public void registerLaunchedAnimation(CanvasAnim animation) {
         mAnimations.add(animation);
     }
 

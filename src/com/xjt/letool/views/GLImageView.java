@@ -3,7 +3,7 @@ package com.xjt.letool.views;
 import java.util.ArrayList;
 
 import com.xjt.letool.anims.AnimationTime;
-import com.xjt.letool.anims.CanvasAnimation;
+import com.xjt.letool.anims.CanvasAnim;
 import com.xjt.letool.anims.StateTransAnim;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.opengl.GLESCanvas;
@@ -30,7 +30,7 @@ public class GLImageView {
     protected GLImageView mParent;
     private ArrayList<GLImageView> mComponents;
     private GLImageView mMotionTarget;
-    private CanvasAnimation mAnimation;
+    private CanvasAnim mAnimation;
     public static final int VISIBLE = View.VISIBLE;
     public static final int INVISIBLE = View.INVISIBLE;
     private static final int FLAG_INVISIBLE = 1;
@@ -253,7 +253,7 @@ public class GLImageView {
 
         canvas.translate(xoffset, yoffset);
 
-        CanvasAnimation anim = component.mAnimation;
+        CanvasAnim anim = component.mAnimation;
         if (anim != null) {
             canvas.save(anim.getCanvasSaveFlags());
             if (anim.calculate(AnimationTime.get())) {
