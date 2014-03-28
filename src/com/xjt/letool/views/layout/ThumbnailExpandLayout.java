@@ -4,10 +4,12 @@ import android.graphics.Rect;
 
 public class ThumbnailExpandLayout extends ThumbnailLayout {
 
+    private static final String TAG = "ThumbnailExpandLayout";
+
     public ThumbnailExpandLayout(ThumbnailLayoutSpec spec) {
         mSpec = spec;
     }
-    
+
     @Override
     public Rect getThumbnailRect(int index, Rect rect) {
         // TODO Auto-generated method stub
@@ -21,15 +23,15 @@ public class ThumbnailExpandLayout extends ThumbnailLayout {
     }
 
     @Override
-    protected void initLayoutParameters() {
+    protected void initThumbnailParameters() {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     protected void updateVisibleThumbnailRange() {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

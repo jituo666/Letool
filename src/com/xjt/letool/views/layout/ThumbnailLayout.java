@@ -9,7 +9,7 @@ public abstract class ThumbnailLayout {
 
     private static final String TAG = "ThumbnailLayout";
 
-    public static final boolean WIDE = true;
+    public static final boolean WIDE = false;
     public static final int INDEX_NONE = -1;
 
     protected int mVisibleStart;
@@ -68,14 +68,14 @@ public abstract class ThumbnailLayout {
         mThumbnailCount = slotCount;
         int hPadding = mHorizontalPadding.getTarget();
         int vPadding = mVerticalPadding.getTarget();
-        initLayoutParameters();
+        initThumbnailParameters();
         return vPadding != mVerticalPadding.getTarget() || hPadding != mHorizontalPadding.getTarget();
     }
 
-    public void setSize(int width, int height) {
+    public void setThumbnailViewSize(int width, int height) {
         mWidth = width;
         mHeight = height;
-        initLayoutParameters();
+        initThumbnailParameters();
     }
 
     public void setScrollPosition(int position) {
@@ -84,15 +84,6 @@ public abstract class ThumbnailLayout {
         mScrollPosition = position;
         updateVisibleThumbnailRange();
     }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public abstract Rect getThumbnailRect(int index, Rect rect);
-
-    public abstract int getThumbnailIndexByPosition(float x, float y);
-
-    protected abstract void initLayoutParameters();
-
-    protected abstract void updateVisibleThumbnailRange();
 
     protected void setVisibleRange(int start, int end) {
         if (start == mVisibleStart && end == mVisibleEnd)
@@ -107,6 +98,15 @@ public abstract class ThumbnailLayout {
             mRenderer.onVisibleRangeChanged(mVisibleStart, mVisibleEnd);
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public abstract Rect getThumbnailRect(int index, Rect rect);
+
+    public abstract int getThumbnailIndexByPosition(float x, float y);
+
+    protected abstract void initThumbnailParameters();
+
+    protected abstract void updateVisibleThumbnailRange();
 
     public boolean advanceAnimation(long animTime) {
         // use '|' to make sure both sides will be executed

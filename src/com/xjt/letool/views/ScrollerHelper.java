@@ -47,34 +47,23 @@ public class ScrollerHelper {
     }
 
     public void setPosition(int position) {
-        mScroller.startScroll(
-                position, 0,    // startX, startY
-                0, 0, 0);       // dx, dy, duration
-
+        mScroller.startScroll(position, 0, 0, 0, 0);
         // This forces the scroller to reach the final position.
         mScroller.abortAnimation();
     }
 
     public void fling(int velocity, int min, int max) {
         int currX = getPosition();
-        mScroller.fling(
-                currX, 0,      // startX, startY
-                velocity, 0,   // velocityX, velocityY
-                min, max,      // minX, maxX
-                0, 0,          // minY, maxY
-                mOverflingEnabled ? mOverflingDistance : 0, 0);
+        mScroller.fling( currX, 0, velocity, 0, min, max, 0, 0, mOverflingEnabled ? mOverflingDistance : 0, 0);
     }
 
     // Returns the distance that over the scroll limit.
     public int startScroll(int distance, int min, int max) {
         int currPosition = mScroller.getCurrX();
-        int finalPosition = mScroller.isFinished() ? currPosition :
-                mScroller.getFinalX();
+        int finalPosition = mScroller.isFinished() ? currPosition : mScroller.getFinalX();
         int newPosition = Utils.clamp(finalPosition + distance, min, max);
         if (newPosition != currPosition) {
-            mScroller.startScroll(
-                currPosition, 0,                    // startX, startY
-                newPosition - currPosition, 0, 0);  // dx, dy, duration
+            mScroller.startScroll(currPosition, 0, newPosition - currPosition, 0, 0);
         }
         return finalPosition + distance - newPosition;
     }

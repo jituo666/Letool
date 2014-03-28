@@ -2,8 +2,10 @@ package com.xjt.letool.views;
 
 import com.xjt.letool.LetoolBaseActivity;
 import com.xjt.letool.SynchronizedHandler;
-import com.xjt.letool.anims.Animation;
 import com.xjt.letool.anims.AnimationTime;
+import com.xjt.letool.anims.ThumbnailRisingAnim;
+import com.xjt.letool.anims.ThumbnailScatteringAnim;
+import com.xjt.letool.anims.ThumbnailAnim;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.opengl.GLESCanvas;
 import com.xjt.letool.utils.Utils;
@@ -12,7 +14,6 @@ import com.xjt.letool.views.layout.ThumbnailLayout;
 import android.graphics.Rect;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.animation.DecelerateInterpolator;
 
 /**
  * @Author Jituo.Xuan
@@ -37,10 +38,10 @@ public class ThumbnailView extends GLImageView {
 
     private int mStartIndex = ThumbnailLayout.INDEX_NONE;
     // to prevent allocating memory
-    private ThumbnailViewAnim mAnimation = null;
+    private ThumbnailAnim mAnimation = null;
     private final Rect mTempRect = new Rect();
     private boolean mDownInScrolling;
-    private int mOverscrollEffect = OVERSCROLL_3D;
+    private int mOverscrollEffect = OVERSCROLL_SYSTEM;
     private ScrollerHelper mScroller;
     private final Paper mPaper = new Paper();
     private GestureDetector mGestureDetector;
@@ -53,60 +54,22 @@ public class ThumbnailView extends GLImageView {
     //////////////////////////////////////////////////////////////Animations////////////////////////////////////////////////////////////////////
 
     public void startScatteringAnimation(RelativePosition position) {
-        mAnimation = new ScatteringAnimation(position);
+        mAnimation = new ThumbnailScatteringAnim(position);
         mAnimation.start();
         if (mLayout.getThumbnailHeight() != 0)
             invalidate();
     }
 
     public void startRisingAnimation() {
-        mAnimation = new RisingAnimation();
+        mAnimation = new ThumbnailRisingAnim();
         mAnimation.start();
         if (mLayout.getThumbnailCount() != 0)
             invalidate();
     }
 
-    public static abstract class ThumbnailViewAnim extends Animation {
-        protected float mProgress = 0;
-
-        public ThumbnailViewAnim() {
-            setInterpolator(new DecelerateInterpolator(4));
-            setDuration(1500);
-        }
-
-        @Override
-        protected void onCalculate(float progress) {
-            mProgress = progress;
-        }
-
-        abstract public void apply(GLESCanvas canvas, int slotIndex, Rect target);
-    }
-
-    public static class RisingAnimation extends ThumbnailViewAnim {
-        private static final int RISING_DISTANCE = 128;
-
-        @Override
-        public void apply(GLESCanvas canvas, int slotIndex, Rect target) {
-            canvas.translate(0, 0, RISING_DISTANCE * (1 - mProgress));
-        }
-    }
-
-    public static class ScatteringAnimation extends ThumbnailViewAnim {
-        private int PHOTO_DISTANCE = 1000;
-        private RelativePosition mCenter;
-
-        public ScatteringAnimation(RelativePosition center) {
-            mCenter = center;
-        }
-
-        @Override
-        public void apply(GLESCanvas canvas, int slotIndex, Rect target) {
-            canvas.translate(
-                    (mCenter.getX() - target.centerX()) * (1 - mProgress),
-                    (mCenter.getY() - target.centerY()) * (1 - mProgress),
-                    slotIndex * PHOTO_DISTANCE * (1 - mProgress));
-            canvas.setAlpha(mProgress);
-        }
+    public void setOverscrollEffect(int kind) {
+        mOverscrollEffect = kind;
+        mScroller.setOverfling(kind == OVERSCROLL_SYSTEM);
     }
 
     //////////////////////////////////////////////////////////////Event Handler//////////////////////////////////////////////////////////////
@@ -249,19 +212,19 @@ public class ThumbnailView extends GLImageView {
             mUIListener.onUserInteraction();
         mGestureDetector.onTouchEvent(event);
         switch (event.getAction()) {
-        case MotionEvent.ACTION_DOWN:
-            mDownInScrolling = !mScroller.isFinished();
-            mScroller.forceFinished();
-            break;
-        case MotionEvent.ACTION_UP:
-            mPaper.onRelease();
-            invalidate();
-            break;
+            case MotionEvent.ACTION_DOWN:
+                mDownInScrolling = !mScroller.isFinished();
+                mScroller.forceFinished();
+                break;
+            case MotionEvent.ACTION_UP:
+                mPaper.onRelease();
+                invalidate();
+                break;
         }
         return true;
     }
 
-    ////////////////////////////////////////////////////////////////Render///////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////Render/////////////////////////////////////////////////////////////////
 
     public static interface Render {
         public void prepareDrawing();
@@ -292,14 +255,17 @@ public class ThumbnailView extends GLImageView {
         more |= mLayout.advanceAnimation(animTime);
         updateScrollPosition(mScroller.getPosition(), false);
 
+        boolean paperActive = isPaperAcitivate();
+
+        more |= paperActive;
+
         if (mAnimation != null) {
             more |= mAnimation.calculate(animTime);
         }
         canvas.translate(-mScrollX, -mScrollY);
 
         for (int i = mLayout.getVisibleEnd() - 1; i >= mLayout.getVisibleStart(); --i) {
-            int r = renderItem(canvas, i, 0);
-            if ((r & RENDER_MORE_FRAME) != 0)
+            if ((renderItem(canvas, i, 0, paperActive) & RENDER_MORE_FRAME) != 0)
                 more = true;
         }
         canvas.translate(mScrollX, mScrollY);
@@ -308,10 +274,18 @@ public class ThumbnailView extends GLImageView {
             invalidate();
     }
 
-    private int renderItem(GLESCanvas canvas, int index, int pass) {
+    private int renderItem(GLESCanvas canvas, int index, int pass, boolean paperActive) {
         canvas.save(GLESCanvas.SAVE_FLAG_ALPHA | GLESCanvas.SAVE_FLAG_MATRIX);
         Rect rect = mLayout.getThumbnailRect(index, mTempRect);
-        canvas.translate(rect.left, rect.top, 0);
+        if (paperActive) {
+            if (ThumbnailLayout.WIDE) {
+                canvas.multiplyMatrix(mPaper.getTransform(rect, mScrollX), 0);
+            } else {
+                canvas.multiplyMatrix(mPaper.getTransform(rect, mScrollY), 0);
+            }
+        } else {
+            canvas.translate(rect.left, rect.top, 0);
+        }
         if (mAnimation != null && mAnimation.isActive()) {
             mAnimation.apply(canvas, index, rect);
         }
@@ -320,13 +294,49 @@ public class ThumbnailView extends GLImageView {
         return result;
     }
 
-    ////////////////////////////////////////////////////////////Layout//////////////////////////////////////////////////////////
+    private boolean isPaperAcitivate() {
+        int oldX = mScrollX;
+        if (mOverscrollEffect == OVERSCROLL_3D) {
+            // Check if an edge is reached and notify mPaper if so.
+            int newX = mScrollX;
+            int limit = mLayout.getScrollLimit();
+            if (oldX > 0 && newX == 0 || oldX < limit && newX == limit) {
+                float v = mScroller.getCurrVelocity();
+                if (newX == limit)
+                    v = -v;
+                // I don't know why, but getCurrVelocity() can return NaN.
+                if (!Float.isNaN(v)) {
+                    mPaper.edgeReached(v);
+                }
+            }
+            return mPaper.advanceAnimation();
+        }
+        return false;
+    }
+
+    ////////////////////////////////////////////////////////////Layout////////////////////////////////////////////////////////////////////
 
     public ThumbnailView(LetoolBaseActivity activity, ThumbnailLayout layout) {
         mGestureDetector = new GestureDetector(activity, new MyGestureListener());
         mScroller = new ScrollerHelper(activity);
         mHandler = new SynchronizedHandler(activity.getGLController());
         mLayout = layout;
+    }
+
+    // Make sure we are still at a resonable scroll position after the size
+    // is changed (like orientation change). We choose to keep the center
+    // visible slot still visible. This is arbitrary but reasonable.
+    @Override
+    protected void onLayout(boolean changeSize, int l, int t, int r, int b) {
+        if (!changeSize)
+            return;
+        int visibleCenterIndex = (mLayout.getVisibleStart() + mLayout.getVisibleEnd()) / 2;
+        mLayout.setThumbnailViewSize(r - l, b - t);
+        LLog.i(TAG, " onLayout visibleCenterIndex:" + visibleCenterIndex);
+        resetVisibleRange(visibleCenterIndex);
+        if (mOverscrollEffect == OVERSCROLL_3D) {
+            mPaper.setSize(r - l, b - t);
+        }
     }
 
     // Return true if the layout parameters have been changed
@@ -354,48 +364,6 @@ public class ThumbnailView extends GLImageView {
         setScrollPosition(position);
     }
 
-    // Make sure we are still at a resonable scroll position after the size
-    // is changed (like orientation change). We choose to keep the center
-    // visible slot still visible. This is arbitrary but reasonable.
-    @Override
-    protected void onLayout(boolean changeSize, int l, int t, int r, int b) {
-        mLayout.setSize(r - l, b - t);
-        int visibleIndex = (mLayout.getVisibleStart() + mLayout.getVisibleEnd()) / 2;
-        resetVisibleRange(visibleIndex);
-    }
-
-    public int getVisibleStart() {
-        return mLayout.getVisibleStart();
-    }
-
-    public int getVisibleEnd() {
-        return mLayout.getVisibleEnd();
-    }
-
-    protected void onScrollPositionChanged(int newPosition) {
-        int limit = mLayout.getScrollLimit();
-        if (mListener != null)
-            mListener.onScrollPositionChanged(newPosition, limit);
-    }
-
-    private void updateScrollPosition(int position, boolean force) {
-        if (!force && (ThumbnailLayout.WIDE ? position == mScrollX : position == mScrollY))
-            return;
-        if (ThumbnailLayout.WIDE) {
-            mScrollX = position;
-        } else {
-            mScrollY = position;
-        }
-        mLayout.setScrollPosition(position);
-        onScrollPositionChanged(position);
-    }
-
-    public void setScrollPosition(int position) {
-        position = Utils.clamp(position, 0, mLayout.getScrollLimit());
-        mScroller.setPosition(position);
-        updateScrollPosition(position, false);
-    }
-
     public void resetVisibleRange(int centerIndex) {
         Rect rect = mLayout.getThumbnailRect(centerIndex, mTempRect);
         int visibleBegin = ThumbnailLayout.WIDE ? mScrollX : mScrollY;
@@ -414,4 +382,32 @@ public class ThumbnailView extends GLImageView {
         }
         setScrollPosition(position);
     }
+
+    public void setScrollPosition(int position) {
+        position = Utils.clamp(position, 0, mLayout.getScrollLimit());
+        mScroller.setPosition(position);
+        updateScrollPosition(position, false);
+    }
+
+    private void updateScrollPosition(int position, boolean force) {
+        if (!force && (ThumbnailLayout.WIDE ? position == mScrollX : position == mScrollY))
+            return;
+        if (ThumbnailLayout.WIDE) {
+            mScrollX = position;
+        } else {
+            mScrollY = position;
+        }
+        mLayout.setScrollPosition(position);
+        if (mListener != null)
+            mListener.onScrollPositionChanged(position, mLayout.getScrollLimit());
+    }
+
+    public int getVisibleStart() {
+        return mLayout.getVisibleStart();
+    }
+
+    public int getVisibleEnd() {
+        return mLayout.getVisibleEnd();
+    }
+
 }

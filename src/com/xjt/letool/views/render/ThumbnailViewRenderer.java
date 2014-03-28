@@ -23,6 +23,21 @@ public class ThumbnailViewRenderer implements ThumbnailView.Render {
     private boolean mAnimatePressedUp;
     private boolean mInSelectionMode;
 
+    public static class LabelSpec {
+        public int labelBackgroundHeight;
+        public int titleOffset;
+        public int countOffset;
+        public int titleFontSize;
+        public int countFontSize;
+        public int leftMargin;
+        public int iconSize;
+        public int titleRightMargin;
+        public int backgroundColor;
+        public int titleColor;
+        public int countColor;
+        public int borderSize;
+    }
+
     public ThumbnailViewRenderer(LetoolBaseActivity activity, ThumbnailView thumbnailView) {
         mActivity = activity;
         mThumbnailView = thumbnailView;

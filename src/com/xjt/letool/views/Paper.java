@@ -2,13 +2,18 @@ package com.xjt.letool.views;
 
 import com.xjt.letool.anims.AnimationTime;
 import com.xjt.letool.utils.Utils;
+import com.xjt.letool.views.layout.ThumbnailLayout;
 
 import android.graphics.Rect;
 import android.opengl.Matrix;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 
-// This class does the overscroll effect.
+/**
+ * @Author Jituo.Xuan
+ * @Date 2:57:29 PM Mar 28, 2014
+ * @Comments: This class does the overscroll effect.
+ */
 class Paper {
     @SuppressWarnings("unused")
     private static final String TAG = "Paper";
@@ -19,7 +24,7 @@ class Paper {
     private float[] mMatrix = new float[16];
 
     public void overScroll(float distance) {
-        distance /= mWidth;  // make it relative to width
+        distance /= mWidth; // make it relative to width
         if (distance < 0) {
             mAnimationLeft.onPull(-distance);
         } else {
@@ -28,7 +33,7 @@ class Paper {
     }
 
     public void edgeReached(float velocity) {
-        velocity /= mWidth;  // make it relative to width
+        velocity /= mWidth; // make it relative to width
         if (velocity < 0) {
             mAnimationRight.onAbsorb(-velocity);
         } else {
@@ -50,27 +55,28 @@ class Paper {
         mWidth = width;
     }
 
-    public float[] getTransform(Rect rect, float scrollX) {
+    public float[] getTransform(Rect rect, float scrollDistance) {
+
         float left = mAnimationLeft.getValue();
         float right = mAnimationRight.getValue();
-        float screenX = rect.centerX() - scrollX;
+        float screen = !ThumbnailLayout.WIDE ? rect.centerY():rect.centerX() - scrollDistance;
         // We linearly interpolate the value [left, right] for the screenX
-        // range int [-1/4, 5/4]*mWidth. So if part of the thumbnail is outside
-        // the screen, we still get some transform.
-        float x = screenX + mWidth / 4;
+        // range int [-1/4, 5/4]*mWidth. So if part of the thumbnail is outside the screen, we still get some transform.
+        float s = screen + mWidth / 4;
         int range = 3 * mWidth / 2;
-        float t = ((range - x) * left - x * right) / range;
-        // compress t to the range (-1, 1) by the function
-        // f(t) = (1 / (1 + e^-t) - 0.5) * 2
-        // then multiply by 90 to make the range (-45, 45)
-        float degrees =
-                (1 / (1 + (float) Math.exp(-t * ROTATE_FACTOR)) - 0.5f) * 2 * -45;
+        float t = ((range - s) * left - s * right) / range;
+        float degrees = (1 / (1 + (float) Math.exp(-t * ROTATE_FACTOR)) - 0.5f) * 2 * -45;
         Matrix.setIdentityM(mMatrix, 0);
         Matrix.translateM(mMatrix, 0, mMatrix, 0, rect.centerX(), rect.centerY(), 0);
-        Matrix.rotateM(mMatrix, 0, degrees, 0, 1, 0);
+        if (!ThumbnailLayout.WIDE) {
+            Matrix.rotateM(mMatrix, 0, degrees, 1, 0, 0);
+        } else {
+            Matrix.rotateM(mMatrix, 0, degrees, 0, 1, 0);
+        }
         Matrix.translateM(mMatrix, 0, mMatrix, 0, -rect.width() / 2, -rect.height() / 2, 0);
         return mMatrix;
     }
+
 }
 
 // This class follows the structure of frameworks's EdgeEffect class.
@@ -117,13 +123,15 @@ class EdgeAnimation {
     // The value 1 is the full length of the view. Negative values means the
     // movement is in the opposite direction.
     public void onPull(float deltaDistance) {
-        if (mState == STATE_ABSORB) return;
+        if (mState == STATE_ABSORB)
+            return;
         mValue = Utils.clamp(mValue + deltaDistance, -1.0f, 1.0f);
         mState = STATE_PULL;
     }
 
     public void onRelease() {
-        if (mState == STATE_IDLE || mState == STATE_ABSORB) return;
+        if (mState == STATE_IDLE || mState == STATE_ABSORB)
+            return;
         startAnimation(mValue, 0, RELEASE_TIME, STATE_RELEASE);
     }
 
@@ -134,10 +142,12 @@ class EdgeAnimation {
     }
 
     public boolean update() {
-        if (mState == STATE_IDLE) return false;
-        if (mState == STATE_PULL) return true;
+        if (mState == STATE_IDLE)
+            return false;
+        if (mState == STATE_PULL)
+            return true;
 
-        float t = Utils.clamp((float)(now() - mStartTime) / mDuration, 0.0f, 1.0f);
+        float t = Utils.clamp((float) (now() - mStartTime) / mDuration, 0.0f, 1.0f);
         /* Use linear interpolation for absorb, quadratic for others */
         float interp = (mState == STATE_ABSORB)
                 ? t : mInterpolator.getInterpolation(t);

@@ -1,9 +1,9 @@
 package com.xjt.letool.views.layout;
 
 public class ThumbnailLayoutSpec {
-    public int thumbnailWidth = -1;
-    public int thumbnailHeight = -1;
-    public int thumbnailHeightAdditional = 0;
+    public int placeholderColor = 0xff000000;
+    public boolean labelOverLay = false;
+    public int labelHeight = 0;
 
     public int rowsLand = -1;
     public int rowsPort = -1;

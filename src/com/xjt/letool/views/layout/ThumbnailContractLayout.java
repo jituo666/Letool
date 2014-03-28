@@ -7,26 +7,19 @@ import android.graphics.Rect;
 public class ThumbnailContractLayout extends ThumbnailLayout {
 
     private static final String TAG = "ThumbnailContractLayout";
-    
+
     public ThumbnailContractLayout(ThumbnailLayoutSpec spec) {
         mSpec = spec;
     }
 
     // Calculate
     // (1) mUnitCount: the number of thumbnails we can fit into one column (or row).
-    // (2) mContentLength: the width (or height) we need to display all the
-    //     columns (rows).
-    // (3) padding[]: the vertical and horizontal padding we need in order
-    //     to put the thumbnails towards to the center of the display.
+    // (2) mContentLength: the width (or height) we need to display all the columns (rows).
+    // (3) padding[]: the vertical and horizontal padding we need in order to put the thumbnails towards to the center of the display.
     //
-    // The "major" direction is the direction the user can scroll. The other
-    // direction is the "minor" direction.
-    //
-    // The comments inside this method are the description when the major
-    // directon is horizontal (X), and the minor directon is vertical (Y).
-    private void initLayoutParameters(
-            int majorLength, int minorLength, /* The view width and height */
-            int majorUnitSize, int minorUnitSize, /* The thumbnail width and height */ int[] padding) {
+    // The "major" direction is the direction the user can scroll. The other direction is the "minor" direction.
+    // The comments inside this method are the description when the major direction is horizontal (X), and the minor direction is vertical (Y).
+    private void initThumbnailLayoutParameters(int majorLength, int minorLength, int majorUnitSize, int minorUnitSize, int[] padding) {
         int unitCount = (minorLength + mThumbnailGap) / (minorUnitSize + mThumbnailGap);
         if (unitCount == 0)
             unitCount = 1;
@@ -47,17 +40,18 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
     }
 
     @Override
-    protected void initLayoutParameters() {
+    protected void initThumbnailParameters() {
         // Initialize mThumbnailWidth and mThumbnailHeight from mSpec
-        if (mSpec.thumbnailWidth != -1) {
-            mThumbnailGap = 0;
-            mThumbnailWidth = mSpec.thumbnailWidth;
-            mThumbnailHeight = mSpec.thumbnailHeight;
+        mThumbnailGap = mSpec.thumbnailGap;
+        if (!WIDE) {
+            int rows = (mWidth < mHeight) ? mSpec.rowsLand : mSpec.rowsPort;
+            mThumbnailWidth = Math.max(1, (mWidth - (rows - 1) * mThumbnailGap) / rows);
+            mThumbnailHeight = mThumbnailWidth + mSpec.labelHeight;
         } else {
+
             int rows = (mWidth > mHeight) ? mSpec.rowsLand : mSpec.rowsPort;
-            mThumbnailGap = mSpec.thumbnailGap;
             mThumbnailHeight = Math.max(1, (mHeight - (rows - 1) * mThumbnailGap) / rows);
-            mThumbnailWidth = mThumbnailHeight - mSpec.thumbnailHeightAdditional;
+            mThumbnailWidth = mThumbnailHeight - mSpec.labelHeight;
         }
 
         if (mRenderer != null) {
@@ -66,15 +60,35 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
 
         int[] padding = new int[2];
         if (WIDE) {
-            initLayoutParameters(mWidth, mHeight, mThumbnailWidth, mThumbnailHeight, padding);
+            initThumbnailLayoutParameters(mWidth, mHeight, mThumbnailWidth, mThumbnailHeight, padding);
             mVerticalPadding.startAnimateTo(padding[0]);
             mHorizontalPadding.startAnimateTo(padding[1]);
         } else {
-            initLayoutParameters(mHeight, mWidth, mThumbnailHeight, mThumbnailWidth, padding);
+            initThumbnailLayoutParameters(mHeight, mWidth, mThumbnailHeight, mThumbnailWidth, padding);
             mVerticalPadding.startAnimateTo(padding[1]);
             mHorizontalPadding.startAnimateTo(padding[0]);
         }
         updateVisibleThumbnailRange();
+    }
+
+    @Override
+    protected void updateVisibleThumbnailRange() {
+
+        int position = mScrollPosition;
+
+        if (WIDE) {
+            int startCol = position / (mThumbnailWidth + mThumbnailGap);
+            int start = Math.max(0, mUnitCount * startCol);
+            int endCol = (position + mWidth + mThumbnailWidth + mThumbnailGap - 1) / (mThumbnailWidth + mThumbnailGap);
+            int end = Math.min(mThumbnailCount, mUnitCount * endCol);
+            setVisibleRange(start, end);
+        } else {
+            int startRow = position / (mThumbnailHeight + mThumbnailGap);
+            int start = Math.max(0, mUnitCount * startRow);
+            int endRow = (position + mHeight + mThumbnailHeight + mThumbnailGap - 1) / (mThumbnailHeight + mThumbnailGap);
+            int end = Math.min(mThumbnailCount, mUnitCount * endRow);
+            setVisibleRange(start, end);
+        }
     }
 
     @Override
@@ -125,31 +139,9 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
             return INDEX_NONE;
         }
 
-        int index = WIDE
-                ? (columnIdx * mUnitCount + rowIdx)
-                : (rowIdx * mUnitCount + columnIdx);
+        int index = WIDE ? (columnIdx * mUnitCount + rowIdx) : (rowIdx * mUnitCount + columnIdx);
 
         return index >= mThumbnailCount ? INDEX_NONE : index;
     }
 
-    @Override
-    protected void updateVisibleThumbnailRange() {
-        int position = mScrollPosition;
-
-        if (WIDE) {
-            int startCol = position / (mThumbnailWidth + mThumbnailGap);
-            int start = Math.max(0, mUnitCount * startCol);
-            int endCol = (position + mWidth + mThumbnailWidth + mThumbnailGap - 1) /
-                    (mThumbnailWidth + mThumbnailGap);
-            int end = Math.min(mThumbnailCount, mUnitCount * endCol);
-            setVisibleRange(start, end);
-        } else {
-            int startRow = position / (mThumbnailHeight + mThumbnailGap);
-            int start = Math.max(0, mUnitCount * startRow);
-            int endRow = (position + mHeight + mThumbnailHeight + mThumbnailGap - 1) /
-                    (mThumbnailHeight + mThumbnailGap);
-            int end = Math.min(mThumbnailCount, mUnitCount * endRow);
-            setVisibleRange(start, end);
-        }
-    }
 }
