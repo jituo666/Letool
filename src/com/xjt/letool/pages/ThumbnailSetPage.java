@@ -12,16 +12,16 @@ import com.xjt.letool.views.GLImageView;
 import com.xjt.letool.views.ThumbnailView;
 import com.xjt.letool.views.ViewConfigs;
 import com.xjt.letool.views.layout.ThumbnailContractLayout;
-import com.xjt.letool.views.render.ThumbnailViewRenderer;
+import com.xjt.letool.views.render.ThumbnailRenderer;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.widget.Toast;
 
-public class AlbumSetPage extends PageState implements EyePosition.EyePositionListener {
+public class ThumbnailSetPage extends PageState implements EyePosition.EyePositionListener {
 
-    private static final String TAG = "AlbumSetPage";
+    private static final String TAG = "ThumbnailSetPage";
 
     public static final String KEY_EMPTY_ALBUM = "empty-album";
     private static final int REQUEST_DO_ANIMATION = 1;
@@ -30,7 +30,7 @@ public class AlbumSetPage extends PageState implements EyePosition.EyePositionLi
     private boolean mIsActive = false;
     private ViewConfigs.AlbumSetPage mConfig;
     private LetoolActionBar mActionBar;
-    private ThumbnailViewRenderer mThumbnailViewRenderer;
+    private ThumbnailRenderer mThumbnailViewRenderer;
     private EyePosition mEyePosition;
     private WeakReference<Toast> mEmptyAlbumToast = null;
     // The eyes' position of the user, the origin is at the center of the device and the unit is in pixels.
@@ -65,7 +65,7 @@ public class AlbumSetPage extends PageState implements EyePosition.EyePositionLi
     private void initializeViews() {
         mConfig = ViewConfigs.AlbumSetPage.get(mActivity);
         mThumbnailView = new ThumbnailView(mActivity, new ThumbnailContractLayout(mConfig.albumSetSpec));
-        mThumbnailViewRenderer = new ThumbnailViewRenderer(mActivity, mThumbnailView);
+        mThumbnailViewRenderer = new ThumbnailRenderer(mActivity, mThumbnailView);
         mThumbnailView.setThumbnailRenderer(mThumbnailViewRenderer);
         mRootPane.addComponent(mThumbnailView);
     }

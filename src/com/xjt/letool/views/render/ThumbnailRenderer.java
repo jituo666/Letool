@@ -8,9 +8,9 @@ import com.xjt.letool.opengl.GLESCanvas;
 import com.xjt.letool.opengl.Texture;
 import com.xjt.letool.views.ThumbnailView;
 
-public class ThumbnailViewRenderer implements ThumbnailView.Render {
+public class ThumbnailRenderer implements ThumbnailView.Render {
 
-    private static final String TAG = "ThumbnailViewRender";
+    private static final String TAG = "ThumbnailRenderer";
     private static final int CACHE_SIZE = 96;
     private final int mPlaceholderColor;
 
@@ -38,7 +38,7 @@ public class ThumbnailViewRenderer implements ThumbnailView.Render {
         public int borderSize;
     }
 
-    public ThumbnailViewRenderer(LetoolBaseActivity activity, ThumbnailView thumbnailView) {
+    public ThumbnailRenderer(LetoolBaseActivity activity, ThumbnailView thumbnailView) {
         mActivity = activity;
         mThumbnailView = thumbnailView;
         mPlaceholderColor = Color.GRAY;

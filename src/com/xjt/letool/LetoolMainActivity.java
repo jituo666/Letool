@@ -1,7 +1,7 @@
 package com.xjt.letool;
 
 import com.xjt.letool.common.LLog;
-import com.xjt.letool.pages.AlbumSetPage;
+import com.xjt.letool.pages.ThumbnailSetPage;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.Utils;
 
@@ -72,7 +72,7 @@ public class LetoolMainActivity extends LetoolBaseActivity {
     public void startDefaultPage() {
         Bundle data = new Bundle();
 //        data.putString(AlbumSetPage.KEY_MEDIA_PATH,getDataManager().getTopSetPath(DataManager.INCLUDE_ALL));
-        getPageManager().startState(AlbumSetPage.class, data);
+        getPageManager().startState(ThumbnailSetPage.class, data);
     }
 
     private void startGetContent(Intent intent) {
@@ -83,7 +83,7 @@ public class LetoolMainActivity extends LetoolBaseActivity {
         int typeBits = LetoolUtils.determineTypeBits(this, intent);
         data.putInt(KEY_TYPE_BITS, typeBits);
         data.putString(AlbumSetPage.KEY_MEDIA_PATH,getDataManager().getTopSetPath(typeBits));*/
-        getPageManager().startState(AlbumSetPage.class, data);
+        getPageManager().startState(ThumbnailSetPage.class, data);
     }
 
 /*    private String getContentType(Intent intent) {
