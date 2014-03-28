@@ -1,3 +1,4 @@
+
 package com.xjt.letool.views;
 
 import com.xjt.letool.utils.Utils;
@@ -6,12 +7,13 @@ import android.content.Context;
 import android.view.ViewConfiguration;
 import android.widget.OverScroller;
 
-public class ScrollerHelper {
+public class ViewScrollerHelper {
+
     private OverScroller mScroller;
     private int mOverflingDistance;
     private boolean mOverflingEnabled;
 
-    public ScrollerHelper(Context context) {
+    public ViewScrollerHelper(Context context) {
         mScroller = new OverScroller(context);
         ViewConfiguration configuration = ViewConfiguration.get(context);
         mOverflingDistance = configuration.getScaledOverflingDistance();
@@ -23,7 +25,7 @@ public class ScrollerHelper {
 
     /**
      * Call this when you want to know the new location. The position will be
-     * updated and can be obtained by getPosition(). Returns true if  the
+     * updated and can be obtained by getPosition(). Returns true if the
      * animation is not yet finished.
      */
     public boolean advanceAnimation(long currentTimeMillis) {
@@ -54,7 +56,7 @@ public class ScrollerHelper {
 
     public void fling(int velocity, int min, int max) {
         int currX = getPosition();
-        mScroller.fling( currX, 0, velocity, 0, min, max, 0, 0, mOverflingEnabled ? mOverflingDistance : 0, 0);
+        mScroller.fling(currX, 0, velocity, 0, min, max, 0, 0, mOverflingEnabled ? mOverflingDistance : 0, 0);
     }
 
     // Returns the distance that over the scroll limit.

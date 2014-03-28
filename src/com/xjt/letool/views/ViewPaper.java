@@ -14,9 +14,9 @@ import android.view.animation.Interpolator;
  * @Date 2:57:29 PM Mar 28, 2014
  * @Comments: This class does the overscroll effect.
  */
-class Paper {
+class ViewPaper {
     @SuppressWarnings("unused")
-    private static final String TAG = "Paper";
+    private static final String TAG = "ViewPaper";
     private static final int ROTATE_FACTOR = 4;
     private EdgeAnimation mAnimationLeft = new EdgeAnimation();
     private EdgeAnimation mAnimationRight = new EdgeAnimation();

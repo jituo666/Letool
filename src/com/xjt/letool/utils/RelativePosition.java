@@ -1,4 +1,4 @@
-package com.xjt.letool.views;
+package com.xjt.letool.utils;
 
 public class RelativePosition {
     private float mAbsoluteX;

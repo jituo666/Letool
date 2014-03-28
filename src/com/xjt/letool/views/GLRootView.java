@@ -13,6 +13,7 @@ import com.xjt.letool.anims.AnimationTime;
 import com.xjt.letool.anims.CanvasAnim;
 import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.common.LLog;
+import com.xjt.letool.common.OrientationSource;
 import com.xjt.letool.opengl.BasicTexture;
 import com.xjt.letool.opengl.GLES11Canvas;
 import com.xjt.letool.opengl.GLES20Canvas;
@@ -44,7 +45,7 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
 
     private GL11 mGL;
     private GLESCanvas mCanvas;
-    private GLImageView mContentView;
+    private GLBaseView mContentView;
     private OrientationSource mOrientationSource;
     // mCompensation is the difference between the UI orientation on GLCanvas
     // and the framework orientation. See OrientationManager for details.
@@ -348,7 +349,7 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
     }
 
     @Override
-    public void setContentPane(GLImageView content) {
+    public void setContentPane(GLBaseView content) {
         if (mContentView == content)
             return;
         if (mContentView != null) {

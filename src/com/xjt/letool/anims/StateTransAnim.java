@@ -2,7 +2,7 @@ package com.xjt.letool.anims;
 
 import com.xjt.letool.opengl.GLESCanvas;
 import com.xjt.letool.opengl.RawTexture;
-import com.xjt.letool.views.GLImageView;
+import com.xjt.letool.views.GLBaseView;
 
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -123,7 +123,7 @@ public class StateTransAnim extends Animation {
                 + (mTransitionSpec.overlayAlphaTo - mTransitionSpec.overlayAlphaFrom) * progress;
     }
 
-    private void applyOldTexture(GLImageView view, GLESCanvas canvas, float alpha, float scale, boolean clear) {
+    private void applyOldTexture(GLBaseView view, GLESCanvas canvas, float alpha, float scale, boolean clear) {
         if (mOldScreenTexture == null)
             return;
         if (clear) canvas.clearBuffer(view.getBackgroundColor());
@@ -137,13 +137,13 @@ public class StateTransAnim extends Animation {
         canvas.restore();
     }
 
-    public void applyBackground(GLImageView view, GLESCanvas canvas) {
+    public void applyBackground(GLBaseView view, GLESCanvas canvas) {
         if (mCurrentBackgroundAlpha > 0f) {
             applyOldTexture(view, canvas, mCurrentBackgroundAlpha, mCurrentBackgroundScale, true);
         }
     }
 
-    public void applyContentTransform(GLImageView view, GLESCanvas canvas) {
+    public void applyContentTransform(GLBaseView view, GLESCanvas canvas) {
         int xOffset = view.getWidth() / 2;
         int yOffset = view.getHeight() / 2;
         canvas.translate(xOffset, yOffset);
@@ -152,7 +152,7 @@ public class StateTransAnim extends Animation {
         canvas.setAlpha(mCurrentContentAlpha);
     }
 
-    public void applyOverlay(GLImageView view, GLESCanvas canvas) {
+    public void applyOverlay(GLBaseView view, GLESCanvas canvas) {
         if (mCurrentOverlayAlpha > 0f) {
             applyOldTexture(view, canvas, mCurrentOverlayAlpha, mCurrentOverlayScale, false);
         }

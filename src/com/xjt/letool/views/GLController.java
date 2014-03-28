@@ -1,6 +1,7 @@
 package com.xjt.letool.views;
 
 import com.xjt.letool.anims.CanvasAnim;
+import com.xjt.letool.common.OrientationSource;
 import com.xjt.letool.opengl.GLESCanvas;
 
 import android.content.Context;
@@ -22,7 +23,7 @@ public interface GLController {
     public void lockRenderThread();
     public void unlockRenderThread();
 
-    public void setContentPane(GLImageView content);
+    public void setContentPane(GLBaseView content);
     public void setOrientationSource(OrientationSource source);
     public int getDisplayRotation();
     public int getCompensation();

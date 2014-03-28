@@ -2,7 +2,7 @@ package com.xjt.letool;
 
 import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.common.LLog;
-import com.xjt.letool.views.OrientationSource;
+import com.xjt.letool.common.OrientationSource;
 
 import android.app.Activity;
 import android.content.ContentResolver;

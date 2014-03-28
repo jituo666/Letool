@@ -5,14 +5,14 @@ import android.content.res.Resources;
 
 import com.xjt.letool.R;
 import com.xjt.letool.views.layout.ThumbnailLayoutSpec;
-import com.xjt.letool.views.render.ThumbnailRenderer;
+import com.xjt.letool.views.render.ThumbnailSetRenderer;
 
 public final class ViewConfigs {
     public static class AlbumSetPage {
         private static AlbumSetPage sInstance;
 
         public ThumbnailLayoutSpec albumSetSpec;
-        public ThumbnailRenderer.LabelSpec labelSpec;
+        public ThumbnailSetRenderer.LabelSpec labelSpec;
         public int paddingLeft;
         public int paddingTop;
         public int paddingRight;
@@ -39,7 +39,7 @@ public final class ViewConfigs {
             paddingRight = r.getDimensionPixelSize(R.dimen.albumset_padding_right);
             paddingBottom = r.getDimensionPixelSize(R.dimen.albumset_padding_bottom);
 
-            labelSpec = new ThumbnailRenderer.LabelSpec();
+            labelSpec = new ThumbnailSetRenderer.LabelSpec();
             labelSpec.labelBackgroundHeight = r.getDimensionPixelSize(R.dimen.albumset_label_background_height);
             labelSpec.titleOffset = r.getDimensionPixelSize(R.dimen.albumset_title_offset);
             labelSpec.countOffset = r.getDimensionPixelSize(R.dimen.albumset_count_offset);

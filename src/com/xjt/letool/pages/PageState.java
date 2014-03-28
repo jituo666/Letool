@@ -5,7 +5,7 @@ import com.xjt.letool.R;
 import com.xjt.letool.anims.StateTransAnim;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.utils.LetoolUtils;
-import com.xjt.letool.views.GLImageView;
+import com.xjt.letool.views.GLBaseView;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -55,12 +55,12 @@ abstract public class PageState {
     private StateTransAnim.Transition mNextTransition =
             StateTransAnim.Transition.None;
     private StateTransAnim mIntroAnimation;
-    private GLImageView mContentPane;
+    private GLBaseView mContentPane;
 
     protected PageState() {
     }
 
-    protected void setContentPane(GLImageView content) {
+    protected void setContentPane(GLBaseView content) {
         mContentPane = content;
         if (mIntroAnimation != null) {
             mContentPane.setIntroAnimation(mIntroAnimation);

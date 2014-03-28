@@ -8,6 +8,7 @@ import com.xjt.letool.anims.ThumbnailScatteringAnim;
 import com.xjt.letool.anims.ThumbnailAnim;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.opengl.GLESCanvas;
+import com.xjt.letool.utils.RelativePosition;
 import com.xjt.letool.utils.Utils;
 import com.xjt.letool.views.layout.ThumbnailLayout;
 
@@ -25,7 +26,7 @@ import android.view.MotionEvent;
  * @Date 2:50:42 PM Mar 25, 2014
  * @Comments:null
  */
-public class ThumbnailView extends GLImageView {
+public class ThumbnailView extends GLBaseView {
 
     private static final String TAG = "ThumbnailView";
 
@@ -42,10 +43,10 @@ public class ThumbnailView extends GLImageView {
     private final Rect mTempRect = new Rect();
     private boolean mDownInScrolling;
     private int mOverscrollEffect = OVERSCROLL_SYSTEM;
-    private ScrollerHelper mScroller;
-    private final Paper mPaper = new Paper();
+    private ViewScrollerHelper mScroller;
+    private final ViewPaper mPaper = new ViewPaper();
     private GestureDetector mGestureDetector;
-    private UserInteractionListener mUIListener;
+    private UIListener mUIListener;
     private SynchronizedHandler mHandler;
     private Listener mListener;
     private ThumbnailLayout mLayout;
@@ -202,7 +203,7 @@ public class ThumbnailView extends GLImageView {
         mListener = listener;
     }
 
-    public void setUserInteractionListener(UserInteractionListener listener) {
+    public void setUserInteractionListener(UIListener listener) {
         mUIListener = listener;
     }
 
@@ -318,7 +319,7 @@ public class ThumbnailView extends GLImageView {
 
     public ThumbnailView(LetoolBaseActivity activity, ThumbnailLayout layout) {
         mGestureDetector = new GestureDetector(activity, new MyGestureListener());
-        mScroller = new ScrollerHelper(activity);
+        mScroller = new ViewScrollerHelper(activity);
         mHandler = new SynchronizedHandler(activity.getGLController());
         mLayout = layout;
     }
