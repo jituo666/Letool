@@ -5,9 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View.MeasureSpec;
 
-import com.xjt.letool.LetoolBaseActivity;
 import com.xjt.letool.R;
-import com.xjt.letool.datas.MediaDetails;
+import com.xjt.letool.activities.LetoolBaseActivity;
+import com.xjt.letool.data.MediaDetails;
 import com.xjt.letool.views.DetailsAddressResolver.AddressResolvingListener;
 
 public class DetailsHelper {

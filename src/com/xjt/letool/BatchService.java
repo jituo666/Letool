@@ -8,7 +8,7 @@ import android.os.IBinder;
 public class BatchService extends Service {
 
     public class LocalBinder extends Binder {
-        BatchService getService() {
+        public BatchService getService() {
             return BatchService.this;
         }
     }

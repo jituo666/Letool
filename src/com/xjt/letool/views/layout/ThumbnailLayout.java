@@ -3,7 +3,8 @@ package com.xjt.letool.views.layout;
 import android.graphics.Rect;
 
 import com.xjt.letool.anims.Animation;
-import com.xjt.letool.views.ThumbnailView.Render;
+import com.xjt.letool.views.ThumbnailView;
+import com.xjt.letool.views.ThumbnailView.Renderer;
 
 public abstract class ThumbnailLayout {
 
@@ -21,7 +22,7 @@ public abstract class ThumbnailLayout {
     protected int mThumbnailGap;
 
     protected ThumbnailLayoutSpec mSpec;
-    protected Render mRenderer;
+    protected Renderer mRenderer;
 
     protected int mWidth;
     protected int mHeight;
@@ -58,6 +59,9 @@ public abstract class ThumbnailLayout {
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public void setRenderer(ThumbnailView.Renderer render) {
+        mRenderer = render;
+    }
     public boolean setThumbnailCount(int slotCount) {
         if (slotCount == mThumbnailCount)
             return false;

@@ -3,15 +3,16 @@ package com.xjt.letool.pages;
 
 import java.lang.ref.WeakReference;
 
-import com.xjt.letool.DataManager;
 import com.xjt.letool.EyePosition;
 import com.xjt.letool.LetoolActionBar;
 import com.xjt.letool.R;
-import com.xjt.letool.adapters.ThumbnailSetAdapter;
-import com.xjt.letool.common.LLog;
-import com.xjt.letool.datas.MediaDetails;
-import com.xjt.letool.datas.Path;
+import com.xjt.letool.data.DataManager;
+import com.xjt.letool.data.LoadingListener;
+import com.xjt.letool.data.MediaDetails;
+import com.xjt.letool.data.MediaSet;
+import com.xjt.letool.data.loader.ThumbnailSetDataLoader;
 import com.xjt.letool.opengl.GLESCanvas;
+import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.views.DetailsHelper;
 import com.xjt.letool.views.DetailsHelper.CloseListener;
@@ -19,6 +20,7 @@ import com.xjt.letool.views.GLBaseView;
 import com.xjt.letool.views.ThumbnailView;
 import com.xjt.letool.views.ViewConfigs;
 import com.xjt.letool.views.layout.ThumbnailContractLayout;
+import com.xjt.letool.views.layout.ThumbnailLayout;
 import com.xjt.letool.views.render.ThumbnailSetRenderer;
 
 import android.app.Activity;
@@ -26,6 +28,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class ThumbnailSetPage extends PageState implements EyePosition.EyePositionListener {
@@ -33,6 +39,10 @@ public class ThumbnailSetPage extends PageState implements EyePosition.EyePositi
     private static final String TAG = "ThumbnailSetPage";
 
     public static final String KEY_EMPTY_ALBUM = "empty-album";
+    private static final int DATA_CACHE_SIZE = 256;
+
+    private static final int BIT_LOADING_RELOAD = 1;
+    private static final int BIT_LOADING_SYNC = 2;
     private static final int REQUEST_DO_ANIMATION = 1;
 
     private ThumbnailView mThumbnailView;
@@ -41,7 +51,9 @@ public class ThumbnailSetPage extends PageState implements EyePosition.EyePositi
     private LetoolActionBar mActionBar;
     private ThumbnailSetRenderer mThumbnailViewRenderer;
 
-    private ThumbnailSetAdapter mThumbnailSetAdapter;
+    private SelectionManager mSelectionManager;
+    private ThumbnailSetDataLoader mThumbnailSetAdapter;
+    private MediaSet mMediaSet;
 
     private DetailsHelper mDetailsHelper;
     private MyDetailsSource mDetailsSource;
@@ -52,6 +64,10 @@ public class ThumbnailSetPage extends PageState implements EyePosition.EyePositi
     private float mX;
     private float mY;
     private float mZ;
+
+    private int mLoadingBits = 0;
+    private Button mCameraButton;
+    private boolean mShowedEmptyToastForSelf = false;
 
     private final GLBaseView mRootPane = new GLBaseView() {
 
@@ -83,12 +99,52 @@ public class ThumbnailSetPage extends PageState implements EyePosition.EyePositi
         }
     };
 
-    private void initializeViews() {
-        mConfig = ViewConfigs.AlbumSetPage.get(mActivity);
-        mThumbnailView = new ThumbnailView(mActivity, new ThumbnailContractLayout(mConfig.albumSetSpec));
-        mThumbnailViewRenderer = new ThumbnailSetRenderer(mActivity, mThumbnailView);
-        mThumbnailView.setThumbnailRenderer(mThumbnailViewRenderer);
-        mRootPane.addComponent(mThumbnailView);
+    private class MyLoadingListener implements LoadingListener {
+        @Override
+        public void onLoadingStarted() {
+            setLoadingBit(BIT_LOADING_RELOAD);
+        }
+
+        @Override
+        public void onLoadingFinished(boolean loadingFailed) {
+            clearLoadingBit(BIT_LOADING_RELOAD);
+        }
+    }
+
+    private void setLoadingBit(int loadingBit) {
+        mLoadingBits |= loadingBit;
+    }
+
+    private void clearLoadingBit(int loadingBit) {
+        mLoadingBits &= ~loadingBit;
+        if (mLoadingBits == 0 && mIsActive) {
+            if (mThumbnailSetAdapter.size() == 0) {
+                // If this is not the top of the gallery folder hierarchy,
+                // tell the parent AlbumSetPage instance to handle displaying
+                // the empty album toast, otherwise show it within this
+                // instance
+                if (mActivity.getPageManager().getStateCount() > 1) {
+                    Intent result = new Intent();
+                    result.putExtra(KEY_EMPTY_ALBUM, true);
+                    setStateResult(Activity.RESULT_OK, result);
+                    mActivity.getPageManager().finishState(this);
+                } else {
+                    mShowedEmptyToastForSelf = true;
+                    showEmptyAlbumToast(Toast.LENGTH_LONG);
+                    mThumbnailView.invalidate();
+                    showCameraButton();
+                }
+                return;
+            }
+        }
+        // Hide the empty album toast if we are in the root instance of
+        // AlbumSetPage and the album is no longer empty (for instance,
+        // after a sync is completed and web albums have been synced)
+        if (mShowedEmptyToastForSelf) {
+            mShowedEmptyToastForSelf = false;
+            hideEmptyAlbumToast();
+            hideCameraButton();
+        }
     }
 
     private void showEmptyAlbumToast(int toastLength) {
@@ -105,10 +161,84 @@ public class ThumbnailSetPage extends PageState implements EyePosition.EyePositi
         toast.show();
     }
 
+    private void hideEmptyAlbumToast() {
+        if (mEmptyAlbumToast != null) {
+            Toast toast = mEmptyAlbumToast.get();
+            if (toast != null)
+                toast.cancel();
+        }
+    }
+
+    private boolean setupCameraButton() {
+        if (!LetoolUtils.isCameraAvailable(mActivity))
+            return false;
+        RelativeLayout galleryRoot = (RelativeLayout) ((Activity) mActivity).findViewById(R.id.gallery_root);
+        if (galleryRoot == null)
+            return false;
+
+        mCameraButton = new Button(mActivity);
+        mCameraButton.setText(R.string.camera_label);
+        mCameraButton.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.frame_overlay_gallery_camera, 0, 0);
+        mCameraButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View arg0) {LetoolUtils.startCameraActivity(mActivity);
+            }
+        });
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        lp.addRule(RelativeLayout.CENTER_IN_PARENT);
+        galleryRoot.addView(mCameraButton, lp);
+        return true;
+    }
+
+    private void cleanupCameraButton() {
+        if (mCameraButton == null)
+            return;
+        RelativeLayout galleryRoot = (RelativeLayout) ((Activity) mActivity)
+                .findViewById(R.id.gallery_root);
+        if (galleryRoot == null)
+            return;
+        galleryRoot.removeView(mCameraButton);
+        mCameraButton = null;
+    }
+
+    private void showCameraButton() {
+        if (mCameraButton == null && !setupCameraButton())
+            return;
+        mCameraButton.setVisibility(View.VISIBLE);
+    }
+
+    private void hideCameraButton() {
+        if (mCameraButton == null)
+            return;
+        mCameraButton.setVisibility(View.GONE);
+    }
+
+    private void initializeViews() {
+        mConfig = ViewConfigs.AlbumSetPage.get(mActivity);
+        ThumbnailLayout layout = new ThumbnailContractLayout(mConfig.albumSetSpec);
+        mThumbnailView = new ThumbnailView(mActivity, layout);
+        mThumbnailViewRenderer = new ThumbnailSetRenderer(mActivity, mThumbnailView);
+        layout.setRenderer(mThumbnailViewRenderer);
+        mThumbnailView.setThumbnailRenderer(mThumbnailViewRenderer);
+        mRootPane.addComponent(mThumbnailView);
+    }
+
+    private void initializeData(Bundle data) {
+        String mediaPath = data.getString(DataManager.KEY_MEDIA_PATH);
+        mMediaSet = mActivity.getDataManager().getMediaSet(mediaPath, -1000);
+        //mSelectionManager.setSourceMediaSet(mMediaSet);
+        mThumbnailSetAdapter = new ThumbnailSetDataLoader(mActivity, mMediaSet, DATA_CACHE_SIZE);
+        mThumbnailSetAdapter.setLoadingListener(new MyLoadingListener());
+        mThumbnailViewRenderer.setModel(mThumbnailSetAdapter);
+    }
+
     @Override
     public void onCreate(Bundle data, Bundle restoreState) {
         super.onCreate(data, restoreState);
         initializeViews();
+        initializeData(data);
         mActionBar = mActivity.getLetoolActionBar();
         mEyePosition = new EyePosition(mActivity.getAndroidContext(), this);
     }
@@ -123,6 +253,7 @@ public class ThumbnailSetPage extends PageState implements EyePosition.EyePositi
         super.onResume();
         mIsActive = true;
         setContentPane(mRootPane);
+        mThumbnailSetAdapter.resume();
         mThumbnailViewRenderer.resume();
         mEyePosition.resume();
     }
@@ -131,6 +262,7 @@ public class ThumbnailSetPage extends PageState implements EyePosition.EyePositi
     public void onPause() {
         super.onPause();
         mIsActive = false;
+        mThumbnailSetAdapter.pause();
         mThumbnailViewRenderer.pause();
         mEyePosition.pause();
     }
@@ -139,14 +271,13 @@ public class ThumbnailSetPage extends PageState implements EyePosition.EyePositi
     protected boolean onItemSelected(MenuItem item) {
         Activity activity = mActivity;
         switch (item.getItemId()) {
-/*            case R.id.action_cancel:
-                activity.setResult(Activity.RESULT_CANCELED);
-                activity.finish();
-                return true;
-            case R.id.action_select:
-                mSelectionManager.setAutoLeaveSelectionMode(false);
-                mSelectionManager.enterSelectionMode();
-                return true;*/
+        /*
+         * case R.id.action_cancel:
+         * activity.setResult(Activity.RESULT_CANCELED); activity.finish();
+         * return true; case R.id.action_select:
+         * mSelectionManager.setAutoLeaveSelectionMode(false);
+         * mSelectionManager.enterSelectionMode(); return true;
+         */
             case R.id.action_details:
                 if (mThumbnailSetAdapter.size() != 0) {
                     if (mShowDetails) {
@@ -158,21 +289,19 @@ public class ThumbnailSetPage extends PageState implements EyePosition.EyePositi
                     Toast.makeText(activity, activity.getText(R.string.no_albums_alert), Toast.LENGTH_SHORT).show();
                 }
                 return true;
-/*            case R.id.action_camera: {
-                LetoolUtils.startCameraActivity(activity);
-                return true;
-            }
-            case R.id.action_manage_offline: {
-                Bundle data = new Bundle();
-                String mediaPath = mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_ALL);
-                data.putString(ThumbnailSetPage.KEY_MEDIA_PATH, mediaPath);
-                mActivity.getStateManager().startState(ManageCachePage.class, data);
-                return true;
-            }
-            case R.id.action_settings: {
-                activity.startActivity(new Intent(activity, LetoolSettings.class));
-                return true;
-            }*/
+                /*
+                 * case R.id.action_camera: {
+                 * LetoolUtils.startCameraActivity(activity); return true; }
+                 * case R.id.action_manage_offline: { Bundle data = new
+                 * Bundle(); String mediaPath =
+                 * mActivity.getDataManager().getTopSetPath
+                 * (DataManager.INCLUDE_ALL);
+                 * data.putString(ThumbnailSetPage.KEY_MEDIA_PATH, mediaPath);
+                 * mActivity.getPageManager().startState(ManageCachePage.class,
+                 * data); return true; } case R.id.action_settings: {
+                 * activity.startActivity(new Intent(activity,
+                 * LetoolSettings.class)); return true; }
+                 */
             default:
                 return false;
         }
@@ -236,20 +365,20 @@ public class ThumbnailSetPage extends PageState implements EyePosition.EyePositi
 
         @Override
         public int setIndex() {
-            Path id = mSelectionManager.getSelected(false).get(0);
-            mIndex = mThumbnailSetAdapter.findSet(id);
+            //            Path id = mSelectionManager.getSelected(false).get(0);
+            //            mIndex = mThumbnailSetAdapter.findSet(id);
             return mIndex;
         }
 
         @Override
         public MediaDetails getDetails() {
-            MediaObject item = mThumbnailSetAdapter.getMediaSet(mIndex);
-            if (item != null) {
-                mThumbnailViewRenderer.setHighlightItemPath(item.getPath());
-                return item.getDetails();
-            } else {
-                return null;
-            }
+            //            MediaObject item = mThumbnailSetAdapter.getMediaSet(mIndex);
+            //            if (item != null) {
+            //                mThumbnailViewRenderer.setHighlightItemPath(item.getPath());
+            //                return item.getDetails();
+            //            } else {
+            return null;
+            //            }
         }
     }
 }

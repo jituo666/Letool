@@ -1,7 +1,7 @@
 package com.xjt.letool.pages;
 
-import com.xjt.letool.LetoolBaseActivity;
 import com.xjt.letool.R;
+import com.xjt.letool.activities.LetoolBaseActivity;
 import com.xjt.letool.anims.StateTransAnim;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.utils.LetoolUtils;

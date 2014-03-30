@@ -2,7 +2,6 @@ package com.xjt.letool.pages;
 
 import java.util.Stack;
 
-import com.xjt.letool.LetoolBaseActivity;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.utils.UsageStatistics;
 import com.xjt.letool.utils.Utils;
@@ -14,6 +13,8 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.xjt.letool.activities.LetoolBaseActivity;
 import com.xjt.letool.anims.StateTransAnim;
 
 public class PageManager {

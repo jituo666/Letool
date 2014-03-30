@@ -1,7 +1,7 @@
 package com.xjt.letool.views;
 
-import com.xjt.letool.LetoolBaseActivity;
 import com.xjt.letool.SynchronizedHandler;
+import com.xjt.letool.activities.LetoolBaseActivity;
 import com.xjt.letool.anims.AnimationTime;
 import com.xjt.letool.anims.ThumbnailRisingAnim;
 import com.xjt.letool.anims.ThumbnailScatteringAnim;
@@ -50,7 +50,7 @@ public class ThumbnailView extends GLBaseView {
     private SynchronizedHandler mHandler;
     private Listener mListener;
     private ThumbnailLayout mLayout;
-    private Render mRenderer;
+    private Renderer mRenderer;
 
     //////////////////////////////////////////////////////////////Animations////////////////////////////////////////////////////////////////////
 
@@ -227,7 +227,7 @@ public class ThumbnailView extends GLBaseView {
 
     ////////////////////////////////////////////////////////////////Render/////////////////////////////////////////////////////////////////
 
-    public static interface Render {
+    public static interface Renderer {
         public void prepareDrawing();
 
         public void onVisibleRangeChanged(int visibleStart, int visibleEnd);
@@ -237,7 +237,7 @@ public class ThumbnailView extends GLBaseView {
         public int renderThumbnail(GLESCanvas canvas, int index, int pass, int width, int height);
     }
 
-    public void setThumbnailRenderer(Render render) {
+    public void setThumbnailRenderer(Renderer render) {
         mRenderer = render;
         if (mRenderer != null) {
             mRenderer.onThumbnailSizeChanged(mLayout.getThumbnailWidth(), mLayout.getThumbnailHeight());

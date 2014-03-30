@@ -11,13 +11,13 @@ import com.xjt.letool.opengl.NinePatchTexture;
 import com.xjt.letool.opengl.Texture;
 import com.xjt.letool.views.ThumbnailView;
 
-public abstract class AbstractThumbnailSRender implements ThumbnailView.Render {
+public abstract class AbstractThumbnailRender implements ThumbnailView.Renderer {
 
     private FadeOutTexture mFramePressedUp;
     private final NinePatchTexture mFramePressed;
     private final NinePatchTexture mFrameSelected;
 
-    protected AbstractThumbnailSRender(Context context) {
+    protected AbstractThumbnailRender(Context context) {
         mFramePressed = new NinePatchTexture(context, R.drawable.grid_pressed);
         mFrameSelected = new NinePatchTexture(context, R.drawable.grid_selected);
     }

@@ -1,11 +1,13 @@
 
-package com.xjt.letool;
+package com.xjt.letool.activities;
 
+import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
+import com.xjt.letool.data.DataManager;
 import com.xjt.letool.pages.ThumbnailSetPage;
 import com.xjt.letool.utils.Utils;
 
-import android.os.Bundle;
+import android.os.Bundle;   
 import android.content.Intent;
 import android.view.Menu;
 import android.view.Window;
@@ -66,7 +68,7 @@ public class LetoolMainActivity extends LetoolBaseActivity {
 
     public void startDefaultPage() {
         Bundle data = new Bundle();
-        //        data.putString(AlbumSetPage.KEY_MEDIA_PATH,getDataManager().getTopSetPath(DataManager.INCLUDE_ALL));
+        data.putString(DataManager.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
         getPageManager().startState(ThumbnailSetPage.class, data);
     }
 

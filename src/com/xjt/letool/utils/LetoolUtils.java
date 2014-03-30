@@ -25,13 +25,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import com.xjt.letool.DataManager;
-import com.xjt.letool.LetoolBaseActivity;
 import com.xjt.letool.R;
 import com.xjt.letool.ThreadPool.CancelListener;
 import com.xjt.letool.ThreadPool.JobContext;
+import com.xjt.letool.activities.LetoolBaseActivity;
 import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.common.PackagesMonitor;
+import com.xjt.letool.data.DataManager;
 
 public class LetoolUtils {
     private static final String TAG = "GalleryUtils";

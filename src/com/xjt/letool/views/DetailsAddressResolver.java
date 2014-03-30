@@ -7,12 +7,11 @@ import android.os.Looper;
 
 import com.xjt.letool.Future;
 import com.xjt.letool.FutureListener;
-import com.xjt.letool.LetoolBaseActivity;
 import com.xjt.letool.ThreadPool.Job;
 import com.xjt.letool.ThreadPool.JobContext;
-import com.xjt.letool.datas.MediaDetails;
+import com.xjt.letool.activities.LetoolBaseActivity;
+import com.xjt.letool.data.MediaDetails;
 import com.xjt.letool.utils.LetoolUtils;
-import com.xjt.letool.utils.ReverseGeocoder;
 
 public class DetailsAddressResolver {
     private AddressResolvingListener mListener;
@@ -29,8 +28,9 @@ public class DetailsAddressResolver {
 
         @Override
         public Address run(JobContext jc) {
-            ReverseGeocoder geocoder = new ReverseGeocoder(mContext.getAndroidContext());
-            return geocoder.lookupAddress(mLatlng[0], mLatlng[1], true);
+//            ReverseGeocoder geocoder = new ReverseGeocoder(mContext.getAndroidContext());
+//            return geocoder.lookupAddress(mLatlng[0], mLatlng[1], true);
+            return null;
         }
     }
 
