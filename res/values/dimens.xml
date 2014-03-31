@@ -101,11 +101,11 @@
 
     <bool name="albumset_label_overLay">false</bool>
 
-    <dimen name="albumset_thumbnail_gap">7dp</dimen>
-    <dimen name="albumset_padding_left">7dp</dimen>
-    <dimen name="albumset_padding_top">7dp</dimen>
-    <dimen name="albumset_padding_bottom">7dp</dimen>
-    <dimen name="albumset_padding_right">7dp</dimen>
+    <dimen name="albumset_thumbnail_gap">4dp</dimen>
+    <dimen name="albumset_padding_left">4dp</dimen>
+    <dimen name="albumset_padding_top">4dp</dimen>
+    <dimen name="albumset_padding_bottom">4dp</dimen>
+    <dimen name="albumset_padding_right">4dp</dimen>
     <dimen name="albumset_label_background_height">30dp</dimen>
     <dimen name="albumset_title_offset">10dp</dimen>
     <dimen name="albumset_count_offset">10dp</dimen>
@@ -116,9 +116,8 @@
     <dimen name="albumset_icon_size">25dp</dimen>
 
     <!-- configuration for album page -->
-    <integer name="album_rows_land">2</integer>
-    <integer name="album_rows_port">4</integer>
-
+    <integer name="album_rows_land">3</integer>
+    <integer name="album_rows_port">5</integer>
     <dimen name="album_thumbnail_gap">5dp</dimen>
 
     <!-- configuration for manage page -->

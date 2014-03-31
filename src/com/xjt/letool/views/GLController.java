@@ -1,6 +1,6 @@
 package com.xjt.letool.views;
 
-import com.xjt.letool.anims.CanvasAnim;
+import com.xjt.letool.animations.CanvasAnim;
 import com.xjt.letool.common.OrientationSource;
 import com.xjt.letool.opengl.GLESCanvas;
 

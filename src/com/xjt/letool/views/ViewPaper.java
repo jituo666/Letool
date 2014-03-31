@@ -1,6 +1,6 @@
 package com.xjt.letool.views;
 
-import com.xjt.letool.anims.AnimationTime;
+import com.xjt.letool.animations.AnimationTime;
 import com.xjt.letool.utils.Utils;
 import com.xjt.letool.views.layout.ThumbnailLayout;
 

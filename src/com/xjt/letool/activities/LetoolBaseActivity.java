@@ -11,6 +11,8 @@ import com.xjt.letool.TransitionStore;
 import com.xjt.letool.BatchService.LocalBinder;
 import com.xjt.letool.R.id;
 import com.xjt.letool.data.DataManager;
+import com.xjt.letool.data.MediaItem;
+import com.xjt.letool.data.utils.LetoolBitmapPool;
 import com.xjt.letool.pages.PageManager;
 import com.xjt.letool.views.GLController;
 import com.xjt.letool.views.GLRootView;
@@ -161,8 +163,8 @@ public class LetoolBaseActivity extends Activity implements LetoolContext {
         } finally {
             mGLRootView.unlockRenderThread();
         }
-        //        GalleryBitmapPool.getInstance().clear();
-        //        MediaItem.getBytesBufferPool().clear();
+        LetoolBitmapPool.getInstance().clear();
+        MediaItem.getBytesBufferPool().clear();
     }
 
     @Override

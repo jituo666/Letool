@@ -210,7 +210,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
     @Override
     public void onThumbnailSizeChanged(int width, int height) {
         if (mDataWindow != null) {
-            mDataWindow.onSlotSizeChanged(width, height);
+            mDataWindow.onThumbnailSizeChanged(width, height);
         }
     }
 

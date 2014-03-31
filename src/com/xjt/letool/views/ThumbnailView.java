@@ -2,10 +2,10 @@ package com.xjt.letool.views;
 
 import com.xjt.letool.SynchronizedHandler;
 import com.xjt.letool.activities.LetoolBaseActivity;
-import com.xjt.letool.anims.AnimationTime;
-import com.xjt.letool.anims.ThumbnailRisingAnim;
-import com.xjt.letool.anims.ThumbnailScatteringAnim;
-import com.xjt.letool.anims.ThumbnailAnim;
+import com.xjt.letool.animations.AnimationTime;
+import com.xjt.letool.animations.ThumbnailAnim;
+import com.xjt.letool.animations.ThumbnailRisingAnim;
+import com.xjt.letool.animations.ThumbnailScatteringAnim;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.opengl.GLESCanvas;
 import com.xjt.letool.utils.RelativePosition;
@@ -21,11 +21,7 @@ import android.view.MotionEvent;
  * @Date 2:50:38 PM Mar 25, 2014
  * @Comments:null
  */
-/**
- * @Author Jituo.Xuan
- * @Date 2:50:42 PM Mar 25, 2014
- * @Comments:null
- */
+
 public class ThumbnailView extends GLBaseView {
 
     private static final String TAG = "ThumbnailView";
@@ -38,9 +34,9 @@ public class ThumbnailView extends GLBaseView {
     public static final int RENDER_MORE_FRAME = 2;
 
     private int mStartIndex = ThumbnailLayout.INDEX_NONE;
-    // to prevent allocating memory
+
     private ThumbnailAnim mAnimation = null;
-    private final Rect mTempRect = new Rect();
+    private final Rect mTempRect = new Rect(); // to prevent allocating memory
     private boolean mDownInScrolling;
     private int mOverscrollEffect = OVERSCROLL_SYSTEM;
     private ViewScrollerHelper mScroller;
@@ -255,11 +251,8 @@ public class ThumbnailView extends GLBaseView {
         boolean more = mScroller.advanceAnimation(animTime);
         more |= mLayout.advanceAnimation(animTime);
         updateScrollPosition(mScroller.getPosition(), false);
-
         boolean paperActive = isPaperAcitivate();
-
         more |= paperActive;
-
         if (mAnimation != null) {
             more |= mAnimation.calculate(animTime);
         }
@@ -340,7 +333,12 @@ public class ThumbnailView extends GLBaseView {
         }
     }
 
-    // Return true if the layout parameters have been changed
+
+    /**
+     * Return true if the layout parameters have been changed
+     * @param thumbnailCount
+     * @return
+     */
     public boolean setThumbnailCount(int thumbnailCount) {
         boolean changed = mLayout.setThumbnailCount(thumbnailCount);
         // mStartIndex is applied the first time setSlotCount is called.

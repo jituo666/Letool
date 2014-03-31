@@ -2,7 +2,7 @@ package com.xjt.letool.views.layout;
 
 import android.graphics.Rect;
 
-import com.xjt.letool.anims.Animation;
+import com.xjt.letool.animations.Animation;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.views.ThumbnailView;
 import com.xjt.letool.views.ThumbnailView.Renderer;
@@ -68,10 +68,10 @@ public abstract class ThumbnailLayout {
         //LLog.i(TAG, " mThumbnailCount:" + mThumbnailCount + " thumbnailCount:" + thumbnailCount);
         if (thumbnailCount == mThumbnailCount)
             return false;
-        if (mThumbnailCount != 0) {
+        //if (mThumbnailCount != 0) {
             mHorizontalPadding.setEnabled(true);
             mVerticalPadding.setEnabled(true);
-        }
+        //}
         mThumbnailCount = thumbnailCount;
         int hPadding = mHorizontalPadding.getTarget();
         int vPadding = mVerticalPadding.getTarget();

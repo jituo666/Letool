@@ -2,9 +2,9 @@ package com.xjt.letool.views;
 
 import java.util.ArrayList;
 
-import com.xjt.letool.anims.AnimationTime;
-import com.xjt.letool.anims.CanvasAnim;
-import com.xjt.letool.anims.StateTransAnim;
+import com.xjt.letool.animations.AnimationTime;
+import com.xjt.letool.animations.CanvasAnim;
+import com.xjt.letool.animations.StateTransAnim;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.opengl.GLESCanvas;
 import com.xjt.letool.utils.Utils;

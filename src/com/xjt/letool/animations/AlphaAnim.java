@@ -1,4 +1,4 @@
-package com.xjt.letool.anims;
+package com.xjt.letool.animations;
 
 import com.xjt.letool.opengl.GLESCanvas;
 import com.xjt.letool.utils.Utils;

@@ -15,7 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.xjt.letool.activities.LetoolBaseActivity;
-import com.xjt.letool.anims.StateTransAnim;
+import com.xjt.letool.animations.StateTransAnim;
 
 public class PageManager {
     @SuppressWarnings("unused")

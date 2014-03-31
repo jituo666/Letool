@@ -311,8 +311,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         }
 
         // add background textures
-        int range = Math.max(
-                (mContentEnd - mActiveEnd), (mActiveStart - mContentStart));
+        int range = Math.max((mContentEnd - mActiveEnd), (mActiveStart - mContentStart));
         for (int i = 0; i < range; ++i) {
             uploadBackgroundTextureInSlot(mActiveEnd + i);
             uploadBackgroundTextureInSlot(mActiveStart - i - 1);
@@ -346,8 +345,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
     @Override
     public void onContentChanged(int index) {
         if (!mIsActive) {
-            // paused, ignore thumbnail changed event
-            return;
+            return; // paused, ignore thumbnail changed event
         }
 
         // If the updated content is not cached, ignore it
@@ -367,8 +365,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
 
     public BitmapTexture getLoadingTexture() {
         if (mLoadingLabel == null) {
-            Bitmap bitmap = mLabelMaker.requestLabel(mLoadingText, "", DataSourceType.TYPE_NOT_CATEGORIZED)
-                    .run(ThreadPool.JOB_CONTEXT_STUB);
+            Bitmap bitmap = mLabelMaker.requestLabel(mLoadingText, "", DataSourceType.TYPE_NOT_CATEGORIZED).run(ThreadPool.JOB_CONTEXT_STUB);
             mLoadingLabel = new BitmapTexture(bitmap);
             mLoadingLabel.setOpaque(false);
         }
@@ -502,7 +499,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         }
     }
 
-    public void onSlotSizeChanged(int width, int height) {
+    public void onThumbnailSizeChanged(int width, int height) {
         if (mSlotWidth == width) return;
 
         mSlotWidth = width;

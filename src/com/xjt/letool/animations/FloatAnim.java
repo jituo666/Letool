@@ -1,4 +1,4 @@
-package com.xjt.letool.anims;
+package com.xjt.letool.animations;
 
 public class FloatAnim extends Animation {
 
