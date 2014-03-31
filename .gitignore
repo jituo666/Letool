@@ -1,8 +1,9 @@
-
+bin/
 gen/
 out/
 .classpath
 .project
-.settings/
-bin/
+.settings/*
+
+local.properties
 
