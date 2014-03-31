@@ -146,12 +146,12 @@ public class ThumbnailSetDataLoader {
         return -1;
     }
 
-    private void clearSlot(int slotIndex) {
-        mData[slotIndex] = null;
-        mCoverItem[slotIndex] = null;
-        mTotalCount[slotIndex] = 0;
-        mItemVersion[slotIndex] = MediaObject.INVALID_DATA_VERSION;
-        mSetVersion[slotIndex] = MediaObject.INVALID_DATA_VERSION;
+    private void clearSlot(int thumbnailIndex) {
+        mData[thumbnailIndex] = null;
+        mCoverItem[thumbnailIndex] = null;
+        mTotalCount[thumbnailIndex] = 0;
+        mItemVersion[thumbnailIndex] = MediaObject.INVALID_DATA_VERSION;
+        mSetVersion[thumbnailIndex] = MediaObject.INVALID_DATA_VERSION;
     }
 
     private void setContentWindow(int contentStart, int contentEnd) {

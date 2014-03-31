@@ -1,7 +1,7 @@
 package com.xjt.letool.common;
 
 public class LLog {
-    private static final String TAG = "letooltag";
+    private static final String TAG = "letooltag:";
 
     public static int v(String tag, String msg) {
         tag = TAG + tag;

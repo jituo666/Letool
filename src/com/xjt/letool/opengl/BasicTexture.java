@@ -1,9 +1,8 @@
 package com.xjt.letool.opengl;
 
-import android.util.Log;
-
 import java.util.WeakHashMap;
 
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.utils.Utils;
 
 // BasicTexture is a Texture corresponds to a real GL texture.
@@ -65,7 +64,7 @@ public abstract class BasicTexture implements Texture {
         mTextureWidth = width > 0 ? Utils.nextPowerOf2(width) : 0;
         mTextureHeight = height > 0 ? Utils.nextPowerOf2(height) : 0;
         if (mTextureWidth > MAX_TEXTURE_SIZE || mTextureHeight > MAX_TEXTURE_SIZE) {
-            Log.w(TAG, String.format("texture is too large: %d x %d",
+            LLog.w(TAG, String.format("texture is too large: %d x %d",
                     mTextureWidth, mTextureHeight), new Exception());
         }
     }

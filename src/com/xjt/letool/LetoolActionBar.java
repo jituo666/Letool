@@ -279,7 +279,7 @@ public class LetoolActionBar implements OnNavigationListener {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Need to lock rendering when operations invoked by system UI (main thread) are
-                // modifying slot data used in GL thread for rendering.
+                // modifying thumbnail data used in GL thread for rendering.
                 mActivity.getGLController().lockRenderThread();
                 try {
                     clusterRunner.doCluster(actions.get(which).intValue());
@@ -355,7 +355,7 @@ public class LetoolActionBar implements OnNavigationListener {
         if (itemPosition != mCurrentIndex && mClusterRunner != null
                 || mAlbumModeListener != null) {
             // Need to lock rendering when operations invoked by system UI (main thread) are
-            // modifying slot data used in GL thread for rendering.
+            // modifying thumbnail data used in GL thread for rendering.
             mActivity.getGLController().lockRenderThread();
             try {
                 if (mAlbumModeListener != null) {

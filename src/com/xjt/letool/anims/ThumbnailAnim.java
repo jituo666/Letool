@@ -18,5 +18,5 @@ public abstract class ThumbnailAnim extends Animation {
         mProgress = progress;
     }
 
-    abstract public void apply(GLESCanvas canvas, int slotIndex, Rect target);
+    abstract public void apply(GLESCanvas canvas, int thumbnailIndex, Rect target);
 }

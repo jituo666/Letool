@@ -1,5 +1,7 @@
 package com.xjt.letool.anims;
 
+import com.xjt.letool.common.LLog;
+
 import android.os.SystemClock;
 
 //
@@ -9,10 +11,13 @@ import android.os.SystemClock;
 // as a approximation.
 //
 public class AnimationTime {
+    private static final String TAG = "AnimationTime";
+
     private static volatile long sTime;
 
     // Sets current time as the animation time.
     public static void update() {
+
         sTime = SystemClock.uptimeMillis();
     }
 

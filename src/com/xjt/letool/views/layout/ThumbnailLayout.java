@@ -3,6 +3,7 @@ package com.xjt.letool.views.layout;
 import android.graphics.Rect;
 
 import com.xjt.letool.anims.Animation;
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.views.ThumbnailView;
 import com.xjt.letool.views.ThumbnailView.Renderer;
 
@@ -62,14 +63,16 @@ public abstract class ThumbnailLayout {
     public void setRenderer(ThumbnailView.Renderer render) {
         mRenderer = render;
     }
-    public boolean setThumbnailCount(int slotCount) {
-        if (slotCount == mThumbnailCount)
+
+    public boolean setThumbnailCount(int thumbnailCount) {
+        //LLog.i(TAG, " mThumbnailCount:" + mThumbnailCount + " thumbnailCount:" + thumbnailCount);
+        if (thumbnailCount == mThumbnailCount)
             return false;
         if (mThumbnailCount != 0) {
             mHorizontalPadding.setEnabled(true);
             mVerticalPadding.setEnabled(true);
         }
-        mThumbnailCount = slotCount;
+        mThumbnailCount = thumbnailCount;
         int hPadding = mHorizontalPadding.getTarget();
         int vPadding = mVerticalPadding.getTarget();
         initThumbnailParameters();
@@ -114,7 +117,8 @@ public abstract class ThumbnailLayout {
 
     public boolean advanceAnimation(long animTime) {
         // use '|' to make sure both sides will be executed
-        return mVerticalPadding.calculate(animTime) | mHorizontalPadding.calculate(animTime);
+        boolean anim = mVerticalPadding.calculate(animTime) | mHorizontalPadding.calculate(animTime);
+        return anim;
     }
 
     public static class IntegerAnimation extends Animation {

@@ -1,12 +1,12 @@
 package com.xjt.letool.exif;
 
-import android.util.Log;
-
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import com.xjt.letool.common.LLog;
 
 /**
  * This class stores the EXIF header in IFDs according to the JPEG
@@ -227,7 +227,7 @@ class ExifData {
                 return null;
             }
         } catch (UnsupportedEncodingException e) {
-            Log.w(TAG, "Failed to decode the user comment");
+            LLog.w(TAG, "Failed to decode the user comment");
             return null;
         }
     }

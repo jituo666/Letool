@@ -106,19 +106,19 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         mListener = listener;
     }
 
-    public AlbumSetEntry get(int slotIndex) {
-        if (!isActiveSlot(slotIndex)) {
-            Utils.fail("invalid slot: %s outsides (%s, %s)", slotIndex, mActiveStart, mActiveEnd);
+    public AlbumSetEntry get(int thumbnailIndex) {
+        if (!isActiveSlot(thumbnailIndex)) {
+            Utils.fail("invalid thumbnail: %s outsides (%s, %s)", thumbnailIndex, mActiveStart, mActiveEnd);
         }
-        return mData[slotIndex % mData.length];
+        return mData[thumbnailIndex % mData.length];
     }
 
     public int size() {
         return mSize;
     }
 
-    public boolean isActiveSlot(int slotIndex) {
-        return slotIndex >= mActiveStart && slotIndex < mActiveEnd;
+    public boolean isActiveSlot(int thumbnailIndex) {
+        return thumbnailIndex >= mActiveStart && thumbnailIndex < mActiveEnd;
     }
 
     private void setContentWindow(int contentStart, int contentEnd) {
@@ -153,7 +153,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
     }
 
     public void setActiveWindow(int start, int end) {
-        LLog.i(TAG, "--------------------------start:" + start + " end :" + end);
+        //LLog.i(TAG, "tart:" + start + " end :" + end);
         if (!(start <= end && end - start <= mData.length && end <= mSize)) {
             Utils.fail("start = %s, end = %s, length = %s, size = %s", start, end, mData.length, mSize);
         }
@@ -171,7 +171,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         }
     }
 
-    // We would like to request non active slots in the following order:
+    // We would like to request non active thumbnails in the following order:
     // Order:    8 6 4 2                   1 3 5 7
     //         |---------|---------------|---------|
     //                   |<-  active  ->|
@@ -192,16 +192,16 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         }
     }
 
-    private void requestImagesInSlot(int slotIndex) {
-        if (slotIndex < mContentStart || slotIndex >= mContentEnd) return;
-        AlbumSetEntry entry = mData[slotIndex % mData.length];
+    private void requestImagesInSlot(int thumbnailIndex) {
+        if (thumbnailIndex < mContentStart || thumbnailIndex >= mContentEnd) return;
+        AlbumSetEntry entry = mData[thumbnailIndex % mData.length];
         if (entry.coverLoader != null) entry.coverLoader.startLoad();
         if (entry.labelLoader != null) entry.labelLoader.startLoad();
     }
 
-    private void cancelImagesInSlot(int slotIndex) {
-        if (slotIndex < mContentStart || slotIndex >= mContentEnd) return;
-        AlbumSetEntry entry = mData[slotIndex % mData.length];
+    private void cancelImagesInSlot(int thumbnailIndex) {
+        if (thumbnailIndex < mContentStart || thumbnailIndex >= mContentEnd) return;
+        AlbumSetEntry entry = mData[thumbnailIndex % mData.length];
         if (entry.coverLoader != null) entry.coverLoader.cancelLoad();
         if (entry.labelLoader != null) entry.labelLoader.cancelLoad();
     }
@@ -212,13 +212,13 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
                 : object.getDataVersion();
     }
 
-    private void freeSlotContent(int slotIndex) {
-        AlbumSetEntry entry = mData[slotIndex % mData.length];
+    private void freeSlotContent(int thumbnailIndex) {
+        AlbumSetEntry entry = mData[thumbnailIndex % mData.length];
         if (entry.coverLoader != null) entry.coverLoader.recycle();
         if (entry.labelLoader != null) entry.labelLoader.recycle();
         if (entry.labelTexture != null) entry.labelTexture.recycle();
         if (entry.bitmapTexture != null) entry.bitmapTexture.recycle();
-        mData[slotIndex % mData.length] = null;
+        mData[thumbnailIndex % mData.length] = null;
     }
 
     private boolean isLabelChanged(
@@ -228,10 +228,10 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
                 || entry.sourceType != sourceType;
     }
 
-    private void updateAlbumSetEntry(AlbumSetEntry entry, int slotIndex) {
-        MediaSet album = mSource.getMediaSet(slotIndex);
-        MediaItem cover = mSource.getCoverItem(slotIndex);
-        int totalCount = mSource.getTotalCount(slotIndex);
+    private void updateAlbumSetEntry(AlbumSetEntry entry, int thumbnailIndex) {
+        MediaSet album = mSource.getMediaSet(thumbnailIndex);
+        MediaItem cover = mSource.getCoverItem(thumbnailIndex);
+        int totalCount = mSource.getTotalCount(thumbnailIndex);
 
         entry.album = album;
         entry.setDataVersion = getDataVersion(album);
@@ -251,8 +251,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
                 entry.labelTexture = null;
             }
             if (album != null) {
-                entry.labelLoader = new AlbumLabelLoader(
-                        slotIndex, title, totalCount, sourceType);
+                entry.labelLoader = new AlbumLabelLoader(thumbnailIndex, title, totalCount, sourceType);
             }
         }
 
@@ -267,15 +266,15 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
                 entry.content = null;
             }
             if (cover != null) {
-                entry.coverLoader = new AlbumCoverLoader(slotIndex, cover);
+                entry.coverLoader = new AlbumCoverLoader(thumbnailIndex, cover);
             }
         }
     }
 
-    private void prepareSlotContent(int slotIndex) {
+    private void prepareSlotContent(int thumbnailIndex) {
         AlbumSetEntry entry = new AlbumSetEntry();
-        updateAlbumSetEntry(entry, slotIndex);
-        mData[slotIndex % mData.length] = entry;
+        updateAlbumSetEntry(entry, thumbnailIndex);
+        mData[thumbnailIndex % mData.length] = entry;
     }
 
     private static boolean startLoadBitmap(BitmapLoader loader) {
@@ -347,7 +346,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
     @Override
     public void onContentChanged(int index) {
         if (!mIsActive) {
-            // paused, ignore slot changed event
+            // paused, ignore thumbnail changed event
             return;
         }
 
@@ -403,8 +402,8 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         private MediaItem mMediaItem;
         private final int mSlotIndex;
 
-        public AlbumCoverLoader(int slotIndex, MediaItem item) {
-            mSlotIndex = slotIndex;
+        public AlbumCoverLoader(int thumbnailIndex, MediaItem item) {
+            mSlotIndex = thumbnailIndex;
             mMediaItem = item;
         }
 
@@ -464,9 +463,8 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         private final int mTotalCount;
         private final int mSourceType;
 
-        public AlbumLabelLoader(
-                int slotIndex, String title, int totalCount, int sourceType) {
-            mSlotIndex = slotIndex;
+        public AlbumLabelLoader(int thumbnailIndex, String title, int totalCount, int sourceType) {
+            mSlotIndex = thumbnailIndex;
             mTitle = title;
             mTotalCount = totalCount;
             mSourceType = sourceType;

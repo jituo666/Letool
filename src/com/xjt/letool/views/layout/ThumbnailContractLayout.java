@@ -68,6 +68,7 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
             mVerticalPadding.startAnimateTo(padding[1]);
             mHorizontalPadding.startAnimateTo(padding[0]);
         }
+        LLog.i(TAG, " padding[0]:" + padding[0] + " padding[1]:" + padding[1]);
         updateVisibleThumbnailRange();
     }
 

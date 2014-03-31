@@ -1,9 +1,9 @@
 package com.xjt.letool.exif;
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.io.InputStream;
+
+import com.xjt.letool.common.LLog;
 
 /**
  * This class reads the EXIF header of a JPEG file and stores it in
@@ -57,7 +57,7 @@ class ExifReader {
                     if (buf.length == parser.read(buf)) {
                         exifData.setCompressedThumbnail(buf);
                     } else {
-                        Log.w(TAG, "Failed to read the compressed thumbnail");
+                        LLog.w(TAG, "Failed to read the compressed thumbnail");
                     }
                     break;
                 case ExifParser.EVENT_UNCOMPRESSED_STRIP:
@@ -65,7 +65,7 @@ class ExifReader {
                     if (buf.length == parser.read(buf)) {
                         exifData.setStripBytes(parser.getStripIndex(), buf);
                     } else {
-                        Log.w(TAG, "Failed to read the strip bytes");
+                        LLog.w(TAG, "Failed to read the strip bytes");
                     }
                     break;
             }

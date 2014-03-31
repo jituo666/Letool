@@ -1,7 +1,5 @@
 package com.xjt.letool.exif;
 
-import android.util.Log;
-
 import java.io.BufferedOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
@@ -10,11 +8,13 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 
+import com.xjt.letool.common.LLog;
+
 /**
  * This class provides a way to replace the Exif header of a JPEG image.
  * <p>
  * Below is an example of writing EXIF data into a file
- *
+ * 
  * <pre>
  * public static void writeExif(byte[] jpeg, ExifData exif, String path) {
  *     OutputStream os = null;
@@ -195,7 +195,7 @@ class ExifOutputStream extends FilterOutputStream {
             return;
         }
         if (DEBUG) {
-            Log.v(TAG, "Writing exif data...");
+            LLog.v(TAG, "Writing exif data...");
         }
         ArrayList<ExifTag> nullTags = stripNullValueTags(mExifData);
         createRequiredIfdAndTag();
@@ -226,7 +226,7 @@ class ExifOutputStream extends FilterOutputStream {
 
     private ArrayList<ExifTag> stripNullValueTags(ExifData data) {
         ArrayList<ExifTag> nullTags = new ArrayList<ExifTag>();
-        for(ExifTag t : data.getAllTags()) {
+        for (ExifTag t : data.getAllTags()) {
             if (t.getValue() == null && !ExifInterface.isOffsetTag(t.getTagId())) {
                 data.removeTag(t.getTagId(), t.getIfd());
                 nullTags.add(t);
@@ -271,7 +271,7 @@ class ExifOutputStream extends FilterOutputStream {
             dataOutputStream.writeShort(tag.getDataType());
             dataOutputStream.writeInt(tag.getComponentCount());
             if (DEBUG) {
-                Log.v(TAG, "\n" + tag.toString());
+                LLog.v(TAG, "\n" + tag.toString());
             }
             if (tag.getDataSize() > 4) {
                 dataOutputStream.writeInt(tag.getOffset());

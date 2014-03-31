@@ -12,19 +12,19 @@ import android.os.Build;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Images.ImageColumns;
 import android.provider.MediaStore.MediaColumns;
-import android.util.Log;
 
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.ThreadPool.Job;
 import com.xjt.letool.ThreadPool.JobContext;
 import com.xjt.letool.common.ApiHelper;
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.MediaDetails;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.cache.ImageCacheRequest;
 import com.xjt.letool.data.source.LocalAlbum;
 import com.xjt.letool.data.utils.BitmapUtils;
-import com.xjt.letool.data.utils.DecodeUtils;
+import com.xjt.letool.data.utils.BitmapDecodeUtils;
 import com.xjt.letool.data.utils.UpdateHelper;
 import com.xjt.letool.exif.ExifInterface;
 import com.xjt.letool.exif.ExifTag;
@@ -38,8 +38,7 @@ import java.io.IOException;
 public class LocalImage extends LocalMediaItem {
     private static final String TAG = "LocalImage";
     public static final String ITEM_PATH = "/local/image/item";
-    // Must preserve order between these indices and the order of the terms in
-    // the following PROJECTION array.
+    // Must preserve order between these indices and the order of the terms in the following PROJECTION array.
     private static final int INDEX_ID = 0;
     private static final int INDEX_CAPTION = 1;
     private static final int INDEX_MIME_TYPE = 2;
@@ -182,19 +181,17 @@ public class LocalImage extends LocalMediaItem {
                     exif.readExif(mLocalFilePath);
                     thumbData = exif.getThumbnail();
                 } catch (FileNotFoundException e) {
-                    Log.w(TAG, "failed to find file to read thumbnail: " + mLocalFilePath);
+                    LLog.w(TAG, "failed to find file to read thumbnail: " + mLocalFilePath);
                 } catch (IOException e) {
-                    Log.w(TAG, "failed to get thumbnail from: " + mLocalFilePath);
+                    LLog.w(TAG, "failed to get thumbnail from: " + mLocalFilePath);
                 }
                 if (thumbData != null) {
-                    Bitmap bitmap = DecodeUtils.decodeIfBigEnough(jc, thumbData, options, targetSize);
+                    Bitmap bitmap = BitmapDecodeUtils.decodeIfBigEnough(jc, thumbData, options, targetSize);
                     if (bitmap != null) return bitmap;
                 }
             }
 
-            Bitmap b = DecodeUtils.decodeThumbnail(jc, mLocalFilePath, options, targetSize, type);
-            Log.i(TAG, "onDecodeOriginal mLocalFilePath:" + mLocalFilePath + " b w:" + b.getWidth() + " h:" + b.getHeight());
-            return b;
+            return BitmapDecodeUtils.decodeThumbnail(jc, mLocalFilePath, options, targetSize, type);
         }
     }
 
@@ -212,7 +209,7 @@ public class LocalImage extends LocalMediaItem {
 
         @Override
         public BitmapRegionDecoder run(JobContext jc) {
-            return DecodeUtils.createBitmapRegionDecoder(jc, mLocalFilePath, false);
+            return BitmapDecodeUtils.createBitmapRegionDecoder(jc, mLocalFilePath, false);
         }
     }
 
@@ -263,18 +260,17 @@ public class LocalImage extends LocalMediaItem {
                     fileSize = new File(filePath).length();
                     values.put(Images.Media.SIZE, fileSize);
                 } catch (FileNotFoundException e) {
-                    Log.w(TAG, "cannot find file to set exif: " + filePath);
+                    LLog.w(TAG, "cannot find file to set exif: " + filePath);
                 } catch (IOException e) {
-                    Log.w(TAG, "cannot set exif data: " + filePath);
+                    LLog.w(TAG, "cannot set exif data: " + filePath);
                 }
             } else {
-                Log.w(TAG, "Could not build tag: " + ExifInterface.TAG_ORIENTATION);
+                LLog.w(TAG, "Could not build tag: " + ExifInterface.TAG_ORIENTATION);
             }
         }
 
         values.put(Images.Media.ORIENTATION, rotation);
-        mApplication.getContentResolver().update(baseUri, values, "_id=?",
-                new String[]{String.valueOf(id)});
+        mApplication.getContentResolver().update(baseUri, values, "_id=?", new String[]{String.valueOf(id)});
     }
 
     @Override

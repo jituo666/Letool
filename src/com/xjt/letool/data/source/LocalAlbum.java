@@ -71,7 +71,7 @@ public class LocalAlbum extends MediaSet {
             mProjection = LocalVideo.PROJECTION;
             mItemPath = LocalVideo.ITEM_PATH;
         }
-        LLog.i(TAG, "Create LocalAlbum, bucket id:" + bucketId);
+        //LLog.i(TAG, "Create LocalAlbum, bucket id:" + bucketId);
         mNotifier = new DataNotifier(this, mBaseUri, application);
     }
 

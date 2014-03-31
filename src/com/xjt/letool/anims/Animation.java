@@ -1,5 +1,6 @@
 package com.xjt.letool.anims;
 
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.utils.Utils;
 
 import android.view.animation.Interpolator;

@@ -14,9 +14,9 @@ public class ThumbnailScatteringAnim extends ThumbnailAnim {
     }
 
     @Override
-    public void apply(GLESCanvas canvas, int slotIndex, Rect target) {
+    public void apply(GLESCanvas canvas, int thumbnailIndex, Rect target) {
         canvas.translate((mCenter.getX() - target.centerX()) * (1 - mProgress),
-                (mCenter.getY() - target.centerY()) * (1 - mProgress), slotIndex * PHOTO_DISTANCE * (1 - mProgress));
+                (mCenter.getY() - target.centerY()) * (1 - mProgress), thumbnailIndex * PHOTO_DISTANCE * (1 - mProgress));
         canvas.setAlpha(mProgress);
     }
 }

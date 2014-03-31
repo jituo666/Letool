@@ -7,6 +7,7 @@ import com.xjt.letool.activities.LetoolBaseActivity;
 import com.xjt.letool.adapters.ThumbnailSetDataWindow;
 import com.xjt.letool.adapters.ThumbnailSetDataWindow.AlbumSetEntry;
 import com.xjt.letool.common.AlbumLabelMaker;
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.loader.ThumbnailSetDataLoader;
 import com.xjt.letool.opengl.ColorTexture;
@@ -134,11 +135,12 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
 
     protected int renderContent(GLESCanvas canvas, AlbumSetEntry entry, int width, int height) {
         int renderRequestFlags = 0;
+
         Texture content = checkContentTexture(entry.content);
         if (content == null) {
             content = mWaitLoadingTexture;
             entry.isWaitLoadingDisplayed = true;
-        } else {
+        } else if (entry.isWaitLoadingDisplayed) {
             entry.isWaitLoadingDisplayed = false;
             content = new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
             entry.content = content;

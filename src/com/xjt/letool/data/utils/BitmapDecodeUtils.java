@@ -20,7 +20,7 @@ import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-public class DecodeUtils {
+public class BitmapDecodeUtils {
     private static final String TAG = "DecodeUtils";
 
     private static class DecodeCanceller implements CancelListener {
@@ -45,8 +45,7 @@ public class DecodeUtils {
         if (options == null) options = new Options();
         jc.setCancelListener(new DecodeCanceller(options));
         setOptionsMutable(options);
-        return ensureGLCompatibleBitmap(
-                BitmapFactory.decodeFileDescriptor(fd, null, options));
+        return ensureGLCompatibleBitmap(BitmapFactory.decodeFileDescriptor(fd, null, options));
     }
 
     public static void decodeBounds(JobContext jc, FileDescriptor fd,
@@ -80,12 +79,12 @@ public class DecodeUtils {
         options.inJustDecodeBounds = false;
     }
 
-    public static Bitmap decodeThumbnail(
-            JobContext jc, String filePath, Options options, int targetSize, int type) {
+    public static Bitmap decodeThumbnail(JobContext jc, String filePath, Options options, int targetSize, int type) {
         FileInputStream fis = null;
         try {
             fis = new FileInputStream(filePath);
             FileDescriptor fd = fis.getFD();
+
             return decodeThumbnail(jc, fd, options, targetSize, type);
         } catch (Exception ex) {
             LLog.w(TAG, ex);
@@ -95,8 +94,7 @@ public class DecodeUtils {
         }
     }
 
-    public static Bitmap decodeThumbnail(
-            JobContext jc, FileDescriptor fd, Options options, int targetSize, int type) {
+    public static Bitmap decodeThumbnail(JobContext jc, FileDescriptor fd, Options options, int targetSize, int type) {
         if (options == null) options = new Options();
         jc.setCancelListener(new DecodeCanceller(options));
 
@@ -106,7 +104,6 @@ public class DecodeUtils {
 
         int w = options.outWidth;
         int h = options.outHeight;
-
         if (type == MediaItem.TYPE_MICROTHUMBNAIL) {
             // We center-crop the original image as it's micro thumbnail. In this case,
             // we want to make sure the shorter side >= "targetSize".
@@ -117,8 +114,7 @@ public class DecodeUtils {
             // it for TYPE_MICROTHUMBNAIL. So we add a max number of pixels limit here.
             final int MAX_PIXEL_COUNT = 640000; // 400 x 1600
             if ((w / options.inSampleSize) * (h / options.inSampleSize) > MAX_PIXEL_COUNT) {
-                options.inSampleSize = BitmapUtils.computeSampleSize(
-                        FloatMath.sqrt((float) MAX_PIXEL_COUNT / (w * h)));
+                options.inSampleSize = BitmapUtils.computeSampleSize(FloatMath.sqrt((float) MAX_PIXEL_COUNT / (w * h)));
             }
         } else {
             // For screen nail, we only want to keep the longer side >= targetSize.
@@ -128,7 +124,6 @@ public class DecodeUtils {
 
         options.inJustDecodeBounds = false;
         setOptionsMutable(options);
-
         Bitmap result = BitmapFactory.decodeFileDescriptor(fd, null, options);
         if (result == null) return null;
 
@@ -183,9 +178,7 @@ public class DecodeUtils {
             JobContext jc, byte[] bytes, int offset, int length,
             boolean shareable) {
         if (offset < 0 || length <= 0 || offset + length > bytes.length) {
-            throw new IllegalArgumentException(String.format(
-                    "offset = %s, length = %s, bytes = %s",
-                    offset, length, bytes.length));
+            throw new IllegalArgumentException(String.format("offset = %s, length = %s, bytes = %s", offset, length, bytes.length));
         }
 
         try {
@@ -265,7 +258,7 @@ public class DecodeUtils {
         options.inBitmap = (options.inSampleSize == 1)
                 ? findCachedBitmap(jc, fileDescriptor, options) : null;
         try {
-            Bitmap bitmap = DecodeUtils.decode(jc, fileDescriptor, options);
+            Bitmap bitmap = BitmapDecodeUtils.decode(jc, fileDescriptor, options);
             if (options.inBitmap != null && options.inBitmap != bitmap) {
                 LetoolBitmapPool.getInstance().put(options.inBitmap);
                 options.inBitmap = null;

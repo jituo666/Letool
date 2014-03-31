@@ -1,7 +1,5 @@
 package com.xjt.letool.data.cache;
 
-import android.util.Log;
-
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +9,8 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Arrays;
 import java.util.zip.Adler32;
+
+import com.xjt.letool.common.LLog;
 
 public class BlobCache implements Closeable {
     private static final String TAG = "BlobCache";
@@ -130,17 +130,17 @@ public class BlobCache implements Closeable {
 
             byte[] buf = mIndexHeader;
             if (mIndexFile.read(buf) != INDEX_HEADER_SIZE) {
-                Log.w(TAG, "cannot read header");
+                LLog.w(TAG, "cannot read header");
                 return false;
             }
 
             if (readInt(buf, IH_MAGIC) != MAGIC_INDEX_FILE) {
-                Log.w(TAG, "cannot read header magic");
+                LLog.w(TAG, "cannot read header magic");
                 return false;
             }
 
             if (readInt(buf, IH_VERSION) != mVersion) {
-                Log.w(TAG, "version mismatch");
+                LLog.w(TAG, "version mismatch");
                 return false;
             }
 
@@ -152,53 +152,53 @@ public class BlobCache implements Closeable {
 
             int sum = readInt(buf, IH_CHECKSUM);
             if (checkSum(buf, 0, IH_CHECKSUM) != sum) {
-                Log.w(TAG, "header checksum does not match");
+                LLog.w(TAG, "header checksum does not match");
                 return false;
             }
 
             // Sanity check
             if (mMaxEntries <= 0) {
-                Log.w(TAG, "invalid max entries");
+                LLog.w(TAG, "invalid max entries");
                 return false;
             }
             if (mMaxBytes <= 0) {
-                Log.w(TAG, "invalid max bytes");
+                LLog.w(TAG, "invalid max bytes");
                 return false;
             }
             if (mActiveRegion != 0 && mActiveRegion != 1) {
-                Log.w(TAG, "invalid active region");
+                LLog.w(TAG, "invalid active region");
                 return false;
             }
             if (mActiveEntries < 0 || mActiveEntries > mMaxEntries) {
-                Log.w(TAG, "invalid active entries");
+                LLog.w(TAG, "invalid active entries");
                 return false;
             }
             if (mActiveBytes < DATA_HEADER_SIZE || mActiveBytes > mMaxBytes) {
-                Log.w(TAG, "invalid active bytes");
+                LLog.w(TAG, "invalid active bytes");
                 return false;
             }
             if (mIndexFile.length() !=
                     INDEX_HEADER_SIZE + mMaxEntries * 12 * 2) {
-                Log.w(TAG, "invalid index file length");
+                LLog.w(TAG, "invalid index file length");
                 return false;
             }
 
             // Make sure data file has magic
             byte[] magic = new byte[4];
             if (mDataFile0.read(magic) != 4) {
-                Log.w(TAG, "cannot read data file magic");
+                LLog.w(TAG, "cannot read data file magic");
                 return false;
             }
             if (readInt(magic, 0) != MAGIC_DATA_FILE) {
-                Log.w(TAG, "invalid data file magic");
+                LLog.w(TAG, "invalid data file magic");
                 return false;
             }
             if (mDataFile1.read(magic) != 4) {
-                Log.w(TAG, "cannot read data file magic");
+                LLog.w(TAG, "cannot read data file magic");
                 return false;
             }
             if (readInt(magic, 0) != MAGIC_DATA_FILE) {
-                Log.w(TAG, "invalid data file magic");
+                LLog.w(TAG, "invalid data file magic");
                 return false;
             }
 
@@ -211,7 +211,7 @@ public class BlobCache implements Closeable {
             setActiveVariables();
             return true;
         } catch (IOException ex) {
-            Log.e(TAG, "loadIndex failed.", ex);
+            LLog.e(TAG, "loadIndex failed.", ex);
             return false;
         }
     }
@@ -404,7 +404,7 @@ public class BlobCache implements Closeable {
                     writeInt(mIndexHeader, IH_ACTIVE_ENTRIES, mActiveEntries);
                     updateIndexHeader();
                 } catch (Throwable t) {
-                    Log.e(TAG, "cannot copy over");
+                    LLog.e(TAG, "cannot copy over");
                 }
                 return true;
             }
@@ -427,7 +427,7 @@ public class BlobCache implements Closeable {
         try {
             file.seek(offset);
             if (file.read(header) != BLOB_HEADER_SIZE) {
-                Log.w(TAG, "cannot read blob header");
+                LLog.w(TAG, "cannot read blob header");
                 return false;
             }
             long blobKey = readLong(header, BH_KEY);
@@ -435,18 +435,18 @@ public class BlobCache implements Closeable {
                 return false; // This entry has been cleared.
             }
             if (blobKey != req.key) {
-                Log.w(TAG, "blob key does not match: " + blobKey);
+                LLog.w(TAG, "blob key does not match: " + blobKey);
                 return false;
             }
             int sum = readInt(header, BH_CHECKSUM);
             int blobOffset = readInt(header, BH_OFFSET);
             if (blobOffset != offset) {
-                Log.w(TAG, "blob offset does not match: " + blobOffset);
+                LLog.w(TAG, "blob offset does not match: " + blobOffset);
                 return false;
             }
             int length = readInt(header, BH_LENGTH);
             if (length < 0 || length > mMaxBytes - offset - BLOB_HEADER_SIZE) {
-                Log.w(TAG, "invalid blob length: " + length);
+                LLog.w(TAG, "invalid blob length: " + length);
                 return false;
             }
             if (req.buffer == null || req.buffer.length < length) {
@@ -457,16 +457,16 @@ public class BlobCache implements Closeable {
             req.length = length;
 
             if (file.read(blob, 0, length) != length) {
-                Log.w(TAG, "cannot read blob data");
+                LLog.w(TAG, "cannot read blob data");
                 return false;
             }
             if (checkSum(blob, 0, length) != sum) {
-                Log.w(TAG, "blob checksum does not match: " + sum);
+                LLog.w(TAG, "blob checksum does not match: " + sum);
                 return false;
             }
             return true;
         } catch (Throwable t)  {
-            Log.e(TAG, "getBlob failed.", t);
+            LLog.e(TAG, "getBlob failed.", t);
             return false;
         } finally {
             file.seek(oldPosition);
@@ -502,7 +502,7 @@ public class BlobCache implements Closeable {
                     slot = 0;
                 }
                 if (slot == slotBegin) {
-                    Log.w(TAG, "corrupted index: clear the slot.");
+                    LLog.w(TAG, "corrupted index: clear the slot.");
                     mIndexBuffer.putInt(hashStart + slot * 12 + 8, 0);
                 }
             }
@@ -513,7 +513,7 @@ public class BlobCache implements Closeable {
         try {
             mIndexBuffer.force();
         } catch (Throwable t) {
-            Log.w(TAG, "sync index failed", t);
+            LLog.w(TAG, "sync index failed", t);
         }
     }
 
@@ -522,12 +522,12 @@ public class BlobCache implements Closeable {
         try {
             mDataFile0.getFD().sync();
         } catch (Throwable t) {
-            Log.w(TAG, "sync data file 0 failed", t);
+            LLog.w(TAG, "sync data file 0 failed", t);
         }
         try {
             mDataFile1.getFD().sync();
         } catch (Throwable t) {
-            Log.w(TAG, "sync data file 1 failed", t);
+            LLog.w(TAG, "sync data file 1 failed", t);
         }
     }
 
@@ -546,7 +546,7 @@ public class BlobCache implements Closeable {
         if (count == mActiveEntries) {
             return count;
         } else {
-            Log.e(TAG, "wrong active count: " + mActiveEntries + " vs " + count);
+            LLog.e(TAG, "wrong active count: " + mActiveEntries + " vs " + count);
             return -1;  // signal failure.
         }
     }

@@ -326,7 +326,7 @@ public class ThumbnailView extends GLBaseView {
 
     // Make sure we are still at a resonable scroll position after the size
     // is changed (like orientation change). We choose to keep the center
-    // visible slot still visible. This is arbitrary but reasonable.
+    // visible thumbnail still visible. This is arbitrary but reasonable.
     @Override
     protected void onLayout(boolean changeSize, int l, int t, int r, int b) {
         if (!changeSize)
@@ -341,8 +341,8 @@ public class ThumbnailView extends GLBaseView {
     }
 
     // Return true if the layout parameters have been changed
-    public boolean setThumbnailCount(int slotCount) {
-        boolean changed = mLayout.setThumbnailCount(slotCount);
+    public boolean setThumbnailCount(int thumbnailCount) {
+        boolean changed = mLayout.setThumbnailCount(thumbnailCount);
         // mStartIndex is applied the first time setSlotCount is called.
         if (mStartIndex != ThumbnailLayout.INDEX_NONE) {
             setCenterIndex(mStartIndex);
@@ -370,16 +370,16 @@ public class ThumbnailView extends GLBaseView {
         int visibleBegin = ThumbnailLayout.WIDE ? mScrollX : mScrollY;
         int visibleLength = ThumbnailLayout.WIDE ? getWidth() : getHeight();
         int visibleEnd = visibleBegin + visibleLength;
-        int slotBegin = ThumbnailLayout.WIDE ? rect.left : rect.top;
-        int slotEnd = ThumbnailLayout.WIDE ? rect.right : rect.bottom;
+        int thumbnailBegin = ThumbnailLayout.WIDE ? rect.left : rect.top;
+        int thumbnailEnd = ThumbnailLayout.WIDE ? rect.right : rect.bottom;
 
         int position = visibleBegin;
-        if (visibleLength < slotEnd - slotBegin) {
+        if (visibleLength < thumbnailEnd - thumbnailBegin) {
             position = visibleBegin;
-        } else if (slotBegin < visibleBegin) {
-            position = slotBegin;
-        } else if (slotEnd > visibleEnd) {
-            position = slotEnd - visibleLength;
+        } else if (thumbnailBegin < visibleBegin) {
+            position = thumbnailBegin;
+        } else if (thumbnailEnd > visibleEnd) {
+            position = thumbnailEnd - visibleLength;
         }
         setScrollPosition(position);
     }

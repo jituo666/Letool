@@ -135,10 +135,10 @@ public class ThumbnailDataLoader {
         return mSize;
     }
 
-    private void clearSlot(int slotIndex) {
-        mData[slotIndex] = null;
-        mItemVersion[slotIndex] = MediaObject.INVALID_DATA_VERSION;
-        mSetVersion[slotIndex] = MediaObject.INVALID_DATA_VERSION;
+    private void clearSlot(int Index) {
+        mData[Index] = null;
+        mItemVersion[Index] = MediaObject.INVALID_DATA_VERSION;
+        mSetVersion[Index] = MediaObject.INVALID_DATA_VERSION;
     }
 
     private void setContentWindow(int contentStart, int contentEnd) {

@@ -8,7 +8,6 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.os.Build;
 import android.util.FloatMath;
-import android.util.Log;
 
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.utils.Utils;
@@ -45,8 +44,7 @@ public class BitmapUtils {
      */
     public static int computeSampleSize(int width, int height,
             int minSideLength, int maxNumOfPixels) {
-        int initialSize = computeInitialSampleSize(
-                width, height, minSideLength, maxNumOfPixels);
+        int initialSize = computeInitialSampleSize(width, height, minSideLength, maxNumOfPixels);
 
         return initialSize <= 8
                 ? Utils.nextPowerOf2(initialSize)
@@ -55,11 +53,9 @@ public class BitmapUtils {
 
     private static int computeInitialSampleSize(int w, int h,
             int minSideLength, int maxNumOfPixels) {
-        if (maxNumOfPixels == UNCONSTRAINED
-                && minSideLength == UNCONSTRAINED) return 1;
+        if (maxNumOfPixels == UNCONSTRAINED && minSideLength == UNCONSTRAINED) return 1;
 
-        int lowerBound = (maxNumOfPixels == UNCONSTRAINED) ? 1 :
-                (int) FloatMath.ceil(FloatMath.sqrt((float) (w * h) / maxNumOfPixels));
+        int lowerBound = (maxNumOfPixels == UNCONSTRAINED) ? 1 : (int) FloatMath.ceil(FloatMath.sqrt((float) (w * h) / maxNumOfPixels));
 
         if (minSideLength == UNCONSTRAINED) {
             return lowerBound;
@@ -127,19 +123,11 @@ public class BitmapUtils {
             Bitmap bitmap, int maxLength, boolean recycle) {
         int srcWidth = bitmap.getWidth();
         int srcHeight = bitmap.getHeight();
-        float scale = Math.min(
-                (float) maxLength / srcWidth, (float) maxLength / srcHeight);
+        float scale = Math.min((float) maxLength / srcWidth, (float) maxLength / srcHeight);
         if (scale >= 1.0f) return bitmap;
         return resizeBitmapByScale(bitmap, scale, recycle);
     }
 
-    
-    
-    
-    
-    
-    
-    
     public static Bitmap resizeAndCropCenter(Bitmap bitmap, int size, boolean recycle) {
         int w = bitmap.getWidth();
         int h = bitmap.getHeight();

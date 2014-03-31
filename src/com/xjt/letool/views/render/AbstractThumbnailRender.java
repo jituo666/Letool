@@ -24,7 +24,7 @@ public abstract class AbstractThumbnailRender implements ThumbnailView.Renderer 
 
     protected void drawContent(GLESCanvas canvas, Texture content, int width, int height, int rotation) {
         canvas.save(GLESCanvas.SAVE_FLAG_MATRIX);
-        // The content is always rendered in to the largest square that fits inside the slot, aligned to the top of the slot.
+        // The content is always rendered in to the largest square that fits inside the thumbnail, aligned to the top of the thumbnail.
         width = height = Math.min(width, height);
         if (rotation != 0) {
             canvas.translate(width / 2, height / 2);

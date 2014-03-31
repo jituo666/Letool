@@ -9,7 +9,6 @@ import android.provider.MediaStore.Files.FileColumns;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Images.ImageColumns;
 import android.provider.MediaStore.Video;
-import android.util.Log;
 
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.R;
@@ -17,6 +16,7 @@ import com.xjt.letool.ThreadPool;
 import com.xjt.letool.Future;
 import com.xjt.letool.FutureListener;
 import com.xjt.letool.ThreadPool.JobContext;
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.DataManager;
 import com.xjt.letool.data.DataNotifier;
 import com.xjt.letool.data.MediaObject;
@@ -119,11 +119,11 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
     private BucketEntry[] loadBucketEntries(JobContext jc) {
         Uri uri = mBaseUri;
 
-        Log.v("DebugLoadingTime", "start quering media provider");
+        LLog.v("DebugLoadingTime", "start quering media provider");
         Cursor cursor = mApplication.getContentResolver().query(uri,
                 PROJECTION_BUCKET, BUCKET_GROUP_BY, null, BUCKET_ORDER_BY);
         if (cursor == null) {
-            Log.w(TAG, "cannot open local database: " + uri);
+            LLog.w(TAG, "cannot open local database: " + uri);
             return new BucketEntry[0];
         }
         ArrayList<BucketEntry> buffer = new ArrayList<BucketEntry>();
@@ -147,7 +147,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
                 if (jc.isCancelled())
                     return null;
             }
-            Log.v("DebugLoadingTime", "got " + buffer.size() + " buckets");
+            LLog.v("DebugLoadingTime", "got " + buffer.size() + " buckets");
         } finally {
             cursor.close();
         }
@@ -219,7 +219,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
                 }, null);
 
         if (cursor == null) {
-            Log.w(TAG, "query fail: " + uri);
+            LLog.w(TAG, "query fail: " + uri);
             return "";
         }
         try {
@@ -258,7 +258,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
             for (MediaSet album : mAlbums) {
                 album.reload();
             }
-            Log.i("test-r", "enter reload()-2:" + mDataVersion);
+            LLog.i("test-r", "enter reload()-2:" + mDataVersion);
             mDataVersion = nextVersionNumber();
         }
         return mDataVersion;

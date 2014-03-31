@@ -1,8 +1,8 @@
 package com.xjt.letool.opengl;
 
-import android.util.Log;
-
 import javax.microedition.khronos.opengles.GL11;
+
+import com.xjt.letool.common.LLog;
 
 public class RawTexture extends BasicTexture {
     private static final String TAG = "RawTexture";
@@ -41,7 +41,7 @@ public class RawTexture extends BasicTexture {
     @Override
     protected boolean onBind(GLESCanvas canvas) {
         if (isLoaded()) return true;
-        Log.w(TAG, "lost the content due to context change");
+        LLog.w(TAG, "lost the content due to context change");
         return false;
     }
 

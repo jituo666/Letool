@@ -76,17 +76,17 @@ public class ThumbnailSetPage extends PageState implements EyePosition.EyePositi
         @Override
         protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
             mEyePosition.resetPosition();
-            int slotViewLeft = left + mConfig.paddingLeft;
-            int slotViewTop = mActionBar.getHeight() + mConfig.paddingTop;
-            int slotViewBottom = bottom - top - mConfig.paddingBottom;
-            int slotViewRight = right - left - mConfig.paddingRight;
+            int thumbnailViewLeft = left + mConfig.paddingLeft;
+            int thumbnailViewTop = mActionBar.getHeight() + mConfig.paddingTop;
+            int thumbnailViewBottom = bottom - top - mConfig.paddingBottom;
+            int thumbnailViewRight = right - left - mConfig.paddingRight;
             if (mShowDetails) {
-                mDetailsHelper.layout(left, slotViewTop, right, bottom);
+                mDetailsHelper.layout(left, thumbnailViewTop, right, bottom);
             } else {
                 mThumbnailViewRenderer.setHighlightItemPath(null);
             }
 
-            mThumbnailView.layout(slotViewLeft, slotViewTop, slotViewRight, slotViewBottom);
+            mThumbnailView.layout(thumbnailViewLeft, thumbnailViewTop, thumbnailViewRight, thumbnailViewBottom);
         }
 
         @Override

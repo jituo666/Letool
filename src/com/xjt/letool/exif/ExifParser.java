@@ -1,13 +1,13 @@
 package com.xjt.letool.exif;
 
-import android.util.Log;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteOrder;
 import java.nio.charset.Charset;
 import java.util.Map.Entry;
 import java.util.TreeMap;
+
+import com.xjt.letool.common.LLog;
 
 /**
  * This class provides a low-level EXIF parsing API. Given a JPEG format
@@ -188,7 +188,7 @@ class ExifParser {
             throw new IOException("Null argument inputStream to ExifParser");
         }
         if (LOGV) {
-            Log.v(TAG, "Reading exif...");
+            LLog.v(TAG, "Reading exif...");
         }
         mInterface = iRef;
         mContainExifData = seekTiffData(inputStream);
@@ -284,11 +284,11 @@ class ExifParser {
                             mTiffStream.getReadByteCount();
                 }
                 if (offsetSize < 4) {
-                    Log.w(TAG, "Invalid size of link to next IFD: " + offsetSize);
+                    LLog.w(TAG, "Invalid size of link to next IFD: " + offsetSize);
                 } else {
                     long ifdOffset = readUnsignedLong();
                     if (ifdOffset != 0) {
-                        Log.w(TAG, "Invalid link to next IFD: " + ifdOffset);
+                        LLog.w(TAG, "Invalid link to next IFD: " + ifdOffset);
                     }
                 }
             }
@@ -299,7 +299,7 @@ class ExifParser {
             try {
                 skipTo(entry.getKey());
             } catch (IOException e) {
-                Log.w(TAG, "Failed to skip to data at: " + entry.getKey() +
+                LLog.w(TAG, "Failed to skip to data at: " + entry.getKey() +
                         " for " + event.getClass().getName() + ", the file may be broken.");
                 continue;
             }
@@ -309,7 +309,7 @@ class ExifParser {
                 mIfdStartOffset = entry.getKey();
 
                 if (mNumOfTagInIfd * TAG_SIZE + mIfdStartOffset + OFFSET_SIZE > mApp1End) {
-                    Log.w(TAG, "Invalid size of IFD " + mIfdType);
+                    LLog.w(TAG, "Invalid size of IFD " + mIfdType);
                     return EVENT_END;
                 }
 
@@ -524,7 +524,7 @@ class ExifParser {
         }
         // Some invalid image file contains invalid data type. Ignore those tags
         if (!ExifTag.isValidType(dataFormat)) {
-            Log.w(TAG, String.format("Tag %04x: Invalid data type %d", tagId, dataFormat));
+            LLog.w(TAG, String.format("Tag %04x: Invalid data type %d", tagId, dataFormat));
             mTiffStream.skip(4);
             return null;
         }
@@ -638,22 +638,22 @@ class ExifParser {
                     Object event = mCorrespondingEvent.firstEntry().getValue();
                     if (event instanceof ImageEvent) {
                         // Tag value overlaps thumbnail, ignore thumbnail.
-                        Log.w(TAG, "Thumbnail overlaps value for tag: \n" + tag.toString());
+                        LLog.w(TAG, "Thumbnail overlaps value for tag: \n" + tag.toString());
                         Entry<Integer, Object> entry = mCorrespondingEvent.pollFirstEntry();
-                        Log.w(TAG, "Invalid thumbnail offset: " + entry.getKey());
+                        LLog.w(TAG, "Invalid thumbnail offset: " + entry.getKey());
                     } else {
                         // Tag value overlaps another tag, shorten count
                         if (event instanceof IfdEvent) {
-                            Log.w(TAG, "Ifd " + ((IfdEvent) event).ifd
+                            LLog.w(TAG, "Ifd " + ((IfdEvent) event).ifd
                                     + " overlaps value for tag: \n" + tag.toString());
                         } else if (event instanceof ExifTagEvent) {
-                            Log.w(TAG, "Tag value for tag: \n"
+                            LLog.w(TAG, "Tag value for tag: \n"
                                     + ((ExifTagEvent) event).tag.toString()
                                     + " overlaps value for tag: \n" + tag.toString());
                         }
                         size = mCorrespondingEvent.firstEntry().getKey()
                                 - mTiffStream.getReadByteCount();
-                        Log.w(TAG, "Invalid size of tag: \n" + tag.toString()
+                        LLog.w(TAG, "Invalid size of tag: \n" + tag.toString()
                                 + " setting count to: " + size);
                         tag.forceSetComponentCount(size);
                     }
@@ -713,7 +713,7 @@ class ExifParser {
                 break;
         }
         if (LOGV) {
-            Log.v(TAG, "\n" + tag.toString());
+            LLog.v(TAG, "\n" + tag.toString());
         }
     }
 
@@ -762,7 +762,7 @@ class ExifParser {
                 }
             }
             if (length < 2 || (length - 2) != dataStream.skip(length - 2)) {
-                Log.w(TAG, "Invalid JPEG format.");
+                LLog.w(TAG, "Invalid JPEG format.");
                 return false;
             }
             marker = dataStream.readShort();

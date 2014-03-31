@@ -7,11 +7,12 @@ import android.database.Cursor;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InterruptedIOException;
+
+import com.xjt.letool.common.LLog;
 /**
  * @Author Jituo.Xuan
  * @Date 6:34:48 PM Mar 20, 2014
@@ -163,7 +164,7 @@ public class Utils {
         try {
             c.close();
         } catch (IOException t) {
-            Log.w(TAG, "close fail ", t);
+            LLog.w(TAG, "close fail ", t);
         }
     }
 
@@ -191,7 +192,7 @@ public class Utils {
         try {
             if (fd != null) fd.close();
         } catch (Throwable t) {
-            Log.w(TAG, "fail to close", t);
+            LLog.w(TAG, "fail to close", t);
         }
     }
 
@@ -199,7 +200,7 @@ public class Utils {
         try {
             if (cursor != null) cursor.close();
         } catch (Throwable t) {
-            Log.w(TAG, "fail to close", t);
+            LLog.w(TAG, "fail to close", t);
         }
     }
 
@@ -251,7 +252,7 @@ public class Utils {
         try {
             object.wait();
         } catch (InterruptedException e) {
-            Log.w(TAG, "unexpected interrupt: " + object);
+            LLog.w(TAG, "unexpected interrupt: " + object);
         }
     }
 
@@ -323,6 +324,6 @@ public class Utils {
 
     // This method should be ONLY used for debugging.
     public static void debug(String message, Object ... args) {
-        Log.v(DEBUG_TAG, String.format(message, args));
+        LLog.v(DEBUG_TAG, String.format(message, args));
     }
 }

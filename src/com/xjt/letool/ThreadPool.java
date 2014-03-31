@@ -1,11 +1,11 @@
 package com.xjt.letool;
 
-import android.util.Log;
-
 import java.util.concurrent.Executor;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
+import com.xjt.letool.common.LLog;
 
 public class ThreadPool {
     @SuppressWarnings("unused")
@@ -116,7 +116,7 @@ public class ThreadPool {
                 try {
                     result = mJob.run(this);
                 } catch (Throwable ex) {
-                    Log.w(TAG, "Exception in running a job", ex);
+                    LLog.w(TAG, "Exception in running a job", ex);
                 }
             }
 
@@ -160,7 +160,7 @@ public class ThreadPool {
                 try {
                     wait();
                 } catch (Exception ex) {
-                    Log.w(TAG, "ingore exception", ex);
+                    LLog.w(TAG, "ingore exception", ex);
                     // ignore.
                 }
             }

@@ -2,16 +2,16 @@ package com.xjt.letool.data.cache;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.ThreadPool.Job;
 import com.xjt.letool.ThreadPool.JobContext;
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.utils.BitmapUtils;
 import com.xjt.letool.data.utils.BytesBufferPool.BytesBuffer;
-import com.xjt.letool.data.utils.DecodeUtils;
+import com.xjt.letool.data.utils.BitmapDecodeUtils;
 
 
 public abstract class ImageCacheRequest implements Job<Bitmap> {
@@ -51,12 +51,12 @@ public abstract class ImageCacheRequest implements Job<Bitmap> {
                 options.inPreferredConfig = Bitmap.Config.ARGB_8888;
                 Bitmap bitmap;
                 if (mType == MediaItem.TYPE_MICROTHUMBNAIL) {
-                    bitmap = DecodeUtils.decodeUsingPool(jc, buffer.data, buffer.offset, buffer.length, options);
+                    bitmap = BitmapDecodeUtils.decodeUsingPool(jc, buffer.data, buffer.offset, buffer.length, options);
                 } else {
-                    bitmap = DecodeUtils.decodeUsingPool(jc, buffer.data, buffer.offset, buffer.length, options);
+                    bitmap = BitmapDecodeUtils.decodeUsingPool(jc, buffer.data, buffer.offset, buffer.length, options);
                 }
                 if (bitmap == null && !jc.isCancelled()) {
-                    Log.w(TAG, "decode cached failed " + debugTag());
+                    LLog.w(TAG, "decode cached failed " + debugTag());
                 }
                 return bitmap;
             }
@@ -67,7 +67,7 @@ public abstract class ImageCacheRequest implements Job<Bitmap> {
         if (jc.isCancelled()) return null;
 
         if (bitmap == null) {
-            Log.w(TAG, "decode orig failed " + debugTag());
+            LLog.w(TAG, "decode orig failed " + debugTag());
             return null;
         }
 

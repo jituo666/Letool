@@ -1,14 +1,13 @@
 package com.xjt.letool.exif;
 
-import android.util.Log;
-
-import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.xjt.letool.common.LLog;
 
 class ExifModifier {
     public static final String TAG = "ExifModifier";
@@ -131,8 +130,8 @@ class ExifModifier {
 
     private void writeTagValue(ExifTag tag, int offset) {
         if (DEBUG) {
-            Log.v(TAG, "modifying tag to: \n" + tag.toString());
-            Log.v(TAG, "at offset: " + offset);
+            LLog.v(TAG, "modifying tag to: \n" + tag.toString());
+            LLog.v(TAG, "at offset: " + offset);
         }
         mByteBuffer.position(offset + mOffsetBase);
         switch (tag.getDataType()) {

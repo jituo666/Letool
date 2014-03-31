@@ -17,7 +17,6 @@ import android.os.StatFs;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.WindowManager;
 
 import java.io.File;
@@ -30,6 +29,7 @@ import com.xjt.letool.ThreadPool.CancelListener;
 import com.xjt.letool.ThreadPool.JobContext;
 import com.xjt.letool.activities.LetoolBaseActivity;
 import com.xjt.letool.common.ApiHelper;
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.PackagesMonitor;
 import com.xjt.letool.data.DataManager;
 
@@ -63,7 +63,7 @@ public class LetoolUtils {
                 context.getSystemService(Context.WINDOW_SERVICE);
         wm.getDefaultDisplay().getMetrics(metrics);
         sPixelDensity = metrics.density;
-        Log.i("letooltag", " resume sPixelDensity:" + sPixelDensity);
+        LLog.i("letooltag", " resume sPixelDensity:" + sPixelDensity);
         Resources r = context.getResources();
         //TiledScreenNail.setPlaceholderColor(r.getColor(R.color.bitmap_screennail_placeholder));
         initializeThumbnailSizes(metrics, r);
@@ -123,7 +123,7 @@ public class LetoolUtils {
         if (!sWarned) {
             if (Thread.currentThread() == sCurrentThread) {
                 sWarned = true;
-                Log.w(TAG, new Throwable("Should not do this in render thread"));
+                LLog.w(TAG, new Throwable("Should not do this in render thread"));
             }
         }
     }
@@ -233,7 +233,7 @@ public class LetoolUtils {
         } catch (ActivityNotFoundException e) {
             // This will only occur if Camera was disabled while Gallery is open
             // since we cache our availability check. Just abort the attempt.
-            Log.e(TAG, "Camera activity previously detected but cannot be found", e);
+            LLog.e(TAG, "Camera activity previously detected but cannot be found", e);
         }
     }
 
@@ -271,7 +271,7 @@ public class LetoolUtils {
             context.startActivity(mapsIntent);
         } catch (ActivityNotFoundException e) {
             // Use the "geo intent" if no GMM is installed
-            Log.e(TAG, "GMM activity not found!", e);
+            LLog.e(TAG, "GMM activity not found!", e);
             String url = formatLatitudeLongitude("geo:%f,%f", latitude, longitude);
             Intent mapsIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             context.startActivity(mapsIntent);
@@ -376,7 +376,7 @@ public class LetoolUtils {
             StatFs stat = new StatFs(path);
             return stat.getAvailableBlocks() * (long) stat.getBlockSize() > size;
         } catch (Exception e) {
-            Log.i(TAG, "Fail to access external storage", e);
+            LLog.i(TAG, "Fail to access external storage", e);
         }
         return false;
     }
