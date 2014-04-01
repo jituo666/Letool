@@ -64,6 +64,13 @@ public class ThumbnailView extends GLBaseView {
             invalidate();
     }
 
+    public boolean advanceAnimation(long animTime) {
+        if (mAnimation != null) {
+            return mAnimation.calculate(animTime);
+        }
+        return false;
+    }
+
     public void setOverscrollEffect(int kind) {
         mOverscrollEffect = kind;
         mScroller.setOverfling(kind == OVERSCROLL_SYSTEM);
@@ -251,11 +258,9 @@ public class ThumbnailView extends GLBaseView {
         boolean more = mScroller.advanceAnimation(animTime);
         more |= mLayout.advanceAnimation(animTime);
         updateScrollPosition(mScroller.getPosition(), false);
-        boolean paperActive = isPaperAcitivate();
+        boolean paperActive = isPaperAcitivated();
         more |= paperActive;
-        if (mAnimation != null) {
-            more |= mAnimation.calculate(animTime);
-        }
+        more |= advanceAnimation(animTime);
         canvas.translate(-mScrollX, -mScrollY);
 
         for (int i = mLayout.getVisibleEnd() - 1; i >= mLayout.getVisibleStart(); --i) {
@@ -288,7 +293,7 @@ public class ThumbnailView extends GLBaseView {
         return result;
     }
 
-    private boolean isPaperAcitivate() {
+    private boolean isPaperAcitivated() {
         int oldX = mScrollX;
         if (mOverscrollEffect == OVERSCROLL_3D) {
             // Check if an edge is reached and notify mPaper if so.
@@ -333,14 +338,13 @@ public class ThumbnailView extends GLBaseView {
         }
     }
 
-
     /**
      * Return true if the layout parameters have been changed
      * @param thumbnailCount
      * @return
      */
-    public boolean setThumbnailCount(int thumbnailCount) {
-        boolean changed = mLayout.setThumbnailCount(thumbnailCount);
+    public void setThumbnailCount(int thumbnailCount) {
+       mLayout.setThumbnailCount(thumbnailCount);
         // mStartIndex is applied the first time setSlotCount is called.
         if (mStartIndex != ThumbnailLayout.INDEX_NONE) {
             setCenterIndex(mStartIndex);
@@ -348,7 +352,7 @@ public class ThumbnailView extends GLBaseView {
         }
         // Reset the scroll position to avoid scrolling over the updated limit.
         setScrollPosition(ThumbnailLayout.WIDE ? mScrollX : mScrollY);
-        return changed;
+        return;
     }
 
     public void setCenterIndex(int index) {

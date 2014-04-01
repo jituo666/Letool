@@ -3,6 +3,7 @@ package com.xjt.letool.views.layout;
 import com.xjt.letool.common.LLog;
 
 import android.graphics.Rect;
+import android.view.animation.DecelerateInterpolator;
 
 public class ThumbnailContractLayout extends ThumbnailLayout {
 
@@ -19,7 +20,7 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
     //
     // The "major" direction is the direction the user can scroll. The other direction is the "minor" direction.
     // The comments inside this method are the description when the major direction is horizontal (X), and the minor direction is vertical (Y).
-    private void initThumbnailLayoutParameters(int majorLength, int minorLength, int majorUnitSize, int minorUnitSize, int[] padding) {
+    private void initThumbnailLayoutParameters(int majorLength, int minorLength, int majorUnitSize, int minorUnitSize) {
         int unitCount = (minorLength + mThumbnailGap) / (minorUnitSize + mThumbnailGap);
         if (unitCount == 0)
             unitCount = 1;
@@ -28,14 +29,11 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
         // We put extra padding above and below the column.
         int availableUnits = Math.min(mUnitCount, mThumbnailCount);
         int usedMinorLength = availableUnits * minorUnitSize + (availableUnits - 1) * mThumbnailGap;
-        padding[0] = (minorLength - usedMinorLength) / 2;
 
         // Then calculate how many columns we need for all thumbnails.
         int count = ((mThumbnailCount + mUnitCount - 1) / mUnitCount);
         mContentLength = count * majorUnitSize + (count - 1) * mThumbnailGap;
-
         // If the content length is less then the screen width, put extra padding in left and right.
-        padding[1] = Math.max(0, (majorLength - mContentLength) / 2);
         LLog.i(TAG, " initLayoutParameters rows:" + count + " column;" + unitCount);
     }
 
@@ -58,17 +56,19 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
             mRenderer.onThumbnailSizeChanged(mThumbnailWidth, mThumbnailHeight);
         }
 
-        int[] padding = new int[2];
         if (WIDE) {
-            initThumbnailLayoutParameters(mWidth, mHeight, mThumbnailWidth, mThumbnailHeight, padding);
-            mVerticalPadding.startAnimateTo(padding[0]);
-            mHorizontalPadding.startAnimateTo(padding[1]);
+            initThumbnailLayoutParameters(mWidth, mHeight, mThumbnailWidth, mThumbnailHeight);
+            if (mHorizontalPadding.isEnabled()) {
+                mHorizontalPadding.setInterpolator(new DecelerateInterpolator());
+                mHorizontalPadding.startAnimateTo(mWidth + mThumbnailGap);
+            }
         } else {
-            initThumbnailLayoutParameters(mHeight, mWidth, mThumbnailHeight, mThumbnailWidth, padding);
-            mVerticalPadding.startAnimateTo(padding[1]);
-            mHorizontalPadding.startAnimateTo(padding[0]);
+            initThumbnailLayoutParameters(mHeight, mWidth, mThumbnailHeight, mThumbnailWidth);
+            if (mVerticalPadding.isEnabled()) {
+                mVerticalPadding.setInterpolator(new DecelerateInterpolator());
+                mVerticalPadding.startAnimateTo(mHeight + mThumbnailGap);
+            }
         }
-        LLog.i(TAG, " padding[0]:" + padding[0] + " padding[1]:" + padding[1]);
         updateVisibleThumbnailRange();
     }
 

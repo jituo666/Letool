@@ -2,7 +2,7 @@ package com.xjt.letool.views.layout;
 
 import android.graphics.Rect;
 
-import com.xjt.letool.animations.Animation;
+import com.xjt.letool.animations.IntegerAnim;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.views.ThumbnailView;
 import com.xjt.letool.views.ThumbnailView.Renderer;
@@ -31,8 +31,8 @@ public abstract class ThumbnailLayout {
     protected int mUnitCount;
     protected int mContentLength;
     protected int mScrollPosition;
-    protected IntegerAnimation mVerticalPadding = new IntegerAnimation();
-    protected IntegerAnimation mHorizontalPadding = new IntegerAnimation();
+    protected IntegerAnim mVerticalPadding = new IntegerAnim();
+    protected IntegerAnim mHorizontalPadding = new IntegerAnim();
 
     public int getThumbnailCount() {
         return mThumbnailCount;
@@ -64,19 +64,15 @@ public abstract class ThumbnailLayout {
         mRenderer = render;
     }
 
-    public boolean setThumbnailCount(int thumbnailCount) {
-        //LLog.i(TAG, " mThumbnailCount:" + mThumbnailCount + " thumbnailCount:" + thumbnailCount);
+    public void setThumbnailCount(int thumbnailCount) {
         if (thumbnailCount == mThumbnailCount)
-            return false;
-        //if (mThumbnailCount != 0) {
-            mHorizontalPadding.setEnabled(true);
+            return;
+        if (thumbnailCount > 0) {
             mVerticalPadding.setEnabled(true);
-        //}
+            mHorizontalPadding.setEnabled(true);
+        }
         mThumbnailCount = thumbnailCount;
-        int hPadding = mHorizontalPadding.getTarget();
-        int vPadding = mVerticalPadding.getTarget();
         initThumbnailParameters();
-        return vPadding != mVerticalPadding.getTarget() || hPadding != mHorizontalPadding.getTarget();
     }
 
     public void setThumbnailViewSize(int width, int height) {
@@ -119,45 +115,5 @@ public abstract class ThumbnailLayout {
         // use '|' to make sure both sides will be executed
         boolean anim = mVerticalPadding.calculate(animTime) | mHorizontalPadding.calculate(animTime);
         return anim;
-    }
-
-    public static class IntegerAnimation extends Animation {
-        private int mTarget;
-        private int mCurrent = 0;
-        private int mFrom = 0;
-        private boolean mEnabled = false;
-
-        public void setEnabled(boolean enabled) {
-            mEnabled = enabled;
-        }
-
-        public void startAnimateTo(int target) {
-            if (!mEnabled) {
-                mTarget = mCurrent = target;
-                return;
-            }
-            if (target == mTarget)
-                return;
-
-            mFrom = mCurrent;
-            mTarget = target;
-            setDuration(180);
-            start();
-        }
-
-        public int get() {
-            return mCurrent;
-        }
-
-        public int getTarget() {
-            return mTarget;
-        }
-
-        @Override
-        protected void onCalculate(float progress) {
-            mCurrent = Math.round(mFrom + progress * (mTarget - mFrom));
-            if (progress == 1f)
-                mEnabled = false;
-        }
     }
 }

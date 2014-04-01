@@ -5,7 +5,6 @@ import com.xjt.letool.utils.Utils;
 
 import android.view.animation.Interpolator;
 
-
 // Animation calculates a value according to the current input time.
 //
 // 1. First we need to use setDuration(int) to set the duration of the
@@ -32,6 +31,9 @@ import android.view.animation.Interpolator;
 // The start() method can be called again to restart the Animation.
 //
 abstract public class Animation {
+
+    private static final String TAG = "Animation";
+
     private static final long ANIMATION_START = -1;
     private static final long NO_ANIMATION = -2;
 
@@ -64,13 +66,16 @@ abstract public class Animation {
     }
 
     public boolean calculate(long currentTimeMillis) {
-        if (mStartTime == NO_ANIMATION) return false;
-        if (mStartTime == ANIMATION_START) mStartTime = currentTimeMillis;
+        if (mStartTime == NO_ANIMATION)
+            return false;
+        if (mStartTime == ANIMATION_START)
+            mStartTime = currentTimeMillis;
         int elapse = (int) (currentTimeMillis - mStartTime);
         float x = Utils.clamp((float) elapse / mDuration, 0f, 1f);
         Interpolator i = mInterpolator;
         onCalculate(i != null ? i.getInterpolation(x) : x);
-        if (elapse >= mDuration) mStartTime = NO_ANIMATION;
+        if (elapse >= mDuration)
+            mStartTime = NO_ANIMATION;
         return mStartTime != NO_ANIMATION;
     }
 
