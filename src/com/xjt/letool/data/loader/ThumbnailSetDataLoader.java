@@ -7,7 +7,6 @@ import android.os.Process;
 
 import com.xjt.letool.activities.LetoolBaseActivity;
 import com.xjt.letool.data.ContentListener;
-import com.xjt.letool.data.LoadingListener;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaObject;
 import com.xjt.letool.data.MediaPath;
@@ -54,7 +53,7 @@ public class ThumbnailSetDataLoader {
     private int mSize;
 
     private DataListener mDataListener;
-    private LoadingListener mLoadingListener;
+    private DataLoadingListener mLoadingListener;
     private ReloadTask mReloadTask;
 
     private final Handler mMainHandler;
@@ -146,7 +145,7 @@ public class ThumbnailSetDataLoader {
         return -1;
     }
 
-    private void clearSlot(int thumbnailIndex) {
+    private void clearThumbnail(int thumbnailIndex) {
         mData[thumbnailIndex] = null;
         mCoverItem[thumbnailIndex] = null;
         mTotalCount[thumbnailIndex] = 0;
@@ -166,14 +165,14 @@ public class ThumbnailSetDataLoader {
 
         if (contentStart >= end || start >= contentEnd) {
             for (int i = start, n = end; i < n; ++i) {
-                clearSlot(i % length);
+                clearThumbnail(i % length);
             }
         } else {
             for (int i = start; i < contentStart; ++i) {
-                clearSlot(i % length);
+                clearThumbnail(i % length);
             }
             for (int i = contentEnd, n = end; i < n; ++i) {
-                clearSlot(i % length);
+                clearThumbnail(i % length);
             }
         }
         mReloadTask.notifyDirty();
@@ -212,7 +211,7 @@ public class ThumbnailSetDataLoader {
         mDataListener = listener;
     }
 
-    public void setLoadingListener(LoadingListener listener) {
+    public void setLoadingListener(DataLoadingListener listener) {
         mLoadingListener = listener;
     }
 

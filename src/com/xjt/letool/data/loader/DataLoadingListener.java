@@ -1,6 +1,6 @@
 package com.xjt.letool.data.loader;
 
-public interface DataLoadListener {
+public interface DataLoadingListener {
     public void onLoadingStarted();
     public void onLoadingFinished(boolean loadFailed);
 }

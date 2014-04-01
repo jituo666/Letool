@@ -7,9 +7,9 @@ import com.xjt.letool.EyePosition;
 import com.xjt.letool.LetoolActionBar;
 import com.xjt.letool.R;
 import com.xjt.letool.data.DataManager;
-import com.xjt.letool.data.LoadingListener;
 import com.xjt.letool.data.MediaDetails;
 import com.xjt.letool.data.MediaSet;
+import com.xjt.letool.data.loader.DataLoadingListener;
 import com.xjt.letool.data.loader.ThumbnailSetDataLoader;
 import com.xjt.letool.opengl.GLESCanvas;
 import com.xjt.letool.selectors.SelectionManager;
@@ -99,7 +99,7 @@ public class ThumbnailSetPage extends PageState implements EyePosition.EyePositi
         }
     };
 
-    private class MyLoadingListener implements LoadingListener {
+    private class MyLoadingListener implements DataLoadingListener {
         @Override
         public void onLoadingStarted() {
             setLoadingBit(BIT_LOADING_RELOAD);

@@ -55,7 +55,7 @@ public class ThumbnailDataLoader {
 
     private DataListener mDataListener;
     private MySourceListener mSourceListener = new MySourceListener();
-    private DataLoadListener mLoadingListener;
+    private DataLoadingListener mLoadingListener;
 
     private ReloadTask mReloadTask;
     // the data version on which last loading failed
@@ -135,7 +135,7 @@ public class ThumbnailDataLoader {
         return mSize;
     }
 
-    private void clearSlot(int Index) {
+    private void clearThumbnail(int Index) {
         mData[Index] = null;
         mItemVersion[Index] = MediaObject.INVALID_DATA_VERSION;
         mSetVersion[Index] = MediaObject.INVALID_DATA_VERSION;
@@ -154,14 +154,14 @@ public class ThumbnailDataLoader {
         }
         if (contentStart >= end || start >= contentEnd) {
             for (int i = start, n = end; i < n; ++i) {
-                clearSlot(i % DATA_CACHE_SIZE);
+                clearThumbnail(i % DATA_CACHE_SIZE);
             }
         } else {
             for (int i = start; i < contentStart; ++i) {
-                clearSlot(i % DATA_CACHE_SIZE);
+                clearThumbnail(i % DATA_CACHE_SIZE);
             }
             for (int i = contentEnd, n = end; i < n; ++i) {
-                clearSlot(i % DATA_CACHE_SIZE);
+                clearThumbnail(i % DATA_CACHE_SIZE);
             }
         }
         if (mReloadTask != null)
@@ -205,7 +205,7 @@ public class ThumbnailDataLoader {
         mDataListener = listener;
     }
 
-    public void setLoadingListener(DataLoadListener listener) {
+    public void setLoadingListener(DataLoadingListener listener) {
         mLoadingListener = listener;
     }
 
