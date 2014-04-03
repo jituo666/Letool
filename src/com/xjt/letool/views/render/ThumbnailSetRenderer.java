@@ -3,7 +3,6 @@ package com.xjt.letool.views.render;
 
 import android.graphics.Color;
 
-import com.xjt.letool.activities.LetoolBaseActivity;
 import com.xjt.letool.adapters.ThumbnailSetDataWindow;
 import com.xjt.letool.adapters.ThumbnailSetDataWindow.AlbumSetEntry;
 import com.xjt.letool.common.AlbumLabelMaker;

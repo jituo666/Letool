@@ -517,8 +517,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
                 entry.labelTexture = null;
             }
             if (entry.album != null) {
-                entry.labelLoader = new AlbumLabelLoader(i,
-                        entry.title, entry.totalCount, entry.sourceType);
+                entry.labelLoader = new AlbumLabelLoader(i, entry.title, entry.totalCount, entry.sourceType);
             }
         }
         updateAllImageRequests();

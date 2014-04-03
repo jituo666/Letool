@@ -27,12 +27,9 @@ public class LetoolTabsAdpter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case TAB_POS_PHOTO: {
-//                Fragment fragment = new PhotoFragment();
-//                LLog.i(TAG, "PhotoFragment");
-//                return fragment;
-                Fragment fragment = new PictureFragment();
+                Fragment fragment = new PhotoFragment();
                 Bundle data = new Bundle();
-                data.putString(DataManager.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
+                data.putString(DataManager.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
                 fragment.setArguments(data);
                 return fragment;
             }
@@ -50,7 +47,7 @@ public class LetoolTabsAdpter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return 1;
     }
 
     @Override

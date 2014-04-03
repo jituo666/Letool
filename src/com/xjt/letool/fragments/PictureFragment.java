@@ -1,3 +1,4 @@
+
 package com.xjt.letool.fragments;
 
 import java.lang.ref.WeakReference;
@@ -50,7 +51,6 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
     private ThumbnailView mThumbnailView;
     private boolean mIsActive = false;
     private ViewConfigs.AlbumSetPage mConfig;
-    private LetoolActionBar mActionBar;
     private ThumbnailSetRenderer mThumbnailViewRenderer;
 
     private SelectionManager mSelectionManager;
@@ -252,7 +252,6 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
 
         initializeViews();
         initializeData();
-        mActionBar = mActivity.getLetoolActionBar();
         mEyePosition = new EyePosition(mActivity.getAndroidContext(), this);
         return rootView;
     }
@@ -265,9 +264,9 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
 
     @Override
     public void onResume() {
-        super.onResume();
         mGLRootView.lockRenderThread();
         try {
+            super.onResume();
             mIsActive = true;
             mGLRootView.setContentPane(mRootPane);
             mThumbnailSetAdapter.resume();
@@ -280,9 +279,9 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
 
     @Override
     public void onPause() {
-        super.onPause();
         mGLRootView.lockRenderThread();
         try {
+            super.onPause();
             mIsActive = false;
             mThumbnailSetAdapter.pause();
             mThumbnailViewRenderer.pause();
@@ -298,6 +297,7 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
         mGLRootView.lockRenderThread();
         try {
 
+            super.onActivityResult(requestCode, resultCode, data);
             if (data != null && data.getBooleanExtra(KEY_EMPTY_ALBUM, false)) {
                 showEmptyAlbumToast(Toast.LENGTH_SHORT);
             }
@@ -306,7 +306,6 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
                     mThumbnailView.startRisingAnimation();
                 }
             }
-            super.onActivityResult(requestCode, resultCode, data);
         } finally {
             mGLRootView.unlockRenderThread();
         }

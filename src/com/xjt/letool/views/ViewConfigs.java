@@ -1,3 +1,4 @@
+
 package com.xjt.letool.views;
 
 import android.content.Context;
@@ -59,6 +60,10 @@ public final class ViewConfigs {
 
         public ThumbnailLayoutSpec albumSpec;
         public int placeholderColor;
+        public int paddingLeft;
+        public int paddingTop;
+        public int paddingRight;
+        public int paddingBottom;
 
         public static synchronized AlbumPage get(Context context) {
             if (sInstance == null) {
@@ -76,7 +81,11 @@ public final class ViewConfigs {
             albumSpec.rowsLand = r.getInteger(R.integer.album_rows_land);
             albumSpec.rowsPort = r.getInteger(R.integer.album_rows_port);
             albumSpec.thumbnailGap = r.getDimensionPixelSize(R.dimen.album_thumbnail_gap);
+            //
+            paddingLeft = r.getDimensionPixelSize(R.dimen.album_padding_left);
+            paddingTop = r.getDimensionPixelSize(R.dimen.album_padding_top);
+            paddingRight = r.getDimensionPixelSize(R.dimen.album_padding_right);
+            paddingBottom = r.getDimensionPixelSize(R.dimen.album_padding_bottom);
         }
     }
 }
-

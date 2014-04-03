@@ -5,6 +5,7 @@ import android.os.Process;
 
 import com.xjt.letool.SynchronizedHandler;
 import com.xjt.letool.activities.LetoolBaseActivity;
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.ContentListener;
 import com.xjt.letool.data.DataManager;
 import com.xjt.letool.data.MediaItem;
@@ -295,6 +296,7 @@ public class ThumbnailDataLoader {
                     mItemVersion[index] = itemVersion;
                     mData[index] = updateItem;
                     if (mDataListener != null && i >= mActiveStart && i < mActiveEnd) {
+                        LLog.i(TAG, "UpdateContent:" + index);
                         mDataListener.onContentChanged(i);
                     }
                 }

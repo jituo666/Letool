@@ -170,7 +170,7 @@ public class TiledTexture implements Texture {
         }
     }
 
-    private boolean uploadNextTile(GLESCanvas canvas) {
+    public boolean uploadNextTile(GLESCanvas canvas) {
         if (mUploadIndex == mTiles.length)
             return true;
 
