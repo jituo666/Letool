@@ -188,7 +188,7 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
         mThumbnailView = new ThumbnailView(this, layout);
         mThumbnailView.setBackgroundColor(
                 LetoolUtils.intColorToFloatARGBArray(mActivity.getResources().getColor(R.color.default_background))
-                        );
+                );
         mThumbnailViewRenderer = new ThumbnailSetRenderer(this, mThumbnailView);
         layout.setRenderer(mThumbnailViewRenderer);
         mThumbnailView.setThumbnailRenderer(mThumbnailViewRenderer);
@@ -266,33 +266,51 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
     @Override
     public void onResume() {
         super.onResume();
-        mIsActive = true;
-        mGLRootView.setContentPane(mRootPane);
-        mThumbnailSetAdapter.resume();
-        mThumbnailViewRenderer.resume();
-        mEyePosition.resume();
+        mGLRootView.lockRenderThread();
+        try {
+            mIsActive = true;
+            mGLRootView.setContentPane(mRootPane);
+            mThumbnailSetAdapter.resume();
+            mThumbnailViewRenderer.resume();
+            mEyePosition.resume();
+        } finally {
+            mGLRootView.unlockRenderThread();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mIsActive = false;
-        mThumbnailSetAdapter.pause();
-        mThumbnailViewRenderer.pause();
-        mEyePosition.pause();
+        mGLRootView.lockRenderThread();
+        try {
+            mIsActive = false;
+            mThumbnailSetAdapter.pause();
+            mThumbnailViewRenderer.pause();
+            mEyePosition.pause();
+        } finally {
+            mGLRootView.unlockRenderThread();
+        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (data != null && data.getBooleanExtra(KEY_EMPTY_ALBUM, false)) {
-            showEmptyAlbumToast(Toast.LENGTH_SHORT);
-        }
-        switch (requestCode) {
-            case REQUEST_DO_ANIMATION: {
-                mThumbnailView.startRisingAnimation();
+
+        mGLRootView.lockRenderThread();
+        try {
+
+            if (data != null && data.getBooleanExtra(KEY_EMPTY_ALBUM, false)) {
+                showEmptyAlbumToast(Toast.LENGTH_SHORT);
             }
+            switch (requestCode) {
+                case REQUEST_DO_ANIMATION: {
+                    mThumbnailView.startRisingAnimation();
+                }
+            }
+            super.onActivityResult(requestCode, resultCode, data);
+        } finally {
+            mGLRootView.unlockRenderThread();
         }
-        super.onActivityResult(requestCode, resultCode, data);
+
     }
 
     @Override
