@@ -1,4 +1,4 @@
-package com.xjt.letool.pages;
+/*package com.xjt.letool.pages;
 
 import com.xjt.letool.R;
 import com.xjt.letool.activities.LetoolBaseActivity;
@@ -258,3 +258,4 @@ abstract public class PageState {
         return mActivity.getMenuInflater();
     }
 }
+*/

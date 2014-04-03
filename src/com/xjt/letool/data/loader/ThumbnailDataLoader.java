@@ -11,6 +11,7 @@ import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaObject;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.MediaSet;
+import com.xjt.letool.fragments.LetoolFragment;
 import com.xjt.letool.utils.Utils;
 
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class ThumbnailDataLoader {
     // the data version on which last loading failed
     private long mFailedVersion = MediaObject.INVALID_DATA_VERSION;
 
-    public ThumbnailDataLoader(LetoolBaseActivity context, MediaSet mediaSet) {
+    public ThumbnailDataLoader(LetoolFragment context, MediaSet mediaSet) {
         mSource = mediaSet;
         mData = new MediaItem[DATA_CACHE_SIZE];
         mItemVersion = new long[DATA_CACHE_SIZE];

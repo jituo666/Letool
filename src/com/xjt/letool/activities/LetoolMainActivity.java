@@ -1,13 +1,11 @@
-
 package com.xjt.letool.activities;
 
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.DataManager;
-import com.xjt.letool.pages.ThumbnailSetPage;
 import com.xjt.letool.utils.Utils;
 
-import android.os.Bundle;   
+import android.os.Bundle;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.Window;
@@ -21,18 +19,19 @@ public class LetoolMainActivity extends LetoolBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_ACTION_BAR);
-        requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+        //requestWindowFeature(Window.FEATURE_ACTION_BAR);
+        //requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         if (getIntent().getBooleanExtra(KEY_DISMISS_KEYGUARD, false)) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         }
-        setContentView(R.layout.activity_main);
-        if (savedInstanceState != null) {
-            getPageManager().restoreFromState(savedInstanceState);
+        setContentView(R.layout.layout_main);
+
+/*        if (savedInstanceState != null) {
+            //getPageManager().restoreFromState(savedInstanceState);
         } else {
             initializeByIntent();
-        }
+        }*/
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -69,7 +68,7 @@ public class LetoolMainActivity extends LetoolBaseActivity {
     public void startDefaultPage() {
         Bundle data = new Bundle();
         data.putString(DataManager.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
-        getPageManager().startState(ThumbnailSetPage.class, data);
+        //getPageManager().startState(ThumbnailSetPage.class, data);
     }
 
     private void startGetContent(Intent intent) {
@@ -83,7 +82,7 @@ public class LetoolMainActivity extends LetoolBaseActivity {
          * data.putString(AlbumSetPage.KEY_MEDIA_PATH
          * ,getDataManager().getTopSetPath(typeBits));
          */
-        getPageManager().startState(ThumbnailSetPage.class, data);
+        //getPageManager().startState(ThumbnailSetPage.class, data);
     }
 
     /*

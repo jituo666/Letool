@@ -10,6 +10,7 @@ import com.xjt.letool.common.AlbumLabelMaker;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.loader.ThumbnailSetDataLoader;
+import com.xjt.letool.fragments.LetoolFragment;
 import com.xjt.letool.opengl.ColorTexture;
 import com.xjt.letool.opengl.FadeInTexture;
 import com.xjt.letool.opengl.GLESCanvas;
@@ -27,7 +28,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
     private final int mPlaceholderColor;
 
     private final ColorTexture mWaitLoadingTexture;
-    private LetoolBaseActivity mActivity;
+    private LetoolFragment mActivity;
 
     private ThumbnailView mThumbnailView;
     private ThumbnailSetDataWindow mDataWindow;
@@ -67,13 +68,13 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         }
     }
 
-    public ThumbnailSetRenderer(LetoolBaseActivity activity, ThumbnailView thumbnailView) {
-        super(activity);
+    public ThumbnailSetRenderer(LetoolFragment activity, ThumbnailView thumbnailView) {
+        super(activity.getAndroidContext());
         mActivity = activity;
         mThumbnailView = thumbnailView;
         mPlaceholderColor = Color.GRAY;
 
-        mLabelSpec = ViewConfigs.AlbumSetPage.get(activity).labelSpec;
+        mLabelSpec = ViewConfigs.AlbumSetPage.get(activity.getAndroidContext()).labelSpec;
 
         mWaitLoadingTexture = new ColorTexture(mPlaceholderColor);
         mWaitLoadingTexture.setSize(1, 1);

@@ -18,6 +18,7 @@ import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.MediaSet;
 import com.xjt.letool.data.image.BitmapLoader;
 import com.xjt.letool.data.loader.ThumbnailSetDataLoader;
+import com.xjt.letool.fragments.LetoolFragment;
 import com.xjt.letool.opengl.BitmapTexture;
 import com.xjt.letool.opengl.Texture;
 import com.xjt.letool.opengl.TextureUploader;
@@ -81,7 +82,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         private BitmapLoader coverLoader;
     }
 
-    public ThumbnailSetDataWindow(LetoolBaseActivity activity, ThumbnailSetDataLoader source, ThumbnailSetRenderer.LabelSpec labelSpec, int cacheSize) {
+    public ThumbnailSetDataWindow(LetoolFragment activity, ThumbnailSetDataLoader source, ThumbnailSetRenderer.LabelSpec labelSpec, int cacheSize) {
         source.setModelListener(this);
         mSource = source;
         mData = new AlbumSetEntry[cacheSize];

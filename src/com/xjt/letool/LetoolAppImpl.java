@@ -6,7 +6,10 @@ import com.xjt.letool.utils.LetoolUtils;
 
 import android.app.Application;
 import android.content.Context;
+
 public class LetoolAppImpl extends Application implements LetoolApp {
+
+    private static final String TAG = "LetoolAppImpl";
 
     private ImageCacheService mImageCacheService;
     private Object mLock = new Object();

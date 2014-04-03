@@ -11,6 +11,7 @@ import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaObject;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.MediaSet;
+import com.xjt.letool.fragments.LetoolFragment;
 import com.xjt.letool.utils.Utils;
 import com.xjt.letool.common.SynchronizedHandler;
 
@@ -60,7 +61,7 @@ public class ThumbnailSetDataLoader {
 
     private final MySourceListener mSourceListener = new MySourceListener();
 
-    public ThumbnailSetDataLoader(LetoolBaseActivity activity, MediaSet albumSet, int cacheSize) {
+    public ThumbnailSetDataLoader(LetoolFragment activity, MediaSet albumSet, int cacheSize) {
         mSource = Utils.checkNotNull(albumSet);
         mCoverItem = new MediaItem[cacheSize];
         mData = new MediaSet[cacheSize];

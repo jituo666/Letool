@@ -278,14 +278,14 @@ public class LetoolActionBar implements OnNavigationListener {
                 mTitles, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // Need to lock rendering when operations invoked by system UI (main thread) are
-                // modifying thumbnail data used in GL thread for rendering.
-                mActivity.getGLController().lockRenderThread();
-                try {
-                    clusterRunner.doCluster(actions.get(which).intValue());
-                } finally {
-                    mActivity.getGLController().unlockRenderThread();
-                }
+//                // Need to lock rendering when operations invoked by system UI (main thread) are
+//                // modifying thumbnail data used in GL thread for rendering.
+//                mActivity.getGLController().lockRenderThread();
+//                try {
+//                    clusterRunner.doCluster(actions.get(which).intValue());
+//                } finally {
+//                    mActivity.getGLController().unlockRenderThread();
+//                }
             }
         }).create().show();
     }
@@ -356,16 +356,16 @@ public class LetoolActionBar implements OnNavigationListener {
                 || mAlbumModeListener != null) {
             // Need to lock rendering when operations invoked by system UI (main thread) are
             // modifying thumbnail data used in GL thread for rendering.
-            mActivity.getGLController().lockRenderThread();
-            try {
-                if (mAlbumModeListener != null) {
-                    mAlbumModeListener.onAlbumModeSelected(itemPosition);
-                } else {
-                    mClusterRunner.doCluster(sClusterItems[itemPosition].action);
-                }
-            } finally {
-                mActivity.getGLController().unlockRenderThread();
-            }
+//            mActivity.getGLController().lockRenderThread();
+//            try {
+//                if (mAlbumModeListener != null) {
+//                    mAlbumModeListener.onAlbumModeSelected(itemPosition);
+//                } else {
+//                    mClusterRunner.doCluster(sClusterItems[itemPosition].action);
+//                }
+//            } finally {
+//                mActivity.getGLController().unlockRenderThread();
+//            }
         }
         return false;
     }
