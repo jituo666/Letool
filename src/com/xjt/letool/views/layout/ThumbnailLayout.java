@@ -68,8 +68,8 @@ public abstract class ThumbnailLayout {
         if (thumbnailCount == mThumbnailCount)
             return;
         if (thumbnailCount > 0) {
-            mVerticalPadding.setEnabled(true);
-            mHorizontalPadding.setEnabled(true);
+//            mVerticalPadding.setEnabled(true);
+//            mHorizontalPadding.setEnabled(true);
         }
         mThumbnailCount = thumbnailCount;
         initThumbnailParameters();

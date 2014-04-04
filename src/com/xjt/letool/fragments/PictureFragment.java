@@ -264,6 +264,7 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
 
     @Override
     public void onResume() {
+        mGLRootView.onResume();
         mGLRootView.lockRenderThread();
         try {
             super.onResume();
@@ -279,6 +280,7 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
 
     @Override
     public void onPause() {
+        mGLRootView.onPause();
         mGLRootView.lockRenderThread();
         try {
             super.onPause();

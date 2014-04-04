@@ -1,16 +1,15 @@
-package com.xjt.letool.activities;
+package com.xjt.letool.fragments;
 
+import com.xjt.letool.activities.LetoolBaseActivity;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.DataManager;
-import com.xjt.letool.fragments.PhotoFragment;
-import com.xjt.letool.fragments.PictureFragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-public class LetoolTabsAdpter extends FragmentPagerAdapter {
+public class LetoolFragmentAdpter extends FragmentPagerAdapter {
 
     private static final String TAG = "LetoolTabsAdpter";
 
@@ -18,7 +17,9 @@ public class LetoolTabsAdpter extends FragmentPagerAdapter {
     public final int TAB_POS_PICTURE = 1;
     private LetoolBaseActivity mActivity;
 
-    public LetoolTabsAdpter(LetoolBaseActivity activity,FragmentManager fm) {
+    private static final String[] CONTENT = new String[] { "照片", "图库"};
+
+    public LetoolFragmentAdpter(LetoolBaseActivity activity, FragmentManager fm) {
         super(fm);
         mActivity = activity;
     }
@@ -47,20 +48,12 @@ public class LetoolTabsAdpter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 1;
+        return CONTENT.length;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        switch (position) {
-            case TAB_POS_PHOTO: {
-                return "照片";
-            }
-            case TAB_POS_PICTURE: {
-                return "图库";
-            }
-        }
-        return null;
+        return CONTENT[position];
     }
 
 }

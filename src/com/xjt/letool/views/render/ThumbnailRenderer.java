@@ -1,5 +1,7 @@
 package com.xjt.letool.views.render;
 
+import android.graphics.Color;
+
 import com.xjt.letool.adapters.ThumbnailDataWindow;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.MediaPath;
@@ -26,7 +28,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
     private static final int CACHE_SIZE = 96;
 
     private final ColorTexture mWaitLoadingTexture;
-    private final int mPlaceholderColor = PLACE_HOLDER_COLOR;
+    private final int mPlaceholderColor = Color.GRAY;
 
     private int mPressedIndex = -1;
     private boolean mAnimatePressedUp;
@@ -91,7 +93,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
     @Override
     public void onVisibleRangeChanged(int visibleStart, int visibleEnd) {
 
-        LLog.i(TAG, "onVisibleRangeChanged visibleStart:" + visibleStart + " visibleEnd:" + visibleEnd);
+        //LLog.i(TAG, "onVisibleRangeChanged visibleStart:" + visibleStart + " visibleEnd:" + visibleEnd);
         if (mDataWindow != null) {
             mDataWindow.setActiveWindow(visibleStart, visibleEnd);
         }

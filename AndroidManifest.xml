@@ -19,7 +19,8 @@
         android:largeHeap="true"
         android:logo="@drawable/ic_launcher"
         android:restoreAnyVersion="true"
-        android:supportsRtl="true" >
+        android:supportsRtl="true"
+        android:theme="@style/StyledIndicators" >
         <activity
             android:name="com.xjt.letool.activities.LetoolMainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

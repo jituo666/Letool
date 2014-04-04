@@ -287,7 +287,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
 
     @Override
     public void onContentChanged(int index) {
-        LLog.i(TAG, "onContentChanged:" + index);
+        //LLog.i(TAG, "onContentChanged:" + index);
         if (index >= mContentStart && index < mContentEnd && mIsActive) {
             freeSlotContent(index);
             prepareSlotContent(index);

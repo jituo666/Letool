@@ -10,6 +10,8 @@ import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.DataManager;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.utils.LetoolBitmapPool;
+import com.xjt.letool.fragments.LetoolFragmentAdpter;
+import com.xjt.letool.surpport.TabPageIndicator;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,16 +30,18 @@ public class LetoolBaseActivity extends FragmentActivity implements LetoolContex
 
     private LetoolActionBar mActionBar;
     private OrientationManager mOrientationManager;
-    private LetoolTabsAdpter mPagerAdapter;
+    private LetoolFragmentAdpter mPagerAdapter;
     private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mOrientationManager = new OrientationManager(this);
-        mPagerAdapter = new LetoolTabsAdpter(this, getSupportFragmentManager());
+        mPagerAdapter = new LetoolFragmentAdpter(this, getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mPagerAdapter);
+        TabPageIndicator indicator = (TabPageIndicator)findViewById(R.id.indicator);
+        indicator.setViewPager(mViewPager);
 
     }
 
@@ -86,9 +90,7 @@ public class LetoolBaseActivity extends FragmentActivity implements LetoolContex
     @Override
     protected void onResume() {
         super.onResume();
-
         getDataManager().resume();
-
         mOrientationManager.resume();
     }
 

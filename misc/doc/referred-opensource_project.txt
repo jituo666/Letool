@@ -1,0 +1,3 @@
+1,https://github.com/JakeWharton/ActionBarSherlock.git
+2,https://github.com/JakeWharton/Android-ViewPagerIndicator.git
+3,https://github.com/jfeinstein10/SlidingMenu.git(http://www.cnblogs.com/android100/p/SlidingMenu.html)

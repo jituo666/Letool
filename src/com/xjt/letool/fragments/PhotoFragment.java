@@ -1,4 +1,3 @@
-
 package com.xjt.letool.fragments;
 
 import com.xjt.letool.EyePosition;
@@ -206,8 +205,8 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
 
     private void initializeData() {
         Bundle data = getArguments();
-        //mDataPath = new Path(data.getString(DataManager.KEY_MEDIA_PATH), 1216519567);
-        mDataPath = new MediaPath(data.getString(DataManager.KEY_MEDIA_PATH), 1509922574);
+        mDataPath = new MediaPath(data.getString(DataManager.KEY_MEDIA_PATH), 1216519567);
+        //mDataPath = new MediaPath(data.getString(DataManager.KEY_MEDIA_PATH), 1509922574);
         mData = mActivity.getDataManager().getMediaSet(mDataPath);
         if (mData == null) {
             Utils.fail("MediaSet is null. Path = %s", mDataPath);
@@ -253,64 +252,75 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mGLRootView.onResume();
+        mGLRootView.lockRenderThread();
+        try {
+            mIsActive = true;
+
+            mGLRootView.setContentPane(mRootPane);
+            // Set the reload bit here to prevent it exit this page in clearLoadingBit().
+            setLoadingBit(BIT_LOADING_RELOAD);
+            mLoadingFailed = false;
+            mAlbumDataLoader.resume();
+            mRender.resume();
+            mRender.setPressedIndex(-1);
+            mEyePosition.resume();
+            if (!mInitialSynced) {
+                setLoadingBit(BIT_LOADING_SYNC);
+                //mSyncTask = mData.requestSync(this);
+            }
+        } finally {
+            mGLRootView.unlockRenderThread();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mGLRootView.onPause();
+        mGLRootView.lockRenderThread();
+        try {
+            mIsActive = false;
+            mRender.setThumbnailFilter(null);
+            mAlbumDataLoader.pause();
+            mRender.pause();
+            DetailsHelper.pause();
+            mEyePosition.resume();
+            if (mSyncTask != null) {
+                mSyncTask.cancel();
+                mSyncTask = null;
+                clearLoadingBit(BIT_LOADING_SYNC);
+            }
+        } finally {
+            mGLRootView.unlockRenderThread();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
     }
 
     @Override
     public void onDestroyView() {
-
         super.onDestroyView();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mIsActive = false;
-        mRender.setThumbnailFilter(null);
-        mAlbumDataLoader.pause();
-        mRender.pause();
-        DetailsHelper.pause();
-        mEyePosition.resume();
-        if (mSyncTask != null) {
-            mSyncTask.cancel();
-            mSyncTask = null;
-            clearLoadingBit(BIT_LOADING_SYNC);
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mIsActive = true;
-
-        mGLRootView.setContentPane(mRootPane);
-        // Set the reload bit here to prevent it exit this page in clearLoadingBit().
-        setLoadingBit(BIT_LOADING_RELOAD);
-        mLoadingFailed = false;
-        mAlbumDataLoader.resume();
-        mRender.resume();
-        mRender.setPressedIndex(-1);
-        mEyePosition.resume();
-        if (!mInitialSynced) {
-            setLoadingBit(BIT_LOADING_SYNC);
-            //mSyncTask = mData.requestSync(this);
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
     }
 
     @Override
