@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/action_bar_selection"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="@style/ActionBarPanel" >
+
+    <ImageView
+        android:id="@+id/enter_selection_indicate"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/action_bar_header_bg"
+        android:scaleType="center"
+        android:src="@drawable/action_bar_back" />
+
+    <TextView
+        android:id="@+id/selection_counter"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/enter_selection_indicate"
+        android:layout_marginLeft="2dp"
+        android:gravity="left|center_vertical"
+        android:text="18"
+        android:textSize="18sp" />
+
+    <ImageButton
+        android:id="@+id/operation_delete"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/action_bar_delete"
+        android:scaleType="fitCenter" />
+
+</RelativeLayout>

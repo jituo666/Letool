@@ -97,11 +97,10 @@ public abstract class ThumbnailLayout {
         } else {
             mVisibleStart = mVisibleEnd = 0;
         }
-        LLog.i(TAG, "1onVisibleRangeChanged visibleStart:" + mVisibleStart + " visibleEnd:" + mVisibleEnd);
         if (mRenderer != null) {
             mRenderer.onVisibleRangeChanged(mVisibleStart, mVisibleEnd);
         }
-        LLog.i(TAG, "2onVisibleRangeChanged visibleStart:" + mVisibleStart + " visibleEnd:" + mVisibleEnd);
+        //LLog.i(TAG, "onVisibleRangeChanged visibleStart:" + mVisibleStart + " visibleEnd:" + mVisibleEnd);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////

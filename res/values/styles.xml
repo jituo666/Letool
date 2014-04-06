@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2012 Jake Wharton
+<!--
+     Copyright (C) 2012 Jake Wharton
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -14,8 +15,9 @@
      limitations under the License.
 -->
 
-<resources>
-    <style name="StyledIndicators" parent="@android:style/Theme.Light">
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="StyledIndicators" parent="@android:style/Theme.NoTitleBar">
         <item name="vpiCirclePageIndicatorStyle">@style/CustomCirclePageIndicator</item>
         <item name="vpiLinePageIndicatorStyle">@style/CustomLinePageIndicator</item>
         <item name="vpiTitlePageIndicatorStyle">@style/CustomTitlePageIndicator</item>
@@ -73,4 +75,12 @@
         <item name="fadeLength">1000</item>
         <item name="fadeDelay">1000</item>
     </style>
+    <!-- ============================================================================================ -->
+    <style name="ActionBarPanel">
+        <item name="android:orientation">horizontal</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">2dp</item>
+        <item name="android:paddingRight">2dp</item>
+    </style>
+
 </resources>

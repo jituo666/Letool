@@ -56,4 +56,8 @@
     <color name="face_detect_fail">#80d05060</color>
     <color name="gray">#FFAAAAAA</color>
 
+    <!-- =============================================================================================== -->
+    
+     <drawable name="color_alpha_from">#e8000000</drawable>
+     <drawable name="color_alpha_to">#FF000000</drawable>
 </resources>

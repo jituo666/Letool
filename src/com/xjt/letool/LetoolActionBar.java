@@ -111,7 +111,7 @@ public class LetoolActionBar implements OnNavigationListener {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.action_bar_text, parent, false);
+                convertView = mInflater.inflate(R.layout.sliding_menu_item, parent, false);
             }
             TextView view = (TextView) convertView;
             view.setText(sClusterItems[position].spinnerTitle);
@@ -149,7 +149,7 @@ public class LetoolActionBar implements OnNavigationListener {
         @Override
         public View getDropDownView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.action_bar_text, parent, false);
+                convertView = mInflater.inflate(R.layout.sliding_menu_item, parent, false);
             }
             TextView view = (TextView) convertView;
             view.setText((CharSequence) getItem(position));
@@ -301,8 +301,7 @@ public class LetoolActionBar implements OnNavigationListener {
         if (displayHomeAsUp) options |= ActionBar.DISPLAY_HOME_AS_UP;
         if (showTitle) options |= ActionBar.DISPLAY_SHOW_TITLE;
 
-        mActionBar.setDisplayOptions(options,
-                ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE);
+        mActionBar.setDisplayOptions(options, ActionBar.DISPLAY_HOME_AS_UP | ActionBar.DISPLAY_SHOW_TITLE);
         mActionBar.setHomeButtonEnabled(displayHomeAsUp);
     }
 

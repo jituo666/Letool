@@ -1,3 +1,4 @@
+
 package com.xjt.letool.fragments;
 
 import com.xjt.letool.EyePosition;
@@ -12,6 +13,7 @@ import com.xjt.letool.data.MediaDetails;
 import com.xjt.letool.data.MediaObject;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.MediaSet;
+import com.xjt.letool.data.MediaSetUtils;
 import com.xjt.letool.data.loader.DataLoadingListener;
 import com.xjt.letool.data.loader.ThumbnailDataLoader;
 import com.xjt.letool.opengl.GLESCanvas;
@@ -24,6 +26,7 @@ import com.xjt.letool.views.DetailsHelper.CloseListener;
 import com.xjt.letool.views.GLBaseView;
 import com.xjt.letool.views.GLController;
 import com.xjt.letool.views.GLRootView;
+import com.xjt.letool.views.LetoolActionBar;
 import com.xjt.letool.views.ThumbnailView;
 import com.xjt.letool.views.ViewConfigs;
 import com.xjt.letool.views.layout.ThumbnailContractLayout;
@@ -34,16 +37,23 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 public class PhotoFragment extends LetoolFragment implements EyePosition.EyePositionListener {
+
     private static final String TAG = "PhotoFragment";
+
     private GLRootView mGLRootView;
     private TransitionStore mTransitionStore = new TransitionStore();
-
     public static final String KEY_RESUME_ANIMATION = "resume_animation";
+    private static final int BIT_LOADING_RELOAD = 1;
+    private static final int BIT_LOADING_SYNC = 2;
+    private static final int MSG_PICK_PHOTO = 0;
 
     //data
     private MediaPath mDataPath;
@@ -52,15 +62,13 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     private MyDetailsSource mDetailsSource;
     private ThumbnailDataLoader mAlbumDataLoader;
     private boolean mLoadingFailed;
-    private static final int BIT_LOADING_RELOAD = 1;
-    private static final int BIT_LOADING_SYNC = 2;
     private int mLoadingBits = 0;
     private Future<Integer> mSyncTask = null; // synchronize data
     private boolean mInitialSynced = false;
     private boolean mShowDetails;
 
-    private ViewConfigs.AlbumPage mConfig;
     //views
+    private ViewConfigs.AlbumPage mConfig;
     private ThumbnailView mThumbnailView;
     private ThumbnailRenderer mRender;
     private RelativePosition mOpenCenter = new RelativePosition();
@@ -69,7 +77,6 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
 
     private boolean mGetContent;
     private SynchronizedHandler mHandler;
-    private static final int MSG_PICK_PHOTO = 0;
     protected SelectionManager mSelector;
     private LetoolBaseActivity mActivity;
     private EyePosition mEyePosition;
@@ -93,6 +100,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     }
 
     private final GLBaseView mRootPane = new GLBaseView() {
+
         private final float mMatrix[] = new float[16];
 
         @Override
@@ -109,7 +117,6 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
             } else {
                 mRender.setHighlightItemPath(null);
             }
-
             // Set the mThumbnailView as a reference point to the open animation
             mOpenCenter.setReferencePosition(0, slotViewTop);
             mThumbnailView.layout(slotViewLeft, slotViewTop, slotViewRight, slotViewBottom);
@@ -136,8 +143,8 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
 
         @Override
         public int setIndex() {
-            //MediaPath id = mSelector.getSelected(false).get(0);
-            mIndex = mAlbumDataLoader.findItem(null);
+            MediaPath id = mSelector.getSelected(false).get(0);
+            mIndex = mAlbumDataLoader.findItem(id);
             return mIndex;
         }
 
@@ -190,11 +197,24 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         }
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mActivity = (LetoolBaseActivity) getActivity();
+        setHasOptionsMenu(true);
+    }
+
     private void initializeViews() {
         mConfig = ViewConfigs.AlbumPage.get(mActivity);
         ThumbnailLayout layout = new ThumbnailContractLayout(mConfig.albumSpec);
         mThumbnailView = new ThumbnailView(this, layout);
-        mThumbnailView.setBackgroundColor(LetoolUtils.intColorToFloatARGBArray(mActivity.getAndroidContext().getResources().getColor(R.color.default_background)));
+        mThumbnailView.setBackgroundColor(LetoolUtils.intColorToFloatARGBArray(mActivity.getAndroidContext().getResources()
+                .getColor(R.color.default_background)));
         mRender = new ThumbnailRenderer(this, mThumbnailView, mSelector);
         layout.setRenderer(mRender);
         mThumbnailView.setThumbnailRenderer(mRender);
@@ -205,8 +225,8 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
 
     private void initializeData() {
         Bundle data = getArguments();
-        mDataPath = new MediaPath(data.getString(DataManager.KEY_MEDIA_PATH), 1216519567);
-        //mDataPath = new MediaPath(data.getString(DataManager.KEY_MEDIA_PATH), 1509922574);
+        LLog.i(TAG, " CAMERA_BUCKET_ID:" + MediaSetUtils.CAMERA_BUCKET_ID);
+        mDataPath = new MediaPath(data.getString(DataManager.KEY_MEDIA_PATH), MediaSetUtils.CAMERA_BUCKET_ID);
         mData = mActivity.getDataManager().getMediaSet(mDataPath);
         if (mData == null) {
             Utils.fail("MediaSet is null. Path = %s", mDataPath);
@@ -214,17 +234,6 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         mAlbumDataLoader = new ThumbnailDataLoader(this, mData);
         mAlbumDataLoader.setLoadingListener(new MyLoadingListener());
         mRender.setModel(mAlbumDataLoader);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mActivity = (LetoolBaseActivity) getActivity();
     }
 
     @Override
@@ -248,7 +257,38 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
             }
         };
         mEyePosition = new EyePosition(mActivity.getAndroidContext(), this);
+        LetoolActionBar actionBar =  mActivity.getLetoolActionBar();
+        actionBar.setOnActionMode(LetoolActionBar.ACTION_MODE_BROWSE, this);
         return rootView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflator) {
+        super.onCreateOptionsMenu(menu, inflator);
+        //GalleryActionBar actionBar = mActivity.getGalleryActionBar();
+
+        if (mGetContent) {
+            inflator.inflate(R.menu.pickup, menu);
+            //int typeBits = mData.getInt(LetoolBaseActivity.KEY_TYPE_BITS,DataManager.INCLUDE_IMAGE);
+            //actionBar.setTitle(LetoolUtils.getSelectionModePrompt(typeBits));
+        } else {
+            inflator.inflate(R.menu.album, menu);
+            //actionBar.setTitle(mData.getName());
+
+/*            FilterUtils.setupMenuItems(actionBar, mMediaSetPath, true);
+
+            menu.findItem(R.id.action_group_by).setVisible(mShowClusterMenu);
+            menu.findItem(R.id.action_camera).setVisible( MediaSetUtils.isCameraSource(mMediaSetPath)
+                    && LetoolUtils.isCameraAvailable(mActivity));*/
+
+        }
+        //actionBar.setSubtitle(null);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -263,7 +303,6 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         mGLRootView.lockRenderThread();
         try {
             mIsActive = true;
-
             mGLRootView.setContentPane(mRootPane);
             // Set the reload bit here to prevent it exit this page in clearLoadingBit().
             setLoadingBit(BIT_LOADING_RELOAD);
@@ -309,11 +348,6 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
     }
@@ -321,6 +355,11 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -336,5 +375,12 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         mZ = z;
         mRootPane.unlockRendering();
         mRootPane.invalidate();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.left_natvi) {
+            mActivity.getLetoolSlidingMenu().updateVisibility();
+        }
     }
 }

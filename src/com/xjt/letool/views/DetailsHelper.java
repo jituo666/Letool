@@ -42,8 +42,7 @@ public class DetailsHelper {
     public void layout(int left, int top, int right, int bottom) {
         if (mContainer instanceof GLBaseView) {
             GLBaseView view = (GLBaseView) mContainer;
-            view.measure(MeasureSpec.UNSPECIFIED,
-                    MeasureSpec.makeMeasureSpec(bottom - top, MeasureSpec.AT_MOST));
+            view.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.makeMeasureSpec(bottom - top, MeasureSpec.AT_MOST));
             view.layout(0, top, view.getMeasuredWidth(), top + view.getMeasuredHeight());
         }
     }

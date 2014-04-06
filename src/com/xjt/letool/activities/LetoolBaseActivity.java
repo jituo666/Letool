@@ -1,6 +1,6 @@
+
 package com.xjt.letool.activities;
 
-import com.xjt.letool.LetoolActionBar;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.OrientationManager;
@@ -12,6 +12,8 @@ import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.utils.LetoolBitmapPool;
 import com.xjt.letool.fragments.LetoolFragmentAdpter;
 import com.xjt.letool.surpport.TabPageIndicator;
+import com.xjt.letool.views.LetoolActionBar;
+import com.xjt.letool.views.LetoolSlidingMenu;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -29,20 +31,21 @@ public class LetoolBaseActivity extends FragmentActivity implements LetoolContex
     private static final String TAG = "LetoolBaseActivity";
 
     private LetoolActionBar mActionBar;
+    private LetoolSlidingMenu mSlidingMenu;
     private OrientationManager mOrientationManager;
-    private LetoolFragmentAdpter mPagerAdapter;
-    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mOrientationManager = new OrientationManager(this);
-        mPagerAdapter = new LetoolFragmentAdpter(this, getSupportFragmentManager());
-        mViewPager = (ViewPager) findViewById(R.id.pager);
-        mViewPager.setAdapter(mPagerAdapter);
-        TabPageIndicator indicator = (TabPageIndicator)findViewById(R.id.indicator);
-        indicator.setViewPager(mViewPager);
-
+        LetoolFragmentAdpter pagerAdapter = new LetoolFragmentAdpter(this, getSupportFragmentManager());
+        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(pagerAdapter);
+        TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.indicator);
+        indicator.setViewPager(viewPager);
+        //
+        mSlidingMenu = new LetoolSlidingMenu(this,findViewById(R.id.siding_menu));
+        mActionBar = new LetoolActionBar(this, findViewById(R.id.action_bar));
     }
 
     @Override
@@ -53,7 +56,6 @@ public class LetoolBaseActivity extends FragmentActivity implements LetoolContex
     @Override
     public void onConfigurationChanged(Configuration config) {
         super.onConfigurationChanged(config);
-        getLetoolActionBar().onConfigurationChanged();
         invalidateOptionsMenu();
     }
 
@@ -137,10 +139,11 @@ public class LetoolBaseActivity extends FragmentActivity implements LetoolContex
         return mOrientationManager;
     }
 
+    public LetoolSlidingMenu getLetoolSlidingMenu() {
+        return mSlidingMenu;
+    }
+
     public LetoolActionBar getLetoolActionBar() {
-        if (mActionBar == null) {
-            mActionBar = new LetoolActionBar(this);
-        }
         return mActionBar;
     }
 }

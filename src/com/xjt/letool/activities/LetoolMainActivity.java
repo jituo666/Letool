@@ -19,8 +19,6 @@ public class LetoolMainActivity extends LetoolBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //requestWindowFeature(Window.FEATURE_ACTION_BAR);
-        //requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         if (getIntent().getBooleanExtra(KEY_DISMISS_KEYGUARD, false)) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         }

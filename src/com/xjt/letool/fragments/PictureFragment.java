@@ -4,7 +4,6 @@ package com.xjt.letool.fragments;
 import java.lang.ref.WeakReference;
 
 import com.xjt.letool.EyePosition;
-import com.xjt.letool.LetoolActionBar;
 import com.xjt.letool.R;
 import com.xjt.letool.TransitionStore;
 import com.xjt.letool.activities.LetoolBaseActivity;
@@ -21,6 +20,7 @@ import com.xjt.letool.views.DetailsHelper;
 import com.xjt.letool.views.GLBaseView;
 import com.xjt.letool.views.GLController;
 import com.xjt.letool.views.GLRootView;
+import com.xjt.letool.views.LetoolActionBar;
 import com.xjt.letool.views.ThumbnailView;
 import com.xjt.letool.views.ViewConfigs;
 import com.xjt.letool.views.DetailsHelper.CloseListener;
@@ -32,6 +32,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +72,7 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
     private int mLoadingBits = 0;
     private boolean mShowedEmptyToastForSelf = false;
     private LetoolBaseActivity mActivity;
+    private boolean mGetContent = false;
 
     private final GLBaseView mRootPane = new GLBaseView() {
 
@@ -180,6 +183,7 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mActivity = (LetoolBaseActivity) getActivity();
+        setHasOptionsMenu(true);
     }
 
     private void initializeViews() {
@@ -203,6 +207,18 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
         mThumbnailSetAdapter = new ThumbnailSetDataLoader(this, mMediaSet, DATA_CACHE_SIZE);
         mThumbnailSetAdapter.setLoadingListener(new MyLoadingListener());
         mThumbnailViewRenderer.setModel(mThumbnailSetAdapter);
+    }
+
+    
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        if (mGetContent) {
+            inflater.inflate(R.menu.pickup, menu);
+        } else {
+            inflater.inflate(R.menu.albumset, menu);
+        }
     }
 
     @Override
@@ -253,6 +269,8 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
         initializeViews();
         initializeData();
         mEyePosition = new EyePosition(mActivity.getAndroidContext(), this);
+        LetoolActionBar actionBar =  mActivity.getLetoolActionBar();
+        actionBar.setOnActionMode(LetoolActionBar.ACTION_MODE_BROWSE, this);
         return rootView;
     }
 
@@ -395,6 +413,13 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
             //            } else {
             return null;
             //            }
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.left_natvi) {
+            mActivity.getLetoolSlidingMenu().updateVisibility();
         }
     }
 
