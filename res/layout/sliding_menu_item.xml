@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="42dp"
+    android:layout_height="@dimen/letool_sliding_menu_item_height"
     android:background="#ffe8e8e8"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical" >
 
     <ImageView
         android:id="@+id/menu_icon"
-        android:layout_width="48dp"
-        android:layout_height="match_parent"
+        android:layout_width="@dimen/letool_sliding_menu_icon_size"
+        android:layout_height="@dimen/letool_sliding_menu_icon_size"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="2dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/ic_launcher" />
+        android:scaleType="fitCenter"/>
 
     <TextView
         android:id="@+id/menu_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_centerVertical="true"
         android:layout_marginLeft="6dp"
         android:layout_toRightOf="@id/menu_icon"
-        android:layout_centerVertical="true"
         android:gravity="left|center_vertical"
         android:textColor="@android:color/black"
-        android:textSize="18sp" />
+        android:textSize="@dimen/letool_sliding_menu_text_size" />
 
 </RelativeLayout>

@@ -14,7 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.xjt.letool.R;
-import com.xjt.letool.activities.LetoolBaseActivity;
+import com.xjt.letool.activities.LetoolActivity;
 import com.xjt.letool.data.MediaDetails;
 import com.xjt.letool.utils.Utils;
 import com.xjt.letool.views.DetailsAddressResolver.AddressResolvingListener;
@@ -32,7 +32,7 @@ public class DialogDetailsView implements DetailsViewContainer {
     @SuppressWarnings("unused")
     private static final String TAG = "DialogDetailsView";
 
-    private final LetoolBaseActivity mActivity;
+    private final LetoolActivity mActivity;
     private DetailsAdapter mAdapter;
     private MediaDetails mDetails;
     private final DetailsSource mSource;
@@ -40,7 +40,7 @@ public class DialogDetailsView implements DetailsViewContainer {
     private Dialog mDialog;
     private CloseListener mListener;
 
-    public DialogDetailsView(LetoolBaseActivity activity, DetailsSource source) {
+    public DialogDetailsView(LetoolActivity activity, DetailsSource source) {
         mActivity = activity;
         mSource = source;
     }

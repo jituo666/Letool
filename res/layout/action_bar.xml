@@ -6,10 +6,10 @@
     android:background="@drawable/main_action_bar_bg"
     android:orientation="horizontal" >
 
-    <include layout="@layout/action_bar_album" />
+    <include layout="@layout/action_bar_normal" />
 
     <include
-        layout="@layout/action_bar_select"
+        layout="@layout/action_bar_selection"
         android:visibility="gone" />
 
 </FrameLayout>

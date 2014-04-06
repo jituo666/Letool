@@ -1,35 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/action_bar_selection"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     style="@style/ActionBarPanel" >
 
     <ImageView
         android:id="@+id/enter_selection_indicate"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
+        style="@style/ActionBarIconStyle"
+        android:layout_centerVertical="true"
         android:background="@drawable/action_bar_header_bg"
-        android:scaleType="center"
-        android:src="@drawable/action_bar_back" />
+        android:src="@drawable/action_bar_selection" />
 
     <TextView
         android:id="@+id/selection_counter"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="4dp"
         android:layout_toRightOf="@+id/enter_selection_indicate"
-        android:layout_marginLeft="2dp"
         android:gravity="left|center_vertical"
-        android:text="18"
-        android:textSize="18sp" />
+        android:text="180"
+        android:textSize="@dimen/letool_action_bar_text_size1" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/operation_delete"
-        android:layout_width="48dp"
-        android:layout_height="match_parent"
+        style="@style/ActionBarIconStyle"
         android:layout_alignParentRight="true"
-        android:background="@drawable/action_bar_delete"
-        android:scaleType="fitCenter" />
+        android:layout_centerVertical="true"
+        android:src="@drawable/action_bar_delete" />
 
 </RelativeLayout>

@@ -5,7 +5,7 @@ import com.xjt.letool.EyePosition;
 import com.xjt.letool.Future;
 import com.xjt.letool.R;
 import com.xjt.letool.TransitionStore;
-import com.xjt.letool.activities.LetoolBaseActivity;
+import com.xjt.letool.activities.LetoolActivity;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
 import com.xjt.letool.data.DataManager;
@@ -78,7 +78,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     private boolean mGetContent;
     private SynchronizedHandler mHandler;
     protected SelectionManager mSelector;
-    private LetoolBaseActivity mActivity;
+    private LetoolActivity mActivity;
     private EyePosition mEyePosition;
     // The eyes' position of the user, the origin is at the center of the device and the unit is in pixels.
     private float mX;
@@ -205,7 +205,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivity = (LetoolBaseActivity) getActivity();
+        mActivity = (LetoolActivity) getActivity();
         setHasOptionsMenu(true);
     }
 
@@ -238,7 +238,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.gl_root_group, container, false);
+        View rootView = inflater.inflate(R.layout.gl_root_view, container, false);
         mGLRootView = (GLRootView) rootView.findViewById(R.id.gl_root_view);
         LLog.i(TAG, "onCreateView:" + mGLRootView);
         initializeViews();
@@ -379,8 +379,8 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.left_natvi) {
-            mActivity.getLetoolSlidingMenu().updateVisibility();
+        if (v.getId() == R.id.sliding_menu) {
+            mActivity.getLetoolSlidingMenu().toggle();
         }
     }
 }

@@ -6,7 +6,7 @@ import java.lang.ref.WeakReference;
 import com.xjt.letool.EyePosition;
 import com.xjt.letool.R;
 import com.xjt.letool.TransitionStore;
-import com.xjt.letool.activities.LetoolBaseActivity;
+import com.xjt.letool.activities.LetoolActivity;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.DataManager;
 import com.xjt.letool.data.MediaDetails;
@@ -71,7 +71,7 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
 
     private int mLoadingBits = 0;
     private boolean mShowedEmptyToastForSelf = false;
-    private LetoolBaseActivity mActivity;
+    private LetoolActivity mActivity;
     private boolean mGetContent = false;
 
     private final GLBaseView mRootPane = new GLBaseView() {
@@ -182,7 +182,7 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivity = (LetoolBaseActivity) getActivity();
+        mActivity = (LetoolActivity) getActivity();
         setHasOptionsMenu(true);
     }
 
@@ -263,7 +263,7 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.gl_root_group, container, false);
+        View rootView = inflater.inflate(R.layout.gl_root_view, container, false);
         mGLRootView = (GLRootView) rootView.findViewById(R.id.gl_root_view);
 
         initializeViews();
@@ -418,8 +418,8 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.left_natvi) {
-            mActivity.getLetoolSlidingMenu().updateVisibility();
+        if (v.getId() == R.id.sliding_menu) {
+            mActivity.getLetoolSlidingMenu().toggle();
         }
     }
 

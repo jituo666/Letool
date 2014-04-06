@@ -9,13 +9,13 @@ import com.xjt.letool.Future;
 import com.xjt.letool.FutureListener;
 import com.xjt.letool.ThreadPool.Job;
 import com.xjt.letool.ThreadPool.JobContext;
-import com.xjt.letool.activities.LetoolBaseActivity;
+import com.xjt.letool.activities.LetoolActivity;
 import com.xjt.letool.data.MediaDetails;
 import com.xjt.letool.utils.LetoolUtils;
 
 public class DetailsAddressResolver {
     private AddressResolvingListener mListener;
-    private final LetoolBaseActivity mContext;
+    private final LetoolActivity mContext;
     private Future<Address> mAddressLookupJob;
     private final Handler mHandler;
 
@@ -38,7 +38,7 @@ public class DetailsAddressResolver {
         public void onAddressAvailable(String address);
     }
 
-    public DetailsAddressResolver(LetoolBaseActivity context) {
+    public DetailsAddressResolver(LetoolActivity context) {
         mContext = context;
         mHandler = new Handler(Looper.getMainLooper());
     }

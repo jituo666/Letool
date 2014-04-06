@@ -13,12 +13,12 @@ public class LetoolActionBar {
     public static final int ACTION_MODE_SELECTION = 1;
 
     public static final int ACTION_MODE[] = {
-            R.id.action_bar_browse,
+            R.id.action_bar_normal,
             R.id.action_bar_selection
     };
 
     public static final int ACTION_IDS[] = {
-            R.id.left_natvi,
+            R.id.sliding_menu,
             R.id.operation_delete
     };
 

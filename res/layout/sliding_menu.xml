@@ -3,12 +3,11 @@
     android:id="@+id/siding_menu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00000000"
-    android:visibility="gone" >
+    android:background="#00000000" >
 
     <LinearLayout
         android:id="@+id/siding_menu_content"
-        android:layout_width="240dp"
+        android:layout_width="@dimen/letool_sliding_menu_logo_height"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="0dp"
@@ -18,16 +17,14 @@
         <ImageView
             android:id="@+id/enter_selection_indicate"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="@dimen/letool_sliding_menu_logo_height"
             android:scaleType="fitXY"
             android:src="@drawable/sliding_menu_logo_bg" />
 
         <ListView
             android:id="@+id/sliding_menu_list"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="3"
+            android:layout_height="match_parent"
             android:divider="@drawable/list_view_divider"
             android:dividerHeight="1dp" >
         </ListView>

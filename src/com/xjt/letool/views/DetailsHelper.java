@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory;
 import android.view.View.MeasureSpec;
 
 import com.xjt.letool.R;
-import com.xjt.letool.activities.LetoolBaseActivity;
+import com.xjt.letool.activities.LetoolActivity;
 import com.xjt.letool.data.MediaDetails;
 import com.xjt.letool.views.DetailsAddressResolver.AddressResolvingListener;
 
@@ -35,7 +35,7 @@ public class DetailsHelper {
         public void onResolutionAvailable(int width, int height);
     }
 
-    public DetailsHelper(LetoolBaseActivity activity, GLBaseView rootPane, DetailsSource source) {
+    public DetailsHelper(LetoolActivity activity, GLBaseView rootPane, DetailsSource source) {
         mContainer = new DialogDetailsView(activity, source);
     }
 
@@ -55,7 +55,7 @@ public class DetailsHelper {
         mContainer.setCloseListener(listener);
     }
 
-    public static String resolveAddress(LetoolBaseActivity activity, double[] latlng, AddressResolvingListener listener) {
+    public static String resolveAddress(LetoolActivity activity, double[] latlng, AddressResolvingListener listener) {
         if (sAddressResolver == null) {
             sAddressResolver = new DetailsAddressResolver(activity);
         } else {

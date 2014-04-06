@@ -1,6 +1,6 @@
 package com.xjt.letool.fragments;
 
-import com.xjt.letool.activities.LetoolBaseActivity;
+import com.xjt.letool.activities.LetoolActivity;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.DataManager;
 
@@ -15,11 +15,11 @@ public class LetoolFragmentAdpter extends FragmentPagerAdapter {
 
     public final int TAB_POS_PHOTO = 0;
     public final int TAB_POS_PICTURE = 1;
-    private LetoolBaseActivity mActivity;
+    private LetoolActivity mActivity;
 
     private static final String[] CONTENT = new String[] { "照片", "图库"};
 
-    public LetoolFragmentAdpter(LetoolBaseActivity activity, FragmentManager fm) {
+    public LetoolFragmentAdpter(LetoolActivity activity, FragmentManager fm) {
         super(fm);
         mActivity = activity;
     }

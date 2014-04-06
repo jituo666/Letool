@@ -11,7 +11,7 @@ import android.view.Menu;
 import android.view.Window;
 import android.view.WindowManager;
 
-public class LetoolMainActivity extends LetoolBaseActivity {
+public class LetoolMainActivity extends LetoolActivity {
     private static final String TAG = "MainActivity";
 
     public static final String ACTION_REVIEW = "com.android.camera.action.REVIEW";

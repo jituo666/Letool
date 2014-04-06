@@ -27,7 +27,7 @@ import java.util.Locale;
 import com.xjt.letool.R;
 import com.xjt.letool.ThreadPool.CancelListener;
 import com.xjt.letool.ThreadPool.JobContext;
-import com.xjt.letool.activities.LetoolBaseActivity;
+import com.xjt.letool.activities.LetoolActivity;
 import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.PackagesMonitor;
@@ -238,7 +238,7 @@ public class LetoolUtils {
     }
 
     public static void startGalleryActivity(Context context) {
-        Intent intent = new Intent(context, LetoolBaseActivity.class)
+        Intent intent = new Intent(context, LetoolActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                 | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);

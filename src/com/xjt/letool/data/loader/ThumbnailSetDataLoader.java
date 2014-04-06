@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Process;
 
-import com.xjt.letool.activities.LetoolBaseActivity;
+import com.xjt.letool.activities.LetoolActivity;
 import com.xjt.letool.data.ContentListener;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaObject;
