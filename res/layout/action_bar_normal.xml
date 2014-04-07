@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/action_bar_normal"
-    style="@style/ActionBarPanel" >
+    style="@style/MyWidget.ActionBarPanel" >
 
     <LinearLayout
         android:id="@+id/sliding_menu"
         android:layout_width="60dp"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:background="@drawable/action_bar_header_bg"
         android:gravity="center_vertical"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:background="@drawable/common_list_item_bkg" >
 
         <ImageView
             android:id="@+id/sliding_menu_tip"
@@ -30,13 +30,14 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/app_name"
+        android:id="@+id/navi_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginLeft="4dp"
         android:layout_toRightOf="@id/sliding_menu"
         android:gravity="left|center_vertical"
         android:text="@string/app_name"
+        android:textColor="@color/action_bar_major_text_color"
         android:textSize="@dimen/letool_action_bar_text_size" />
 
 </RelativeLayout>

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/letool_sliding_menu_item_height"
-    android:background="#ffe8e8e8"
+    style="@style/MyWidget.ListViewItem"
     android:gravity="center_vertical" >
 
     <ImageView
@@ -11,7 +9,7 @@
         android:layout_height="@dimen/letool_sliding_menu_icon_size"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="2dp"
-        android:scaleType="fitCenter"/>
+        android:scaleType="fitCenter" />
 
     <TextView
         android:id="@+id/menu_title"

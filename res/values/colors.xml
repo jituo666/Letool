@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="default_background">#FFe8e8e8</color>
+
+    <color name="default_background">#FFFFFFFF</color>
 
     <!-- configuration for album set page -->
     <color name="albumset_background">#FF1A1A1A</color>
@@ -20,13 +21,9 @@
     <!-- configuration for manage cache page -->
     <color name="cache_background">#1A1A1A</color>
     <color name="cache_placeholder">#333</color>
-
     <color name="bitmap_screennail_placeholder">#333</color>
-
     <color name="slideshow_background">#1A1A1A</color>
-
     <color name="button_dark_transparent_background">#6000</color>
-
     <color name="ingest_highlight_semitransparent">#8833b5e5</color>
     <color name="ingest_date_tile_text">#33b5e5</color>
 
@@ -57,7 +54,11 @@
     <color name="gray">#FFAAAAAA</color>
 
     <!-- =============================================================================================== -->
-    
-     <drawable name="color_alpha_from">#e8000000</drawable>
-     <drawable name="color_alpha_to">#FF000000</drawable>
+
+    <drawable name="main_screen_bg">#ffffffff</drawable>
+    <drawable name="main_action_bar_bg">#ffe8e8e8</drawable>
+    <drawable name="main_sliding_menu_bg">#ffe8e8e8</drawable>
+
+     <color name="action_bar_major_text_color">#FF666666</color>
+
 </resources>

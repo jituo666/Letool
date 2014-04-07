@@ -11,6 +11,7 @@ import com.xjt.letool.data.DataManager;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.utils.LetoolBitmapPool;
 import com.xjt.letool.fragments.LetoolFragmentAdpter;
+import com.xjt.letool.fragments.SlidingMenuFragment;
 import com.xjt.letool.surpport.TabPageIndicator;
 import com.xjt.letool.views.LetoolActionBar;
 import com.xjt.letool.views.LetoolSlidingMenu;
@@ -30,6 +31,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
+import android.widget.TextView;
 
 public class LetoolActivity extends FragmentActivity implements LetoolContext {
 
@@ -118,12 +120,17 @@ public class LetoolActivity extends FragmentActivity implements LetoolContext {
         List<Fragment> list = mFragmentManager.getFragments();
         if (list.size() > 2) {
             FragmentTransaction ft = mFragmentManager.beginTransaction();
-            ft.setCustomAnimations(0, R.anim.slide_left_out);
             boolean hasTopFragment = false;
             for (int p = list.size(); p > 2; p--) {
                 Fragment f = list.get(p - 1);
                 if (f != null) {
                     hasTopFragment = true;
+                    if (f instanceof SlidingMenuFragment) {
+                        ft.setCustomAnimations(0, R.anim.slide_left_out);
+                    } else {
+                        ft.setCustomAnimations(0, 0);
+                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+                    }
                     ft.remove(f);
                 }
             }
@@ -131,6 +138,8 @@ public class LetoolActivity extends FragmentActivity implements LetoolContext {
                 super.onBackPressed();
             } else {
                 ft.commit();
+                TextView actionBarNaviText = (TextView)mActionBar.getActionPanel().findViewById(R.id.navi_text);
+                actionBarNaviText.setText(R.string.app_name);
             }
         } else {
             super.onBackPressed();

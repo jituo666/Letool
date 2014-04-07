@@ -45,6 +45,7 @@ public class SlidingMenuFragment extends Fragment {
     };
 
     private ListView mMenusList;
+    private ImageView mMenuLogo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,14 @@ public class SlidingMenuFragment extends Fragment {
                 return true;
             }
 
+        });
+        mMenuLogo = (ImageView)rootView.findViewById(R.id.siding_menu_logo_image);
+        mMenuLogo.setOnClickListener(new View.OnClickListener() {
+            
+            @Override
+            public void onClick(View v) {
+
+            }
         });
         mMenusList = (ListView) rootView.findViewById(R.id.sliding_menu_list);
         mMenusList.setAdapter(new SlidingMenuAdapter(inflater));
@@ -84,7 +93,7 @@ public class SlidingMenuFragment extends Fragment {
                             ft.add(R.id.root_container, f);
                         }
                         ft.commit();
-                    } else {
+                    } else { // exit
                         getActivity().finish();
                     }
                 } catch (java.lang.InstantiationException e) {

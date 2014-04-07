@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/action_bar_selection"
-    style="@style/ActionBarPanel" >
+    style="@style/MyWidget.ActionBarPanel" >
 
     <ImageView
         android:id="@+id/enter_selection_indicate"
-        style="@style/ActionBarIconStyle"
+        style="@style/MyWidget.ActionBarIconStyle"
         android:layout_centerVertical="true"
-        android:background="@drawable/action_bar_header_bg"
         android:src="@drawable/action_bar_selection" />
 
     <TextView
@@ -23,9 +22,10 @@
 
     <ImageView
         android:id="@+id/operation_delete"
-        style="@style/ActionBarIconStyle"
+        style="@style/MyWidget.ActionBarIconStyle"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:background="@drawable/common_list_item_bkg"
         android:src="@drawable/action_bar_delete" />
 
 </RelativeLayout>
