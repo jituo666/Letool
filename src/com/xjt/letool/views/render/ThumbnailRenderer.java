@@ -87,7 +87,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
 
     @Override
     public void prepareDrawing() {
-        mInSelectionMode = false;//mMediaSelector.inSelectionMode();
+        mInSelectionMode = mMediaSelector.inSelectionMode();
     }
 
     @Override

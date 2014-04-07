@@ -5,7 +5,6 @@ import java.lang.ref.WeakReference;
 
 import com.xjt.letool.EyePosition;
 import com.xjt.letool.R;
-import com.xjt.letool.TransitionStore;
 import com.xjt.letool.activities.LetoolActivity;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.DataManager;
@@ -270,7 +269,7 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
         initializeData();
         mEyePosition = new EyePosition(mActivity.getAndroidContext(), this);
         LetoolActionBar actionBar =  mActivity.getLetoolActionBar();
-        actionBar.setOnActionMode(LetoolActionBar.ACTION_MODE_BROWSE, this);
+        actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
         return rootView;
     }
 

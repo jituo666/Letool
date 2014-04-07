@@ -6,7 +6,9 @@
     android:background="@drawable/main_action_bar_bg"
     android:orientation="horizontal" >
 
-    <include layout="@layout/action_bar_normal" />
+    <include
+        layout="@layout/action_bar_normal"
+        android:visibility="gone" />
 
     <include
         layout="@layout/action_bar_selection"

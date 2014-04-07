@@ -5,39 +5,46 @@
 
     <LinearLayout
         android:id="@+id/sliding_menu"
-        android:layout_width="60dp"
+        android:layout_width="48dp"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
+        android:background="@drawable/common_item_bkg"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:background="@drawable/common_list_item_bkg" >
+        android:orientation="horizontal" >
 
         <ImageView
             android:id="@+id/sliding_menu_tip"
-            android:layout_width="0dp"
+            android:layout_width="16dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:scaleType="center"
-            android:src="@drawable/ic_sliding_menu_tip" />
+            android:src="@drawable/ic_drawer" />
 
         <ImageView
             android:id="@+id/app_logo"
-            android:layout_width="0dp"
+            android:layout_width="32dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_launcher" />
     </LinearLayout>
+
+    <View
+        android:id="@+id/sliding_menu_divider"
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@id/sliding_menu"
+        android:background="@drawable/common_action_bar_divider" />
 
     <TextView
         android:id="@+id/navi_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="4dp"
-        android:layout_toRightOf="@id/sliding_menu"
+        android:layout_toRightOf="@id/sliding_menu_divider"
         android:gravity="left|center_vertical"
         android:text="@string/app_name"
-        android:textColor="@color/action_bar_major_text_color"
+        android:textColor="@color/major_text_color"
         android:textSize="@dimen/letool_action_bar_text_size" />
 
 </RelativeLayout>

@@ -20,21 +20,25 @@ import com.xjt.letool.activities.LetoolActivity;
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 
+import java.util.List;
+
 @SuppressWarnings("unused")
 public class SlidingMenuFragment extends Fragment {
 
     private static final String TAG = "SlidingMenuFragment";
 
     public static final int SLIDING_MENU_HIDE_LIST = 0;
-    public static final int SLIDING_MENU_ABOUT = 2;
-    public static final int SLIDING_MENU_SETTING = 1;
-    public static final int SLIDING_MENU_EXIT = 3;
+    public static final int SLIDING_MENU_ABOUT = 1;
+    public static final int SLIDING_MENU_SETTING = 2;
+    public static final int SLIDING_MENU_HOME = 3;
+    public static final int SLIDING_MENU_EXIT = 4;
 
     private static final SlidingMenuItem[] SLIDING_MENUS = new SlidingMenuItem[] {
-            new SlidingMenuItem(SLIDING_MENU_HIDE_LIST, R.drawable.ic_hide_list, R.string.sliding_menu_title_hide_list, true, true),
-            new SlidingMenuItem(SLIDING_MENU_ABOUT, R.drawable.ic_app_about, R.string.sliding_menu_title_about, true, true),
-            new SlidingMenuItem(SLIDING_MENU_SETTING, R.drawable.ic_app_settings, R.string.sliding_menu_title_settings, true, true),
-            new SlidingMenuItem(SLIDING_MENU_SETTING, R.drawable.ic_app_exit, R.string.sliding_menu_title_exit, true, true),
+            new SlidingMenuItem(SLIDING_MENU_HIDE_LIST, R.drawable.ic_action_view_as_list, R.string.sliding_menu_title_hide_list, true, true),
+            new SlidingMenuItem(SLIDING_MENU_ABOUT, R.drawable.ic_action_about, R.string.sliding_menu_title_about, true, true),
+            new SlidingMenuItem(SLIDING_MENU_SETTING, R.drawable.ic_action_settings, R.string.sliding_menu_title_settings, true, true),
+            new SlidingMenuItem(SLIDING_MENU_HOME, R.drawable.ic_action_view_as_grid, R.string.sliding_menu_title_home, true, true),
+            new SlidingMenuItem(SLIDING_MENU_EXIT, R.drawable.ic_action_exit, R.string.sliding_menu_title_exit, true, true),
     };
 
     private static final Class<?>[] MenuFragmentClasses = new Class<?>[] {
@@ -46,43 +50,46 @@ public class SlidingMenuFragment extends Fragment {
 
     private ListView mMenusList;
     private ImageView mMenuLogo;
+    private LetoolActivity mActivity;
+    private FragmentManager mFragmentManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mFragmentManager = getFragmentManager();
+        mActivity = (LetoolActivity) getActivity();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.sliding_menu, container, false);
-        rootView.setOnTouchListener(new OnTouchListener(){
+        rootView.setOnTouchListener(new OnTouchListener() {
 
             @Override
             public boolean onTouch(View v, MotionEvent m) {
-                ((LetoolActivity)getActivity()).getLetoolSlidingMenu().toggle();
+                ((LetoolActivity) getActivity()).getLetoolSlidingMenu().toggle();
                 return true;
             }
 
         });
-        mMenuLogo = (ImageView)rootView.findViewById(R.id.siding_menu_logo_image);
+        mMenuLogo = (ImageView) rootView.findViewById(R.id.siding_menu_logo_image);
         mMenuLogo.setOnClickListener(new View.OnClickListener() {
-            
+
             @Override
             public void onClick(View v) {
 
             }
         });
         mMenusList = (ListView) rootView.findViewById(R.id.sliding_menu_list);
-        mMenusList.setAdapter(new SlidingMenuAdapter(inflater));
+        mMenusList.setAdapter(new SlidingMenuAdapter());
         mMenusList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 try {
                     if (position < MenuFragmentClasses.length) {
                         Fragment f = (Fragment) MenuFragmentClasses[position].newInstance();
-                        FragmentTransaction ft = getFragmentManager().beginTransaction();
-                        if (getFragmentManager().getFragments().size() >= 4) {
+                        FragmentTransaction ft = mFragmentManager.beginTransaction();
+                        if (mFragmentManager.getFragments().size() >= 4) {
                             ft.setCustomAnimations(0, R.anim.slide_left_out);
                             ft.remove(SlidingMenuFragment.this);
                             ft.setCustomAnimations(0, 0);
@@ -93,7 +100,9 @@ public class SlidingMenuFragment extends Fragment {
                             ft.add(R.id.root_container, f);
                         }
                         ft.commit();
-                    } else { // exit
+                    } else if (position == MenuFragmentClasses.length) { // exit
+                        naviToHome();
+                    } else if (position - 1 == MenuFragmentClasses.length) {
                         getActivity().finish();
                     }
                 } catch (java.lang.InstantiationException e) {
@@ -103,8 +112,33 @@ public class SlidingMenuFragment extends Fragment {
                 }
             }
         });
-        LLog.i(TAG, " getFragmentManager" + this.getFragmentManager());
+        LLog.i(TAG, " mFragmentManager" + mFragmentManager);
         return rootView;
+    }
+
+    private void naviToHome() {
+        List<Fragment> list = mFragmentManager.getFragments();
+        if (list.size() > 2) {
+            FragmentTransaction ft = mFragmentManager.beginTransaction();
+            boolean hasTopFragment = false;
+            for (int p = list.size(); p > 2; p--) {
+                Fragment f = list.get(p - 1);
+                if (f != null) {
+                    hasTopFragment = true;
+                    if (f instanceof SlidingMenuFragment) {
+                        ft.setCustomAnimations(0, R.anim.slide_left_out);
+                    } else {
+                        ft.setCustomAnimations(0, 0);
+                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+                    }
+                    ft.remove(f);
+                }
+            }
+            if (hasTopFragment) {
+                ft.commit();
+                mActivity.getLetoolActionBar().setTitle(R.string.app_name);
+            }
+        }
     }
 
     private static class SlidingMenuItem {
@@ -128,11 +162,6 @@ public class SlidingMenuFragment extends Fragment {
     }
 
     private class SlidingMenuAdapter extends BaseAdapter {
-        private LayoutInflater mLayoutInflater;
-
-        public SlidingMenuAdapter(LayoutInflater inflater) {
-            mLayoutInflater = inflater;
-        }
 
         @Override
         public int getCount() {
@@ -153,7 +182,7 @@ public class SlidingMenuFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             final View v;
             if (convertView == null) {
-                v = mLayoutInflater.inflate(R.layout.sliding_menu_item, null);
+                v = getActivity().getLayoutInflater().inflate(R.layout.sliding_menu_item, parent, false);
             } else {
                 v = convertView;
             }

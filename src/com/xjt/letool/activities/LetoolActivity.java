@@ -117,6 +117,10 @@ public class LetoolActivity extends FragmentActivity implements LetoolContext {
 
     @Override
     public void onBackPressed() {
+        if (getLetoolActionBar().getActionBarMode() == LetoolActionBar.ACTION_BAR_MODE_SELECTION) {
+            getLetoolActionBar().exitSelection();
+            return;
+        }
         List<Fragment> list = mFragmentManager.getFragments();
         if (list.size() > 2) {
             FragmentTransaction ft = mFragmentManager.beginTransaction();
@@ -138,7 +142,7 @@ public class LetoolActivity extends FragmentActivity implements LetoolContext {
                 super.onBackPressed();
             } else {
                 ft.commit();
-                TextView actionBarNaviText = (TextView)mActionBar.getActionPanel().findViewById(R.id.navi_text);
+                TextView actionBarNaviText = (TextView) mActionBar.getActionPanel().findViewById(R.id.navi_text);
                 actionBarNaviText.setText(R.string.app_name);
             }
         } else {
