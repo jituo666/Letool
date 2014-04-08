@@ -2,7 +2,7 @@ package com.xjt.letool.data.utils;
 
 import com.xjt.letool.utils.Utils;
 
-public class UpdateHelper {
+public class DBUpdateHelper {
 
     private boolean mUpdated = false;
 

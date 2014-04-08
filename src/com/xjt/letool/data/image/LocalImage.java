@@ -22,10 +22,11 @@ import com.xjt.letool.data.MediaDetails;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.cache.ImageCacheRequest;
+import com.xjt.letool.data.cache.LocalImageRequest;
 import com.xjt.letool.data.source.LocalAlbum;
 import com.xjt.letool.data.utils.BitmapUtils;
 import com.xjt.letool.data.utils.BitmapDecodeUtils;
-import com.xjt.letool.data.utils.UpdateHelper;
+import com.xjt.letool.data.utils.DBUpdateHelper;
 import com.xjt.letool.exif.ExifInterface;
 import com.xjt.letool.exif.ExifTag;
 import com.xjt.letool.utils.LetoolUtils;
@@ -36,7 +37,9 @@ import java.io.IOException;
 
 // LocalImage represents an image in the local storage.
 public class LocalImage extends LocalMediaItem {
-    private static final String TAG = "LocalImage";
+
+    private static final String TAG = LocalImage.class.getSimpleName();
+
     public static final String ITEM_PATH = "/local/image/item";
     // Must preserve order between these indices and the order of the terms in the following PROJECTION array.
     private static final int INDEX_ID = 0;
@@ -54,21 +57,21 @@ public class LocalImage extends LocalMediaItem {
     private static final int INDEX_WIDTH = 12;
     private static final int INDEX_HEIGHT = 13;
 
-    public static final String[] PROJECTION =  {
-            ImageColumns._ID,           // 0
-            ImageColumns.TITLE,         // 1
-            ImageColumns.MIME_TYPE,     // 2
-            ImageColumns.LATITUDE,      // 3
-            ImageColumns.LONGITUDE,     // 4
-            ImageColumns.DATE_TAKEN,    // 5
-            ImageColumns.DATE_ADDED,    // 6
+    public static final String[] PROJECTION = {
+            ImageColumns._ID, // 0
+            ImageColumns.TITLE, // 1
+            ImageColumns.MIME_TYPE, // 2
+            ImageColumns.LATITUDE, // 3
+            ImageColumns.LONGITUDE, // 4
+            ImageColumns.DATE_TAKEN, // 5
+            ImageColumns.DATE_ADDED, // 6
             ImageColumns.DATE_MODIFIED, // 7
-            ImageColumns.DATA,          // 8
-            ImageColumns.ORIENTATION,   // 9
-            ImageColumns.BUCKET_ID,     // 10
-            ImageColumns.SIZE,          // 11
-            "0",                        // 12
-            "0"                         // 13
+            ImageColumns.DATA, // 8
+            ImageColumns.ORIENTATION, // 9
+            ImageColumns.BUCKET_ID, // 10
+            ImageColumns.SIZE, // 11
+            "0", // 12
+            "0" // 13
     };
 
     static {
@@ -132,7 +135,7 @@ public class LocalImage extends LocalMediaItem {
 
     @Override
     protected boolean updateFromCursor(Cursor cursor) {
-        UpdateHelper uh = new UpdateHelper();
+        DBUpdateHelper uh = new DBUpdateHelper();
         id = uh.update(id, cursor.getInt(INDEX_ID));
         caption = uh.update(caption, cursor.getString(INDEX_CAPTION));
         mimeType = uh.update(mimeType, cursor.getString(INDEX_MIME_TYPE));
@@ -156,43 +159,6 @@ public class LocalImage extends LocalMediaItem {
     @Override
     public Job<Bitmap> requestImage(int type) {
         return new LocalImageRequest(mApplication, mPath, dateModifiedInSec, type, filePath);
-    }
-
-    public static class LocalImageRequest extends ImageCacheRequest {
-        private String mLocalFilePath;
-
-        LocalImageRequest(LetoolApp application, MediaPath path, long timeModified,
-                int type, String localFilePath) {
-            super(application, path, timeModified, type, MediaItem.getTargetSize(type));
-            mLocalFilePath = localFilePath;
-        }
-
-        @Override
-        public Bitmap onDecodeOriginal(JobContext jc, final int type) {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            int targetSize = MediaItem.getTargetSize(type);
-
-            // try to decode from JPEG EXIF
-            if (type == MediaItem.TYPE_MICROTHUMBNAIL) {
-                ExifInterface exif = new ExifInterface();
-                byte[] thumbData = null;
-                try {
-                    exif.readExif(mLocalFilePath);
-                    thumbData = exif.getThumbnail();
-                } catch (FileNotFoundException e) {
-                    LLog.w(TAG, "failed to find file to read thumbnail: " + mLocalFilePath);
-                } catch (IOException e) {
-                    LLog.w(TAG, "failed to get thumbnail from: " + mLocalFilePath);
-                }
-                if (thumbData != null) {
-                    Bitmap bitmap = BitmapDecodeUtils.decodeIfBigEnough(jc, thumbData, options, targetSize);
-                    if (bitmap != null) return bitmap;
-                }
-            }
-
-            return BitmapDecodeUtils.decodeThumbnail(jc, mLocalFilePath, options, targetSize, type);
-        }
     }
 
     @Override
@@ -238,7 +204,7 @@ public class LocalImage extends LocalMediaItem {
         ContentResolver contentResolver = mApplication.getContentResolver();
         //SaveImage.deleteAuxFiles(contentResolver, getContentUri());
         contentResolver.delete(baseUri, "_id=?",
-                new String[]{String.valueOf(id)});
+                new String[] { String.valueOf(id) });
     }
 
     @Override
@@ -247,13 +213,14 @@ public class LocalImage extends LocalMediaItem {
         Uri baseUri = Images.Media.EXTERNAL_CONTENT_URI;
         ContentValues values = new ContentValues();
         int rotation = (this.rotation + degrees) % 360;
-        if (rotation < 0) rotation += 360;
+        if (rotation < 0)
+            rotation += 360;
 
         if (mimeType.equalsIgnoreCase("image/jpeg")) {
             ExifInterface exifInterface = new ExifInterface();
             ExifTag tag = exifInterface.buildTag(ExifInterface.TAG_ORIENTATION,
                     ExifInterface.getOrientationValueForRotation(rotation));
-            if(tag != null) {
+            if (tag != null) {
                 exifInterface.setTag(tag);
                 try {
                     exifInterface.forceRewriteExif(filePath);
@@ -270,7 +237,7 @@ public class LocalImage extends LocalMediaItem {
         }
 
         values.put(Images.Media.ORIENTATION, rotation);
-        mApplication.getContentResolver().update(baseUri, values, "_id=?", new String[]{String.valueOf(id)});
+        mApplication.getContentResolver().update(baseUri, values, "_id=?", new String[] { String.valueOf(id) });
     }
 
     @Override

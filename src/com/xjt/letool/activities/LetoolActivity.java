@@ -110,7 +110,6 @@ public class LetoolActivity extends FragmentActivity implements LetoolContext {
         super.onPause();
         mOrientationManager.pause();
         getDataManager().pause();
-
         LetoolBitmapPool.getInstance().clear();
         MediaItem.getBytesBufferPool().clear();
     }

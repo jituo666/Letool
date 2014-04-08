@@ -32,6 +32,7 @@ import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.PackagesMonitor;
 import com.xjt.letool.data.DataManager;
+import com.xjt.letool.data.MediaItem;
 
 public class LetoolUtils {
     private static final String TAG = "GalleryUtils";
@@ -59,8 +60,7 @@ public class LetoolUtils {
 
     public static void initialize(Context context) {
         DisplayMetrics metrics = new DisplayMetrics();
-        WindowManager wm = (WindowManager)
-                context.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
         wm.getDefaultDisplay().getMetrics(metrics);
         sPixelDensity = metrics.density;
         LLog.i("letooltag", " resume sPixelDensity:" + sPixelDensity);
@@ -73,7 +73,7 @@ public class LetoolUtils {
         int maxPixels = Math.max(metrics.heightPixels, metrics.widthPixels);
 
         // For screen-nails, we never need to completely fill the screen
-        //MediaItem.setThumbnailSizes(maxPixels / 2, maxPixels / 5);
+        MediaItem.setThumbnailSizes(maxPixels / 2, maxPixels / 5);
         //TiledScreenNail.setMaxSide(maxPixels / 2);
     }
 

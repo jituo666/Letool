@@ -658,8 +658,7 @@ public class GLES20Canvas implements GLESCanvas {
             scale(1, -1, 1);
             translate(0, -target.centerY());
         }
-        draw(params, GLES20.GL_TRIANGLE_STRIP, COUNT_FILL_VERTEX, target.left, target.top,
-                target.width(), target.height());
+        draw(params, GLES20.GL_TRIANGLE_STRIP, COUNT_FILL_VERTEX, target.left, target.top, target.width(), target.height());
         if (texture.isFlippedVertically()) {
             restore();
         }

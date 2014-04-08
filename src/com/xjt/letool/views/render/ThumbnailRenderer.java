@@ -25,7 +25,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
     private ThumbnailFilter mThumbnailFilter;
 
     private static final int PLACE_HOLDER_COLOR = 0xFF222222;
-    private static final int CACHE_SIZE = 96;
+    private static final int CACHE_SIZE = 48;
 
     private final ColorTexture mWaitLoadingTexture;
     private final int mPlaceholderColor = Color.GRAY;

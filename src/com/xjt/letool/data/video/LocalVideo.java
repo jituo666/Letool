@@ -19,7 +19,7 @@ import com.xjt.letool.data.cache.ImageCacheRequest;
 import com.xjt.letool.data.image.LocalMediaItem;
 import com.xjt.letool.data.source.LocalAlbum;
 import com.xjt.letool.data.utils.BitmapUtils;
-import com.xjt.letool.data.utils.UpdateHelper;
+import com.xjt.letool.data.utils.DBUpdateHelper;
 import com.xjt.letool.utils.LetoolUtils;
 
 // LocalVideo represents a video in the local storage.
@@ -121,7 +121,7 @@ public class LocalVideo extends LocalMediaItem {
 
     @Override
     protected boolean updateFromCursor(Cursor cursor) {
-        UpdateHelper uh = new UpdateHelper();
+        DBUpdateHelper uh = new DBUpdateHelper();
         id = uh.update(id, cursor.getInt(INDEX_ID));
         caption = uh.update(caption, cursor.getString(INDEX_CAPTION));
         mimeType = uh.update(mimeType, cursor.getString(INDEX_MIME_TYPE));

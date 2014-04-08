@@ -23,16 +23,15 @@ public abstract class MediaItem extends MediaObject {
 
     private static final int BYTESBUFFE_POOL_SIZE = 4;
     private static final int BYTESBUFFER_SIZE = 200 * 1024;
-
-    private static int sMicrothumbnailTargetSize = 200;
     private static final BytesBufferPool sMicroThumbBufferPool = new BytesBufferPool(BYTESBUFFE_POOL_SIZE, BYTESBUFFER_SIZE);
-
+    private static int sMicrothumbnailTargetSize = 200;
     private static int sThumbnailTargetSize = 640;
 
     // TODO: fix default value for latlng and change this.
     public static final double INVALID_LATLNG = 0f;
 
     public abstract Job<Bitmap> requestImage(int type);
+
     public abstract Job<BitmapRegionDecoder> requestLargeImage();
 
     public MediaItem(MediaPath path, long version) {
@@ -78,6 +77,7 @@ public abstract class MediaItem extends MediaObject {
     // Returns width and height of the media item.
     // Returns 0, 0 if the information is not available.
     public abstract int getWidth();
+
     public abstract int getHeight();
 
     // This is an alternative for requestImage() in PhotoPage. If this is implemented, you don't need to implement requestImage().

@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class BytesBufferPool {
 
-    private static final int READ_STEP = 4096;
+    private static final int READ_STEP = 4 * 1024;
 
     public static class BytesBuffer {
         public byte[] data;
@@ -29,7 +29,8 @@ public class BytesBufferPool {
                 while (true) {
                     int step = Math.min(READ_STEP, capacity - length);
                     int rc = fis.read(data, length, step);
-                    if (rc < 0 || jc.isCancelled()) return;
+                    if (rc < 0 || jc.isCancelled())
+                        return;
                     length += rc;
 
                     if (length == capacity) {
@@ -61,7 +62,8 @@ public class BytesBufferPool {
     }
 
     public synchronized void recycle(BytesBuffer buffer) {
-        if (buffer.data.length != mBufferSize) return;
+        if (buffer.data.length != mBufferSize)
+            return;
         if (mList.size() < mPoolSize) {
             buffer.offset = 0;
             buffer.length = 0;

@@ -1,10 +1,9 @@
-package com.xjt.letool.data.image;
+package com.xjt.letool.data.utils;
 
 import android.graphics.Bitmap;
 
 import com.xjt.letool.Future;
 import com.xjt.letool.FutureListener;
-import com.xjt.letool.data.utils.LetoolBitmapPool;
 
 
 // We use this class to

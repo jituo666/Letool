@@ -66,8 +66,7 @@ public class BitmapDecodeUtils {
         if (options == null) options = new Options();
         jc.setCancelListener(new DecodeCanceller(options));
         setOptionsMutable(options);
-        return ensureGLCompatibleBitmap(
-                BitmapFactory.decodeByteArray(bytes, offset, length, options));
+        return ensureGLCompatibleBitmap(BitmapFactory.decodeByteArray(bytes, offset, length, options));
     }
 
     public static void decodeBounds(JobContext jc, byte[] bytes, int offset,
