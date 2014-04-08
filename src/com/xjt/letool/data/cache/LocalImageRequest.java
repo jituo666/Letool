@@ -23,6 +23,8 @@ public class LocalImageRequest extends ImageCacheRequest {
     public LocalImageRequest(LetoolApp application, MediaPath path, long timeModified,
             int type, String localFilePath) {
         super(application, path, timeModified, type, MediaItem.getTargetSize(type));
+
+        //LLog.i(TAG, " MediaItem.getTargetSize(type):" + MediaItem.getTargetSize(type));
         mLocalFilePath = localFilePath;
     }
 

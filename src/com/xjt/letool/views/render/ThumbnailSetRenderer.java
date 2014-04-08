@@ -23,7 +23,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
 
     private static final String TAG = "ThumbnailSetRenderer";
 
-    private static final int CACHE_SIZE = 48;
+    private static final int CACHE_SIZE = 96;
     private final int mPlaceholderColor;
 
     private final ColorTexture mWaitLoadingTexture;

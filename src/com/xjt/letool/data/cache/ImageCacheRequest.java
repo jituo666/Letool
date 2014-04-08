@@ -23,8 +23,7 @@ public abstract class ImageCacheRequest implements Job<Bitmap> {
     private int mTargetSize;
     private long mTimeModified;
 
-    public ImageCacheRequest(LetoolApp application,
-            MediaPath path, long timeModified, int type, int targetSize) {
+    public ImageCacheRequest(LetoolApp application, MediaPath path, long timeModified, int type, int targetSize) {
         mApplication = application;
         mPath = path;
         mType = type;
