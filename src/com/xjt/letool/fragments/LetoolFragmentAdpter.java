@@ -17,7 +17,11 @@ public class LetoolFragmentAdpter extends FragmentPagerAdapter {
     public final int TAB_POS_PICTURE = 1;
     private LetoolActivity mActivity;
 
-    private static final String[] CONTENT = new String[] { "照片", "图库"};
+    private static final String[] CONTENT = new String[] { "照片", "图库" };
+    private static final Class<?>[] fragments = new Class<?>[] {
+            PhotoFragment.class,
+            PictureFragment.class
+    };
 
     public LetoolFragmentAdpter(LetoolActivity activity, FragmentManager fm) {
         super(fm);
@@ -28,14 +32,28 @@ public class LetoolFragmentAdpter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case TAB_POS_PHOTO: {
-                Fragment fragment = new PhotoFragment();
+                Fragment fragment = null;
+                try {
+                    fragment = (Fragment) fragments[TAB_POS_PHOTO].newInstance();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
                 Bundle data = new Bundle();
                 data.putString(DataManager.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
                 fragment.setArguments(data);
                 return fragment;
             }
             case TAB_POS_PICTURE: {
-                Fragment fragment = new PictureFragment();
+                Fragment fragment = null;
+                try {
+                    fragment = (Fragment) fragments[TAB_POS_PICTURE].newInstance();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
                 Bundle data = new Bundle();
                 data.putString(DataManager.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
                 LLog.i(TAG, "PictureFragment");
