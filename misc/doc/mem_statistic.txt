@@ -1,3 +1,5 @@
+
+//----------------------------------------------------------------------------------------------------
 1,
 
           |虚拟机内存  
@@ -14,7 +16,7 @@ GPU显存在哪里？显存对于每个应用如何计算的？纹理内存统�
 3,计算从程序启动到最后程序结束 整个APP的内存使用情况统计。从而得出不同机器的内存使用策略。
 
 
-
+//----------------------------------------------------------------------------------------------------
 1，位图在一个屏幕到底展示多大，我们应该怎加工位图使得其恰到好处地去适应一个设备？在使用位图时，要着重考虑
 设备的几个制约因素：
 
@@ -27,5 +29,79 @@ GPU显存在哪里？显存对于每个应用如何计算的？纹理内存统�
 7，设备的存储能力；
 
 以上因素决定了位图在不同的设备上应该展示的大小（决定了图片的清晰度），各级缓存池的大小（决定了图片展示的速度）。
+
+
+
+//----------------------------------------------------------------------------------------------------
+
+One Fragment callback order (according once logs):
+() enter app:
+25241:I/letooltag:PhotoFragment( 9558): onAttach
+25242:I/letooltag:PhotoFragment( 9558): onCreate
+25243:I/letooltag:PhotoFragment( 9558): onCreateView
+25249:I/letooltag:PhotoFragment( 9558): onStart
+25250:I/letooltag:PhotoFragment( 9558): onResume
+
+(2) pause app:
+25306:I/letooltag:PhotoFragment( 9558): onPause
+25418:I/letooltag:PhotoFragment( 9558): onStop
+
+(3) resume app:
+25988:I/letooltag:PhotoFragment( 9558): onStart
+26016:I/letooltag:PhotoFragment( 9558): onResume
+
+(4) exit app:
+26464:I/letooltag:PhotoFragment( 9558): onPause
+26513:I/letooltag:PhotoFragment( 9558): onStop
+26514:I/letooltag:PhotoFragment( 9558): onDestroyView
+26516:I/letooltag:PhotoFragment( 9558): onDestroy
+26518:I/letooltag:PhotoFragment( 9558): onDetach
+
+
+
+More than two fragment bind to a fragmentadapter(according once logs):
+
+() enter app:
+29312:I/letooltag:PhotoFragment(11280): onAttach
+29313:I/letooltag:PhotoFragment(11280): onCreate
+29314:I/letooltag:PhotoFragment(11280): onCreateView
+29321:I/letooltag:PhotoFragment(11280): onStart
+29322:I/letooltag:PhotoFragment(11280): onResume
+29324:I/letooltag:PictureFragment(11280): onAttach
+29325:I/letooltag:PictureFragment(11280): onCreate
+29326:I/letooltag:PictureFragment(11280): onCreateView
+29331:I/letooltag:PictureFragment(11280): onStart
+29332:I/letooltag:PictureFragment(11280): onResume
+
+(2) pause app:
+
+
+30585:I/letooltag:PhotoFragment(11280): onPause
+30595:I/letooltag:PictureFragment(11280): onPause
+30725:I/letooltag:PhotoFragment(11280): onStop
+30726:I/letooltag:PictureFragment(11280): onStop
+
+(3) resume app:
+
+31436:I/letooltag:PhotoFragment(11280): onStart
+31437:I/letooltag:PictureFragment(11280): onStart
+31466:I/letooltag:PhotoFragment(11280): onResume
+31469:I/letooltag:PictureFragment(11280): onResume
+
+
+
+(4) exit app:
+
+25014:I/letooltag:PhotoFragment(11280): onPause
+25016:I/letooltag:PictureFragment(11280): onPause
+25068:I/letooltag:PhotoFragment(11280): onStop
+25069:I/letooltag:PictureFragment(11280): onStop
+25070:I/letooltag:PhotoFragment(11280): onDestroyView
+25072:I/letooltag:PhotoFragment(11280): onDestroy
+25074:I/letooltag:PhotoFragment(11280): onDetach
+25075:I/letooltag:PictureFragment(11280): onDestroyView
+25077:I/letooltag:PictureFragment(11280): onDestroy
+25078:I/letooltag:PictureFragment(11280): onDetach
+
 
 

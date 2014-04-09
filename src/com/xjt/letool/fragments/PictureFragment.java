@@ -174,13 +174,14 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
 
     @Override
     public void onAttach(Activity activity) {
-
         super.onAttach(activity);
+        LLog.i(TAG, "onAttach");
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LLog.i(TAG, "onCreate");
         mActivity = (LetoolActivity) getActivity();
         setHasOptionsMenu(true);
     }
@@ -212,7 +213,7 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-
+        LLog.i(TAG, "onCreateOptionsMenu");
         if (mGetContent) {
             inflater.inflate(R.menu.pickup, menu);
         } else {
@@ -262,6 +263,7 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        LLog.i(TAG, "onCreateView");
         View rootView = inflater.inflate(R.layout.gl_root_view, container, false);
         mGLRootView = (GLRootView) rootView.findViewById(R.id.gl_root_view);
 
@@ -275,16 +277,18 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
 
     @Override
     public void onStart() {
-        // TODO Auto-generated method stub
         super.onStart();
+        LLog.i(TAG, "onStart");
     }
 
     @Override
     public void onResume() {
+
+        super.onResume();
+        LLog.i(TAG, "onResume");
         mGLRootView.onResume();
         mGLRootView.lockRenderThread();
         try {
-            super.onResume();
             mIsActive = true;
             mGLRootView.setContentPane(mRootPane);
             mThumbnailSetAdapter.resume();
@@ -297,10 +301,12 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
 
     @Override
     public void onPause() {
+
+        super.onPause();
+        LLog.i(TAG, "onPause");
         mGLRootView.onPause();
         mGLRootView.lockRenderThread();
         try {
-            super.onPause();
             mIsActive = false;
             mThumbnailSetAdapter.pause();
             mThumbnailViewRenderer.pause();
@@ -333,23 +339,26 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
 
     @Override
     public void onStop() {
-        // TODO Auto-generated method stub
         super.onStop();
+        LLog.i(TAG, "onStop");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        LLog.i(TAG, "onDestroyView");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        LLog.i(TAG, "onDetach");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        LLog.i(TAG, "onDestroy");
     }
 
     @Override

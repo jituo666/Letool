@@ -204,11 +204,13 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        LLog.i(TAG, "onAttach");
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LLog.i(TAG, "onCreate");
         mActivity = (LetoolActivity) getActivity();
         setHasOptionsMenu(true);
     }
@@ -307,6 +309,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        LLog.i(TAG, "onCreateView");
         View rootView = inflater.inflate(R.layout.gl_root_view, container, false);
         mGLRootView = (GLRootView) rootView.findViewById(R.id.gl_root_view);
         LLog.i(TAG, "onCreateView:" + mGLRootView);
@@ -334,6 +337,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflator) {
         super.onCreateOptionsMenu(menu, inflator);
+        LLog.i(TAG, "onCreateOptionsMenu");
         //GalleryActionBar actionBar = mActivity.getGalleryActionBar();
 
         if (mGetContent) {
@@ -365,11 +369,14 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     @Override
     public void onStart() {
         super.onStart();
+        LLog.i(TAG, "onStart");
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        LLog.i(TAG, "onResume");
         mGLRootView.onResume();
         mGLRootView.lockRenderThread();
         try {
@@ -394,6 +401,8 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     @Override
     public void onPause() {
         super.onPause();
+
+        LLog.i(TAG, "onPause");
         mGLRootView.onPause();
         mGLRootView.lockRenderThread();
         try {
@@ -416,21 +425,27 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     @Override
     public void onStop() {
         super.onStop();
+
+        LLog.i(TAG, "onStop");
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        LLog.i(TAG, "onDestroyView");
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        LLog.i(TAG, "onDetach");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        LLog.i(TAG, "onDestroy");
     }
 
     @Override
