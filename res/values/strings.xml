@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
     <string name="app_name">了图</string>
     <!-- Title for picture frame gadget to show in list of all available gadgets -->
     <string name="gadget_title">Picture frame</string>
@@ -15,8 +15,10 @@
     <string name="loading_video">Loading video\u2026</string>
     <string name="loading_image">Loading image\u2026</string>
 
-    <!-- Message shown on the progress dialog to indicate we're loading the
-            account info [CHAR LIMIT=30] -->
+    <!--
+         Message shown on the progress dialog to indicate we're loading the
+            account info [CHAR LIMIT=30]
+    -->
     <string name="loading_account">Loading account\u2026</string>
 
     <!-- Movie View Resume Playing dialog title -->
@@ -30,26 +32,36 @@
     <!-- Displayed in the title of those albums that are being loaded -->
     <string name="loading">Loading\u2026</string>
 
-    <!-- Displayed in the title of those pictures that fails to be loaded
-         [CHAR LIMIT=50]-->
+    <!--
+         Displayed in the title of those pictures that fails to be loaded
+         [CHAR LIMIT=50]
+    -->
     <string name="fail_to_load">Couldn\'t load</string>
 
-    <!-- Used in a toast message when an image fails to be loaded
-         [CHAR LIMIT=50]-->
+    <!--
+         Used in a toast message when an image fails to be loaded
+         [CHAR LIMIT=50]
+    -->
     <string name="fail_to_load_image">Couldn\'t load the image</string>
 
-    <!-- Displayed in place of the picture when we fail to get the thumbnail of it.
-         [CHAR LIMIT=50]-->
+    <!--
+         Displayed in place of the picture when we fail to get the thumbnail of it.
+         [CHAR LIMIT=50]
+    -->
     <string name="no_thumbnail">No thumbnail</string>
 
     <!-- Movie View Start Playing button "Beginning" -->
     <string name="resume_playing_restart">Start over</string>
 
-    <!-- Title of a menu item to indicate performing the image crop operation
-         [CHAR LIMIT=20] -->
+    <!--
+         Title of a menu item to indicate performing the image crop operation
+         [CHAR LIMIT=20]
+    -->
     <string name="crop_save_text">OK</string>
-    <!-- Title of a menu item to indicate performing the image crop operation
-         [CHAR LIMIT=20] -->
+    <!--
+         Title of a menu item to indicate performing the image crop operation
+         [CHAR LIMIT=20]
+    -->
     <string name="ok">OK</string>
     <!-- Button indicating that the cropped image should be reverted back to the original -->
     <!-- Hint that appears when cropping an image with more than one face -->
@@ -57,18 +69,19 @@
     <!-- Toast/alert that the image is being saved to the SD card -->
     <string name="saving_image">Saving picture\u2026</string>
 
-    <!-- Toast/alert that the image is being saved after editing in filtershow [CHAR LIMIT=40]-->
+    <!-- Toast/alert that the image is being saved after editing in filtershow [CHAR LIMIT=40] -->
     <string name="filtershow_saving_image">Saving picture to <xliff:g id="album_name">%1$s</xliff:g> \u2026</string>
 
-    <!-- Eorror toast message that the image cannot be saved [CHAR LIMIT=40]-->
+    <!-- Eorror toast message that the image cannot be saved [CHAR LIMIT=40] -->
     <string name="save_error">Couldn\'t save cropped image.</string>
 
-    <!-- menu pick: crop the currently selected image [CHAR LIMIT=30]-->
+    <!-- menu pick: crop the currently selected image [CHAR LIMIT=30] -->
     <string name="crop_label">Crop picture</string>
-    <!-- menu pick: trim the currently selected video [CHAR LIMIT=30]-->
+    <!-- menu pick: trim the currently selected video [CHAR LIMIT=30] -->
     <string name="trim_label">Trim video</string>
 
     <!-- Toast/alert that the face detection is being run -->
+
 
     <!-- Title prompted for user to choose a photo item [CHAR LIMIT=20] -->
     <string name="select_image">Select photo</string>
@@ -81,8 +94,10 @@
     <!-- Title prompted for user to choose a group [CHAR LIMIT=20] -->
     <string name="select_group">Select group</string>
 
-    <!-- Displayed in the title of the dialog for things to do with a picture
-             that is to be "set as" (e.g. set as contact photo or set as wallpaper) -->
+    <!--
+         Displayed in the title of the dialog for things to do with a picture
+             that is to be "set as" (e.g. set as contact photo or set as wallpaper)
+    -->
     <string name="set_image">Set picture as</string>
     <!-- Activity title for cropping picture and setting it as wallpaper [CHAR LIMIT=20] -->
     <string name="set_wallpaper">Set wallpaper</string>
@@ -97,6 +112,7 @@
         <item quantity="one">Delete selected item?</item>
         <item quantity="other">Delete selected items?</item>
     </plurals>
+
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="share">Share</string>
@@ -106,14 +122,13 @@
     <!-- The label shown after an image is deleted [CHAR LIMIT=16] -->
     <string name="deleted">Deleted</string>
 
-    <!-- The label on the button which when clicked will undo a deletion of image [CHAR LIMIT=16]-->
+    <!-- The label on the button which when clicked will undo a deletion of image [CHAR LIMIT=16] -->
     <string name="undo">UNDO</string>
 
     <!-- String indicating more actions are available -->
     <string name="select_all">Select all</string>
     <string name="deselect_all">Deselect all</string>
     <string name="slideshow">Slideshow</string>
-
     <string name="details">Details</string>
     <string name="details_title">%1$d of %2$d items:</string>
     <string name="close">Close</string>
@@ -121,24 +136,30 @@
     <!-- Title of a menu item to switch from Gallery to Camera app [CHAR LIMIT=30] -->
     <string name="switch_to_camera">Switch to Camera</string>
 
-    <!-- String indicating how many media item(s) is(are) selected
-            eg. 1 selected [CHAR LIMIT=30] -->
+    <!--
+         String indicating how many media item(s) is(are) selected
+            eg. 1 selected [CHAR LIMIT=30]
+    -->
     <plurals name="number_of_items_selected">
         <item quantity="zero">%1$d selected</item>
         <item quantity="one">%1$d selected</item>
         <item quantity="other">%1$d selected</item>
     </plurals>
 
-    <!-- String indicating how many media album(s) is(are) selected
-            eg. 1 selected [CHAR LIMIT=30] -->
+    <!--
+         String indicating how many media album(s) is(are) selected
+            eg. 1 selected [CHAR LIMIT=30]
+    -->
     <plurals name="number_of_albums_selected">
         <item quantity="zero">%1$d selected</item>
         <item quantity="one">%1$d selected</item>
         <item quantity="other">%1$d selected</item>
     </plurals>
 
-    <!-- String indicating how many media group(s) is(are) selected
-            eg. 1 selected [CHAR LIMIT=30] -->
+    <!--
+         String indicating how many media group(s) is(are) selected
+            eg. 1 selected [CHAR LIMIT=30]
+    -->
     <plurals name="number_of_groups_selected">
         <item quantity="zero">%1$d selected</item>
         <item quantity="one">%1$d selected</item>
@@ -150,27 +171,35 @@
     <string name="rotate_left">Rotate left</string>
     <string name="rotate_right">Rotate right</string>
 
-    <!-- Toast message prompted when the specified item is not found [CHAR LIMIT=40]-->
+    <!-- Toast message prompted when the specified item is not found [CHAR LIMIT=40] -->
     <string name="no_such_item">Couldn\'t find item.</string>
 
-    <!-- String used as a menu label. The user can choose to edit the image
-         [CHAR_LIMIT=20]-->
+    <!--
+         String used as a menu label. The user can choose to edit the image
+         [CHAR_LIMIT=20]
+    -->
     <string name="edit">Edit</string>
 
-    <!-- String used as a menu label. The user can choose to edit the image
-         [CHAR_LIMIT=20]-->
+    <!--
+         String used as a menu label. The user can choose to edit the image
+         [CHAR_LIMIT=20]
+    -->
     <string name="simple_edit">Simple Edit</string>
 
-    <!-- String used as a title of a progress dialog. The user can
+    <!--
+         String used as a title of a progress dialog. The user can
          choose to cache some Picasa picture albums on device, so it can
          be viewed offline. This string is shown when the request is being
-         processed. [CHAR LIMIT=50] -->
+         processed. [CHAR LIMIT=50]
+    -->
     <string name="process_caching_requests">Processing caching requests</string>
 
-    <!-- String used as a small notification label above a Picasa album.
+    <!--
+         String used as a small notification label above a Picasa album.
          It means the pictures of the Picasa album is currently being
          transferred to local storage, so the pictures can later be viewed
-         offline. [CHAR LIMIT=15] -->
+         offline. [CHAR LIMIT=15]
+    -->
     <string name="caching_label">Caching\u2026</string>
 
     <!-- The title of the menu item to let user crop the image. [CHAR LIMIT=15] -->
@@ -187,36 +216,45 @@
     <!-- String indicating an error when playing the video. [CHAR LIMIT=30] -->
     <string name="video_err">Can\'t play video.</string>
 
-    <!-- Strings for grouping operations in the menu. The photos can be grouped
-         by their location, taken time, or tags. -->
-    <!-- The title of the menu item to let user choose the grouping rule, when
+    <!--
+         Strings for grouping operations in the menu. The photos can be grouped
+         by their location, taken time, or tags.
+    -->
+    <!--
+         The title of the menu item to let user choose the grouping rule, when
          pressed, a submenu will shown and user can choose one grouping rule
-         from the submenu. -->
+         from the submenu.
+    -->
+
 
     <!-- Title of a menu item to group photo by location [CHAR LIMIT=30] -->
     <string name="group_by_location">By location</string>
 
-    <!-- Title of a menu tiem to group photo by taken date [CHAR LIMIT=30]-->
+    <!-- Title of a menu tiem to group photo by taken date [CHAR LIMIT=30] -->
     <string name="group_by_time">By time</string>
 
-    <!-- Title of a menu item to group photo by tags [CHAR LIMIT=30]-->
+    <!-- Title of a menu item to group photo by tags [CHAR LIMIT=30] -->
     <string name="group_by_tags">By tags</string>
 
-    <!-- Title of a menu item to group photo by faces [CHAR LIMIT=30]-->
+    <!-- Title of a menu item to group photo by faces [CHAR LIMIT=30] -->
     <string name="group_by_faces">By people</string>
 
-    <!-- Title of a menu item to group photo by albums [CHAR LIMIT=30]-->
+    <!-- Title of a menu item to group photo by albums [CHAR LIMIT=30] -->
     <string name="group_by_album">By album</string>
 
-    <!-- Title of a menu item to group photo by size [CHAR LIMIT=30]-->
+    <!-- Title of a menu item to group photo by size [CHAR LIMIT=30] -->
     <string name="group_by_size">By size</string>
 
-    <!-- When grouping photos by tags, the label used for photos without tags
-         [CHAR LIMIT=20]-->
+    <!--
+         When grouping photos by tags, the label used for photos without tags
+         [CHAR LIMIT=20]
+    -->
     <string name="untagged">Untagged</string>
 
-    <!-- When grouping photos by locations, the label used for photos that don't
-         have location information in them [CHAR LIMIT=20]-->
+    <!--
+         When grouping photos by locations, the label used for photos that don't
+         have location information in them [CHAR LIMIT=20]
+    -->
     <string name="no_location">No location</string>
 
     <!-- This toast message is shown when network connection is lost while doing clustering -->
@@ -225,18 +263,21 @@
     <!-- This toast message is shown when failed to load the album data. [CHAR LIMIT=NONE] -->
     <string name="sync_album_error">Couldn\'t download the photos in this album. Retry later.</string>
 
-    <!-- The title of the menu item to let user choose the which portion of
+    <!--
+         The title of the menu item to let user choose the which portion of
          the media items the user wants to see. When pressed, a submenu will
          appear and user can choose one of "show images only",
-         "show videos only", or "show all" from the submenu. -->
+         "show videos only", or "show all" from the submenu.
+    -->
 
-    <!-- Title of a menu item to show images only [CHAR LIMIT=30]-->
+
+    <!-- Title of a menu item to show images only [CHAR LIMIT=30] -->
     <string name="show_images_only">Images only</string>
 
-    <!-- Title of a menu item to show videos only [CHAR LIMIT=30]-->
+    <!-- Title of a menu item to show videos only [CHAR LIMIT=30] -->
     <string name="show_videos_only">Videos only</string>
 
-    <!-- Title of a menu item to show all (both images and videos) [CHAR LIMIT=30]-->
+    <!-- Title of a menu item to show all (both images and videos) [CHAR LIMIT=30] -->
     <string name="show_all">Images &amp; videos</string>
 
     <!-- Title of the StackView AppWidget -->
@@ -245,34 +286,43 @@
     <!-- Text for the empty state of the StackView AppWidget [CHAR LIMIT=30] -->
     <string name="appwidget_empty_text">No photos.</string>
 
-    <!-- Toast message shown when the cropped image has been saved in the
-         %s folder (string: folder_download) [CHAR LIMIT=50]-->
-    <string name="crop_saved">
-        Cropped image saved to <xliff:g id="folder_name">%s</xliff:g>.</string>
+    <!--
+         Toast message shown when the cropped image has been saved in the
+         %s folder (string: folder_download) [CHAR LIMIT=50]
+    -->
+    <string name="crop_saved">        Cropped image saved to <xliff:g id="folder_name">%s</xliff:g>.</string>
 
-    <!-- Toast message shown when there is no albums available [CHAR LIMIT=50]-->
+    <!-- Toast message shown when there is no albums available [CHAR LIMIT=50] -->
     <string name="no_albums_alert">No albums available.</string>
 
-    <!-- Toast message shown when we close the AlbumPage because it is empty
-            [CHAR LIMIT=50] -->
+    <!--
+         Toast message shown when we close the AlbumPage because it is empty
+            [CHAR LIMIT=50]
+    -->
     <string name="empty_album">O images/videos available.</string>
 
     <!-- Album label used to indicate the collection of PWA Buzz/Post photos -->
     <string name="picasa_posts">Posts</string>
 
-    <!-- A label describing that the current screen is for the user to pick
-         some albums to be viewable offline [CHAR LIMIT=30] -->
+    <!--
+         A label describing that the current screen is for the user to pick
+         some albums to be viewable offline [CHAR LIMIT=30]
+    -->
     <string name="make_available_offline">Make available offline</string>
 
     <!-- A label of a menu item for user to sync the content [CHAR LIMIT=30] -->
     <string name="sync_picasa_albums">Refresh</string>
 
-    <!-- A label on a button. The user clicks this button after he has
-         finished selection. [CHAR LIMIT=15] -->
+    <!--
+         A label on a button. The user clicks this button after he has
+         finished selection. [CHAR LIMIT=15]
+    -->
     <string name="done">Done</string>
 
-    <!-- String indicating the sequence of currently selected item in the
-            media set eg. 3 of 5 items [CHAR LIMIT=30] -->
+    <!--
+         String indicating the sequence of currently selected item in the
+            media set eg. 3 of 5 items [CHAR LIMIT=30]
+    -->
     <string name="sequence_in_set">%1$d of %2$d items:</string>
     <!-- Text indicating the title of a media item in details window [CHAR LIMIT=14] -->
     <string name="title">Title</string>
@@ -341,13 +391,17 @@
     <string name="ffx_bw_contrast">B/W</string>
     <!-- String for filter that makes colors a yellowish (filtershow_fx_0005_punch) [CHAR LIMIT=10] -->
     <string name="ffx_punch">Punch</string>
-    <!-- String for filter that mimics the cross-process technique in
-         photography (makes colors bluish) (filtershow_fx_0006_x_process) [CHAR LIMIT=10] -->
+    <!--
+         String for filter that mimics the cross-process technique in
+         photography (makes colors bluish) (filtershow_fx_0006_x_process) [CHAR LIMIT=10]
+    -->
     <string name="ffx_x_process">X Process</string>
     <!-- String for filter that makes image coffee-colored (filtershow_fx_0007_washout) [CHAR LIMIT=10] -->
     <string name="ffx_washout">Latte</string>
-    <!-- String for filter that makes colors washed out and brownish
-         (filtershow_fx_0008_washout_color) [CHAR LIMIT=10] -->
+    <!--
+         String for filter that makes colors washed out and brownish
+         (filtershow_fx_0008_washout_color) [CHAR LIMIT=10]
+    -->
     <string name="ffx_washout_color">Litho</string>
 
     <!-- Toast message shown after we make some album(s) available offline [CHAR LIMIT=50] -->
@@ -356,77 +410,96 @@
         <item quantity="other">Making albums available offline.</item>
     </plurals>
 
-    <!-- Toast message shown after we try to make a local album available offline
-         [CHAR LIMIT=150] -->
-    <string name="try_to_set_local_album_available_offline">
-        This item is stored locally and available offline.</string>
+    <!--
+         Toast message shown after we try to make a local album available offline
+         [CHAR LIMIT=150]
+    -->
+    <string name="try_to_set_local_album_available_offline">        This item is stored locally and available offline.</string>
 
-    <!-- A label shown on the action bar. It indicates that the user is
-         viewing all available albums [CHAR LIMIT=20] -->
+    <!--
+         A label shown on the action bar. It indicates that the user is
+         viewing all available albums [CHAR LIMIT=20]
+    -->
     <string name="set_label_all_albums">All albums</string>
 
-    <!-- A label shown on the action bar. It indicates that the user is
-         viewing albums stored locally on the device [CHAR LIMIT=20] -->
+    <!--
+         A label shown on the action bar. It indicates that the user is
+         viewing albums stored locally on the device [CHAR LIMIT=20]
+    -->
     <string name="set_label_local_albums">Local albums</string>
 
-    <!-- A label shown on the action bar. It indicates that the user is
+    <!--
+         A label shown on the action bar. It indicates that the user is
          viewing MTP devices connected (like other digital cameras).
-         [CHAR LIMIT=20] -->
+         [CHAR LIMIT=20]
+    -->
     <string name="set_label_mtp_devices">MTP devices</string>
 
-    <!-- A label shown on the action bar. It indicates that the user is
-         viewing Picasa albums [CHAR LIMIT=20] -->
+    <!--
+         A label shown on the action bar. It indicates that the user is
+         viewing Picasa albums [CHAR LIMIT=20]
+    -->
     <string name="set_label_picasa_albums">Picasa albums</string>
 
-    <!-- Label indicating the amount on free space on the device. The parameter
+    <!--
+         Label indicating the amount on free space on the device. The parameter
          is a string representation of the amount of free space, eg. "20MB".
          [CHAR LIMIT=20]
     -->
     <string name="free_space_format"><xliff:g id="bytes">%s</xliff:g> free</string>
 
-    <!-- Label of a group of pictures. The size of each picture in this group is
+    <!--
+         Label of a group of pictures. The size of each picture in this group is
          less than a certain amount. The parameter is a string representation
          of that amount, eg. "10MB".
          [CHAR LIMIT=20]
     -->
     <string name="size_below"><xliff:g id="size">%1$s</xliff:g> or below</string>
 
-    <!-- Label of a group of pictures. The size of each picture in this group is
+    <!--
+         Label of a group of pictures. The size of each picture in this group is
          more than a certain amount. The parameter is a string representation
          of that amount, eg. "10MB".
          [CHAR LIMIT=20]
     -->
     <string name="size_above"><xliff:g id="size">%1$s</xliff:g> or above</string>
 
-    <!-- Label of a group of pictures. The size of each picture in this group is
+    <!--
+         Label of a group of pictures. The size of each picture in this group is
          between two amounts. The parameters are string representations of the two
          amounts, eg. "10MB", "100MB".
          [CHAR LIMIT=20]
     -->
     <string name="size_between"><xliff:g id="min_size">%1$s</xliff:g> to <xliff:g id="max_size">%2$s</xliff:g></string>
 
-    <!-- A label shown on the action bar. It indicates that the operation
-         to import media item(s) [CHAR LIMIT=20] -->
+    <!--
+         A label shown on the action bar. It indicates that the operation
+         to import media item(s) [CHAR LIMIT=20]
+    -->
     <string name="Import">Import</string>
 
-    <!-- A label shown on the action bar. It indicates whether the import
-         operation succeeds or fails. [CHAR LIMIT=20] -->
+    <!--
+         A label shown on the action bar. It indicates whether the import
+         operation succeeds or fails. [CHAR LIMIT=20]
+    -->
     <string name="import_complete">Import complete</string>
     <string name="import_fail">Import unsuccessful</string>
 
-    <!-- A toast indicating a camera is connected to the device [CHAR LIMIT=30]-->
+    <!-- A toast indicating a camera is connected to the device [CHAR LIMIT=30] -->
     <string name="camera_connected">Camera connected.</string>
     <!-- A toast indicating a camera is disconnected [CHAR LIMIT=30] -->
     <string name="camera_disconnected">Camera disconnected.</string>
-    <!-- A label shown on MTP albums thumbnail to instruct users to import
-        [CHAR LIMIT=40] -->
+    <!--
+         A label shown on MTP albums thumbnail to instruct users to import
+        [CHAR LIMIT=40]
+    -->
     <string name="click_import">Touch here to import</string>
 
-    <!-- The label on the radio button for the widget type that shows the images randomly. [CHAR LIMIT=30]-->
+    <!-- The label on the radio button for the widget type that shows the images randomly. [CHAR LIMIT=30] -->
     <string name="widget_type_album">Choose an album</string>
-    <!-- The label on the radio button for the widget type that shows the images in an album. [CHAR LIMIT=30]-->
+    <!-- The label on the radio button for the widget type that shows the images in an album. [CHAR LIMIT=30] -->
     <string name="widget_type_shuffle">Shuffle all images</string>
-    <!-- The label on the radio button for the widget type that shows only one image. [CHAR LIMIT=30]-->
+    <!-- The label on the radio button for the widget type that shows only one image. [CHAR LIMIT=30] -->
     <string name="widget_type_photo">Choose an image</string>
 
     <!-- The title of the dialog for choosing the type of widget. [CHAR LIMIT=20] -->
@@ -459,23 +532,25 @@
     <!-- The title of menu item where user can add a new account -->
     <string name="add_account">Add account</string>
 
-    <!-- The label for the folder contains pictures taken by the camera. [CHAR LIMIT=20]-->
+    <!-- The label for the folder contains pictures taken by the camera. [CHAR LIMIT=20] -->
     <string name="folder_camera">Camera</string>
 
-    <!-- The label for the folder contains downloaded pictures. [CHAR LIMIT=20]-->
+    <!-- The label for the folder contains downloaded pictures. [CHAR LIMIT=20] -->
     <string name="folder_download">Download</string>
 
-    <!-- The label for the folder contains edited online pictures. [CHAR LIMIT=40]-->
+    <!-- The label for the folder contains edited online pictures. [CHAR LIMIT=40] -->
     <string name="folder_edited_online_photos">Edited Online Photos</string>
 
-    <!-- The label for the folder contains pictures that was imported from an
-         external camera. [CHAR LIMIT=20]-->
+    <!--
+         The label for the folder contains pictures that was imported from an
+         external camera. [CHAR LIMIT=20]
+    -->
     <string name="folder_imported">Imported</string>
 
-    <!-- The label for the folder contains screenshot images. [CHAR LIMIT=20]-->
+    <!-- The label for the folder contains screenshot images. [CHAR LIMIT=20] -->
     <string name="folder_screenshot">Screenshot</string>
 
-    <!-- The title of the menu item which display online help in browser. [CHAR LIMIT=20]-->
+    <!-- The title of the menu item which display online help in browser. [CHAR LIMIT=20] -->
     <string name="help">Help</string>
 
     <!-- The tilte of a dialog showing there is no external storage. [CHAR LIMIT=20] -->
@@ -514,7 +589,7 @@
     <!-- The label on the button that will save an edited image -->
     <string name="save" msgid="8140440041190264400">Save</string>
 
-    <!--  Text of notification message which is shown when user attaches camera -->
+    <!-- Text of notification message which is shown when user attaches camera -->
     <string name="ingest_scanning" msgid="2048262851775139720">Scanning content...</string>
 
     <!-- String indicating how many media items from the camera have been scanned -->
@@ -524,24 +599,26 @@
         <item quantity="other">%1$d items scanned</item>
     </plurals>
 
-    <!--  Status message shown when content from the camera is being sorted -->
+    <!-- Status message shown when content from the camera is being sorted -->
     <string name="ingest_sorting" msgid="624687230903648118">Sorting...</string>
 
-    <!--  Status message shown when scanning the content from the camera has completed -->
+    <!-- Status message shown when scanning the content from the camera has completed -->
     <string name="ingest_scanning_done">Scanning done</string>
 
-    <!--  Status message shown when content from an external camera is being imported -->
+    <!-- Status message shown when content from an external camera is being imported -->
     <string name="ingest_importing">Importing...</string>
 
-    <!--  Status message shown when there is no content available to be imported -->
+    <!-- Status message shown when there is no content available to be imported -->
     <string name="ingest_empty_device">There is no content available for importing on this device.</string>
 
-    <!--  Status message shown when there is no MTP device connected  -->
+    <!-- Status message shown when there is no MTP device connected -->
     <string name="ingest_no_device">There is no MTP device connected</string>
 
     <!-- Camera resources below -->
 
+
     <!-- General strings -->
+
 
     <!-- title for the dialog showing the error of camera hardware -->
     <string name="camera_error_title">Camera error</string>
@@ -584,7 +661,6 @@
 
     <!-- Settings screen, camera selection dialog title. Users can select a camera from the phone (front-facing or back-facing). [CHAR LIMIT=20] -->
     <string name="pref_camera_id_title">Choose camera</string>
-
     <string name="pref_camera_id_default" translatable="false">0</string>
 
     <!-- In select camera setting, back facing camera. [CHAR LIMIT=14] -->
@@ -594,23 +670,22 @@
 
     <!-- Settings screen, setting title text -->
     <string name="pref_camera_recordlocation_title">Store location</string>
-
     <string name="pref_camera_recordlocation_default" translatable="false">none</string>
 
-    <!--  Label for record location preference [CHAR LIMIT=50] -->
+    <!-- Label for record location preference [CHAR LIMIT=50] -->
     <string name="pref_camera_location_label">LOCATION</string>
 
-    <!-- Title for countdown timer on camera settings screen [CHAR LIMIT=30]-->
+    <!-- Title for countdown timer on camera settings screen [CHAR LIMIT=30] -->
     <string name="pref_camera_timer_title">Countdown timer</string>
-
     <string name="pref_camera_timer_default" translatable="false">0</string>
-    <!-- Entry for countdown timer setting. e.g. 1 second, 10 seconds, etc. [CHAR LIMIT=30]-->
+    <!-- Entry for countdown timer setting. e.g. 1 second, 10 seconds, etc. [CHAR LIMIT=30] -->
     <plurals name="pref_camera_timer_entry">
         <item quantity="one">1 second</item>
         <item quantity="other">%d seconds</item>
     </plurals>
+
     <string name="pref_camera_timer_sound_default">@string/setting_on_value</string>
-    <!-- Text followed by a checkbox to turn on/off sound effects during the countdown. [CHAR LIMIT = 16]-->
+    <!-- Text followed by a checkbox to turn on/off sound effects during the countdown. [CHAR LIMIT = 16] -->
     <string name="pref_camera_timer_sound_title">Beep during countdown</string>
 
     <!-- Entry of a on/off setting. The setting is turned off. [CHAR LIMIT=15] -->
@@ -638,8 +713,10 @@
     <!-- Video quality setting entry. Videos will be recorded in the lowest quality available on the device. [CHAR LIMIT=24] -->
     <string name="pref_video_quality_entry_low">Low</string>
 
-    <!-- Describes the preference dialog for choosing interval between frame capture for
-    time lapse recording. Appears at top of the dialog. [CHAR LIMIT=30] -->
+    <!--
+    Describes the preference dialog for choosing interval between frame capture for
+    time lapse recording. Appears at top of the dialog. [CHAR LIMIT=30]
+    -->
     <string name="pref_video_time_lapse_frame_interval_title">Time lapse</string>
     <string name="pref_video_time_lapse_frame_interval_default" translatable="false">0</string>
 
@@ -688,15 +765,15 @@
     <string name="pref_camera_focusmode_label_infinity">INFINITY</string>
     <string name="pref_camera_focusmode_label_macro">MACRO</string>
 
-    <!-- Default flash mode setting.-->
+    <!-- Default flash mode setting. -->
     <string name="pref_camera_flashmode_default" translatable="false">auto</string>
 
-    <!-- Value for flash off setting-->
+    <!-- Value for flash off setting -->
     <string name="pref_camera_flashmode_no_flash" translatable="false">no_flash</string>
 
     <!-- Settings screen, Flash mode title -->
     <string name="pref_camera_flashmode_title">Flash mode</string>
-        <!-- flash label [CHAR LIMIT=50] -->
+    <!-- flash label [CHAR LIMIT=50] -->
     <string name="pref_camera_flashmode_label">FLASH MODE</string>
 
     <!-- Settings screen, Flash mode dialog radio button choices -->
@@ -709,7 +786,7 @@
     <string name="pref_camera_flashmode_label_on">FLASH ON</string>
     <string name="pref_camera_flashmode_label_off">FLASH OFF</string>
 
-    <!-- Default videocamera flash mode setting.-->
+    <!-- Default videocamera flash mode setting. -->
     <string name="pref_camera_video_flashmode_default" translatable="false">off</string>
 
     <!-- Default white balance setting. -->
@@ -783,7 +860,7 @@
     <!-- Exposure settings in preference -->
     <string name="pref_exposure_title">Exposure</string>
     <string name="pref_exposure_default" translatable="false">0</string>
-    <!--  menu label exposure compensation [CHAR LIMIT=50] -->
+    <!-- menu label exposure compensation [CHAR LIMIT=50] -->
     <string name="pref_exposure_label">EXPOSURE</string>
 
     <!-- Default HDR entry value -->
@@ -871,9 +948,8 @@
     <!-- Effect setting item that replaces background with video from gallery. [CHAR LIMIT=14] -->
     <string name="effect_backdropper_gallery">Your video</string>
 
-    <!-- Message displayed in overlay during background replacement training [CHAR LIMIT=180]-->
+    <!-- Message displayed in overlay during background replacement training [CHAR LIMIT=180] -->
     <string name="bg_replacement_message">Set your device down.\nStep out of view for a moment.</string>
-
 
     <!-- Toast telling users tapping on the viewfinder will take a picture [CHAR LIMIT=54] -->
     <string name="video_snapshot_hint">Touch to take photo while recording.</string>
@@ -931,8 +1007,10 @@
     <string name="accessibility_review_cancel">Review cancel</string>
     <!-- The button in review mode indicating that the taken photo/video is OK to be attached/uploaded [CHAR LIMIT = NONE] -->
     <string name="accessibility_review_ok">Review done</string>
-    <!-- button in review mode indicate the user want to retake another photo/video for attachment [
-CHAR LIMIT = NONE] -->
+    <!--
+button in review mode indicate the user want to retake another photo/video for attachment [
+CHAR LIMIT = NONE]
+    -->
     <string name="accessibility_review_retake">Review retake</string>
     <!-- The button to play the video. [CHAR LIMIT = NONE] -->
     <string name="accessibility_play_video">Play video</string>
@@ -1041,15 +1119,15 @@ CHAR LIMIT = NONE] -->
 
     <!-- The button to confirm time-lapse setting changes. [CHAR LIMIT = 20] -->
     <string name="time_lapse_interval_set">Done</string>
-    <!-- Title in time interval picker for setting time interval. [CHAR LIMIT = 30]-->
+    <!-- Title in time interval picker for setting time interval. [CHAR LIMIT = 30] -->
     <string name="set_time_interval">Set Time Interval</string>
-    <!-- Help text that is shown when the time lapse feature is turned off. [CHAR LIMIT = 180]-->
+    <!-- Help text that is shown when the time lapse feature is turned off. [CHAR LIMIT = 180] -->
     <string name="set_time_interval_help">Time lapse feature is off. Turn it on to set time interval.</string>
-    <!-- Help text that is shown when the countdown timer is turned off. [CHAR LIMIT = 180]-->
+    <!-- Help text that is shown when the countdown timer is turned off. [CHAR LIMIT = 180] -->
     <string name="set_timer_help">Countdown timer is off. Turn it on to count down before taking a picture.</string>
-    <!-- Title in timer setting for setting the duration for the countdown timer. [CHAR LIMIT = 50]-->
+    <!-- Title in timer setting for setting the duration for the countdown timer. [CHAR LIMIT = 50] -->
     <string name="set_duration">Set duration in seconds</string>
-    <!-- On-screen hint during timer countdown for taking a photo. [CHAR LIMIT = 60]-->
+    <!-- On-screen hint during timer countdown for taking a photo. [CHAR LIMIT = 60] -->
     <string name="count_down_title_text">Counting down to take a photo</string>
 
     <!-- Title for first run dialog asking if the user wants to remember photo locations [CHAR LIMIT = 50] -->
@@ -1072,6 +1150,7 @@ CHAR LIMIT = NONE] -->
 
     <!-- Camera menu labels -->
 
+
     <!-- more options label [CHAR LIMIT=50] -->
     <string name="camera_menu_more_label">MORE OPTIONS</string>
     <!-- settings label [CHAR LIMIT=50] -->
@@ -1083,9 +1162,12 @@ CHAR LIMIT = NONE] -->
         <item quantity="other">%1$d photos</item>
     </plurals>
     <!-- =========================================================================================================================== -->
+    <string name="common_photo">照片</string>
+    <string name="common_folder">文件夹</string>
+    <string name="common_settings">设置</string>
+    <string name="common_exit">退出</string>
     <string name="sliding_menu_title_hide_list">隐藏列表</string>
     <string name="sliding_menu_title_about">关于</string>
-    <string name="sliding_menu_title_settings">设置</string>
     <string name="sliding_menu_title_home">主页</string>
-    <string name="sliding_menu_title_exit">退出</string>
+
 </resources>

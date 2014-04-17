@@ -96,8 +96,8 @@
     <dimen name="stack_photo_height">120dp</dimen>
 
     <!-- configuration for legacy album set page -->
-    <integer name="albumset_rows_land">2</integer>
-    <integer name="albumset_rows_port">4</integer>
+    <integer name="albumset_rows_land">3</integer>
+    <integer name="albumset_rows_port">5</integer>
 
     <bool name="albumset_label_overLay">false</bool>
 

@@ -10,13 +10,9 @@ import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.DataManager;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.utils.LetoolBitmapPool;
-import com.xjt.letool.fragments.LetoolFragmentAdpter;
-import com.xjt.letool.fragments.SlidingMenuFragment;
-import com.xjt.letool.surpport.TabPageIndicator;
+import com.xjt.letool.fragments.PhotoFragment;
 import com.xjt.letool.views.LetoolActionBar;
 import com.xjt.letool.views.LetoolSlidingMenu;
-
-import java.util.List;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,10 +24,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.view.Menu;
-import android.widget.TextView;
 
 public class LetoolActivity extends FragmentActivity implements LetoolContext {
 
@@ -45,14 +38,16 @@ public class LetoolActivity extends FragmentActivity implements LetoolContext {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mOrientationManager = new OrientationManager(this);
         mFragmentManager = getSupportFragmentManager();
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        viewPager.setAdapter(new LetoolFragmentAdpter(this, mFragmentManager));
-        TabPageIndicator indicator = (TabPageIndicator) findViewById(R.id.indicator);
-        indicator.setViewPager(viewPager);
-        //
+        Fragment fragment = new PhotoFragment();
+        Bundle data = new Bundle();
+        data.putString(DataManager.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+        fragment.setArguments(data);
+        mFragmentManager.beginTransaction().add(R.id.root_container, fragment, "PhotoFragment").commit();
+
         mSlidingMenu = new LetoolSlidingMenu(mFragmentManager);
         mActionBar = new LetoolActionBar(this, findViewById(R.id.action_bar));
     }
@@ -120,6 +115,7 @@ public class LetoolActivity extends FragmentActivity implements LetoolContext {
             getLetoolActionBar().exitSelection();
             return;
         }
+        /*
         List<Fragment> list = mFragmentManager.getFragments();
         if (list.size() > 2) {
             FragmentTransaction ft = mFragmentManager.beginTransaction();
@@ -146,7 +142,8 @@ public class LetoolActivity extends FragmentActivity implements LetoolContext {
             }
         } else {
             super.onBackPressed();
-        }
+        }*/
+        super.onBackPressed();
     }
 
     @Override

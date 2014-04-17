@@ -331,6 +331,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         mEyePosition = new EyePosition(mActivity.getAndroidContext(), this);
         LetoolActionBar actionBar = mActivity.getLetoolActionBar();
         actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
+        actionBar.setTitle(R.string.common_photo);
         return rootView;
     }
 

@@ -20,7 +20,7 @@ public class LetoolFragmentAdpter extends FragmentPagerAdapter {
     private static final String[] CONTENT = new String[] { "照片", "图库" };
     private static final Class<?>[] fragments = new Class<?>[] {
             PhotoFragment.class,
-            PictureFragment.class
+            FolderFragment.class
     };
 
     public LetoolFragmentAdpter(LetoolActivity activity, FragmentManager fm) {

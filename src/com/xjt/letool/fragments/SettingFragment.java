@@ -24,7 +24,7 @@ public class SettingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.app_settings, container, false);
-        mActivity.getLetoolActionBar().setTitle(R.string.sliding_menu_title_settings);
+        mActivity.getLetoolActionBar().setTitle(R.string.common_settings);
         return rootView;
     }
 }

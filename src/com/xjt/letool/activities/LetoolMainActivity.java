@@ -8,7 +8,6 @@ import com.xjt.letool.utils.Utils;
 import android.os.Bundle;
 import android.content.Intent;
 import android.view.Menu;
-import android.view.Window;
 import android.view.WindowManager;
 
 public class LetoolMainActivity extends LetoolActivity {

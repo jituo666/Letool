@@ -19,6 +19,8 @@ import android.widget.TextView;
 import com.xjt.letool.activities.LetoolActivity;
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
+import com.xjt.letool.data.DataManager;
+import com.xjt.letool.views.LetoolSlidingMenu;
 
 import java.util.List;
 
@@ -27,24 +29,29 @@ public class SlidingMenuFragment extends Fragment {
 
     private static final String TAG = "SlidingMenuFragment";
 
-    public static final int SLIDING_MENU_HIDE_LIST = 0;
-    public static final int SLIDING_MENU_ABOUT = 1;
+    public static final int SLIDING_MENU_PHOTO = 0;
+    public static final int SLIDING_MENU_FOLDER = 1;
     public static final int SLIDING_MENU_SETTING = 2;
-    public static final int SLIDING_MENU_HOME = 3;
-    public static final int SLIDING_MENU_EXIT = 4;
+    public static final int SLIDING_MENU_EXIT = 3;
 
     private static final SlidingMenuItem[] SLIDING_MENUS = new SlidingMenuItem[] {
-            new SlidingMenuItem(SLIDING_MENU_HIDE_LIST, R.drawable.ic_action_view_as_list, R.string.sliding_menu_title_hide_list, true, true),
-            new SlidingMenuItem(SLIDING_MENU_ABOUT, R.drawable.ic_action_about, R.string.sliding_menu_title_about, true, true),
-            new SlidingMenuItem(SLIDING_MENU_SETTING, R.drawable.ic_action_settings, R.string.sliding_menu_title_settings, true, true),
-            new SlidingMenuItem(SLIDING_MENU_HOME, R.drawable.ic_action_view_as_grid, R.string.sliding_menu_title_home, true, true),
-            new SlidingMenuItem(SLIDING_MENU_EXIT, R.drawable.ic_action_exit, R.string.sliding_menu_title_exit, true, true),
+            new SlidingMenuItem(SLIDING_MENU_PHOTO, R.drawable.ic_action_view_as_list, R.string.common_photo, true, true),
+            new SlidingMenuItem(SLIDING_MENU_FOLDER, R.drawable.ic_action_about, R.string.common_folder, true, true),
+            new SlidingMenuItem(SLIDING_MENU_SETTING, R.drawable.ic_action_settings, R.string.common_settings, true, true),
+            new SlidingMenuItem(SLIDING_MENU_EXIT, R.drawable.ic_action_exit, R.string.common_exit, true, true),
     };
 
     private static final Class<?>[] MenuFragmentClasses = new Class<?>[] {
-            HideListFragment.class,
-            AboutFragment.class,
+            PhotoFragment.class,
+            FolderFragment.class,
             SettingFragment.class
+
+    };
+
+    private static final String[] MenuFragmentTags = new String[] {
+            "PhotoFragment",
+            "FolderFragment.class",
+            "SettingFragment.class"
 
     };
 
@@ -64,10 +71,9 @@ public class SlidingMenuFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.sliding_menu, container, false);
         rootView.setOnTouchListener(new OnTouchListener() {
-
             @Override
             public boolean onTouch(View v, MotionEvent m) {
-                ((LetoolActivity) getActivity()).getLetoolSlidingMenu().toggle();
+                mActivity.getLetoolSlidingMenu().toggle();
                 return true;
             }
 
@@ -87,22 +93,17 @@ public class SlidingMenuFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 try {
                     if (position < MenuFragmentClasses.length) {
-                        Fragment f = (Fragment) MenuFragmentClasses[position].newInstance();
                         FragmentTransaction ft = mFragmentManager.beginTransaction();
-                        if (mFragmentManager.getFragments().size() >= 4) {
-                            ft.setCustomAnimations(0, R.anim.slide_left_out);
-                            ft.remove(SlidingMenuFragment.this);
+                        ft.setCustomAnimations(0, R.anim.slide_left_out);
+                        ft.remove(SlidingMenuFragment.this);
+                        if (mFragmentManager.findFragmentByTag(MenuFragmentTags[position]) == null) {
+                            Fragment f = (Fragment) MenuFragmentClasses[position].newInstance();
+                            initFragmentData(f);
                             ft.setCustomAnimations(0, 0);
-                            ft.replace(R.id.root_container, f);
-                        } else {
-                            ft.setCustomAnimations(0, R.anim.slide_left_out);
-                            ft.remove(SlidingMenuFragment.this);
-                            ft.add(R.id.root_container, f);
+                            ft.replace(R.id.root_container, f, MenuFragmentTags[position]);
                         }
                         ft.commit();
                     } else if (position == MenuFragmentClasses.length) { // exit
-                        naviToHome();
-                    } else if (position - 1 == MenuFragmentClasses.length) {
                         getActivity().finish();
                     }
                 } catch (java.lang.InstantiationException e) {
@@ -116,28 +117,15 @@ public class SlidingMenuFragment extends Fragment {
         return rootView;
     }
 
-    private void naviToHome() {
-        List<Fragment> list = mFragmentManager.getFragments();
-        if (list.size() > 2) {
-            FragmentTransaction ft = mFragmentManager.beginTransaction();
-            boolean hasTopFragment = false;
-            for (int p = list.size(); p > 2; p--) {
-                Fragment f = list.get(p - 1);
-                if (f != null) {
-                    hasTopFragment = true;
-                    if (f instanceof SlidingMenuFragment) {
-                        ft.setCustomAnimations(0, R.anim.slide_left_out);
-                    } else {
-                        ft.setCustomAnimations(0, 0);
-                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
-                    }
-                    ft.remove(f);
-                }
-            }
-            if (hasTopFragment) {
-                ft.commit();
-                mActivity.getLetoolActionBar().setTitle(R.string.app_name);
-            }
+    private void initFragmentData(Fragment f) {
+        if (f instanceof PhotoFragment) {
+            Bundle data = new Bundle();
+            data.putString(DataManager.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+            f.setArguments(data);
+        } else if (f instanceof FolderFragment) {
+            Bundle data = new Bundle();
+            data.putString(DataManager.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
+            f.setArguments(data);
         }
     }
 

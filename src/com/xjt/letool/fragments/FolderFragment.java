@@ -38,7 +38,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-public class PictureFragment extends LetoolFragment implements EyePosition.EyePositionListener {
+public class FolderFragment extends LetoolFragment implements EyePosition.EyePositionListener {
 
     private static final String TAG = "PictureFragment";
     private GLRootView mGLRootView;
@@ -72,6 +72,10 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
     private boolean mShowedEmptyToastForSelf = false;
     private LetoolActivity mActivity;
     private boolean mGetContent = false;
+
+    public FolderFragment() {
+
+    }
 
     private final GLBaseView mRootPane = new GLBaseView() {
 
@@ -209,7 +213,6 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
         mThumbnailViewRenderer.setModel(mThumbnailSetAdapter);
     }
 
-    
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -270,8 +273,9 @@ public class PictureFragment extends LetoolFragment implements EyePosition.EyePo
         initializeViews();
         initializeData();
         mEyePosition = new EyePosition(mActivity.getAndroidContext(), this);
-        LetoolActionBar actionBar =  mActivity.getLetoolActionBar();
+        LetoolActionBar actionBar = mActivity.getLetoolActionBar();
         actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
+        actionBar.setTitle(R.string.common_folder);
         return rootView;
     }
 
