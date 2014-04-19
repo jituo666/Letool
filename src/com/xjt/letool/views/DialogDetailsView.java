@@ -13,8 +13,9 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
-import com.xjt.letool.activities.LetoolActivity;
+import com.xjt.letool.activities.LetoolBaseActivity;
 import com.xjt.letool.data.MediaDetails;
 import com.xjt.letool.utils.Utils;
 import com.xjt.letool.views.DetailsAddressResolver.AddressResolvingListener;
@@ -32,7 +33,7 @@ public class DialogDetailsView implements DetailsViewContainer {
     @SuppressWarnings("unused")
     private static final String TAG = "DialogDetailsView";
 
-    private final LetoolActivity mActivity;
+    private final LetoolContext mActivity;
     private DetailsAdapter mAdapter;
     private MediaDetails mDetails;
     private final DetailsSource mSource;
@@ -40,7 +41,7 @@ public class DialogDetailsView implements DetailsViewContainer {
     private Dialog mDialog;
     private CloseListener mListener;
 
-    public DialogDetailsView(LetoolActivity activity, DetailsSource source) {
+    public DialogDetailsView(LetoolContext activity, DetailsSource source) {
         mActivity = activity;
         mSource = source;
     }
@@ -71,13 +72,12 @@ public class DialogDetailsView implements DetailsViewContainer {
 
     private void setDetails(MediaDetails details) {
         mAdapter = new DetailsAdapter(details);
-        String title = String.format(
-                mActivity.getAndroidContext().getString(R.string.details_title),
+        String title = String.format(mActivity.getAndroidContext().getString(R.string.details_title),
                 mIndex + 1, mSource.size());
         ListView detailsList = (ListView) LayoutInflater.from(mActivity.getAndroidContext()).inflate(
                 R.layout.details_list, null, false);
         detailsList.setAdapter(mAdapter);
-        mDialog = new AlertDialog.Builder(mActivity)
+        mDialog = new AlertDialog.Builder(mActivity.getAndroidContext())
             .setView(detailsList)
             .setTitle(title)
             .setPositiveButton(R.string.close, new DialogInterface.OnClickListener() {

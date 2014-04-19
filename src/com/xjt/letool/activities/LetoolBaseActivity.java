@@ -9,8 +9,9 @@ import com.xjt.letool.ThreadPool;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.DataManager;
 import com.xjt.letool.data.MediaItem;
+import com.xjt.letool.data.MediaSetUtils;
 import com.xjt.letool.data.utils.LetoolBitmapPool;
-import com.xjt.letool.fragments.PhotoFragment;
+import com.xjt.letool.fragments.ThumbnailFragment;
 import com.xjt.letool.views.LetoolActionBar;
 import com.xjt.letool.views.LetoolSlidingMenu;
 
@@ -26,9 +27,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 
-public class LetoolActivity extends FragmentActivity implements LetoolContext {
+public class LetoolBaseActivity extends FragmentActivity implements LetoolContext {
 
-    private static final String TAG = "LetoolActivity";
+    private static final String TAG = LetoolBaseActivity.class.getSimpleName();
+    public static final String KEY_GET_CONTENT = "get-content";
 
     private LetoolActionBar mActionBar;
     private LetoolSlidingMenu mSlidingMenu;
@@ -41,13 +43,6 @@ public class LetoolActivity extends FragmentActivity implements LetoolContext {
 
         mOrientationManager = new OrientationManager(this);
         mFragmentManager = getSupportFragmentManager();
-
-        Fragment fragment = new PhotoFragment();
-        Bundle data = new Bundle();
-        data.putString(DataManager.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-        fragment.setArguments(data);
-        mFragmentManager.beginTransaction().add(R.id.root_container, fragment, "PhotoFragment").commit();
-
         mSlidingMenu = new LetoolSlidingMenu(mFragmentManager);
         mActionBar = new LetoolActionBar(this, findViewById(R.id.action_bar));
     }
@@ -116,33 +111,20 @@ public class LetoolActivity extends FragmentActivity implements LetoolContext {
             return;
         }
         /*
-        List<Fragment> list = mFragmentManager.getFragments();
-        if (list.size() > 2) {
-            FragmentTransaction ft = mFragmentManager.beginTransaction();
-            boolean hasTopFragment = false;
-            for (int p = list.size(); p > 2; p--) {
-                Fragment f = list.get(p - 1);
-                if (f != null) {
-                    hasTopFragment = true;
-                    if (f instanceof SlidingMenuFragment) {
-                        ft.setCustomAnimations(0, R.anim.slide_left_out);
-                    } else {
-                        ft.setCustomAnimations(0, 0);
-                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
-                    }
-                    ft.remove(f);
-                }
-            }
-            if (!hasTopFragment) {
-                super.onBackPressed();
-            } else {
-                ft.commit();
-                TextView actionBarNaviText = (TextView) mActionBar.getActionPanel().findViewById(R.id.navi_text);
-                actionBarNaviText.setText(R.string.app_name);
-            }
-        } else {
-            super.onBackPressed();
-        }*/
+         * List<Fragment> list = mFragmentManager.getFragments(); if
+         * (list.size() > 2) { FragmentTransaction ft =
+         * mFragmentManager.beginTransaction(); boolean hasTopFragment = false;
+         * for (int p = list.size(); p > 2; p--) { Fragment f = list.get(p - 1);
+         * if (f != null) { hasTopFragment = true; if (f instanceof
+         * SlidingMenuFragment) { ft.setCustomAnimations(0,
+         * R.anim.slide_left_out); } else { ft.setCustomAnimations(0, 0);
+         * ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE); }
+         * ft.remove(f); } } if (!hasTopFragment) { super.onBackPressed(); }
+         * else { ft.commit(); TextView actionBarNaviText = (TextView)
+         * mActionBar.getActionPanel().findViewById(R.id.navi_text);
+         * actionBarNaviText.setText(R.string.app_name); } } else {
+         * super.onBackPressed(); }
+         */
         super.onBackPressed();
     }
 

@@ -16,14 +16,20 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.xjt.letool.activities.LetoolActivity;
+import com.xjt.letool.activities.LetoolBaseActivity;
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.DataManager;
+import com.xjt.letool.data.MediaSetUtils;
 import com.xjt.letool.views.LetoolSlidingMenu;
 
 import java.util.List;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 9:48:19 AM Apr 19, 2014
+ * @Comments:null
+ */
 @SuppressWarnings("unused")
 public class SlidingMenuFragment extends Fragment {
 
@@ -42,7 +48,7 @@ public class SlidingMenuFragment extends Fragment {
     };
 
     private static final Class<?>[] MenuFragmentClasses = new Class<?>[] {
-            PhotoFragment.class,
+            ThumbnailFragment.class,
             FolderFragment.class,
             SettingFragment.class
 
@@ -57,14 +63,14 @@ public class SlidingMenuFragment extends Fragment {
 
     private ListView mMenusList;
     private ImageView mMenuLogo;
-    private LetoolActivity mActivity;
+    private LetoolBaseActivity mActivity;
     private FragmentManager mFragmentManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFragmentManager = getFragmentManager();
-        mActivity = (LetoolActivity) getActivity();
+        mActivity = (LetoolBaseActivity) getActivity();
     }
 
     @Override
@@ -118,9 +124,12 @@ public class SlidingMenuFragment extends Fragment {
     }
 
     private void initFragmentData(Fragment f) {
-        if (f instanceof PhotoFragment) {
+        if (f instanceof ThumbnailFragment) {
             Bundle data = new Bundle();
+            data.putLong(DataManager.KEY_ALBUM_ID, MediaSetUtils.CAMERA_BUCKET_ID);
             data.putString(DataManager.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+            data.putBoolean(DataManager.KEY_IS_CAMERA, true);
+            data.putString(DataManager.KEY_ALBUM_TITLE, getString(R.string.common_photo));
             f.setArguments(data);
         } else if (f instanceof FolderFragment) {
             Bundle data = new Bundle();

@@ -3,9 +3,10 @@ package com.xjt.letool.fragments;
 
 import com.xjt.letool.EyePosition;
 import com.xjt.letool.Future;
+import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
 import com.xjt.letool.TransitionStore;
-import com.xjt.letool.activities.LetoolActivity;
+import com.xjt.letool.activities.LetoolBaseActivity;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
 import com.xjt.letool.data.DataManager;
@@ -14,7 +15,6 @@ import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaObject;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.MediaSet;
-import com.xjt.letool.data.MediaSetUtils;
 import com.xjt.letool.data.loader.DataLoadingListener;
 import com.xjt.letool.data.loader.ThumbnailDataLoader;
 import com.xjt.letool.opengl.FadeTexture;
@@ -47,10 +47,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-public class PhotoFragment extends LetoolFragment implements EyePosition.EyePositionListener,
+/**
+ * @Author Jituo.Xuan
+ * @Date 9:48:35 AM Apr 19, 2014
+ * @Comments:null
+ */
+public class ThumbnailFragment extends LetoolFragment implements EyePosition.EyePositionListener,
         SelectionListener {
 
-    private static final String TAG = "PhotoFragment";
+    private static final String TAG = ThumbnailFragment.class.getSimpleName();
 
     private GLRootView mGLRootView;
     private TransitionStore mTransitionStore = new TransitionStore();
@@ -70,6 +75,8 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     private Future<Integer> mSyncTask = null; // synchronize data
     private boolean mInitialSynced = false;
     private boolean mShowDetails;
+    private String mAlbumTitle;
+    private boolean mIsCamera = false;
 
     //views
     private ViewConfigs.AlbumPage mConfig;
@@ -82,7 +89,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     private boolean mGetContent;
     private SynchronizedHandler mHandler;
     protected SelectionManager mSelector;
-    private LetoolActivity mActivity;
+    private LetoolBaseActivity mActivity;
     private EyePosition mEyePosition;
     // The eyes' position of the user, the origin is at the center of the device and the unit is in pixels.
     private float mX;
@@ -90,6 +97,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     private float mZ;
 
     private class MyLoadingListener implements DataLoadingListener {
+
         @Override
         public void onLoadingStarted() {
             mLoadingFailed = false;
@@ -138,6 +146,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     };
 
     private class MyDetailsSource implements DetailsHelper.DetailsSource {
+
         private int mIndex;
 
         @Override
@@ -170,6 +179,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         if (mDetailsHelper == null) {
             mDetailsHelper = new DetailsHelper(mActivity, mRootPane, mDetailsSource);
             mDetailsHelper.setCloseListener(new CloseListener() {
+
                 @Override
                 public void onClose() {
                     hideDetails();
@@ -194,62 +204,10 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         mLoadingBits &= ~loadTaskBit;
         if (mLoadingBits == 0 && mIsActive) {
             if (mAlbumDataLoader.size() == 0) {
-                Toast.makeText(mActivity,
-                        R.string.empty_album, Toast.LENGTH_LONG).show();
+                Toast.makeText(getAndroidContext(),R.string.empty_album, Toast.LENGTH_LONG).show();
                 //                mActivity.getPageManager().finishPage(AlbumPage.this);
             }
         }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        LLog.i(TAG, "onAttach");
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        LLog.i(TAG, "onCreate");
-        mActivity = (LetoolActivity) getActivity();
-        setHasOptionsMenu(true);
-    }
-
-    private void initializeViews() {
-        mSelector = new SelectionManager(mActivity, false);
-        mSelector.setSelectionListener(this);
-        mConfig = ViewConfigs.AlbumPage.get(mActivity);
-        ThumbnailLayout layout = new ThumbnailContractLayout(mConfig.albumSpec);
-        mThumbnailView = new ThumbnailView(this, layout);
-        mThumbnailView.setBackgroundColor(LetoolUtils.intColorToFloatARGBArray(mActivity.getAndroidContext().getResources()
-                .getColor(R.color.default_background)));
-        mRender = new ThumbnailRenderer(this, mThumbnailView, mSelector);
-        layout.setRenderer(mRender);
-        mThumbnailView.setThumbnailRenderer(mRender);
-        mRender.setModel(mAlbumDataLoader);
-        mRootPane.addComponent(mThumbnailView);
-        mThumbnailView.setListener(new ThumbnailView.SimpleListener() {
-            @Override
-            public void onDown(int index) {
-                PhotoFragment.this.onDown(index);
-            }
-
-            @Override
-            public void onUp(boolean followedByLongPress) {
-                PhotoFragment.this.onUp(followedByLongPress);
-            }
-
-            @Override
-            public void onSingleTapUp(int slotIndex) {
-                PhotoFragment.this.onSingleTapUp(slotIndex);
-            }
-
-            @Override
-            public void onLongTap(int slotIndex) {
-                PhotoFragment.this.onLongTap(slotIndex);
-            }
-        });
-
     }
 
     private void onDown(int index) {
@@ -294,11 +252,62 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         mThumbnailView.invalidate();
     }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        LLog.i(TAG, "onAttach");
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        LLog.i(TAG, "onCreate");
+        mActivity = (LetoolBaseActivity) getActivity();
+        setHasOptionsMenu(true);
+    }
+
+    private void initializeViews() {
+        mSelector = new SelectionManager(mActivity, false);
+        mSelector.setSelectionListener(this);
+        mConfig = ViewConfigs.AlbumPage.get(getAndroidContext());
+        ThumbnailLayout layout = new ThumbnailContractLayout(mConfig.albumSpec);
+        mThumbnailView = new ThumbnailView(this, layout);
+        mThumbnailView.setBackgroundColor(LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.default_background)));
+        mRender = new ThumbnailRenderer(this, mThumbnailView, mSelector);
+        layout.setRenderer(mRender);
+        mThumbnailView.setThumbnailRenderer(mRender);
+        mRender.setModel(mAlbumDataLoader);
+        mRootPane.addComponent(mThumbnailView);
+        mThumbnailView.setListener(new ThumbnailView.SimpleListener() {
+
+            @Override
+            public void onDown(int index) {
+                ThumbnailFragment.this.onDown(index);
+            }
+
+            @Override
+            public void onUp(boolean followedByLongPress) {
+                ThumbnailFragment.this.onUp(followedByLongPress);
+            }
+
+            @Override
+            public void onSingleTapUp(int slotIndex) {
+                ThumbnailFragment.this.onSingleTapUp(slotIndex);
+            }
+
+            @Override
+            public void onLongTap(int slotIndex) {
+                ThumbnailFragment.this.onLongTap(slotIndex);
+            }
+        });
+    }
+
     private void initializeData() {
         Bundle data = getArguments();
-        LLog.i(TAG, " CAMERA_BUCKET_ID:" + MediaSetUtils.CAMERA_BUCKET_ID);
-        mDataPath = new MediaPath(data.getString(DataManager.KEY_MEDIA_PATH), MediaSetUtils.CAMERA_BUCKET_ID);
-        mData = mActivity.getDataManager().getMediaSet(mDataPath);
+        mIsCamera = data.getBoolean(DataManager.KEY_IS_CAMERA);
+        mAlbumTitle = data.getString(DataManager.KEY_ALBUM_TITLE);
+        mDataPath = new MediaPath(data.getString(DataManager.KEY_MEDIA_PATH), data.getLong(DataManager.KEY_ALBUM_ID));
+        mData = getDataManager().getMediaSet(mDataPath);
         if (mData == null) {
             Utils.fail("MediaSet is null. Path = %s", mDataPath);
         }
@@ -316,6 +325,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         initializeViews();
         initializeData();
         mHandler = new SynchronizedHandler(mGLRootView) {
+
             @Override
             public void handleMessage(Message message) {
                 switch (message.what) {
@@ -328,10 +338,16 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
                 }
             }
         };
-        mEyePosition = new EyePosition(mActivity.getAndroidContext(), this);
+        mEyePosition = new EyePosition(getAndroidContext(), this);
         LetoolActionBar actionBar = mActivity.getLetoolActionBar();
         actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
-        actionBar.setTitle(R.string.common_photo);
+        if (mIsCamera) {
+            actionBar.setTitleIcon(R.drawable.ic_drawer);
+        } else {
+            actionBar.setTitleIcon(R.drawable.ic_action_previous_item);
+
+        }
+        actionBar.setTitle(mAlbumTitle);
         return rootView;
     }
 
@@ -376,7 +392,6 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     @Override
     public void onResume() {
         super.onResume();
-
         LLog.i(TAG, "onResume");
         mGLRootView.onResume();
         mGLRootView.lockRenderThread();
@@ -402,7 +417,6 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     @Override
     public void onPause() {
         super.onPause();
-
         LLog.i(TAG, "onPause");
         mGLRootView.onPause();
         mGLRootView.lockRenderThread();
@@ -426,7 +440,6 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     @Override
     public void onStop() {
         super.onStop();
-
         LLog.i(TAG, "onStop");
     }
 
@@ -466,8 +479,12 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.sliding_menu) {
-            mActivity.getLetoolSlidingMenu().toggle();
+        if (v.getId() == R.id.action_navi) {
+            if (!mIsCamera) {
+                getActivity().finish();
+            } else {
+                mActivity.getLetoolSlidingMenu().toggle();
+            }
         }
     }
 
@@ -495,7 +512,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     @Override
     public void onSelectionChange(MediaPath path, boolean selected) {
         int count = mSelector.getSelectedCount();
-        String format = mActivity.getResources().getQuantityString(R.plurals.number_of_items_selected, count);
+        String format = getResources().getQuantityString(R.plurals.number_of_items_selected, count);
         mActivity.getLetoolActionBar().setTitle(String.format(format, count));
         //mActionModeHandler.updateSupportedOperation(path, selected);
     }

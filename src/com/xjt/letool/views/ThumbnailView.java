@@ -1,7 +1,7 @@
 package com.xjt.letool.views;
 
 import com.xjt.letool.SynchronizedHandler;
-import com.xjt.letool.activities.LetoolActivity;
+import com.xjt.letool.activities.LetoolBaseActivity;
 import com.xjt.letool.animations.AnimationTime;
 import com.xjt.letool.animations.ThumbnailAnim;
 import com.xjt.letool.animations.ThumbnailRisingAnim;

@@ -4,7 +4,7 @@ import android.os.Message;
 import android.os.Process;
 
 import com.xjt.letool.SynchronizedHandler;
-import com.xjt.letool.activities.LetoolActivity;
+import com.xjt.letool.activities.LetoolBaseActivity;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.ContentListener;
 import com.xjt.letool.data.DataManager;

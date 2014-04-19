@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import com.xjt.letool.activities.LetoolActivity;
+import com.xjt.letool.activities.LetoolBaseActivity;
 import com.xjt.letool.common.ApiHelper;
 
 public class LetoolActionBar implements OnNavigationListener {
@@ -34,7 +34,7 @@ public class LetoolActionBar implements OnNavigationListener {
     private ArrayList<Integer> mActions;
     private Context mContext;
     private LayoutInflater mInflater;
-    private LetoolActivity mActivity;
+    private LetoolBaseActivity mActivity;
     private ActionBar mActionBar;
     private int mCurrentIndex;
     private ClusterAdapter mAdapter = new ClusterAdapter();
@@ -166,7 +166,7 @@ public class LetoolActionBar implements OnNavigationListener {
         return null;
     }
 
-    public LetoolActionBar(LetoolActivity activity) {
+    public LetoolActionBar(LetoolBaseActivity activity) {
         mActionBar = activity.getActionBar();
         mContext = activity.getAndroidContext();
         mActivity = activity;

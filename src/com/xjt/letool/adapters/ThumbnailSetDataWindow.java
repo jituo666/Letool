@@ -7,7 +7,7 @@ import com.xjt.letool.Future;
 import com.xjt.letool.FutureListener;
 import com.xjt.letool.R;
 import com.xjt.letool.ThreadPool;
-import com.xjt.letool.activities.LetoolActivity;
+import com.xjt.letool.activities.LetoolBaseActivity;
 import com.xjt.letool.common.AlbumLabelMaker;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;

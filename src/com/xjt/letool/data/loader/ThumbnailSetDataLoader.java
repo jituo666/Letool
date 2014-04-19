@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Process;
 
-import com.xjt.letool.activities.LetoolActivity;
+import com.xjt.letool.activities.LetoolBaseActivity;
 import com.xjt.letool.data.ContentListener;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaObject;
@@ -265,8 +265,7 @@ public class ThumbnailSetDataLoader {
 
         @Override
         public Void call() {
-            // Avoid notifying listeners of status change after pause
-            // Otherwise gallery will be in inconsistent state after resume.
+            // Avoid notifying listeners of status change after pause Otherwise gallery will be in inconsistent state after resume.
             if (mReloadTask == null) return null;
             UpdateInfo info = mUpdateInfo;
             mSourceVersion = info.version;
@@ -286,8 +285,7 @@ public class ThumbnailSetDataLoader {
                 mData[pos] = info.item;
                 mCoverItem[pos] = info.cover;
                 mTotalCount[pos] = info.totalCount;
-                if (mDataListener != null
-                        && info.index >= mActiveStart && info.index < mActiveEnd) {
+                if (mDataListener != null && info.index >= mActiveStart && info.index < mActiveEnd) {
                     mDataListener.onContentChanged(info.index);
                 }
             }

@@ -5,14 +5,20 @@ import java.lang.ref.WeakReference;
 
 import com.xjt.letool.EyePosition;
 import com.xjt.letool.R;
-import com.xjt.letool.activities.LetoolActivity;
+import com.xjt.letool.activities.LetoolBaseActivity;
+import com.xjt.letool.activities.LetoolAlbumActivity;
 import com.xjt.letool.common.LLog;
+import com.xjt.letool.common.SynchronizedHandler;
 import com.xjt.letool.data.DataManager;
 import com.xjt.letool.data.MediaDetails;
+import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.MediaSet;
+import com.xjt.letool.data.MediaSetUtils;
 import com.xjt.letool.data.loader.DataLoadingListener;
 import com.xjt.letool.data.loader.ThumbnailSetDataLoader;
+import com.xjt.letool.opengl.FadeTexture;
 import com.xjt.letool.opengl.GLESCanvas;
+import com.xjt.letool.selectors.SelectionListener;
 import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.views.DetailsHelper;
@@ -30,6 +36,8 @@ import com.xjt.letool.views.render.ThumbnailSetRenderer;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,13 +46,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-public class FolderFragment extends LetoolFragment implements EyePosition.EyePositionListener {
+public class FolderFragment extends LetoolFragment implements EyePosition.EyePositionListener, SelectionListener {
 
     private static final String TAG = "PictureFragment";
     private GLRootView mGLRootView;
     public static final String KEY_EMPTY_ALBUM = "empty-album";
     private static final int DATA_CACHE_SIZE = 256;
-
+    private static final int MSG_PICK_ALBUM = 1;
     private static final int BIT_LOADING_RELOAD = 1;
     private static final int BIT_LOADING_SYNC = 2;
     private static final int REQUEST_DO_ANIMATION = 1;
@@ -70,12 +78,9 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
 
     private int mLoadingBits = 0;
     private boolean mShowedEmptyToastForSelf = false;
-    private LetoolActivity mActivity;
+    private LetoolBaseActivity mActivity;
     private boolean mGetContent = false;
-
-    public FolderFragment() {
-
-    }
+    private Handler mHandler;
 
     private final GLBaseView mRootPane = new GLBaseView() {
 
@@ -176,6 +181,48 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
         }
     }
 
+    public void onSingleTapUp(int slotIndex) {
+        if (!mIsActive)
+            return;
+
+        if (mSelectionManager.inSelectionMode()) {
+            MediaSet targetSet = mThumbnailSetAdapter.getMediaSet(slotIndex);
+            if (targetSet == null)
+                return; // Content is dirty, we shall reload soon
+            mSelectionManager.toggle(targetSet.getPath());
+            mThumbnailView.invalidate();
+        } else {
+            // Show pressed-up animation for the single-tap.
+            mThumbnailViewRenderer.setPressedIndex(slotIndex);
+            mThumbnailViewRenderer.setPressedUp();
+            mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_PICK_ALBUM, slotIndex, 0), FadeTexture.DURATION);
+        }
+    }
+
+    private void onDown(int index) {
+        mThumbnailViewRenderer.setPressedIndex(index);
+    }
+
+    private void onUp(boolean followedByLongPress) {
+        if (followedByLongPress) {
+            // Avoid showing press-up animations for long-press.
+            mThumbnailViewRenderer.setPressedIndex(-1);
+        } else {
+            mThumbnailViewRenderer.setPressedUp();
+        }
+    }
+
+    public void onLongTap(int slotIndex) {
+        if (mGetContent)
+            return;
+        MediaSet set = mThumbnailSetAdapter.getMediaSet(slotIndex);
+        if (set == null)
+            return;
+        mSelectionManager.setAutoLeaveSelectionMode(true);
+        mSelectionManager.toggle(set.getPath());
+        mThumbnailView.invalidate();
+    }
+
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -186,11 +233,13 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LLog.i(TAG, "onCreate");
-        mActivity = (LetoolActivity) getActivity();
+        mActivity = (LetoolBaseActivity) getActivity();
         setHasOptionsMenu(true);
     }
 
     private void initializeViews() {
+        mSelectionManager = new SelectionManager(mActivity, true);
+        mSelectionManager.setSelectionListener(this);
         mConfig = ViewConfigs.AlbumSetPage.get(mActivity);
         ThumbnailLayout layout = new ThumbnailContractLayout(mConfig.albumSetSpec);
         mThumbnailView = new ThumbnailView(this, layout);
@@ -201,13 +250,34 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
         layout.setRenderer(mThumbnailViewRenderer);
         mThumbnailView.setThumbnailRenderer(mThumbnailViewRenderer);
         mRootPane.addComponent(mThumbnailView);
+        mThumbnailView.setListener(new ThumbnailView.SimpleListener() {
+            @Override
+            public void onDown(int index) {
+                FolderFragment.this.onDown(index);
+            }
+
+            @Override
+            public void onUp(boolean followedByLongPress) {
+                FolderFragment.this.onUp(followedByLongPress);
+            }
+
+            @Override
+            public void onSingleTapUp(int slotIndex) {
+                FolderFragment.this.onSingleTapUp(slotIndex);
+            }
+
+            @Override
+            public void onLongTap(int slotIndex) {
+                FolderFragment.this.onLongTap(slotIndex);
+            }
+        });
     }
 
     private void initializeData() {
         Bundle data = getArguments();
-        String mediaPath = data.getString(DataManager.KEY_MEDIA_PATH);
-        mMediaSet = mActivity.getDataManager().getMediaSet(mediaPath, -1000);
-        //mSelectionManager.setSourceMediaSet(mMediaSet);
+        mGetContent = data.getBoolean(LetoolBaseActivity.KEY_GET_CONTENT, false);
+        mMediaSet = mActivity.getDataManager().getMediaSet(data.getString(DataManager.KEY_MEDIA_PATH), -1000);
+        mSelectionManager.setSourceMediaSet(mMediaSet);
         mThumbnailSetAdapter = new ThumbnailSetDataLoader(this, mMediaSet, DATA_CACHE_SIZE);
         mThumbnailSetAdapter.setLoadingListener(new MyLoadingListener());
         mThumbnailViewRenderer.setModel(mThumbnailSetAdapter);
@@ -269,12 +339,24 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
         LLog.i(TAG, "onCreateView");
         View rootView = inflater.inflate(R.layout.gl_root_view, container, false);
         mGLRootView = (GLRootView) rootView.findViewById(R.id.gl_root_view);
-
+        mHandler = new SynchronizedHandler(mGLRootView) {
+            @Override
+            public void handleMessage(Message message) {
+                switch (message.what) {
+                    case MSG_PICK_ALBUM: {
+                        pickAlbum(message.arg1);
+                        break;
+                    }
+                    default: throw new AssertionError(message.what);
+                }
+            }
+        };
         initializeViews();
         initializeData();
         mEyePosition = new EyePosition(mActivity.getAndroidContext(), this);
         LetoolActionBar actionBar = mActivity.getLetoolActionBar();
         actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
+        actionBar.setTitleIcon(R.drawable.ic_drawer);
         actionBar.setTitle(R.string.common_folder);
         return rootView;
     }
@@ -430,9 +512,60 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.sliding_menu) {
+        if (v.getId() == R.id.action_navi) {
             mActivity.getLetoolSlidingMenu().toggle();
         }
     }
 
+    private void pickAlbum(int slotIndex) {
+        if (!mIsActive)
+            return;
+        MediaSet targetSet = mThumbnailSetAdapter.getMediaSet(slotIndex);
+        if (targetSet == null)
+            return; // Content is dirty, we shall reload soon
+        if (targetSet.getTotalMediaItemCount() == 0) {
+            showEmptyAlbumToast(Toast.LENGTH_SHORT);
+            return;
+        }
+        hideEmptyAlbumToast();
+        MediaPath mediaPath = targetSet.getPath();
+        if (!mGetContent) {
+            Intent it = new Intent();
+            it.setClass(getActivity(), LetoolAlbumActivity.class);
+            it.putExtra(DataManager.KEY_ALBUM_ID, mediaPath.getIdentity());
+            it.putExtra(DataManager.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+            it.putExtra(DataManager.KEY_IS_CAMERA, false);
+            it.putExtra(DataManager.KEY_ALBUM_TITLE, targetSet.getName());
+            startActivityForResult(it, LetoolAlbumActivity.REQUEST_FOR_PHOTO);
+            return;
+        }
+    }
+
+    @Override
+    public void onSelectionModeChange(int mode) {
+        switch (mode) {
+            case SelectionManager.ENTER_SELECTION_MODE: {
+                mActivity.getLetoolActionBar().setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_SELECTION, this);
+                mActivity.getLetoolActionBar().setSelectionManager(mSelectionManager);
+                mRootPane.invalidate();
+                break;
+            }
+            case SelectionManager.LEAVE_SELECTION_MODE: {
+                mActivity.getLetoolActionBar().setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
+                mRootPane.invalidate();
+                break;
+            }
+            case SelectionManager.SELECT_ALL_MODE: {
+                mRootPane.invalidate();
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void onSelectionChange(MediaPath path, boolean selected) {
+        int count = mSelectionManager.getSelectedCount();
+        String format = mActivity.getResources().getQuantityString(R.plurals.number_of_items_selected, count);
+        mActivity.getLetoolActionBar().setTitle(String.format(format, count));
+    }
 }

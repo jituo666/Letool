@@ -249,8 +249,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
             if (mLoadTask != null)
                 mLoadTask.cancel();
             mIsLoading = true;
-            mLoadTask = mApplication.getThreadPool().submit(new AlbumsLoader(),
-                    this);
+            mLoadTask = mApplication.getThreadPool().submit(new AlbumsLoader(), this);
         }
         if (mLoadBuffer != null) {
             mAlbums = mLoadBuffer;

@@ -9,16 +9,16 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.xjt.letool.R;
-import com.xjt.letool.activities.LetoolActivity;
+import com.xjt.letool.activities.LetoolBaseActivity;
 
 public class HideListFragment extends Fragment {
 
-    private LetoolActivity mActivity;
+    private LetoolBaseActivity mActivity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivity = (LetoolActivity) getActivity();
+        mActivity = (LetoolBaseActivity) getActivity();
     }
 
     @Override

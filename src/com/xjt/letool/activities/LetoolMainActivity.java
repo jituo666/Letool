@@ -1,42 +1,57 @@
+
 package com.xjt.letool.activities;
 
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.DataManager;
+import com.xjt.letool.data.MediaSetUtils;
+import com.xjt.letool.fragments.ThumbnailFragment;
 import com.xjt.letool.utils.Utils;
 
 import android.os.Bundle;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.WindowManager;
 
-public class LetoolMainActivity extends LetoolActivity {
-    private static final String TAG = "MainActivity";
+/**
+ * @Author Jituo.Xuan
+ * @Date 9:54:30 AM Apr 19, 2014
+ * @Comments:null
+ */
+public class LetoolMainActivity extends LetoolBaseActivity {
+
+    private static final String TAG = LetoolMainActivity.class.getSimpleName();
 
     public static final String ACTION_REVIEW = "com.android.camera.action.REVIEW";
     public static final String KEY_DISMISS_KEYGUARD = "dismiss-keyguard";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         if (getIntent().getBooleanExtra(KEY_DISMISS_KEYGUARD, false)) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
         }
         setContentView(R.layout.layout_main);
-
-/*        if (savedInstanceState != null) {
-            //getPageManager().restoreFromState(savedInstanceState);
-        } else {
-            initializeByIntent();
-        }*/
         super.onCreate(savedInstanceState);
+        Fragment fragment = new ThumbnailFragment();
+        Bundle data = new Bundle();
+        data.putLong(DataManager.KEY_ALBUM_ID, MediaSetUtils.CAMERA_BUCKET_ID);
+        data.putString(DataManager.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+        data.putBoolean(DataManager.KEY_IS_CAMERA, true);
+        data.putString(DataManager.KEY_ALBUM_TITLE, getString(R.string.common_photo));
+        fragment.setArguments(data);
+        getSupportFragmentManager().beginTransaction().add(R.id.root_container, fragment, "PhotoFragment").commit();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         return true;
     }
 
     private void initializeByIntent() {
+
         Intent intent = getIntent();
         String action = intent.getAction();
 
@@ -63,12 +78,14 @@ public class LetoolMainActivity extends LetoolActivity {
     }
 
     public void startDefaultPage() {
+
         Bundle data = new Bundle();
         data.putString(DataManager.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
         //getPageManager().startState(ThumbnailSetPage.class, data);
     }
 
     private void startGetContent(Intent intent) {
+
         Bundle data = intent.getExtras() != null
                 ? new Bundle(intent.getExtras())
                 : new Bundle();
@@ -92,6 +109,7 @@ public class LetoolMainActivity extends LetoolActivity {
      */
 
     private void startViewAction(Intent intent) {
+
         /*
          * Boolean slideshow = intent.getBooleanExtra(EXTRA_SLIDESHOW, false);
          * if (slideshow) { getActionBar().hide(); DataManager manager =

@@ -3,6 +3,7 @@ package com.xjt.letool.views;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.xjt.letool.R;
@@ -30,7 +31,7 @@ public class LetoolActionBar {
     };
 
     public static final int ACTION_IDS[] = {
-            R.id.sliding_menu,
+            R.id.action_navi,
             R.id.operation_delete
     };
 
@@ -77,9 +78,15 @@ public class LetoolActionBar {
     public int getActionBarMode() {
         return mCurActionBarMode;
     }
-    
-    public void setTitle(CharSequence title) {
 
+    public void setTitleIcon(int resId) {
+        if (mCurActionBarMode == ACTION_BAR_MODE_BROWSE) {
+            ImageView natviButton = (ImageView) mActionModePanel.findViewById(R.id.action_navi_tip);
+            natviButton.setImageResource(resId);
+        }
+    }
+
+    public void setTitle(CharSequence title) {
         TextView actionBarNaviText = (TextView) mActionModePanel.findViewById(ACTION_MODE_TITLE_VIEW_ID[mCurActionBarMode]);
         if (actionBarNaviText != null)
             actionBarNaviText.setText(title);
