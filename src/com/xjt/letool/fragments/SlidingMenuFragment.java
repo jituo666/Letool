@@ -55,10 +55,9 @@ public class SlidingMenuFragment extends Fragment {
     };
 
     private static final String[] MenuFragmentTags = new String[] {
-            "PhotoFragment",
-            "FolderFragment.class",
-            "SettingFragment.class"
-
+            LetoolFragment.FRAGMENT_TAG_THUMBNAIL,
+            LetoolFragment.FRAGMENT_TAG_FOLDER,
+            LetoolFragment.FRAGMENT_TAG_SETTINGS
     };
 
     private ListView mMenusList;
@@ -77,6 +76,7 @@ public class SlidingMenuFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.sliding_menu, container, false);
         rootView.setOnTouchListener(new OnTouchListener() {
+
             @Override
             public boolean onTouch(View v, MotionEvent m) {
                 mActivity.getLetoolSlidingMenu().toggle();
@@ -95,6 +95,7 @@ public class SlidingMenuFragment extends Fragment {
         mMenusList = (ListView) rootView.findViewById(R.id.sliding_menu_list);
         mMenusList.setAdapter(new SlidingMenuAdapter());
         mMenusList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 try {
@@ -126,19 +127,20 @@ public class SlidingMenuFragment extends Fragment {
     private void initFragmentData(Fragment f) {
         if (f instanceof ThumbnailFragment) {
             Bundle data = new Bundle();
-            data.putLong(DataManager.KEY_ALBUM_ID, MediaSetUtils.CAMERA_BUCKET_ID);
-            data.putString(DataManager.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-            data.putBoolean(DataManager.KEY_IS_CAMERA, true);
-            data.putString(DataManager.KEY_ALBUM_TITLE, getString(R.string.common_photo));
+            data.putLong(LetoolBaseActivity.KEY_ALBUM_ID, MediaSetUtils.CAMERA_BUCKET_ID);
+            data.putString(LetoolBaseActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+            data.putBoolean(LetoolBaseActivity.KEY_IS_CAMERA, true);
+            data.putString(LetoolBaseActivity.KEY_ALBUM_TITLE, getString(R.string.common_photo));
             f.setArguments(data);
         } else if (f instanceof FolderFragment) {
             Bundle data = new Bundle();
-            data.putString(DataManager.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
+            data.putString(LetoolBaseActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
             f.setArguments(data);
         }
     }
 
     private static class SlidingMenuItem {
+
         public int menuId;
         public int menuIcon;
         public int menuTitle;

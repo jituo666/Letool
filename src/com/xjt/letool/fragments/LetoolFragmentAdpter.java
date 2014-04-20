@@ -41,7 +41,7 @@ public class LetoolFragmentAdpter extends FragmentPagerAdapter {
                     e.printStackTrace();
                 }
                 Bundle data = new Bundle();
-                data.putString(DataManager.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+                data.putString(LetoolBaseActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
                 fragment.setArguments(data);
                 return fragment;
             }
@@ -55,7 +55,7 @@ public class LetoolFragmentAdpter extends FragmentPagerAdapter {
                     e.printStackTrace();
                 }
                 Bundle data = new Bundle();
-                data.putString(DataManager.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
+                data.putString(LetoolBaseActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
                 LLog.i(TAG, "PictureFragment");
                 fragment.setArguments(data);
                 return fragment;

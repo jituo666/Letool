@@ -1,12 +1,9 @@
 
 package com.xjt.letool.fragments;
 
-import android.app.ActionBar.OnMenuVisibilityListener;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 
 import android.net.Uri;
@@ -23,14 +20,12 @@ import android.widget.Toast;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.OrientationManager;
 import com.xjt.letool.R;
-import com.xjt.letool.data.DataManager;
 import com.xjt.letool.data.MediaDetails;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaObject;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.MediaSet;
 import com.xjt.letool.selectors.SelectionManager;
-import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.UsageStatistics;
 import com.xjt.letool.views.DetailsHelper;
 import com.xjt.letool.views.DetailsHelper.DetailsSource;
@@ -44,7 +39,13 @@ import com.xjt.letool.adapters.PhotoDataAdapter;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
 
-public class PhotoFragment extends LetoolFragment implements
+
+/**
+ * @Author Jituo.Xuan
+ * @Date 9:40:15 PM Apr 20, 2014
+ * @Comments:null
+ */
+public class FullImageFragment extends LetoolFragment implements
         PhotoView.Listener {
 
     private static final String TAG = "PhotoPage";
@@ -93,7 +94,7 @@ public class PhotoFragment extends LetoolFragment implements
     private SelectionManager mSelectionManager;
 
     private PhotoView mPhotoView;
-    private PhotoFragment.Model mModel;
+    private FullImageFragment.Model mModel;
     private DetailsHelper mDetailsHelper;
     private boolean mShowDetails;
 
@@ -477,10 +478,10 @@ public class PhotoFragment extends LetoolFragment implements
         initDatas();
 
         Bundle data = this.getArguments();
-        String albumTitle = data.getString(DataManager.KEY_ALBUM_TITLE);
-        long albumId = data.getLong(DataManager.KEY_ALBUM_ID, 0);
-        String albumMediaPath = data.getString(DataManager.KEY_MEDIA_PATH);
-        //boolean isCamera = data.getBoolean(DataManager.KEY_MEDIA_PATH, false);
+        String albumTitle = data.getString(LetoolBaseActivity.KEY_ALBUM_TITLE);
+        long albumId = data.getLong(LetoolBaseActivity.KEY_ALBUM_ID, 0);
+        String albumMediaPath = data.getString(LetoolBaseActivity.KEY_MEDIA_PATH);
+        boolean isCamera = data.getBoolean(LetoolBaseActivity.KEY_MEDIA_PATH, false);
 
         LLog.i(TAG, " photo fragment onCreateView id:" + albumId + " albumTitle:" + albumTitle + " albumMediaPath:" + albumMediaPath + " isCamera:");
         //mIsCamera = data.getBoolean(DataManager.KEY_IS_CAMERA);
@@ -621,7 +622,6 @@ public class PhotoFragment extends LetoolFragment implements
                     }
                     updateBars();
                 }
-                // Reset the timeout for the bars after a swipe
                 refreshHidingMessage();
             }
 

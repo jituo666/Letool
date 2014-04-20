@@ -33,11 +33,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.xjt.letool.activities.LetoolAlbumActivity"
+            android:name="com.xjt.letool.activities.LetoolThumbnailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" >
         </activity>
                 <activity
-            android:name="com.xjt.letool.activities.LetoolPhotoActivity"
+            android:name="com.xjt.letool.activities.LetoolFullImageActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" >
         </activity>
     </application>

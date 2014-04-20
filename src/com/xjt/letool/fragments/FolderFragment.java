@@ -6,14 +6,13 @@ import java.lang.ref.WeakReference;
 import com.xjt.letool.EyePosition;
 import com.xjt.letool.R;
 import com.xjt.letool.activities.LetoolBaseActivity;
-import com.xjt.letool.activities.LetoolAlbumActivity;
+import com.xjt.letool.activities.LetoolThumbnailActivity;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
 import com.xjt.letool.data.DataManager;
 import com.xjt.letool.data.MediaDetails;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.MediaSet;
-import com.xjt.letool.data.MediaSetUtils;
 import com.xjt.letool.data.loader.DataLoadingListener;
 import com.xjt.letool.data.loader.ThumbnailSetDataLoader;
 import com.xjt.letool.opengl.FadeTexture;
@@ -46,6 +45,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+
+/**
+ * @Author Jituo.Xuan
+ * @Date 9:40:26 PM Apr 20, 2014
+ * @Comments:null
+ */
 public class FolderFragment extends LetoolFragment implements EyePosition.EyePositionListener, SelectionListener {
 
     private static final String TAG = "PictureFragment";
@@ -78,7 +83,6 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
 
     private int mLoadingBits = 0;
     private boolean mShowedEmptyToastForSelf = false;
-    private LetoolBaseActivity mActivity;
     private boolean mGetContent = false;
     private Handler mHandler;
 
@@ -168,7 +172,7 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
                 return;
             }
         }
-        toast = Toast.makeText(mActivity, R.string.empty_album, toastLength);
+        toast = Toast.makeText(getAndroidContext(), R.string.empty_album, toastLength);
         mEmptyAlbumToast = new WeakReference<Toast>(toast);
         toast.show();
     }
@@ -233,18 +237,17 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LLog.i(TAG, "onCreate");
-        mActivity = (LetoolBaseActivity) getActivity();
         setHasOptionsMenu(true);
     }
 
     private void initializeViews() {
-        mSelectionManager = new SelectionManager(mActivity, true);
+        mSelectionManager = new SelectionManager(this, true);
         mSelectionManager.setSelectionListener(this);
-        mConfig = ViewConfigs.AlbumSetPage.get(mActivity);
+        mConfig = ViewConfigs.AlbumSetPage.get(getAndroidContext());
         ThumbnailLayout layout = new ThumbnailContractLayout(mConfig.albumSetSpec);
         mThumbnailView = new ThumbnailView(this, layout);
         mThumbnailView.setBackgroundColor(
-                LetoolUtils.intColorToFloatARGBArray(mActivity.getResources().getColor(R.color.default_background))
+                LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.default_background))
                 );
         mThumbnailViewRenderer = new ThumbnailSetRenderer(this, mThumbnailView);
         layout.setRenderer(mThumbnailViewRenderer);
@@ -276,7 +279,7 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
     private void initializeData() {
         Bundle data = getArguments();
         mGetContent = data.getBoolean(LetoolBaseActivity.KEY_GET_CONTENT, false);
-        mMediaSet = mActivity.getDataManager().getMediaSet(data.getString(DataManager.KEY_MEDIA_PATH), -1000);
+        mMediaSet = getDataManager().getMediaSet(data.getString(LetoolBaseActivity.KEY_MEDIA_PATH), -1000);
         mSelectionManager.setSourceMediaSet(mMediaSet);
         mThumbnailSetAdapter = new ThumbnailSetDataLoader(this, mMediaSet, DATA_CACHE_SIZE);
         mThumbnailSetAdapter.setLoadingListener(new MyLoadingListener());
@@ -296,7 +299,7 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Activity activity = mActivity;
+
         switch (item.getItemId()) {
         /*
          * case R.id.action_cancel:
@@ -313,7 +316,7 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
                         showDetails();
                     }
                 } else {
-                    Toast.makeText(activity, activity.getText(R.string.no_albums_alert), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getAndroidContext(), getText(R.string.no_albums_alert), Toast.LENGTH_SHORT).show();
                 }
                 return true;
                 /*
@@ -353,8 +356,8 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
         };
         initializeViews();
         initializeData();
-        mEyePosition = new EyePosition(mActivity.getAndroidContext(), this);
-        LetoolActionBar actionBar = mActivity.getLetoolActionBar();
+        mEyePosition = new EyePosition(getAndroidContext(), this);
+        LetoolActionBar actionBar = getLetoolActionBar();
         actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
         actionBar.setTitleIcon(R.drawable.ic_drawer);
         actionBar.setTitle(R.string.common_folder);
@@ -472,7 +475,7 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
     private void showDetails() {
         mShowDetails = true;
         if (mDetailsHelper == null) {
-            mDetailsHelper = new DetailsHelper(mActivity, mRootPane, mDetailsSource);
+            mDetailsHelper = new DetailsHelper(this, mRootPane, mDetailsSource);
             mDetailsHelper.setCloseListener(new CloseListener() {
                 @Override
                 public void onClose() {
@@ -513,7 +516,7 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.action_navi) {
-            mActivity.getLetoolSlidingMenu().toggle();
+            getLetoolSlidingMenu().toggle();
         }
     }
 
@@ -531,12 +534,12 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
         MediaPath mediaPath = targetSet.getPath();
         if (!mGetContent) {
             Intent it = new Intent();
-            it.setClass(getActivity(), LetoolAlbumActivity.class);
-            it.putExtra(DataManager.KEY_ALBUM_ID, mediaPath.getIdentity());
-            it.putExtra(DataManager.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-            it.putExtra(DataManager.KEY_IS_CAMERA, false);
-            it.putExtra(DataManager.KEY_ALBUM_TITLE, targetSet.getName());
-            startActivityForResult(it, LetoolAlbumActivity.REQUEST_FOR_PHOTO);
+            it.setClass(getActivity(), LetoolThumbnailActivity.class);
+            it.putExtra(LetoolBaseActivity.KEY_ALBUM_ID, mediaPath.getIdentity());
+            it.putExtra(LetoolBaseActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+            it.putExtra(LetoolBaseActivity.KEY_IS_CAMERA, false);
+            it.putExtra(LetoolBaseActivity.KEY_ALBUM_TITLE, targetSet.getName());
+            startActivityForResult(it, LetoolThumbnailActivity.REQUEST_FOR_PHOTO);
             return;
         }
     }
@@ -545,13 +548,13 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
     public void onSelectionModeChange(int mode) {
         switch (mode) {
             case SelectionManager.ENTER_SELECTION_MODE: {
-                mActivity.getLetoolActionBar().setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_SELECTION, this);
-                mActivity.getLetoolActionBar().setSelectionManager(mSelectionManager);
+                getLetoolActionBar().setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_SELECTION, this);
+                getLetoolActionBar().setSelectionManager(mSelectionManager);
                 mRootPane.invalidate();
                 break;
             }
             case SelectionManager.LEAVE_SELECTION_MODE: {
-                mActivity.getLetoolActionBar().setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
+                getLetoolActionBar().setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
                 mRootPane.invalidate();
                 break;
             }
@@ -565,7 +568,7 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
     @Override
     public void onSelectionChange(MediaPath path, boolean selected) {
         int count = mSelectionManager.getSelectedCount();
-        String format = mActivity.getResources().getQuantityString(R.plurals.number_of_items_selected, count);
-        mActivity.getLetoolActionBar().setTitle(String.format(format, count));
+        String format = getResources().getQuantityString(R.plurals.number_of_items_selected, count);
+        getLetoolActionBar().setTitle(String.format(format, count));
     }
 }

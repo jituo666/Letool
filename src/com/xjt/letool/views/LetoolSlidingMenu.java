@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
+import com.xjt.letool.fragments.LetoolFragment;
 import com.xjt.letool.fragments.SlidingMenuFragment;
 
 public class LetoolSlidingMenu {
@@ -22,11 +23,11 @@ public class LetoolSlidingMenu {
     }
 
     public void toggle() {
-        if (mFragmentManager.findFragmentByTag("slidingMenuFragment") == null) {
+        if (mFragmentManager.findFragmentByTag(LetoolFragment.FRAGMENT_TAG_SLIDING_MENU) == null) {
             mFragment = new SlidingMenuFragment();
             FragmentTransaction ft = mFragmentManager.beginTransaction();
             ft.setCustomAnimations(R.anim.slide_left_in, 0);
-            ft.add(R.id.root_container, mFragment, "slidingMenuFragment").commit();
+            ft.add(R.id.root_container, mFragment, LetoolFragment.FRAGMENT_TAG_SLIDING_MENU).commit();
         } else if (mFragment != null) {
             FragmentTransaction ft = mFragmentManager.beginTransaction();
             ft.setCustomAnimations(0, R.anim.slide_left_out);

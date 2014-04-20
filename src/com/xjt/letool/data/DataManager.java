@@ -19,12 +19,6 @@ public class DataManager {
 
     private static final String TAG = "DataManager";
 
-    
-    public static final String KEY_ALBUM_TITLE = "album_title";
-    public static final String KEY_MEDIA_PATH = "media-path";
-    public static final String KEY_ALBUM_ID = "album_id";
-    public static final String KEY_IS_CAMERA = "is_camera";
-
     public static final int INCLUDE_IMAGE_SET = 1;
     public static final int INCLUDE_VIDEO_SET = 2;
     public static final int INCLUDE_ALL_SET = INCLUDE_IMAGE_SET | INCLUDE_VIDEO_SET;

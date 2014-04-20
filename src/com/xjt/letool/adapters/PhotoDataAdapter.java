@@ -34,10 +34,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 import com.xjt.letool.fragments.LetoolFragment;
-import com.xjt.letool.fragments.PhotoFragment;
+import com.xjt.letool.fragments.FullImageFragment;
 import com.xjt.letool.common.SynchronizedHandler;
 
-public class PhotoDataAdapter implements PhotoFragment.Model {
+public class PhotoDataAdapter implements FullImageFragment.Model {
     @SuppressWarnings("unused")
     private static final String TAG = "PhotoDataAdapter";
 

@@ -9,28 +9,36 @@ import com.xjt.letool.ThreadPool;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.DataManager;
 import com.xjt.letool.data.MediaItem;
-import com.xjt.letool.data.MediaSetUtils;
 import com.xjt.letool.data.utils.LetoolBitmapPool;
-import com.xjt.letool.fragments.ThumbnailFragment;
+import com.xjt.letool.fragments.LetoolFragment;
 import com.xjt.letool.views.LetoolActionBar;
 import com.xjt.letool.views.LetoolSlidingMenu;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnClickListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 6:16:39 PM Apr 20, 2014
+ * @Comments:null
+ */
 public class LetoolBaseActivity extends FragmentActivity implements LetoolContext {
 
     private static final String TAG = LetoolBaseActivity.class.getSimpleName();
+
+    public static final String KEY_ALBUM_TITLE = "album_title";
+    public static final String KEY_MEDIA_PATH = "media-path";
+    public static final String KEY_ALBUM_ID = "album_id";
+    public static final String KEY_IS_CAMERA = "is_camera";
     public static final String KEY_GET_CONTENT = "get-content";
+    public static final String KEY_TYPE_BITS = "type-bits";
 
     private LetoolActionBar mActionBar;
     private LetoolSlidingMenu mSlidingMenu;
@@ -40,7 +48,6 @@ public class LetoolBaseActivity extends FragmentActivity implements LetoolContex
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         mOrientationManager = new OrientationManager(this);
         mFragmentManager = getSupportFragmentManager();
         mSlidingMenu = new LetoolSlidingMenu(mFragmentManager);
@@ -66,21 +73,6 @@ public class LetoolBaseActivity extends FragmentActivity implements LetoolContex
     @Override
     protected void onStart() {
         super.onStart();
-        if (getExternalCacheDir() == null) {
-            OnCancelListener onCancel = new OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    finish();
-                }
-            };
-            OnClickListener onClick = new OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            };
-
-        }
     }
 
     @Override
@@ -110,22 +102,15 @@ public class LetoolBaseActivity extends FragmentActivity implements LetoolContex
             getLetoolActionBar().exitSelection();
             return;
         }
-        /*
-         * List<Fragment> list = mFragmentManager.getFragments(); if
-         * (list.size() > 2) { FragmentTransaction ft =
-         * mFragmentManager.beginTransaction(); boolean hasTopFragment = false;
-         * for (int p = list.size(); p > 2; p--) { Fragment f = list.get(p - 1);
-         * if (f != null) { hasTopFragment = true; if (f instanceof
-         * SlidingMenuFragment) { ft.setCustomAnimations(0,
-         * R.anim.slide_left_out); } else { ft.setCustomAnimations(0, 0);
-         * ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE); }
-         * ft.remove(f); } } if (!hasTopFragment) { super.onBackPressed(); }
-         * else { ft.commit(); TextView actionBarNaviText = (TextView)
-         * mActionBar.getActionPanel().findViewById(R.id.navi_text);
-         * actionBarNaviText.setText(R.string.app_name); } } else {
-         * super.onBackPressed(); }
-         */
-        super.onBackPressed();
+        Fragment f = mFragmentManager.findFragmentByTag(LetoolFragment.FRAGMENT_TAG_SLIDING_MENU);
+        if (f != null) {
+            FragmentTransaction ft = mFragmentManager.beginTransaction();
+            ft.setCustomAnimations(0, R.anim.slide_left_out);
+            ft.remove(f);
+            ft.commit();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -143,7 +128,6 @@ public class LetoolBaseActivity extends FragmentActivity implements LetoolContex
 
     @Override
     public DataManager getDataManager() {
-        LLog.i(TAG, "");
         return ((LetoolApp) getApplication()).getDataManager();
     }
 
