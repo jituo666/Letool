@@ -1,3 +1,4 @@
+
 package com.xjt.letool.fragments;
 
 import com.xjt.letool.LetoolApp;
@@ -12,8 +13,15 @@ import android.content.Context;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 11:24:54 PM Apr 19, 2014
+ * @Comments:null
+ */
 public abstract class LetoolFragment extends Fragment implements LetoolContext, OnActionModeListener {
+
     private static final String TAG = "LetoolFragment";
+
     @Override
     public DataManager getDataManager() {
         return ((LetoolApp) getActivity().getApplication()).getDataManager();
@@ -28,11 +36,11 @@ public abstract class LetoolFragment extends Fragment implements LetoolContext, 
     public Context getAndroidContext() {
         return getActivity().getApplicationContext();
     }
-    
+
     @Override
     public Looper getMainLooper() {
         return getActivity().getMainLooper();
     }
-    
+
     public abstract GLController getGLController();
 }

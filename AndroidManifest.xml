@@ -36,6 +36,10 @@
             android:name="com.xjt.letool.activities.LetoolAlbumActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" >
         </activity>
+                <activity
+            android:name="com.xjt.letool.activities.LetoolPhotoActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" >
+        </activity>
     </application>
 
 </manifest>

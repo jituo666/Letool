@@ -7,6 +7,7 @@ import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
 import com.xjt.letool.TransitionStore;
 import com.xjt.letool.activities.LetoolBaseActivity;
+import com.xjt.letool.activities.LetoolPhotoActivity;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
 import com.xjt.letool.data.DataManager;
@@ -37,6 +38,7 @@ import com.xjt.letool.views.layout.ThumbnailLayout;
 import com.xjt.letool.views.render.ThumbnailRenderer;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -330,7 +332,7 @@ public class ThumbnailFragment extends LetoolFragment implements EyePosition.Eye
             public void handleMessage(Message message) {
                 switch (message.what) {
                     case MSG_PICK_PHOTO: {
-                        //pickPhoto(message.arg1);
+                        pickPhoto(message.arg1);
                         break;
                     }
                     default:
@@ -515,5 +517,16 @@ public class ThumbnailFragment extends LetoolFragment implements EyePosition.Eye
         String format = getResources().getQuantityString(R.plurals.number_of_items_selected, count);
         mActivity.getLetoolActionBar().setTitle(String.format(format, count));
         //mActionModeHandler.updateSupportedOperation(path, selected);
+    }
+    
+    
+    private void pickPhoto(int index) {
+        Intent it = new Intent();
+        it.setClass(mActivity, LetoolPhotoActivity.class);
+        it.putExtra(DataManager.KEY_ALBUM_ID, mData.getPath().getIdentity());
+        it.putExtra(DataManager.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+        it.putExtra(DataManager.KEY_IS_CAMERA, false);
+        it.putExtra(DataManager.KEY_ALBUM_TITLE, mData.getName());
+        startActivity(it);
     }
 }
