@@ -45,7 +45,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-
 /**
  * @Author Jituo.Xuan
  * @Date 9:40:26 PM Apr 20, 2014
@@ -53,7 +52,8 @@ import android.widget.Toast;
  */
 public class FolderFragment extends LetoolFragment implements EyePosition.EyePositionListener, SelectionListener {
 
-    private static final String TAG = "PictureFragment";
+    private static final String TAG = FolderFragment.class.getSimpleName();
+
     private GLRootView mGLRootView;
     public static final String KEY_EMPTY_ALBUM = "empty-album";
     private static final int DATA_CACHE_SIZE = 256;
@@ -117,6 +117,7 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
     };
 
     private class MyLoadingListener implements DataLoadingListener {
+
         @Override
         public void onLoadingStarted() {
             setLoadingBit(BIT_LOADING_RELOAD);
@@ -254,6 +255,7 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
         mThumbnailView.setThumbnailRenderer(mThumbnailViewRenderer);
         mRootPane.addComponent(mThumbnailView);
         mThumbnailView.setListener(new ThumbnailView.SimpleListener() {
+
             @Override
             public void onDown(int index) {
                 FolderFragment.this.onDown(index);
@@ -343,6 +345,7 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
         View rootView = inflater.inflate(R.layout.gl_root_view, container, false);
         mGLRootView = (GLRootView) rootView.findViewById(R.id.gl_root_view);
         mHandler = new SynchronizedHandler(mGLRootView) {
+
             @Override
             public void handleMessage(Message message) {
                 switch (message.what) {
@@ -350,7 +353,8 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
                         pickAlbum(message.arg1);
                         break;
                     }
-                    default: throw new AssertionError(message.what);
+                    default:
+                        throw new AssertionError(message.what);
                 }
             }
         };
@@ -477,6 +481,7 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
         if (mDetailsHelper == null) {
             mDetailsHelper = new DetailsHelper(this, mRootPane, mDetailsSource);
             mDetailsHelper.setCloseListener(new CloseListener() {
+
                 @Override
                 public void onClose() {
                     hideDetails();
@@ -487,6 +492,7 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
     }
 
     private class MyDetailsSource implements DetailsHelper.DetailsSource {
+
         private int mIndex;
 
         @Override
