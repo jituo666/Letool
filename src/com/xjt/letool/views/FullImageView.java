@@ -29,12 +29,12 @@ import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.RangeArray;
 import com.xjt.letool.utils.UsageStatistics;
 import com.xjt.letool.utils.Utils;
-import com.xjt.letool.views.layout.PositionController;
+import com.xjt.letool.views.layout.FullImageLayout;
 import com.xjt.letool.views.utils.GestureRecognizer;
 
-public class PhotoView extends GLBaseView {
+public class FullImageView extends GLBaseView {
     @SuppressWarnings("unused")
-    private static final String TAG = "PhotoView";
+    private static final String TAG = FullImageView.class.getSimpleName();
     private final int mPlaceholderColor;
 
     public static final int INVALID_SIZE = -1;
@@ -47,6 +47,7 @@ public class PhotoView extends GLBaseView {
 
     public interface Model extends TileImageView.TileSource {
         public int getCurrentIndex();
+
         public void moveTo(int index);
 
         // Returns the size for the specified picture. If the size information is
@@ -103,20 +104,31 @@ public class PhotoView extends GLBaseView {
         // MediaItem, depending on the value of focus hint direction.
         public static final int FOCUS_HINT_NEXT = 0;
         public static final int FOCUS_HINT_PREVIOUS = 1;
+
         public void setFocusHintDirection(int direction);
+
         public void setFocusHintPath(MediaPath path);
     }
 
     public interface Listener {
         public void onSingleTapUp(int x, int y);
+
         public void onFullScreenChanged(boolean full);
+
         public void onActionBarAllowed(boolean allowed);
+
         public void onActionBarWanted();
+
         public void onCurrentImageUpdated();
+
         public void onDeleteImage(MediaPath path, int offset);
+
         public void onUndoDeleteImage();
+
         public void onCommitDeleteImage();
+
         public void onFilmModeChanged(boolean enabled);
+
         public void onPictureCenter(boolean isCamera);
         //public void onUndoBarVisibilityChanged(boolean visible);
     }
@@ -178,7 +190,7 @@ public class PhotoView extends GLBaseView {
 
     private final MyGestureListener mGestureListener;
     private final GestureRecognizer mGestureRecognizer;
-    private final PositionController mPositionController;
+    private final FullImageLayout mPositionController;
 
     private Listener mListener;
     private Model mModel;
@@ -228,7 +240,7 @@ public class PhotoView extends GLBaseView {
 
     private Context mContext;
 
-    public PhotoView(LetoolFragment activity) {
+    public FullImageView(LetoolFragment activity) {
         mTileView = new TileImageView(activity);
         addComponent(mTileView);
         mContext = activity.getAndroidContext();
@@ -244,39 +256,39 @@ public class PhotoView extends GLBaseView {
         mGestureListener = new MyGestureListener();
         mGestureRecognizer = new GestureRecognizer(mContext, mGestureListener);
 
-        mPositionController = new PositionController(mContext,
-                new PositionController.Listener() {
+        mPositionController = new FullImageLayout(mContext,
+                new FullImageLayout.Listener() {
 
-            @Override
-            public void invalidate() {
-                PhotoView.this.invalidate();
-            }
+                    @Override
+                    public void invalidate() {
+                        FullImageView.this.invalidate();
+                    }
 
-            @Override
-            public boolean isHoldingDown() {
-                return (mHolding & HOLD_TOUCH_DOWN) != 0;
-            }
+                    @Override
+                    public boolean isHoldingDown() {
+                        return (mHolding & HOLD_TOUCH_DOWN) != 0;
+                    }
 
-            @Override
-            public boolean isHoldingDelete() {
-                return (mHolding & HOLD_DELETE) != 0;
-            }
+                    @Override
+                    public boolean isHoldingDelete() {
+                        return (mHolding & HOLD_DELETE) != 0;
+                    }
 
-            @Override
-            public void onPull(int offset, int direction) {
-                mEdgeView.onPull(offset, direction);
-            }
+                    @Override
+                    public void onPull(int offset, int direction) {
+                        mEdgeView.onPull(offset, direction);
+                    }
 
-            @Override
-            public void onRelease() {
-                mEdgeView.onRelease();
-            }
+                    @Override
+                    public void onRelease() {
+                        mEdgeView.onRelease();
+                    }
 
-            @Override
-            public void onAbsorb(int velocity, int direction) {
-                mEdgeView.onAbsorb(velocity, direction);
-            }
-        });
+                    @Override
+                    public void onAbsorb(int velocity, int direction) {
+                        mEdgeView.onAbsorb(velocity, direction);
+                    }
+                });
         mVideoPlayIcon = new ResourceTexture(mContext, R.drawable.ic_control_play);
         for (int i = -SCREEN_NAIL_MAX; i <= SCREEN_NAIL_MAX; i++) {
             if (i == 0) {
@@ -362,7 +374,8 @@ public class PhotoView extends GLBaseView {
                     checkHideUndoBar(UNDO_BAR_FULL_CAMERA);
                     break;
                 }
-                default: throw new AssertionError(message.what);
+                default:
+                    throw new AssertionError(message.what);
             }
         }
     }
@@ -400,7 +413,7 @@ public class PhotoView extends GLBaseView {
 
         // Update the ScreenNails.
         for (int i = -SCREEN_NAIL_MAX; i <= SCREEN_NAIL_MAX; i++) {
-            Picture p =  mPictures.get(i);
+            Picture p = mPictures.get(i);
             p.reload();
             mSizes[i + SCREEN_NAIL_MAX] = p.getSize();
         }
@@ -423,7 +436,7 @@ public class PhotoView extends GLBaseView {
             mHandler.removeMessages(MSG_DELETE_DONE);
             Message m = mHandler.obtainMessage(MSG_DELETE_DONE);
             mHandler.sendMessageDelayed(
-                    m, PositionController.SNAPBACK_ANIMATION_TIME);
+                    m, FullImageLayout.SNAPBACK_ANIMATION_TIME);
         }
 
         invalidate();
@@ -502,10 +515,18 @@ public class PhotoView extends GLBaseView {
 
         // Now convert it to the coordinates we are using.
         switch (mCompensation) {
-            case 0: mCameraRect.set(l, t, r, b); break;
-            case 90: mCameraRect.set(h - b, l, h - t, r); break;
-            case 180: mCameraRect.set(w - r, h - b, w - l, h - t); break;
-            case 270: mCameraRect.set(t, w - r, b, w - l); break;
+            case 0:
+                mCameraRect.set(l, t, r, b);
+                break;
+            case 90:
+                mCameraRect.set(h - b, l, h - t, r);
+                break;
+            case 180:
+                mCameraRect.set(w - r, h - b, w - l, h - t);
+                break;
+            case 270:
+                mCameraRect.set(t, w - r, b, w - l);
+                break;
         }
 
         LLog.d(TAG, "compensation = " + mCompensation
@@ -553,11 +574,17 @@ public class PhotoView extends GLBaseView {
 
     private interface Picture {
         void reload();
+
         void draw(GLESCanvas canvas, Rect r);
+
         void setScreenNail(ScreenNail s);
-        boolean isCamera();  // whether the picture is a camera preview
-        boolean isDeletable();  // whether the picture can be deleted
-        void forceSize();  // called when mCompensation changes
+
+        boolean isCamera(); // whether the picture is a camera preview
+
+        boolean isDeletable(); // whether the picture can be deleted
+
+        void forceSize(); // called when mCompensation changes
+
         Size getSize();
     }
 
@@ -623,7 +650,8 @@ public class PhotoView extends GLBaseView {
             // page mode, we move _to_ the camera preview from another picture.
 
             // Holdings except touch-down prevent the transitions.
-            if ((mHolding & ~HOLD_TOUCH_DOWN) != 0) return;
+            if ((mHolding & ~HOLD_TOUCH_DOWN) != 0)
+                return;
 
             if (mWantPictureCenterCallbacks && mPositionController.isCenter()) {
                 mListener.onPictureCenter(mIsCamera);
@@ -651,7 +679,7 @@ public class PhotoView extends GLBaseView {
             int viewH = getHeight();
             float cx = r.exactCenterX();
             float cy = r.exactCenterY();
-            float scale = 1f;  // the scaling factor due to card effect
+            float scale = 1f; // the scaling factor due to card effect
 
             canvas.save(GLESCanvas.SAVE_FLAG_MATRIX | GLESCanvas.SAVE_FLAG_ALPHA);
             float filmRatio = mPositionController.getFilmRatio();
@@ -678,7 +706,7 @@ public class PhotoView extends GLBaseView {
                     imageScale *= scale;
                     canvas.multiplyAlpha(alpha);
 
-                    float cxPage;  // the cx value in page mode
+                    float cxPage; // the cx value in page mode
                     if (right - left <= viewW) {
                         // If the picture is narrower than the view, keep it at
                         // the center of the view.
@@ -704,7 +732,8 @@ public class PhotoView extends GLBaseView {
             // Draw the play video icon and the message.
             canvas.translate((int) (cx + 0.5f), (int) (cy + 0.5f));
             int s = (int) (scale * Math.min(r.width(), r.height()) + 0.5f);
-            if (mIsVideo) drawVideoPlayIcon(canvas, s);
+            if (mIsVideo)
+                drawVideoPlayIcon(canvas, s);
             if (mLoadingState == Model.LOADING_FAIL) {
                 drawLoadingFailMessage(canvas);
             }
@@ -729,10 +758,22 @@ public class PhotoView extends GLBaseView {
             int inverseY = imageH - centerY;
             int x, y;
             switch (mRotation) {
-                case 0: x = centerX; y = centerY; break;
-                case 90: x = centerY; y = inverseX; break;
-                case 180: x = inverseX; y = inverseY; break;
-                case 270: x = inverseY; y = centerX; break;
+                case 0:
+                    x = centerX;
+                    y = centerY;
+                    break;
+                case 90:
+                    x = centerY;
+                    y = inverseX;
+                    break;
+                case 180:
+                    x = inverseX;
+                    y = inverseY;
+                    break;
+                case 270:
+                    x = inverseY;
+                    y = centerX;
+                    break;
                 default:
                     throw new RuntimeException(String.valueOf(mRotation));
             }
@@ -825,7 +866,8 @@ public class PhotoView extends GLBaseView {
                 invalidate();
             }
             int s = Math.min(drawW, drawH);
-            if (mIsVideo) drawVideoPlayIcon(canvas, s);
+            if (mIsVideo)
+                drawVideoPlayIcon(canvas, s);
             if (mLoadingState == Model.LOADING_FAIL) {
                 drawLoadingFailMessage(canvas);
             }
@@ -967,12 +1009,13 @@ public class PhotoView extends GLBaseView {
                 // directly to the lock screen.
                 MediaItem item = mModel.getMediaItem(0);
                 int supported = 0;
-                if (item != null) supported = item.getSupportedOperations();
-/*                if ((supported & MediaItem.SUPPORT_ACTION) == 0) {
-                    setFilmMode(false);
-                    mIgnoreUpEvent = true;
-                    return true;
-                }*/
+                if (item != null)
+                    supported = item.getSupportedOperations();
+                /*                if ((supported & MediaItem.SUPPORT_ACTION) == 0) {
+                                    setFilmMode(false);
+                                    mIgnoreUpEvent = true;
+                                    return true;
+                                }*/
             }
 
             if (mListener != null) {
@@ -980,7 +1023,7 @@ public class PhotoView extends GLBaseView {
                 Matrix m = getGLController().getCompensationMatrix();
                 Matrix inv = new Matrix();
                 m.invert(inv);
-                float[] pts = new float[] {x, y};
+                float[] pts = new float[] { x, y };
                 inv.mapPoints(pts);
                 mListener.onSingleTapUp((int) (pts[0] + 0.5f), (int) (pts[1] + 0.5f));
             }
@@ -989,9 +1032,11 @@ public class PhotoView extends GLBaseView {
 
         @Override
         public boolean onDoubleTap(float x, float y) {
-            if (mIgnoreSwipingGesture) return true;
-            if (mPictures.get(0).isCamera()) return false;
-            PositionController controller = mPositionController;
+            if (mIgnoreSwipingGesture)
+                return true;
+            if (mPictures.get(0).isCamera())
+                return false;
+            FullImageLayout controller = mPositionController;
             float scale = controller.getImageScale();
             // onDoubleTap happened on the second ACTION_DOWN.
             // We need to ignore the next UP event.
@@ -1006,7 +1051,8 @@ public class PhotoView extends GLBaseView {
 
         @Override
         public boolean onScroll(float dx, float dy, float totalX, float totalY) {
-            if (mIgnoreSwipingGesture) return true;
+            if (mIgnoreSwipingGesture)
+                return true;
             if (!mScrolledAfterDown) {
                 mScrolledAfterDown = true;
                 mFirstScrollX = (Math.abs(dx) > Math.abs(dy));
@@ -1018,7 +1064,8 @@ public class PhotoView extends GLBaseView {
                 if (mFirstScrollX) {
                     mPositionController.scrollFilmX(dxi);
                 } else {
-                    if (mTouchBoxIndex == Integer.MAX_VALUE) return true;
+                    if (mTouchBoxIndex == Integer.MAX_VALUE)
+                        return true;
                     int newDeltaY = calculateDeltaY(totalY);
                     int d = newDeltaY - mDeltaY;
                     if (d != 0) {
@@ -1033,7 +1080,8 @@ public class PhotoView extends GLBaseView {
         }
 
         private int calculateDeltaY(float delta) {
-            if (mTouchBoxDeletable) return (int) (delta + 0.5f);
+            if (mTouchBoxDeletable)
+                return (int) (delta + 0.5f);
 
             // don't let items that can't be deleted be dragged more than
             // maxScrollDistance, and make it harder and harder to drag.
@@ -1050,8 +1098,10 @@ public class PhotoView extends GLBaseView {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            if (mIgnoreSwipingGesture) return true;
-            if (mModeChanged) return true;
+            if (mIgnoreSwipingGesture)
+                return true;
+            if (mModeChanged)
+                return true;
             if (swipeImages(velocityX, velocityY)) {
                 mIgnoreUpEvent = true;
             } else {
@@ -1102,7 +1152,8 @@ public class PhotoView extends GLBaseView {
 
         private void deleteAfterAnimation(int duration) {
             MediaItem item = mModel.getMediaItem(mTouchBoxIndex);
-            if (item == null) return;
+            if (item == null)
+                return;
             mListener.onCommitDeleteImage();
             mUndoIndexHint = mModel.getCurrentIndex() + mTouchBoxIndex;
             mHolding |= HOLD_DELETE;
@@ -1114,7 +1165,8 @@ public class PhotoView extends GLBaseView {
 
         @Override
         public boolean onScaleBegin(float focusX, float focusY) {
-            if (mIgnoreSwipingGesture) return true;
+            if (mIgnoreSwipingGesture)
+                return true;
             // We ignore the scaling gesture if it is a camera preview.
             mIgnoreScalingGesture = mPictures.get(0).isCamera();
             if (mIgnoreScalingGesture) {
@@ -1131,10 +1183,14 @@ public class PhotoView extends GLBaseView {
 
         @Override
         public boolean onScale(float focusX, float focusY, float scale) {
-            if (mIgnoreSwipingGesture) return true;
-            if (mIgnoreScalingGesture) return true;
-            if (mModeChanged) return true;
-            if (Float.isNaN(scale) || Float.isInfinite(scale)) return false;
+            if (mIgnoreSwipingGesture)
+                return true;
+            if (mIgnoreScalingGesture)
+                return true;
+            if (mModeChanged)
+                return true;
+            if (Float.isNaN(scale) || Float.isInfinite(scale))
+                return false;
 
             int outOfRange = mPositionController.scaleBy(scale, focusX, focusY);
 
@@ -1160,14 +1216,13 @@ public class PhotoView extends GLBaseView {
                     }
                     setFilmMode(!mFilmMode);
 
-
                     // We need to call onScaleEnd() before setting mModeChanged
                     // to true.
                     onScaleEnd();
                     mModeChanged = true;
                     return true;
                 }
-           }
+            }
 
             if (outOfRange != 0) {
                 startExtraScalingIfNeeded();
@@ -1179,9 +1234,12 @@ public class PhotoView extends GLBaseView {
 
         @Override
         public void onScaleEnd() {
-            if (mIgnoreSwipingGesture) return;
-            if (mIgnoreScalingGesture) return;
-            if (mModeChanged) return;
+            if (mIgnoreSwipingGesture)
+                return;
+            if (mIgnoreScalingGesture)
+                return;
+            if (mModeChanged)
+                return;
             mPositionController.endScale();
         }
 
@@ -1209,7 +1267,8 @@ public class PhotoView extends GLBaseView {
             mDeltaY = 0;
             mModeChanged = false;
 
-            if (mIgnoreSwipingGesture) return;
+            if (mIgnoreSwipingGesture)
+                return;
 
             mHolding |= HOLD_TOUCH_DOWN;
 
@@ -1241,7 +1300,8 @@ public class PhotoView extends GLBaseView {
 
         @Override
         public void onUp() {
-            if (mIgnoreSwipingGesture) return;
+            if (mIgnoreSwipingGesture)
+                return;
 
             mHolding &= ~HOLD_TOUCH_DOWN;
             mEdgeView.onRelease();
@@ -1268,7 +1328,7 @@ public class PhotoView extends GLBaseView {
             }
 
             if (!(mFilmMode && !mHadFling && mFirstScrollX
-                    && snapToNeighborImage())) {
+            && snapToNeighborImage())) {
                 snapback();
             }
         }
@@ -1289,12 +1349,14 @@ public class PhotoView extends GLBaseView {
             mListener.onActionBarAllowed(false);
         } else {
             mListener.onActionBarAllowed(true);
-            if (mFilmMode) mListener.onActionBarWanted();
+            if (mFilmMode)
+                mListener.onActionBarWanted();
         }
     }
 
     public void setFilmMode(boolean enabled) {
-        if (mFilmMode == enabled) return;
+        if (mFilmMode == enabled)
+            return;
         mFilmMode = enabled;
         mPositionController.setFilmMode(mFilmMode);
         mModel.setNeedFullImage(!enabled);
@@ -1348,9 +1410,10 @@ public class PhotoView extends GLBaseView {
     private void showUndoBar(boolean deleteLast) {
         mHandler.removeMessages(MSG_UNDO_BAR_TIMEOUT);
         mUndoBarState = UNDO_BAR_SHOW;
-        if(deleteLast) mUndoBarState |= UNDO_BAR_DELETE_LAST;
+        if (deleteLast)
+            mUndoBarState |= UNDO_BAR_DELETE_LAST;
         mHandler.sendEmptyMessageDelayed(MSG_UNDO_BAR_TIMEOUT, 3000);
-       // if (mListener != null) mListener.onUndoBarVisibilityChanged(true);
+        // if (mListener != null) mListener.onUndoBarVisibilityChanged(true);
     }
 
     private void hideUndoBar() {
@@ -1371,7 +1434,8 @@ public class PhotoView extends GLBaseView {
     // 2. The camera is shown in full screen.
     private void checkHideUndoBar(int addition) {
         mUndoBarState |= addition;
-        if ((mUndoBarState & UNDO_BAR_SHOW) == 0) return;
+        if ((mUndoBarState & UNDO_BAR_SHOW) == 0)
+            return;
         boolean timeout = (mUndoBarState & UNDO_BAR_TIMEOUT) != 0;
         boolean touched = (mUndoBarState & UNDO_BAR_TOUCHED) != 0;
         boolean fullCamera = (mUndoBarState & UNDO_BAR_FULL_CAMERA) != 0;
@@ -1401,7 +1465,8 @@ public class PhotoView extends GLBaseView {
             mFullScreenCamera = full;
             mFirst = false;
             mListener.onFullScreenChanged(full);
-            if (full) mHandler.sendEmptyMessage(MSG_UNDO_BAR_FULL_CAMERA);
+            if (full)
+                mHandler.sendEmptyMessage(MSG_UNDO_BAR_FULL_CAMERA);
         }
 
         // Determine how many photos we need to draw in addition to the center
@@ -1440,8 +1505,10 @@ public class PhotoView extends GLBaseView {
 
     // Runs in GL thread.
     private void checkFocusSwitching() {
-        if (!mFilmMode) return;
-        if (mHandler.hasMessages(MSG_SWITCH_FOCUS)) return;
+        if (!mFilmMode)
+            return;
+        if (mHandler.hasMessages(MSG_SWITCH_FOCUS))
+            return;
         if (switchPosition() != 0) {
             mHandler.sendEmptyMessage(MSG_SWITCH_FOCUS);
         }
@@ -1449,7 +1516,8 @@ public class PhotoView extends GLBaseView {
 
     // Runs in main thread.
     private void switchFocus() {
-        if (mHolding != 0) return;
+        if (mHolding != 0)
+            return;
         switch (switchPosition()) {
             case -1:
                 switchToPrevImage();
@@ -1514,25 +1582,26 @@ public class PhotoView extends GLBaseView {
     ////////////////////////////////////////////////////////////////////////////
 
     private boolean swipeImages(float velocityX, float velocityY) {
-        if (mFilmMode) return false;
+        if (mFilmMode)
+            return false;
 
         // Avoid swiping images if we're possibly flinging to view the
         // zoomed in picture vertically.
-        PositionController controller = mPositionController;
+        FullImageLayout controller = mPositionController;
         boolean isMinimal = controller.isAtMinimalScale();
         int edges = controller.getImageAtEdges();
         if (!isMinimal && Math.abs(velocityY) > Math.abs(velocityX))
-            if ((edges & PositionController.IMAGE_AT_TOP_EDGE) == 0
-                    || (edges & PositionController.IMAGE_AT_BOTTOM_EDGE) == 0)
+            if ((edges & FullImageLayout.IMAGE_AT_TOP_EDGE) == 0
+                    || (edges & FullImageLayout.IMAGE_AT_BOTTOM_EDGE) == 0)
                 return false;
 
         // If we are at the edge of the current photo and the sweeping velocity
         // exceeds the threshold, slide to the next / previous image.
         if (velocityX < -SWIPE_THRESHOLD && (isMinimal
-                || (edges & PositionController.IMAGE_AT_RIGHT_EDGE) != 0)) {
+                || (edges & FullImageLayout.IMAGE_AT_RIGHT_EDGE) != 0)) {
             return slideToNextPicture();
         } else if (velocityX > SWIPE_THRESHOLD && (isMinimal
-                || (edges & PositionController.IMAGE_AT_LEFT_EDGE) != 0)) {
+                || (edges & FullImageLayout.IMAGE_AT_LEFT_EDGE) != 0)) {
             return slideToPrevPicture();
         }
 
@@ -1540,7 +1609,8 @@ public class PhotoView extends GLBaseView {
     }
 
     private void snapback() {
-        if ((mHolding & ~HOLD_DELETE) != 0) return;
+        if ((mHolding & ~HOLD_DELETE) != 0)
+            return;
         if (mFilmMode || !snapToNeighborImage()) {
             mPositionController.snapback();
         }
@@ -1550,7 +1620,7 @@ public class PhotoView extends GLBaseView {
         Rect r = mPositionController.getPosition(0);
         int viewW = getWidth();
         // Setting the move threshold proportional to the width of the view
-        int moveThreshold = viewW / 5 ;
+        int moveThreshold = viewW / 5;
         int threshold = moveThreshold + gapToSide(r.width(), viewW);
 
         // If we have moved the picture a lot, switching.
@@ -1564,14 +1634,16 @@ public class PhotoView extends GLBaseView {
     }
 
     private boolean slideToNextPicture() {
-        if (mNextBound <= 0) return false;
+        if (mNextBound <= 0)
+            return false;
         switchToNextImage();
         mPositionController.startHorizontalSlide();
         return true;
     }
 
     private boolean slideToPrevPicture() {
-        if (mPrevBound >= 0) return false;
+        if (mPrevBound >= 0)
+            return false;
         switchToPrevImage();
         mPositionController.startHorizontalSlide();
         return true;
@@ -1615,7 +1687,8 @@ public class PhotoView extends GLBaseView {
 
     public boolean switchWithCaptureAnimation(int offset) {
         GLController root = getGLController();
-        if(root == null) return false;
+        if (root == null)
+            return false;
         root.lockRenderThread();
         try {
             return switchWithCaptureAnimationLocked(offset);
@@ -1625,16 +1698,21 @@ public class PhotoView extends GLBaseView {
     }
 
     private boolean switchWithCaptureAnimationLocked(int offset) {
-        if (mHolding != 0) return true;
+        if (mHolding != 0)
+            return true;
         if (offset == 1) {
-            if (mNextBound <= 0) return false;
+            if (mNextBound <= 0)
+                return false;
             // Temporary disable action bar until the capture animation is done.
-            if (!mFilmMode) mListener.onActionBarAllowed(false);
+            if (!mFilmMode)
+                mListener.onActionBarAllowed(false);
             switchToNextImage();
             mPositionController.startCaptureAnimationSlide(-1);
         } else if (offset == -1) {
-            if (mPrevBound >= 0) return false;
-            if (mFilmMode) setFilmMode(false);
+            if (mPrevBound >= 0)
+                return false;
+            if (mFilmMode)
+                setFilmMode(false);
 
             // If we are too far away from the first image (so that we don't
             // have all the ScreenNails in-between), we go directly without
@@ -1652,7 +1730,7 @@ public class PhotoView extends GLBaseView {
         }
         mHolding |= HOLD_CAPTURE_ANIMATION;
         Message m = mHandler.obtainMessage(MSG_CAPTURE_ANIMATION_DONE, offset, 0);
-        mHandler.sendMessageDelayed(m, PositionController.CAPTURE_ANIMATION_TIME);
+        mHandler.sendMessageDelayed(m, FullImageLayout.CAPTURE_ANIMATION_TIME);
         return true;
     }
 
@@ -1693,9 +1771,9 @@ public class PhotoView extends GLBaseView {
         if (w < viewWidth) {
             int zx = viewWidth / 2 - w / 2;
             if (left > zx) {
-                return -(left - zx) / (float) (viewWidth - zx);  // progress = (0, -1]
+                return -(left - zx) / (float) (viewWidth - zx); // progress = (0, -1]
             } else {
-                return (left - zx) / (float) (-w - zx);  // progress = [0, 1]
+                return (left - zx) / (float) (-w - zx); // progress = [0, 1]
             }
         }
 
@@ -1720,7 +1798,7 @@ public class PhotoView extends GLBaseView {
     // animation.
     private float getScrollAlpha(float scrollProgress) {
         return scrollProgress < 0 ? mAlphaInterpolator.getInterpolation(
-                     1 - Math.abs(scrollProgress)) : 1.0f;
+                1 - Math.abs(scrollProgress)) : 1.0f;
     }
 
     // Maps a scrolling progress value to the scaling factor in the fading
@@ -1732,7 +1810,6 @@ public class PhotoView extends GLBaseView {
                 interpolatedProgress * TRANSITION_SCALE_FACTOR;
         return scale;
     }
-
 
     // This interpolator emulates the rate at which the perceived scale of an
     // object changes as its distance from a camera increases. When this
@@ -1747,7 +1824,7 @@ public class PhotoView extends GLBaseView {
 
         public float getInterpolation(float input) {
             return (1.0f - focalLength / (focalLength + input)) /
-                (1.0f - focalLength / (focalLength + 1.0f));
+                    (1.0f - focalLength / (focalLength + 1.0f));
         }
     }
 

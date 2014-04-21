@@ -1,4 +1,4 @@
-package com.xjt.letool.utils;
+package com.xjt.letool.views.utils;
 
 import com.xjt.letool.common.ApiHelper;
 
@@ -12,8 +12,7 @@ public final class MotionEventHelper {
     private MotionEventHelper() {}
 
     public static MotionEvent transformEvent(MotionEvent e, Matrix m) {
-        // We try to use the new transform method if possible because it uses
-        // less memory.
+        // We try to use the new transform method if possible because it usesless memory.
         if (ApiHelper.HAS_MOTION_EVENT_TRANSFORM) {
             return transformEventNew(e, m);
         } else {

@@ -23,7 +23,7 @@ import com.xjt.letool.opengl.ScreenNail;
 import com.xjt.letool.opengl.TiledScreenNail;
 import com.xjt.letool.opengl.TiledTexture;
 import com.xjt.letool.utils.Utils;
-import com.xjt.letool.views.PhotoView;
+import com.xjt.letool.views.FullImageView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,7 +48,7 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
 
     private static final int MIN_LOAD_COUNT = 16;
     private static final int DATA_CACHE_SIZE = 256;
-    private static final int SCREEN_NAIL_MAX = PhotoView.SCREEN_NAIL_MAX;
+    private static final int SCREEN_NAIL_MAX = FullImageView.SCREEN_NAIL_MAX;
     private static final int IMAGE_CACHE_SIZE = 2 * SCREEN_NAIL_MAX + 1;
 
     private static final int BIT_SCREEN_NAIL = 1;
@@ -127,7 +127,7 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
     private final Handler mMainHandler;
     private final ThreadPool mThreadPool;
 
-    private final PhotoView mPhotoView;
+    private final FullImageView mPhotoView;
     private final MediaSet mSource;
     private ReloadTask mReloadTask;
 
@@ -156,7 +156,7 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
     // can find the item. If mItemPath is null, then we use the mCurrentIndex to
     // find the image being viewed. cameraIndex is the index of the camera
     // preview. If cameraIndex < 0, there is no camera preview.
-    public PhotoDataAdapter(LetoolFragment activity, PhotoView view,
+    public PhotoDataAdapter(LetoolFragment activity, FullImageView view,
             MediaSet mediaSet, MediaPath itemPath, int indexHint, int cameraIndex,
             boolean isPanorama, boolean isStaticCamera) {
         mSource = Utils.checkNotNull(mediaSet);
@@ -452,7 +452,7 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
     }
 
     @Override
-    public void getImageSize(int offset, PhotoView.Size size) {
+    public void getImageSize(int offset, FullImageView.Size size) {
         MediaItem item = getItem(mCurrentIndex + offset);
         if (item == null) {
             size.width = 0;

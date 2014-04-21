@@ -32,7 +32,7 @@ import com.xjt.letool.views.DetailsHelper.DetailsSource;
 import com.xjt.letool.views.GLBaseView;
 import com.xjt.letool.views.GLController;
 import com.xjt.letool.views.GLRootView;
-import com.xjt.letool.views.PhotoView;
+import com.xjt.letool.views.FullImageView;
 
 import com.xjt.letool.activities.LetoolBaseActivity;
 import com.xjt.letool.adapters.PhotoDataAdapter;
@@ -46,7 +46,7 @@ import com.xjt.letool.common.SynchronizedHandler;
  * @Comments:null
  */
 public class FullImageFragment extends LetoolFragment implements
-        PhotoView.Listener {
+        FullImageView.Listener {
 
     private static final String TAG = "PhotoPage";
 
@@ -93,7 +93,7 @@ public class FullImageFragment extends LetoolFragment implements
     private LetoolApp mApplication;
     private SelectionManager mSelectionManager;
 
-    private PhotoView mPhotoView;
+    private FullImageView mPhotoView;
     private FullImageFragment.Model mModel;
     private DetailsHelper mDetailsHelper;
     private boolean mShowDetails;
@@ -129,7 +129,7 @@ public class FullImageFragment extends LetoolFragment implements
 
     private LetoolBaseActivity mActivity;
 
-    public static interface Model extends PhotoView.Model {
+    public static interface Model extends FullImageView.Model {
 
         public void resume();
 
@@ -495,7 +495,7 @@ public class FullImageFragment extends LetoolFragment implements
         mStartInFilmstrip = data.getBoolean(KEY_START_IN_FILMSTRIP, false);
         mCurrentIndex = data.getInt(KEY_INDEX_HINT, 0);
 
-        mPhotoView = new PhotoView(this);
+        mPhotoView = new FullImageView(this);
         mPhotoView.setListener(this);
         mRootPane.addComponent(mPhotoView);
         mApplication = (LetoolApp) ((Activity) mActivity).getApplication();

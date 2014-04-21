@@ -12,12 +12,12 @@ import com.xjt.letool.utils.RangeArray;
 import com.xjt.letool.utils.RangeIntArray;
 import com.xjt.letool.utils.Utils;
 import com.xjt.letool.views.EdgeView;
-import com.xjt.letool.views.PhotoView;
-import com.xjt.letool.views.PhotoView.Size;
+import com.xjt.letool.views.FullImageView;
+import com.xjt.letool.views.FullImageView.Size;
 import com.xjt.letool.views.utils.FlingScroller;
 
-public class PositionController {
-    private static final String TAG = "PositionController";
+public class FullImageLayout {
+    private static final String TAG = FullImageLayout.class.getSimpleName();
 
     public static final int IMAGE_AT_LEFT_EDGE = 1;
     public static final int IMAGE_AT_RIGHT_EDGE = 2;
@@ -86,7 +86,7 @@ public class PositionController {
 
     // In addition to the focused box (index == 0). We also keep information
     // about this many boxes on each side.
-    private static final int BOX_MAX = PhotoView.SCREEN_NAIL_MAX;
+    private static final int BOX_MAX = FullImageView.SCREEN_NAIL_MAX;
     private static final int[] CENTER_OUT_INDEX = new int[2 * BOX_MAX + 1];
 
     private static final int IMAGE_GAP = LetoolUtils.dpToPixel(16);
@@ -196,7 +196,7 @@ public class PositionController {
         }
     }
 
-    public PositionController(Context context, Listener listener) {
+    public FullImageLayout(Context context, Listener listener) {
         mListener = listener;
         mPageScroller = new FlingScroller();
         mFilmScroller = new Scroller(context, null, false);

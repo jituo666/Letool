@@ -12,6 +12,7 @@ import com.xjt.letool.LetoolApp;
 import com.xjt.letool.ThreadPool.Job;
 import com.xjt.letool.ThreadPool.JobContext;
 import com.xjt.letool.common.LLog;
+import com.xjt.letool.data.DBUpdateHelper;
 import com.xjt.letool.data.MediaDetails;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaPath;
@@ -19,7 +20,6 @@ import com.xjt.letool.data.cache.ImageCacheRequest;
 import com.xjt.letool.data.image.LocalMediaItem;
 import com.xjt.letool.data.source.LocalAlbum;
 import com.xjt.letool.data.utils.BitmapUtils;
-import com.xjt.letool.data.utils.DBUpdateHelper;
 import com.xjt.letool.utils.LetoolUtils;
 
 // LocalVideo represents a video in the local storage.

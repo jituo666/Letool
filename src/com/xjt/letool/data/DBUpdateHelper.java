@@ -1,4 +1,4 @@
-package com.xjt.letool.data.utils;
+package com.xjt.letool.data;
 
 import com.xjt.letool.utils.Utils;
 

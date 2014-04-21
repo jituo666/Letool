@@ -20,7 +20,7 @@ import com.xjt.letool.opengl.GLES20Canvas;
 import com.xjt.letool.opengl.GLESCanvas;
 import com.xjt.letool.opengl.LetoolEGLChooser;
 import com.xjt.letool.opengl.UploadedTexture;
-import com.xjt.letool.utils.MotionEventHelper;
+import com.xjt.letool.views.utils.MotionEventHelper;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

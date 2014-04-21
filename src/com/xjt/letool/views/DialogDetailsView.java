@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
-import com.xjt.letool.activities.LetoolBaseActivity;
 import com.xjt.letool.data.MediaDetails;
 import com.xjt.letool.utils.Utils;
 import com.xjt.letool.views.DetailsAddressResolver.AddressResolvingListener;
