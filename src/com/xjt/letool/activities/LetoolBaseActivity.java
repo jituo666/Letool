@@ -10,9 +10,9 @@ import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.DataManager;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.utils.LetoolBitmapPool;
-import com.xjt.letool.fragments.LetoolFragment;
 import com.xjt.letool.views.LetoolActionBar;
 import com.xjt.letool.views.LetoolSlidingMenu;
+import com.xjt.letool.views.fragments.LetoolFragment;
 
 import android.content.Context;
 import android.content.Intent;

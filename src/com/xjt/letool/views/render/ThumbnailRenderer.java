@@ -6,14 +6,14 @@ import com.xjt.letool.adapters.ThumbnailDataWindow;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.loader.ThumbnailDataLoader;
-import com.xjt.letool.fragments.LetoolFragment;
-import com.xjt.letool.opengl.ColorTexture;
-import com.xjt.letool.opengl.FadeInTexture;
-import com.xjt.letool.opengl.GLESCanvas;
-import com.xjt.letool.opengl.Texture;
-import com.xjt.letool.opengl.TiledTexture;
 import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.views.ThumbnailView;
+import com.xjt.letool.views.fragments.LetoolFragment;
+import com.xjt.letool.views.opengl.ColorTexture;
+import com.xjt.letool.views.opengl.FadeInTexture;
+import com.xjt.letool.views.opengl.GLESCanvas;
+import com.xjt.letool.views.opengl.Texture;
+import com.xjt.letool.views.opengl.TiledTexture;
 
 public class ThumbnailRenderer extends AbstractThumbnailRender {
 

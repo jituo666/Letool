@@ -7,11 +7,11 @@ import com.xjt.letool.animations.ThumbnailAnim;
 import com.xjt.letool.animations.ThumbnailRisingAnim;
 import com.xjt.letool.animations.ThumbnailScatteringAnim;
 import com.xjt.letool.common.LLog;
-import com.xjt.letool.fragments.LetoolFragment;
-import com.xjt.letool.opengl.GLESCanvas;
 import com.xjt.letool.utils.RelativePosition;
 import com.xjt.letool.utils.Utils;
+import com.xjt.letool.views.fragments.LetoolFragment;
 import com.xjt.letool.views.layout.ThumbnailLayout;
+import com.xjt.letool.views.opengl.GLESCanvas;
 
 import android.graphics.Rect;
 import android.view.GestureDetector;

@@ -5,11 +5,11 @@ import android.content.Context;
 import android.graphics.Rect;
 
 import com.xjt.letool.R;
-import com.xjt.letool.opengl.FadeOutTexture;
-import com.xjt.letool.opengl.GLESCanvas;
-import com.xjt.letool.opengl.NinePatchTexture;
-import com.xjt.letool.opengl.Texture;
 import com.xjt.letool.views.ThumbnailView;
+import com.xjt.letool.views.opengl.FadeOutTexture;
+import com.xjt.letool.views.opengl.GLESCanvas;
+import com.xjt.letool.views.opengl.NinePatchTexture;
+import com.xjt.letool.views.opengl.Texture;
 
 public abstract class AbstractThumbnailRender implements ThumbnailView.Renderer {
 

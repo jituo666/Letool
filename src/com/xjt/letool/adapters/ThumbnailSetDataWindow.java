@@ -18,12 +18,12 @@ import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.MediaSet;
 import com.xjt.letool.data.loader.ThumbnailSetDataLoader;
 import com.xjt.letool.data.utils.BitmapLoader;
-import com.xjt.letool.fragments.LetoolFragment;
-import com.xjt.letool.opengl.BitmapTexture;
-import com.xjt.letool.opengl.Texture;
-import com.xjt.letool.opengl.TextureUploader;
-import com.xjt.letool.opengl.TiledTexture;
 import com.xjt.letool.utils.Utils;
+import com.xjt.letool.views.fragments.LetoolFragment;
+import com.xjt.letool.views.opengl.BitmapTexture;
+import com.xjt.letool.views.opengl.Texture;
+import com.xjt.letool.views.opengl.TextureUploader;
+import com.xjt.letool.views.opengl.TiledTexture;
 import com.xjt.letool.views.render.ThumbnailSetRenderer;
 
 

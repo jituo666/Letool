@@ -11,8 +11,8 @@ import com.xjt.letool.ThreadPool.JobContext;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaPath;
+import com.xjt.letool.data.exif.ExifInterface;
 import com.xjt.letool.data.utils.BitmapDecodeUtils;
-import com.xjt.letool.exif.ExifInterface;
 
 public class LocalImageRequest extends ImageCacheRequest {
 

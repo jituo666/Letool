@@ -8,8 +8,8 @@ import android.view.animation.Interpolator;
 
 import com.xjt.letool.R;
 import com.xjt.letool.animations.AnimationTime;
-import com.xjt.letool.opengl.GLESCanvas;
-import com.xjt.letool.opengl.ResourceTexture;
+import com.xjt.letool.views.opengl.GLESCanvas;
+import com.xjt.letool.views.opengl.ResourceTexture;
 
 // This is copied from android.widget.EdgeEffect with some small modifications:
 // (1) Copy the images (overscroll_{edge|glow}.png) to local resources.

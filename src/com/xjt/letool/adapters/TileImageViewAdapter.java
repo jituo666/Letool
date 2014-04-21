@@ -12,7 +12,7 @@ import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.utils.LetoolBitmapPool;
 import com.xjt.letool.views.TileImageView;
-import com.xjt.letool.opengl.ScreenNail;
+import com.xjt.letool.views.opengl.ScreenNail;
 import com.xjt.letool.utils.Utils;
 
 public class TileImageViewAdapter implements TileImageView.TileSource {

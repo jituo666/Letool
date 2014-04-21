@@ -18,11 +18,11 @@ import com.xjt.letool.ThreadPool.JobContext;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.utils.BitmapDecodeUtils;
 import com.xjt.letool.data.utils.LetoolBitmapPool;
-import com.xjt.letool.opengl.GLESCanvas;
-import com.xjt.letool.opengl.ScreenNail;
-import com.xjt.letool.opengl.TiledScreenNail;
-import com.xjt.letool.opengl.UploadedTexture;
 import com.xjt.letool.utils.Utils;
+import com.xjt.letool.views.opengl.GLESCanvas;
+import com.xjt.letool.views.opengl.ScreenNail;
+import com.xjt.letool.views.opengl.TiledScreenNail;
+import com.xjt.letool.views.opengl.UploadedTexture;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 

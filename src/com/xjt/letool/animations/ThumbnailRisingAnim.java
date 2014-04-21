@@ -2,7 +2,7 @@ package com.xjt.letool.animations;
 
 import android.graphics.Rect;
 
-import com.xjt.letool.opengl.GLESCanvas;
+import com.xjt.letool.views.opengl.GLESCanvas;
 
 public  class ThumbnailRisingAnim extends ThumbnailAnim {
     private static final int RISING_DISTANCE = 128;

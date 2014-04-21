@@ -24,11 +24,11 @@ import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.cache.ImageCacheRequest;
 import com.xjt.letool.data.cache.LocalImageRequest;
+import com.xjt.letool.data.exif.ExifInterface;
+import com.xjt.letool.data.exif.ExifTag;
 import com.xjt.letool.data.source.LocalAlbum;
 import com.xjt.letool.data.utils.BitmapUtils;
 import com.xjt.letool.data.utils.BitmapDecodeUtils;
-import com.xjt.letool.exif.ExifInterface;
-import com.xjt.letool.exif.ExifTag;
 import com.xjt.letool.utils.LetoolUtils;
 
 import java.io.File;

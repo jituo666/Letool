@@ -18,18 +18,18 @@ import com.xjt.letool.common.SynchronizedHandler;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaObject;
 import com.xjt.letool.data.MediaPath;
-import com.xjt.letool.fragments.LetoolFragment;
-import com.xjt.letool.opengl.GLESCanvas;
-import com.xjt.letool.opengl.ScreenNail;
-import com.xjt.letool.opengl.StringTexture;
-import com.xjt.letool.opengl.Texture;
-import com.xjt.letool.opengl.ResourceTexture;
-import com.xjt.letool.opengl.TiledScreenNail;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.RangeArray;
 import com.xjt.letool.utils.UsageStatistics;
 import com.xjt.letool.utils.Utils;
+import com.xjt.letool.views.fragments.LetoolFragment;
 import com.xjt.letool.views.layout.FullImageLayout;
+import com.xjt.letool.views.opengl.GLESCanvas;
+import com.xjt.letool.views.opengl.ResourceTexture;
+import com.xjt.letool.views.opengl.ScreenNail;
+import com.xjt.letool.views.opengl.StringTexture;
+import com.xjt.letool.views.opengl.Texture;
+import com.xjt.letool.views.opengl.TiledScreenNail;
 import com.xjt.letool.views.utils.GestureRecognizer;
 
 public class FullImageView extends GLBaseView {

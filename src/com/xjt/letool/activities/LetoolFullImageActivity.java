@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentManager;
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.DataManager;
-import com.xjt.letool.fragments.FullImageFragment;
+import com.xjt.letool.views.fragments.FullImageFragment;
 
 public class LetoolFullImageActivity extends LetoolBaseActivity {
 

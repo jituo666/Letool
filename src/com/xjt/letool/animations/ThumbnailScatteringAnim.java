@@ -2,8 +2,8 @@ package com.xjt.letool.animations;
 
 import android.graphics.Rect;
 
-import com.xjt.letool.opengl.GLESCanvas;
 import com.xjt.letool.utils.RelativePosition;
+import com.xjt.letool.views.opengl.GLESCanvas;
 
 public class ThumbnailScatteringAnim extends ThumbnailAnim {
     private int PHOTO_DISTANCE = 1000;

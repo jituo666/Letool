@@ -7,8 +7,8 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
-import com.xjt.letool.fragments.LetoolFragment;
-import com.xjt.letool.fragments.SlidingMenuFragment;
+import com.xjt.letool.views.fragments.LetoolFragment;
+import com.xjt.letool.views.fragments.SlidingMenuFragment;
 
 public class LetoolSlidingMenu {
 

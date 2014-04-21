@@ -19,11 +19,13 @@ import com.xjt.letool.data.MediaSetUtils;
 import com.xjt.letool.data.image.LocalMediaItem;
 import com.xjt.letool.data.loader.DataLoadingListener;
 import com.xjt.letool.data.utils.BitmapUtils;
-import com.xjt.letool.opengl.ScreenNail;
-import com.xjt.letool.opengl.TiledScreenNail;
-import com.xjt.letool.opengl.TiledTexture;
 import com.xjt.letool.utils.Utils;
 import com.xjt.letool.views.FullImageView;
+import com.xjt.letool.views.fragments.FullImageFragment;
+import com.xjt.letool.views.fragments.LetoolFragment;
+import com.xjt.letool.views.opengl.ScreenNail;
+import com.xjt.letool.views.opengl.TiledScreenNail;
+import com.xjt.letool.views.opengl.TiledTexture;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,8 +35,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
-import com.xjt.letool.fragments.LetoolFragment;
-import com.xjt.letool.fragments.FullImageFragment;
 import com.xjt.letool.common.SynchronizedHandler;
 
 public class PhotoDataAdapter implements FullImageFragment.Model {

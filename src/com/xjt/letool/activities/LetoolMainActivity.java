@@ -5,10 +5,10 @@ import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.DataManager;
 import com.xjt.letool.data.MediaSetUtils;
-import com.xjt.letool.fragments.LetoolFragment;
-import com.xjt.letool.fragments.ThumbnailFragment;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.Utils;
+import com.xjt.letool.views.fragments.LetoolFragment;
+import com.xjt.letool.views.fragments.ThumbnailFragment;
 
 import android.os.Bundle;
 import android.content.Intent;

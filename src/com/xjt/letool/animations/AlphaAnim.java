@@ -1,7 +1,7 @@
 package com.xjt.letool.animations;
 
-import com.xjt.letool.opengl.GLESCanvas;
 import com.xjt.letool.utils.Utils;
+import com.xjt.letool.views.opengl.GLESCanvas;
 
 
 public class AlphaAnim extends CanvasAnim {

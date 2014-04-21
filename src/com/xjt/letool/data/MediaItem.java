@@ -5,7 +5,7 @@ import android.graphics.BitmapRegionDecoder;
 
 import com.xjt.letool.ThreadPool.Job;
 import com.xjt.letool.data.utils.BytesBufferPool;
-import com.xjt.letool.opengl.ScreenNail;
+import com.xjt.letool.views.opengl.ScreenNail;
 
 // MediaItem represents an image or a video item.
 public abstract class MediaItem extends MediaObject {

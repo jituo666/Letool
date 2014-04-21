@@ -12,8 +12,8 @@ import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaObject;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.MediaSet;
-import com.xjt.letool.fragments.LetoolFragment;
 import com.xjt.letool.utils.Utils;
+import com.xjt.letool.views.fragments.LetoolFragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;

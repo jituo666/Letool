@@ -12,11 +12,11 @@ import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.loader.ThumbnailDataLoader;
 import com.xjt.letool.data.utils.BitmapLoader;
-import com.xjt.letool.fragments.LetoolFragment;
-import com.xjt.letool.opengl.Texture;
-import com.xjt.letool.opengl.TiledTexture;
-import com.xjt.letool.opengl.TiledTextureUploader;
 import com.xjt.letool.utils.Utils;
+import com.xjt.letool.views.fragments.LetoolFragment;
+import com.xjt.letool.views.opengl.Texture;
+import com.xjt.letool.views.opengl.TiledTexture;
+import com.xjt.letool.views.opengl.TiledTextureUploader;
 
 /**
  * control the data window ,[activate range:media data], [content range: meta

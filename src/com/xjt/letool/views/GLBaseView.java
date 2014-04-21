@@ -6,8 +6,8 @@ import com.xjt.letool.animations.AnimationTime;
 import com.xjt.letool.animations.CanvasAnim;
 import com.xjt.letool.animations.StateTransAnim;
 import com.xjt.letool.common.LLog;
-import com.xjt.letool.opengl.GLESCanvas;
 import com.xjt.letool.utils.Utils;
+import com.xjt.letool.views.opengl.GLESCanvas;
 
 import android.annotation.SuppressLint;
 import android.graphics.Rect;

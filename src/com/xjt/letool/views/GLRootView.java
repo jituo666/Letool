@@ -14,12 +14,12 @@ import com.xjt.letool.animations.CanvasAnim;
 import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.OrientationSource;
-import com.xjt.letool.opengl.BasicTexture;
-import com.xjt.letool.opengl.GLES11Canvas;
-import com.xjt.letool.opengl.GLES20Canvas;
-import com.xjt.letool.opengl.GLESCanvas;
-import com.xjt.letool.opengl.LetoolEGLChooser;
-import com.xjt.letool.opengl.UploadedTexture;
+import com.xjt.letool.views.opengl.BasicTexture;
+import com.xjt.letool.views.opengl.GLES11Canvas;
+import com.xjt.letool.views.opengl.GLES20Canvas;
+import com.xjt.letool.views.opengl.GLESCanvas;
+import com.xjt.letool.views.opengl.LetoolEGLChooser;
+import com.xjt.letool.views.opengl.UploadedTexture;
 import com.xjt.letool.views.utils.MotionEventHelper;
 
 import android.annotation.SuppressLint;

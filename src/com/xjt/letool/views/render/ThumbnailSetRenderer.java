@@ -9,15 +9,15 @@ import com.xjt.letool.common.AlbumLabelMaker;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.loader.ThumbnailSetDataLoader;
-import com.xjt.letool.fragments.LetoolFragment;
-import com.xjt.letool.opengl.ColorTexture;
-import com.xjt.letool.opengl.FadeInTexture;
-import com.xjt.letool.opengl.GLESCanvas;
-import com.xjt.letool.opengl.Texture;
-import com.xjt.letool.opengl.TiledTexture;
-import com.xjt.letool.opengl.UploadedTexture;
 import com.xjt.letool.views.ThumbnailView;
 import com.xjt.letool.views.ViewConfigs;
+import com.xjt.letool.views.fragments.LetoolFragment;
+import com.xjt.letool.views.opengl.ColorTexture;
+import com.xjt.letool.views.opengl.FadeInTexture;
+import com.xjt.letool.views.opengl.GLESCanvas;
+import com.xjt.letool.views.opengl.Texture;
+import com.xjt.letool.views.opengl.TiledTexture;
+import com.xjt.letool.views.opengl.UploadedTexture;
 
 public class ThumbnailSetRenderer extends AbstractThumbnailRender {
 

@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentManager;
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.DataManager;
-import com.xjt.letool.fragments.ThumbnailFragment;
+import com.xjt.letool.views.fragments.ThumbnailFragment;
 
 
 /**

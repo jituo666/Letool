@@ -3,7 +3,7 @@ package com.xjt.letool.views;
 import android.content.Context;
 import android.opengl.Matrix;
 
-import com.xjt.letool.opengl.GLESCanvas;
+import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.utils.EdgeEffect;
 
 // EdgeView draws EdgeEffect (blue glow) at four sides of the view.

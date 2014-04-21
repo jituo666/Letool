@@ -1,8 +1,8 @@
 package com.xjt.letool.animations;
 
-import com.xjt.letool.opengl.GLESCanvas;
-import com.xjt.letool.opengl.RawTexture;
 import com.xjt.letool.views.GLBaseView;
+import com.xjt.letool.views.opengl.GLESCanvas;
+import com.xjt.letool.views.opengl.RawTexture;
 
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
