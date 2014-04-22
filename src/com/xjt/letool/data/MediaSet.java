@@ -1,6 +1,6 @@
 package com.xjt.letool.data;
 
-import com.xjt.letool.Future;
+import com.xjt.letool.common.Future;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.utils.Utils;
 

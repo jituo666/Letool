@@ -3,8 +3,8 @@ package com.xjt.letool.views.opengl;
 
 import java.util.ArrayDeque;
 
-import com.xjt.letool.views.GLController;
-import com.xjt.letool.views.GLController.OnGLIdleListener;
+import com.xjt.letool.view.GLController;
+import com.xjt.letool.view.GLController.OnGLIdleListener;
 
 public class TextureUploader implements OnGLIdleListener {
     private static final int INIT_CAPACITY = 64;

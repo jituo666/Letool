@@ -5,8 +5,9 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.Looper;
 
+import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.data.DataManager;
-import com.xjt.letool.views.LetoolSlidingMenu;
+import com.xjt.letool.view.LetoolSlidingMenu;
 
 public interface LetoolContext {
 

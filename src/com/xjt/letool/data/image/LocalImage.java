@@ -14,10 +14,10 @@ import android.provider.MediaStore.Images.ImageColumns;
 import android.provider.MediaStore.MediaColumns;
 
 import com.xjt.letool.LetoolApp;
-import com.xjt.letool.ThreadPool.Job;
-import com.xjt.letool.ThreadPool.JobContext;
 import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.common.LLog;
+import com.xjt.letool.common.ThreadPool.Job;
+import com.xjt.letool.common.ThreadPool.JobContext;
 import com.xjt.letool.data.DBUpdateHelper;
 import com.xjt.letool.data.MediaDetails;
 import com.xjt.letool.data.MediaItem;

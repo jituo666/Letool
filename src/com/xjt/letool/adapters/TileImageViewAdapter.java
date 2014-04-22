@@ -11,7 +11,7 @@ import android.graphics.Rect;
 import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.utils.LetoolBitmapPool;
-import com.xjt.letool.views.TileImageView;
+import com.xjt.letool.view.TileImageView;
 import com.xjt.letool.views.opengl.ScreenNail;
 import com.xjt.letool.utils.Utils;
 

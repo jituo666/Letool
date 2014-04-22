@@ -3,7 +3,7 @@ package com.xjt.letool.data;
 import android.graphics.Bitmap;
 import android.graphics.BitmapRegionDecoder;
 
-import com.xjt.letool.ThreadPool.Job;
+import com.xjt.letool.common.ThreadPool.Job;
 import com.xjt.letool.data.utils.BytesBufferPool;
 import com.xjt.letool.views.opengl.ScreenNail;
 

@@ -3,14 +3,13 @@ package com.xjt.letool.adapters;
 import android.graphics.Bitmap;
 import android.os.Message;
 
-import com.xjt.letool.Future;
-import com.xjt.letool.FutureListener;
 import com.xjt.letool.R;
-import com.xjt.letool.ThreadPool;
-import com.xjt.letool.activities.LetoolBaseActivity;
-import com.xjt.letool.common.AlbumLabelMaker;
+import com.xjt.letool.activities.BaseActivity;
+import com.xjt.letool.common.Future;
+import com.xjt.letool.common.FutureListener;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
+import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.data.DataSourceType;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaObject;
@@ -19,12 +18,13 @@ import com.xjt.letool.data.MediaSet;
 import com.xjt.letool.data.loader.ThumbnailSetDataLoader;
 import com.xjt.letool.data.utils.BitmapLoader;
 import com.xjt.letool.utils.Utils;
-import com.xjt.letool.views.fragments.LetoolFragment;
+import com.xjt.letool.views.fragment.LetoolFragment;
 import com.xjt.letool.views.opengl.BitmapTexture;
 import com.xjt.letool.views.opengl.Texture;
 import com.xjt.letool.views.opengl.TextureUploader;
 import com.xjt.letool.views.opengl.TiledTexture;
 import com.xjt.letool.views.render.ThumbnailSetRenderer;
+import com.xjt.letool.views.utils.AlbumLabelMaker;
 
 
 public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListener {

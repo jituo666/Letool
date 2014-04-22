@@ -1,7 +1,7 @@
 package com.xjt.letool.selectors;
 
 import com.xjt.letool.LetoolContext;
-import com.xjt.letool.activities.LetoolBaseActivity;
+import com.xjt.letool.activities.BaseActivity;
 import com.xjt.letool.data.DataManager;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaPath;

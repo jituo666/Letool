@@ -4,8 +4,8 @@ import android.graphics.Rect;
 
 import com.xjt.letool.animations.IntegerAnim;
 import com.xjt.letool.common.LLog;
-import com.xjt.letool.views.ThumbnailView;
-import com.xjt.letool.views.ThumbnailView.Renderer;
+import com.xjt.letool.view.ThumbnailView;
+import com.xjt.letool.view.ThumbnailView.Renderer;
 
 public abstract class ThumbnailLayout {
 

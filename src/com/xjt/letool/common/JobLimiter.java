@@ -1,10 +1,7 @@
 package com.xjt.letool.common;
 
-import com.xjt.letool.Future;
-import com.xjt.letool.FutureListener;
-import com.xjt.letool.ThreadPool;
-import com.xjt.letool.ThreadPool.Job;
-import com.xjt.letool.ThreadPool.JobContext;
+import com.xjt.letool.common.ThreadPool.Job;
+import com.xjt.letool.common.ThreadPool.JobContext;
 import com.xjt.letool.utils.Utils;
 
 import java.util.LinkedList;

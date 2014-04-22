@@ -9,9 +9,9 @@ import android.provider.MediaStore.Video;
 import android.provider.MediaStore.Video.VideoColumns;
 
 import com.xjt.letool.LetoolApp;
-import com.xjt.letool.ThreadPool.Job;
-import com.xjt.letool.ThreadPool.JobContext;
 import com.xjt.letool.common.LLog;
+import com.xjt.letool.common.ThreadPool.Job;
+import com.xjt.letool.common.ThreadPool.JobContext;
 import com.xjt.letool.data.DBUpdateHelper;
 import com.xjt.letool.data.MediaDetails;
 import com.xjt.letool.data.MediaItem;

@@ -12,11 +12,11 @@ import android.provider.MediaStore.Video;
 
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.R;
-import com.xjt.letool.ThreadPool;
-import com.xjt.letool.Future;
-import com.xjt.letool.FutureListener;
-import com.xjt.letool.ThreadPool.JobContext;
+import com.xjt.letool.common.Future;
+import com.xjt.letool.common.FutureListener;
 import com.xjt.letool.common.LLog;
+import com.xjt.letool.common.ThreadPool;
+import com.xjt.letool.common.ThreadPool.JobContext;
 import com.xjt.letool.data.DataManager;
 import com.xjt.letool.data.DataNotifier;
 import com.xjt.letool.data.MediaObject;

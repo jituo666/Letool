@@ -23,7 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/StyledIndicators" >
         <activity
-            android:name="com.xjt.letool.activities.LetoolMainActivity"
+            android:name="com.xjt.letool.activities.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name" >
             <intent-filter>
@@ -33,11 +33,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.xjt.letool.activities.LetoolThumbnailActivity"
+            android:name="com.xjt.letool.activities.ThumbnailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" >
         </activity>
                 <activity
-            android:name="com.xjt.letool.activities.LetoolFullImageActivity"
+            android:name="com.xjt.letool.activities.FullImageActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" >
         </activity>
     </application>

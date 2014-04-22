@@ -4,8 +4,8 @@ import java.util.ArrayDeque;
 
 import android.os.SystemClock;
 
-import com.xjt.letool.views.GLController;
-import com.xjt.letool.views.GLController.OnGLIdleListener;
+import com.xjt.letool.view.GLController;
+import com.xjt.letool.view.GLController.OnGLIdleListener;
 
 public class TiledTextureUploader implements OnGLIdleListener {
 

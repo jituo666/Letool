@@ -11,9 +11,9 @@ import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.RangeArray;
 import com.xjt.letool.utils.RangeIntArray;
 import com.xjt.letool.utils.Utils;
-import com.xjt.letool.views.EdgeView;
-import com.xjt.letool.views.FullImageView;
-import com.xjt.letool.views.FullImageView.Size;
+import com.xjt.letool.view.EdgeView;
+import com.xjt.letool.view.FullImageView;
+import com.xjt.letool.view.FullImageView.Size;
 import com.xjt.letool.views.utils.FlingScroller;
 
 public class FullImageLayout {

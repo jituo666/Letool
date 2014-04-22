@@ -7,9 +7,9 @@ import android.graphics.BitmapFactory.Options;
 import android.graphics.BitmapRegionDecoder;
 import android.util.FloatMath;
 
-import com.xjt.letool.ThreadPool.CancelListener;
-import com.xjt.letool.ThreadPool.JobContext;
 import com.xjt.letool.common.LLog;
+import com.xjt.letool.common.ThreadPool.CancelListener;
+import com.xjt.letool.common.ThreadPool.JobContext;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.utils.Utils;
 

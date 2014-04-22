@@ -5,7 +5,7 @@ import android.content.Context;
 import android.graphics.Rect;
 
 import com.xjt.letool.R;
-import com.xjt.letool.views.ThumbnailView;
+import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.views.opengl.FadeOutTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.opengl.NinePatchTexture;

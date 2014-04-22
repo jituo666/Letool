@@ -4,9 +4,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.xjt.letool.LetoolApp;
-import com.xjt.letool.ThreadPool.Job;
-import com.xjt.letool.ThreadPool.JobContext;
 import com.xjt.letool.common.LLog;
+import com.xjt.letool.common.ThreadPool.Job;
+import com.xjt.letool.common.ThreadPool.JobContext;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.utils.BitmapUtils;
