@@ -1,3 +1,4 @@
+
 package com.xjt.letool.data.provider;
 
 import com.xjt.letool.common.LLog;
@@ -13,7 +14,8 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
 public class LetoolProvider extends ContentProvider {
-    private static final String TAG = "LetoolProvider";
+
+    private static final String TAG = LetoolProvider.class.getSimpleName();
 
     private static final String NO_DELETES_INSERTS_OR_UPDATES = "LetoolProvider does not support deletes, inserts, or updates for this URI.";
     private static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
@@ -45,7 +47,7 @@ public class LetoolProvider extends ContentProvider {
         }
 
         if (affectedRows > 0) {
-            context.getContentResolver().notifyChange(LetooContent.CONTENT_URI, null);
+            context.getContentResolver().notifyChange(LetoolContent.CONTENT_URI, null);
         }
         return affectedRows;
     }
@@ -61,6 +63,7 @@ public class LetoolProvider extends ContentProvider {
         String table = TABLE_THUMBNAILS;
         switch (match) {
             case URI_THUMBNAILS: {
+                table = TABLE_THUMBNAILS;
                 break;
             }
             default:
@@ -69,7 +72,7 @@ public class LetoolProvider extends ContentProvider {
         }
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         ContentValues finalValues;
-        Uri res = LetooContent.CONTENT_URI;
+        Uri res = LetoolContent.CONTENT_URI;
         long rowId;
         if (table.equals(TABLE_THUMBNAILS)) {
             finalValues = new ContentValues(values);
@@ -91,9 +94,9 @@ public class LetoolProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] args, String sortOrder) {
-
         Cursor cursor = null;
-        switch (URI_MATCHER.match(uri)) {
+        int math = URI_MATCHER.match(uri);
+        switch (math) {
             case URI_THUMBNAILS:
                 cursor = getThumbnailByPath(projection, selection, args, sortOrder);
                 break;
@@ -102,7 +105,7 @@ public class LetoolProvider extends ContentProvider {
         }
 
         if (cursor != null) {
-            cursor.setNotificationUri(getContext().getContentResolver(), LetooContent.CONTENT_URI);
+            cursor.setNotificationUri(getContext().getContentResolver(), LetoolContent.CONTENT_URI);
         }
         return cursor;
     }

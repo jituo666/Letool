@@ -124,8 +124,10 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
             entry.isWaitDisplayed = true;
         } else if (entry.isWaitDisplayed) {
             entry.isWaitDisplayed = false;
-            content = new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
-            entry.content = content;
+/*            content = new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
+            entry.content = content;*/
+            //content = new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
+            entry.content = entry.bitmapTexture;
         }
 
         drawContent(canvas, content, width, height, entry.rotation);

@@ -10,6 +10,7 @@ import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaPath;
+import com.xjt.letool.data.cache2.ThumbnailCacheCursor;
 import com.xjt.letool.data.loader.ThumbnailDataLoader;
 import com.xjt.letool.data.utils.BitmapLoader;
 import com.xjt.letool.utils.Utils;
@@ -30,7 +31,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
     private static final String TAG = "AlbumDataWindow";
 
     private static final int MSG_UPDATE_ENTRY = 0;
-    private static final int JOB_LIMIT = 2;
+    private static final int JOB_LIMIT = 1;
     private int mActiveRequestCount = 0;
     private boolean mIsActive = false;
 
@@ -83,6 +84,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
 
         mThreadPool = new JobLimiter(fragment.getThreadPool(), JOB_LIMIT);
         mTileUploader = new TiledTextureUploader(fragment.getGLController());
+        mThumbnailCacheCursor = new ThumbnailCacheCursor(fragment.getAndroidContext());
     }
 
     public void setListener(DataListener listener) {
@@ -269,6 +271,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
 
     public void resume() {
         mIsActive = true;
+        mThumbnailCacheCursor.resume();
         TiledTexture.prepareResources();
         for (int i = mContentStart, n = mContentEnd; i < n; ++i) {
             prepareSlotContent(i);
@@ -278,6 +281,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
 
     public void pause() {
         mIsActive = false;
+        mThumbnailCacheCursor.pause();
         mTileUploader.clear();
         TiledTexture.freeResources();
         for (int i = mContentStart, n = mContentEnd; i < n; ++i) {
@@ -322,7 +326,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
 
         @Override
         protected Future<Bitmap> submitBitmapTask(FutureListener<Bitmap> l) {
-            return mThreadPool.submit(mItem.requestImage(MediaItem.TYPE_MICROTHUMBNAIL), this);
+            return mThreadPool.submit(mItem.requestImage(MediaItem.TYPE_MICROTHUMBNAIL, mThumbnailCacheCursor.getCursor()), this);
         }
 
         @Override
@@ -346,4 +350,5 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
             }
         }
     }
+    private ThumbnailCacheCursor mThumbnailCacheCursor = null;
 }

@@ -138,7 +138,7 @@ public class LocalVideo extends LocalMediaItem {
     }
 
     @Override
-    public Job<Bitmap> requestImage(int type) {
+    public Job<Bitmap> requestImage(int type, Cursor cusor) {
         return new LocalVideoRequest(mApplication, getPath(), dateModifiedInSec, type, filePath);
     }
 

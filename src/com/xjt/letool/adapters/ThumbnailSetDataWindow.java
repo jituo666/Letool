@@ -1,5 +1,6 @@
 package com.xjt.letool.adapters;
 
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Message;
 
@@ -407,8 +408,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
 
         @Override
         protected Future<Bitmap> submitBitmapTask(FutureListener<Bitmap> l) {
-            return mThreadPool.submit(mMediaItem.requestImage(
-                    MediaItem.TYPE_MICROTHUMBNAIL), l);
+            return mThreadPool.submit(mMediaItem.requestImage(MediaItem.TYPE_MICROTHUMBNAIL, null), l);
         }
 
         @Override

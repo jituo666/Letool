@@ -24,6 +24,8 @@ import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.cache.ImageCacheRequest;
 import com.xjt.letool.data.cache.LocalImageRequest;
+import com.xjt.letool.data.cache2.LocalThumbnailRequest;
+import com.xjt.letool.data.cache2.ThumbnailCacheRequest;
 import com.xjt.letool.data.exif.ExifInterface;
 import com.xjt.letool.data.exif.ExifTag;
 import com.xjt.letool.data.source.LocalAlbum;
@@ -157,8 +159,8 @@ public class LocalImage extends LocalMediaItem {
     }
 
     @Override
-    public Job<Bitmap> requestImage(int type) {
-        return new LocalImageRequest(mApplication, mPath, dateModifiedInSec, type, filePath);
+    public Job<Bitmap> requestImage(int type, Cursor cusor) {
+        return new LocalThumbnailRequest(mApplication, cusor,mPath, dateModifiedInSec, type, filePath);
     }
 
     @Override
