@@ -36,10 +36,17 @@
             android:name="com.xjt.letool.activities.ThumbnailActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" >
         </activity>
-                <activity
+        <activity
             android:name="com.xjt.letool.activities.FullImageActivity"
             android:configChanges="keyboardHidden|orientation|screenSize" >
         </activity>
+
+        <provider
+            android:name="com.xjt.letool.data.provider.LetoolProvider"
+            android:authorities="lt_provider_authories"
+            android:exported="true"
+            android:multiprocess="false"
+            android:permission="com.xjt.letool.data.provider.rw" />
     </application>
 
 </manifest>
