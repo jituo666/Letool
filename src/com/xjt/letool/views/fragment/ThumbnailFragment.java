@@ -334,6 +334,11 @@ public class ThumbnailFragment extends LetoolFragment implements EyePosition.Eye
             }
         };
         mEyePosition = new EyePosition(getAndroidContext(), this);
+        initBrowseActionBar();
+        return rootView;
+    }
+
+    private void initBrowseActionBar() {
         LetoolActionBar actionBar = getLetoolActionBar();
         actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
         if (mIsCamera) {
@@ -341,8 +346,13 @@ public class ThumbnailFragment extends LetoolFragment implements EyePosition.Eye
         } else {
             actionBar.setTitleIcon(R.drawable.ic_action_previous_item);
         }
-        actionBar.setTitle(mAlbumTitle);
-        return rootView;
+        actionBar.setTitleText(mAlbumTitle);
+    }
+
+    private void initSelectionActionBar() {
+        LetoolActionBar actionBar = getLetoolActionBar();
+        actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_SELECTION, this);
+        actionBar.setSelectionManager(mSelector);
     }
 
     @Override
@@ -486,13 +496,12 @@ public class ThumbnailFragment extends LetoolFragment implements EyePosition.Eye
     public void onSelectionModeChange(int mode) {
         switch (mode) {
             case SelectionManager.ENTER_SELECTION_MODE: {
-                getLetoolActionBar().setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_SELECTION, this);
-                getLetoolActionBar().setSelectionManager(mSelector);
+                initSelectionActionBar();
                 mRootPane.invalidate();
                 break;
             }
             case SelectionManager.LEAVE_SELECTION_MODE: {
-                getLetoolActionBar().setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
+                initBrowseActionBar();
                 mRootPane.invalidate();
                 break;
             }
@@ -507,7 +516,7 @@ public class ThumbnailFragment extends LetoolFragment implements EyePosition.Eye
     public void onSelectionChange(MediaPath path, boolean selected) {
         int count = mSelector.getSelectedCount();
         String format = getResources().getQuantityString(R.plurals.number_of_items_selected, count);
-        getLetoolActionBar().setTitle(String.format(format, count));
+        getLetoolActionBar().setTitleText(String.format(format, count));
     }
 
     private void pickPhoto(int index) {

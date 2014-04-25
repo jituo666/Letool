@@ -364,7 +364,7 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
         LetoolActionBar actionBar = getLetoolActionBar();
         actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
         actionBar.setTitleIcon(R.drawable.ic_drawer);
-        actionBar.setTitle(R.string.common_folder);
+        actionBar.setTitleText(R.string.common_folder);
         return rootView;
     }
 
@@ -575,6 +575,6 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
     public void onSelectionChange(MediaPath path, boolean selected) {
         int count = mSelectionManager.getSelectedCount();
         String format = getResources().getQuantityString(R.plurals.number_of_items_selected, count);
-        getLetoolActionBar().setTitle(String.format(format, count));
+        getLetoolActionBar().setTitleText(String.format(format, count));
     }
 }

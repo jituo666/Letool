@@ -5,7 +5,6 @@ import android.graphics.Color;
 
 import com.xjt.letool.adapters.ThumbnailSetDataWindow;
 import com.xjt.letool.adapters.ThumbnailSetDataWindow.AlbumSetEntry;
-import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.loader.ThumbnailSetDataLoader;
 import com.xjt.letool.view.ThumbnailView;

@@ -1,12 +1,15 @@
 
 package com.xjt.letool.view;
 
-import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.xjt.letool.R;
+import com.xjt.letool.activities.BaseActivity;
 import com.xjt.letool.selectors.SelectionManager;
 
 public class LetoolActionBar {
@@ -14,56 +17,57 @@ public class LetoolActionBar {
     public static final int ACTION_BAR_MODE_NONE = -1;
     public static final int ACTION_BAR_MODE_BROWSE = 0;
     public static final int ACTION_BAR_MODE_SELECTION = 1;
+    public static final int ACTION_BAR_MODE_SETTINGS = 2;
 
+    private BaseActivity mActivity;
     public static final int ACTION_BAR_MODE[] = {
             ACTION_BAR_MODE_BROWSE,
-            ACTION_BAR_MODE_SELECTION
+            ACTION_BAR_MODE_SELECTION,
+            ACTION_BAR_MODE_SETTINGS
     };
 
     public static final int ACTION_MODE_LAYOUT_ID[] = {
-            R.id.action_bar_normal,
-            R.id.action_bar_selection
+            R.layout.action_bar_normal,
+            R.layout.action_bar_selection,
+            R.layout.action_bar_settings
     };
 
     public static final int ACTION_MODE_TITLE_VIEW_ID[] = {
             R.id.navi_text,
-            R.id.selection_counter
+            R.id.selection_counter,
+            R.id.navi_text,
     };
 
-    public static final int ACTION_IDS[] = {
+    public static final int ACTION_BUTTON_IDS[] = {
             R.id.action_navi,
-            R.id.operation_delete
+            R.id.operation_delete,
+            R.id.action_navi,
     };
 
     public static interface OnActionModeListener extends View.OnClickListener {
 
     }
 
-    private View mRootView;
+    private ViewGroup mBarContainer;
     private View mActionModePanel;
     private OnActionModeListener mOnActionModeListener;
     private int mCurActionBarMode;
     private SelectionManager mSelectionManager;
 
-    public LetoolActionBar(Context context, View rootView) {
-        mRootView = rootView;
+    public LetoolActionBar(BaseActivity activity, ViewGroup barContainer) {
+        mActivity = activity;
+        mBarContainer = barContainer;
     }
 
     public void setOnActionMode(int actonMode, OnActionModeListener modeListener) {
         mCurActionBarMode = actonMode;
-        for (int mode : ACTION_BAR_MODE) {
-            View v = mRootView.findViewById(ACTION_MODE_LAYOUT_ID[mode]);
-            if (v != null) {
-                if (mode == mCurActionBarMode) {
-                    mActionModePanel = v;
-                    mActionModePanel.setVisibility(View.VISIBLE);
-                } else {
-                    v.setVisibility(View.GONE);
-                }
-            }
-        }
+        mActionModePanel = LayoutInflater.from(mActivity).inflate(ACTION_MODE_LAYOUT_ID[actonMode], null);
+        mBarContainer.removeAllViews();
+        ViewGroup.LayoutParams layoutParam = new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        mBarContainer.addView(mActionModePanel, layoutParam);
+
         mOnActionModeListener = modeListener;
-        for (int i : ACTION_IDS) {
+        for (int i : ACTION_BUTTON_IDS) {
             View v = mActionModePanel.findViewById(i);
             if (v != null) {
                 v.setOnClickListener(mOnActionModeListener);
@@ -80,19 +84,19 @@ public class LetoolActionBar {
     }
 
     public void setTitleIcon(int resId) {
-        if (mCurActionBarMode == ACTION_BAR_MODE_BROWSE) {
+        if (mCurActionBarMode == ACTION_BAR_MODE_BROWSE || mCurActionBarMode == ACTION_BAR_MODE_SETTINGS ) {
             ImageView natviButton = (ImageView) mActionModePanel.findViewById(R.id.action_navi_tip);
             natviButton.setImageResource(resId);
         }
     }
 
-    public void setTitle(CharSequence title) {
+    public void setTitleText(CharSequence title) {
         TextView actionBarNaviText = (TextView) mActionModePanel.findViewById(ACTION_MODE_TITLE_VIEW_ID[mCurActionBarMode]);
         if (actionBarNaviText != null)
             actionBarNaviText.setText(title);
     }
 
-    public void setTitle(int titleId) {
+    public void setTitleText(int titleId) {
         TextView actionBarNaviText = (TextView) mActionModePanel.findViewById(ACTION_MODE_TITLE_VIEW_ID[mCurActionBarMode]);
         if (actionBarNaviText != null)
             actionBarNaviText.setText(titleId);

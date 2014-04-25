@@ -10,13 +10,15 @@ import android.widget.TextView;
 
 import com.xjt.letool.R;
 import com.xjt.letool.activities.BaseActivity;
+import com.xjt.letool.view.GLController;
+import com.xjt.letool.view.LetoolActionBar;
 
 /**
  * @Author Jituo.Xuan
  * @Date 9:47:49 AM Apr 19, 2014
  * @Comments:null
  */
-public class SettingFragment extends Fragment {
+public class SettingFragment extends LetoolFragment {
 
     private BaseActivity mActivity;
 
@@ -26,10 +28,29 @@ public class SettingFragment extends Fragment {
         mActivity = (BaseActivity) getActivity();
     }
 
+    private void initBrowseActionBar() {
+        LetoolActionBar actionBar = getLetoolActionBar();
+        actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_SETTINGS, this);
+        actionBar.setTitleIcon(R.drawable.ic_drawer);
+        actionBar.setTitleText(R.string.common_settings);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.app_settings, container, false);
-        mActivity.getLetoolActionBar().setTitle(R.string.common_settings);
+        initBrowseActionBar();
         return rootView;
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.action_navi) {
+            getLetoolSlidingMenu().toggle();
+        }
+    }
+
+    @Override
+    public GLController getGLController() {
+        return null;
     }
 }

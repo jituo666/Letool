@@ -24,7 +24,7 @@ public class HideListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.app_hide_list, container, false);
-        mActivity.getLetoolActionBar().setTitle(R.string.sliding_menu_title_hide_list);
+        mActivity.getLetoolActionBar().setTitleText(R.string.sliding_menu_title_hide_list);
         return rootView;
     }
 }

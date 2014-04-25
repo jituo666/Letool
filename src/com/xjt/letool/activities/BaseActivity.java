@@ -23,6 +23,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
+import android.view.ViewGroup;
 
 /**
  * @Author Jituo.Xuan
@@ -51,7 +52,7 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
         mOrientationManager = new OrientationManager(this);
         mFragmentManager = getSupportFragmentManager();
         mSlidingMenu = new LetoolSlidingMenu(mFragmentManager);
-        mActionBar = new LetoolActionBar(this, findViewById(R.id.action_bar));
+        mActionBar = new LetoolActionBar(this, (ViewGroup)findViewById(R.id.action_bar));
     }
 
     @Override
