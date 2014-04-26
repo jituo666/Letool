@@ -10,7 +10,7 @@ import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaPath;
-import com.xjt.letool.data.cache2.ThumbnailCacheCursor;
+import com.xjt.letool.data.cache2.ThumbnailCacheLoader;
 import com.xjt.letool.data.loader.ThumbnailDataLoader;
 import com.xjt.letool.data.utils.BitmapLoader;
 import com.xjt.letool.utils.Utils;
@@ -84,7 +84,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
 
         mThreadPool = new JobLimiter(fragment.getThreadPool(), JOB_LIMIT);
         mTileUploader = new TiledTextureUploader(fragment.getGLController());
-        mThumbnailCacheCursor = new ThumbnailCacheCursor(fragment.getAndroidContext());
+        mThumbnailCacheCursor = new ThumbnailCacheLoader(fragment.getAndroidContext());
     }
 
     public void setListener(DataListener listener) {
@@ -350,5 +350,5 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
             }
         }
     }
-    private ThumbnailCacheCursor mThumbnailCacheCursor = null;
+    private ThumbnailCacheLoader mThumbnailCacheCursor = null;
 }

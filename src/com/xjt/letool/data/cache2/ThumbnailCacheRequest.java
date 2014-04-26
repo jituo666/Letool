@@ -16,6 +16,12 @@ import com.xjt.letool.data.provider.LetoolContent;
 import com.xjt.letool.data.utils.BitmapDecodeUtils;
 import com.xjt.letool.data.utils.BitmapUtils;
 
+
+/**
+ * @Author Jituo.Xuan
+ * @Date 9:48:08 AM Apr 26, 2014
+ * @Comments:null
+ */
 public abstract class ThumbnailCacheRequest implements Job<Bitmap> {
 
     private static final String TAG = ThumbnailCacheRequest.class.getSimpleName();
@@ -27,7 +33,8 @@ public abstract class ThumbnailCacheRequest implements Job<Bitmap> {
     private long mTimeModified;
     private Cursor mCursor;
 
-    public ThumbnailCacheRequest(LetoolApp application, Cursor cursor, String path, long timeModified, int type, int targetSize) {
+    public ThumbnailCacheRequest(LetoolApp application, Cursor cursor, String path, 
+            long timeModified, int type, int targetSize) {
         mApplication = application;
         mPath = path;
         mType = type;
@@ -50,6 +57,7 @@ public abstract class ThumbnailCacheRequest implements Job<Bitmap> {
             return null;
 
         long time = System.currentTimeMillis();
+
         if (mCursor != null && mCursor.moveToFirst()) {
             int columnIndex = mCursor.getColumnIndex(LetoolContent.Thumbnails.DATE_TAKEN);
             int columnIndexData = mCursor.getColumnIndex(LetoolContent.Thumbnails.THUMBS_DATA);

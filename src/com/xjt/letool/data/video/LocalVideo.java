@@ -16,7 +16,7 @@ import com.xjt.letool.data.DBUpdateHelper;
 import com.xjt.letool.data.MediaDetails;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaPath;
-import com.xjt.letool.data.cache.ImageCacheRequest;
+import com.xjt.letool.data.cache1.BlobCacheRequest;
 import com.xjt.letool.data.image.LocalMediaItem;
 import com.xjt.letool.data.source.LocalAlbum;
 import com.xjt.letool.data.utils.BitmapUtils;
@@ -142,7 +142,7 @@ public class LocalVideo extends LocalMediaItem {
         return new LocalVideoRequest(mApplication, getPath(), dateModifiedInSec, type, filePath);
     }
 
-    public static class LocalVideoRequest extends ImageCacheRequest {
+    public static class LocalVideoRequest extends BlobCacheRequest {
         private String mLocalFilePath;
 
         LocalVideoRequest(LetoolApp application, MediaPath path, long timeModified,

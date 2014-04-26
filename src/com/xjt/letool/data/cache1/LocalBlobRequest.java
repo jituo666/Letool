@@ -1,4 +1,4 @@
-package com.xjt.letool.data.cache;
+package com.xjt.letool.data.cache1;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -14,13 +14,13 @@ import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.exif.ExifInterface;
 import com.xjt.letool.data.utils.BitmapDecodeUtils;
 
-public class LocalImageRequest extends ImageCacheRequest {
+public class LocalBlobRequest extends BlobCacheRequest {
 
-    private static final String TAG = LocalImageRequest.class.getSimpleName();
+    private static final String TAG = LocalBlobRequest.class.getSimpleName();
 
     private String mLocalFilePath;
 
-    public LocalImageRequest(LetoolApp application, MediaPath path, long timeModified,
+    public LocalBlobRequest(LetoolApp application, MediaPath path, long timeModified,
             int type, String localFilePath) {
         super(application, path, timeModified, type, MediaItem.getTargetSize(type));
 

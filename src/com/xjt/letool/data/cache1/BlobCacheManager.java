@@ -1,4 +1,4 @@
-package com.xjt.letool.data.cache;
+package com.xjt.letool.data.cache1;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class CacheManager {
+public class BlobCacheManager {
     private static final String TAG = "CacheManager";
     private static final String KEY_CACHE_UP_TO_DATE = "cache-up-to-date";
     private static HashMap<String, BlobCache> sCacheMap = new HashMap<String, BlobCache>();

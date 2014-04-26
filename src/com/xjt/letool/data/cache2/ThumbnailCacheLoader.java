@@ -7,13 +7,19 @@ import android.database.Cursor;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.provider.LetoolContent;
 
-public class ThumbnailCacheCursor {
 
-    private static final String TAG = ThumbnailCacheCursor.class.getSimpleName();
+/**
+ * @Author Jituo.Xuan
+ * @Date 9:48:12 AM Apr 26, 2014
+ * @Comments:null
+ */
+public class ThumbnailCacheLoader {
+
+    private static final String TAG = ThumbnailCacheLoader.class.getSimpleName();
     private Cursor mCursor;
     private Context mApp;
 
-    public ThumbnailCacheCursor(Context app) {
+    public ThumbnailCacheLoader(Context app) {
         mApp = app;
     }
 

@@ -15,17 +15,21 @@ import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.exif.ExifInterface;
 import com.xjt.letool.data.utils.BitmapDecodeUtils;
 
+
+/**
+ * @Author Jituo.Xuan
+ * @Date 9:48:02 AM Apr 26, 2014
+ * @Comments:null
+ */
 public class LocalThumbnailRequest extends ThumbnailCacheRequest {
 
     private static final String TAG = LocalThumbnailRequest.class.getSimpleName();
 
     private String mLocalFilePath;
 
-    public LocalThumbnailRequest(LetoolApp application, Cursor cursor,MediaPath path, long timeModified,
+    public LocalThumbnailRequest(LetoolApp application, Cursor cursor,long timeModified,
             int type, String localFilePath) {
         super(application,cursor, localFilePath, timeModified, type, MediaItem.getTargetSize(type));
-
-        //LLog.i(TAG, " MediaItem.getTargetSize(type):" + MediaItem.getTargetSize(type));
         mLocalFilePath = localFilePath;
     }
 
@@ -34,7 +38,6 @@ public class LocalThumbnailRequest extends ThumbnailCacheRequest {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         int targetSize = MediaItem.getTargetSize(type);
-
         // try to decode from JPEG EXIF
         if (type == MediaItem.TYPE_MICROTHUMBNAIL) {
             ExifInterface exif = new ExifInterface();

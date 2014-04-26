@@ -1,4 +1,4 @@
-package com.xjt.letool.data.cache;
+package com.xjt.letool.data.cache1;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,7 +14,7 @@ import com.xjt.letool.data.utils.BytesBufferPool.BytesBuffer;
 import com.xjt.letool.data.utils.BitmapDecodeUtils;
 
 
-public abstract class ImageCacheRequest implements Job<Bitmap> {
+public abstract class BlobCacheRequest implements Job<Bitmap> {
     private static final String TAG = "ImageCacheRequest";
 
     protected LetoolApp mApplication;
@@ -23,7 +23,7 @@ public abstract class ImageCacheRequest implements Job<Bitmap> {
     private int mTargetSize;
     private long mTimeModified;
 
-    public ImageCacheRequest(LetoolApp application, MediaPath path, long timeModified, int type, int targetSize) {
+    public BlobCacheRequest(LetoolApp application, MediaPath path, long timeModified, int type, int targetSize) {
         mApplication = application;
         mPath = path;
         mType = type;
@@ -39,7 +39,7 @@ public abstract class ImageCacheRequest implements Job<Bitmap> {
 
     @Override
     public Bitmap run(JobContext jc) {
-        ImageCacheService cacheService = mApplication.getImageCacheService();
+        BlobCacheService cacheService = mApplication.getImageCacheService();
 
         BytesBuffer buffer = MediaItem.getBytesBufferPool().get();
         try {

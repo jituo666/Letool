@@ -1,9 +1,9 @@
-package com.xjt.letool.data.cache;
+package com.xjt.letool.data.cache1;
 
 import android.content.Context;
 
 import com.xjt.letool.data.MediaPath;
-import com.xjt.letool.data.cache.BlobCache.LookupRequest;
+import com.xjt.letool.data.cache1.BlobCache.LookupRequest;
 import com.xjt.letool.data.utils.BytesBufferPool.BytesBuffer;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.Utils;
@@ -11,7 +11,7 @@ import com.xjt.letool.utils.Utils;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-public class ImageCacheService {
+public class BlobCacheService {
     @SuppressWarnings("unused")
     private static final String TAG = "ImageCacheService";
 
@@ -22,8 +22,8 @@ public class ImageCacheService {
 
     private BlobCache mCache;
 
-    public ImageCacheService(Context context) {
-        mCache = CacheManager.getCache(context, IMAGE_CACHE_FILE,
+    public BlobCacheService(Context context) {
+        mCache = BlobCacheManager.getCache(context, IMAGE_CACHE_FILE,
                 IMAGE_CACHE_MAX_ENTRIES, IMAGE_CACHE_MAX_BYTES,
                 IMAGE_CACHE_VERSION);
     }

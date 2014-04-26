@@ -5,7 +5,6 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.net.Uri;
 import android.os.Build;
@@ -20,12 +19,8 @@ import com.xjt.letool.common.ThreadPool.Job;
 import com.xjt.letool.common.ThreadPool.JobContext;
 import com.xjt.letool.data.DBUpdateHelper;
 import com.xjt.letool.data.MediaDetails;
-import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaPath;
-import com.xjt.letool.data.cache.ImageCacheRequest;
-import com.xjt.letool.data.cache.LocalImageRequest;
 import com.xjt.letool.data.cache2.LocalThumbnailRequest;
-import com.xjt.letool.data.cache2.ThumbnailCacheRequest;
 import com.xjt.letool.data.exif.ExifInterface;
 import com.xjt.letool.data.exif.ExifTag;
 import com.xjt.letool.data.source.LocalAlbum;
@@ -160,7 +155,7 @@ public class LocalImage extends LocalMediaItem {
 
     @Override
     public Job<Bitmap> requestImage(int type, Cursor cusor) {
-        return new LocalThumbnailRequest(mApplication, cusor,mPath, dateModifiedInSec, type, filePath);
+        return new LocalThumbnailRequest(mApplication, cusor, dateModifiedInSec, type, filePath);
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.xjt.letool;
 
 import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.data.DataManager;
-import com.xjt.letool.data.cache.ImageCacheService;
+import com.xjt.letool.data.cache1.BlobCacheService;
 import com.xjt.letool.utils.LetoolUtils;
 
 import android.app.Application;
@@ -12,7 +12,7 @@ public class LetoolAppImpl extends Application implements LetoolApp {
 
     private static final String TAG = "LetoolAppImpl";
 
-    private ImageCacheService mImageCacheService;
+    private BlobCacheService mImageCacheService;
     private Object mLock = new Object();
     private DataManager mDataManager;
     private ThreadPool mThreadPool;
@@ -41,11 +41,11 @@ public class LetoolAppImpl extends Application implements LetoolApp {
     }
 
     @Override
-    public ImageCacheService getImageCacheService() {
+    public BlobCacheService getImageCacheService() {
         // This method may block on file I/O so a dedicated lock is needed here.
         synchronized (mLock) {
             if (mImageCacheService == null) {
-                mImageCacheService = new ImageCacheService(getAndroidContext());
+                mImageCacheService = new BlobCacheService(getAndroidContext());
             }
             return mImageCacheService;
         }
