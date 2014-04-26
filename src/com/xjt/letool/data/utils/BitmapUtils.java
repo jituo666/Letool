@@ -171,8 +171,7 @@ public class BitmapUtils {
     }
 
     public static Bitmap createVideoThumbnail(String filePath) {
-        // MediaMetadataRetriever is available on API Level 8
-        // but is hidden until API Level 10
+        // MediaMetadataRetriever is available on API Level 8 but is hidden until API Level 10
         Class<?> clazz = null;
         Object instance = null;
         try {

@@ -116,10 +116,10 @@ public class LetoolProvider extends ContentProvider {
         return 0;
     }
 
-    private Cursor getThumbnailByPath(String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    private Cursor getThumbnailByPath(String[] projection, String selection, String[] selectionArgs, String order) {
         SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
         queryBuilder.setDistinct(true);
         queryBuilder.setTables(TABLE_THUMBNAILS);
-        return queryBuilder.query(mOpenHelper.getReadableDatabase(), projection, selection, selectionArgs, sortOrder, null, null);
+        return queryBuilder.query(mOpenHelper.getReadableDatabase(), projection, selection, selectionArgs, null, null, order);
     }
 }

@@ -10,7 +10,7 @@ import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaPath;
-import com.xjt.letool.data.cache2.ThumbnailCacheLoader;
+import com.xjt.letool.data.cache2.ThumbCacheLoader;
 import com.xjt.letool.data.loader.ThumbnailDataLoader;
 import com.xjt.letool.data.utils.BitmapLoader;
 import com.xjt.letool.utils.Utils;
@@ -49,6 +49,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
     private int mActiveStart = 0;
     private int mActiveEnd = 0;
 
+    private ThumbCacheLoader mThumbnailCacheLoader = null;
     private DataListener mDataListener;
 
     public static interface DataListener {
@@ -84,7 +85,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
 
         mThreadPool = new JobLimiter(fragment.getThreadPool(), JOB_LIMIT);
         mTileUploader = new TiledTextureUploader(fragment.getGLController());
-        mThumbnailCacheCursor = new ThumbnailCacheLoader(fragment.getAndroidContext());
+        mThumbnailCacheLoader = new ThumbCacheLoader(fragment.getAndroidContext(), source.getMediaSource().getPath().getIdentity());
     }
 
     public void setListener(DataListener listener) {
@@ -271,7 +272,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
 
     public void resume() {
         mIsActive = true;
-        mThumbnailCacheCursor.resume();
+        mThumbnailCacheLoader.resume();
         TiledTexture.prepareResources();
         for (int i = mContentStart, n = mContentEnd; i < n; ++i) {
             prepareSlotContent(i);
@@ -281,7 +282,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
 
     public void pause() {
         mIsActive = false;
-        mThumbnailCacheCursor.pause();
+        mThumbnailCacheLoader.pause();
         mTileUploader.clear();
         TiledTexture.freeResources();
         for (int i = mContentStart, n = mContentEnd; i < n; ++i) {
@@ -318,6 +319,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
     private class ThumbnailLoader extends BitmapLoader {
         private final int mSlotIndex;
         private final MediaItem mItem;
+        long time = System.currentTimeMillis();
 
         public ThumbnailLoader(int slotIndex, MediaItem item) {
             mSlotIndex = slotIndex;
@@ -326,7 +328,10 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
 
         @Override
         protected Future<Bitmap> submitBitmapTask(FutureListener<Bitmap> l) {
-            return mThreadPool.submit(mItem.requestImage(MediaItem.TYPE_MICROTHUMBNAIL, mThumbnailCacheCursor.getCursor()), this);
+            //mThumbnailCacheLoader.updateCurrentIndex(mSlotIndex, mItem.getDateInMs(), mItem.getFilePath());
+            time = System.currentTimeMillis();
+            return mThreadPool.submit(mItem.requestImage(MediaItem.TYPE_MICROTHUMBNAIL,
+                    mSlotIndex, mItem.getDateInMs(), mThumbnailCacheLoader), this);
         }
 
         @Override
@@ -336,19 +341,21 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
 
         public void updateEntry() {
             Bitmap bitmap = getBitmap();
-            if (bitmap == null) return; // error or recycled
+            if (bitmap == null)
+                return; // error or recycled
             AlbumEntry entry = mImageData[mSlotIndex % mImageData.length];
             entry.bitmapTexture = new TiledTexture(bitmap);
             entry.content = entry.bitmapTexture;
             if (isActiveSlot(mSlotIndex)) {
                 mTileUploader.addTexture(entry.bitmapTexture);
                 --mActiveRequestCount;
-                if (mActiveRequestCount == 0) requestNonactiveImages();
-                if (mDataListener != null) mDataListener.onContentChanged();
+                if (mActiveRequestCount == 0)
+                    requestNonactiveImages();
+                if (mDataListener != null)
+                    mDataListener.onContentChanged();
             } else {
                 mTileUploader.addTexture(entry.bitmapTexture);
             }
         }
     }
-    private ThumbnailCacheLoader mThumbnailCacheCursor = null;
 }

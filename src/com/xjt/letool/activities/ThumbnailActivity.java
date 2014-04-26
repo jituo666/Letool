@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
-import com.xjt.letool.data.DataManager;
 import com.xjt.letool.views.fragment.ThumbnailFragment;
 
 
@@ -35,7 +34,7 @@ public class ThumbnailActivity extends BaseActivity {
         String albumTitle = getIntent().getStringExtra(KEY_ALBUM_TITLE);
         long albumId = getIntent().getLongExtra(KEY_ALBUM_ID, 0);
         String albumMediaPath = getIntent().getStringExtra(KEY_MEDIA_PATH);
-        boolean isCamera = getIntent().getBooleanExtra(KEY_MEDIA_PATH, false);
+        boolean isCamera = getIntent().getBooleanExtra(KEY_IS_CAMERA, false);
         data.putString(KEY_ALBUM_TITLE, albumTitle);
         data.putLong(KEY_ALBUM_ID, albumId);
         data.putString(KEY_MEDIA_PATH, albumMediaPath);

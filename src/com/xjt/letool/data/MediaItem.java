@@ -1,10 +1,10 @@
 package com.xjt.letool.data;
 
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapRegionDecoder;
 
 import com.xjt.letool.common.ThreadPool.Job;
+import com.xjt.letool.data.cache2.ThumbCacheLoader;
 import com.xjt.letool.data.utils.BytesBufferPool;
 import com.xjt.letool.views.opengl.ScreenNail;
 
@@ -31,7 +31,8 @@ public abstract class MediaItem extends MediaObject {
     // TODO: fix default value for latlng and change this.
     public static final double INVALID_LATLNG = 0f;
 
-    public abstract Job<Bitmap> requestImage(int type, Cursor cusor);
+    public abstract Job<Bitmap> requestImage(int type);
+    public abstract Job<Bitmap> requestImage(int type, int index, long dateTaken,ThumbCacheLoader loader);
 
     public abstract Job<BitmapRegionDecoder> requestLargeImage();
 

@@ -13,12 +13,13 @@ public class LetoolDataBaseHelper extends SQLiteOpenHelper {
     protected static final String DATABASE_PATH = Environment.getExternalStorageDirectory() + File.separator + DATABASE_NAME;
     protected static final int DATABASE_VERSION = 1;
 
+    private static final int DB_CAHCE_PAGE_SIZE = 1024;
     private final Context mContext;
     private static LetoolDataBaseHelper sInstance;
 
     private LetoolDataBaseHelper(Context context) {
         super(context, DATABASE_PATH, null, DATABASE_VERSION);
-        SQLiteDatabase.openOrCreateDatabase(DATABASE_PATH  , null);
+        SQLiteDatabase.openOrCreateDatabase(DATABASE_PATH, null);
         mContext = context;
     }
 
@@ -31,7 +32,7 @@ public class LetoolDataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.setPageSize(4096);
+        db.setPageSize(DB_CAHCE_PAGE_SIZE);
         createLetoolTables(db);
     }
 
@@ -43,7 +44,8 @@ public class LetoolDataBaseHelper extends SQLiteOpenHelper {
     private void createLetoolTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + LetoolProvider.TABLE_THUMBNAILS + " (" +
                 LetoolContent.Thumbnails._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                LetoolContent.Thumbnails.ORIGINAL_PATH + " TEXT," +
+                LetoolContent.Thumbnails.BUKET_ID + " INTEGER," +
+                LetoolContent.Thumbnails.PATH_ID + " INTEGER," +
                 LetoolContent.Thumbnails.DATE_TAKEN + " INTEGER," +
                 LetoolContent.Thumbnails.THUMBS_DATA + " BLOB " +
                 ");");

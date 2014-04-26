@@ -137,6 +137,9 @@ public class ThumbnailDataLoader {
         return mSize;
     }
 
+    public MediaSet getMediaSource() {
+        return mSource;
+    }
     private void clearThumbnail(int Index) {
         mData[Index] = null;
         mItemVersion[Index] = MediaObject.INVALID_DATA_VERSION;

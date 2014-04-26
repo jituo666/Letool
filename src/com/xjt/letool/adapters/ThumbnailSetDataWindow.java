@@ -16,6 +16,7 @@ import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaObject;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.MediaSet;
+import com.xjt.letool.data.cache2.ThumbCacheLoader;
 import com.xjt.letool.data.loader.ThumbnailSetDataLoader;
 import com.xjt.letool.data.utils.BitmapLoader;
 import com.xjt.letool.utils.Utils;
@@ -27,13 +28,13 @@ import com.xjt.letool.views.opengl.TiledTexture;
 import com.xjt.letool.views.render.ThumbnailSetRenderer;
 import com.xjt.letool.views.utils.AlbumLabelMaker;
 
-
 public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListener {
     private static final String TAG = "ThumbnailSetDataWindow";
     private static final int MSG_UPDATE_ALBUM_ENTRY = 1;
 
     public static interface Listener {
         public void onSizeChanged(int size);
+
         public void onContentChanged();
     }
 
@@ -83,25 +84,27 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         private BitmapLoader coverLoader;
     }
 
-    public ThumbnailSetDataWindow(LetoolFragment activity, ThumbnailSetDataLoader source, ThumbnailSetRenderer.LabelSpec labelSpec, int cacheSize) {
+    public ThumbnailSetDataWindow(LetoolFragment fragment, ThumbnailSetDataLoader source, ThumbnailSetRenderer.LabelSpec labelSpec, int cacheSize) {
         source.setModelListener(this);
         mSource = source;
         mData = new AlbumSetEntry[cacheSize];
         mSize = source.size();
-        mThreadPool = activity.getThreadPool();
+        mThreadPool = fragment.getThreadPool();
 
-        mLabelMaker = new AlbumLabelMaker(activity.getAndroidContext(), labelSpec);
-        mLoadingText = activity.getAndroidContext().getString(R.string.loading);
-        mContentUploader = new TiledTexture.Uploader(activity.getGLController());
-        mLabelUploader = new TextureUploader(activity.getGLController());
+        mLabelMaker = new AlbumLabelMaker(fragment.getAndroidContext(), labelSpec);
+        mLoadingText = fragment.getAndroidContext().getString(R.string.loading);
+        mContentUploader = new TiledTexture.Uploader(fragment.getGLController());
+        mLabelUploader = new TextureUploader(fragment.getGLController());
 
-        mHandler = new SynchronizedHandler(activity.getGLController()) {
+        mHandler = new SynchronizedHandler(fragment.getGLController()) {
             @Override
             public void handleMessage(Message message) {
                 Utils.assertTrue(message.what == MSG_UPDATE_ALBUM_ENTRY);
                 ((EntryUpdater) message.obj).updateEntry();
             }
         };
+
+        mThumbnailCacheLoader = new ThumbCacheLoader(fragment.getAndroidContext());
     }
 
     public void setListener(Listener listener) {
@@ -124,7 +127,8 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
     }
 
     private void setContentWindow(int contentStart, int contentEnd) {
-        if (contentStart == mContentStart && contentEnd == mContentEnd) return;
+        if (contentStart == mContentStart && contentEnd == mContentEnd)
+            return;
 
         if (contentStart >= mContentEnd || mContentStart >= contentEnd) {
             for (int i = mContentStart, n = mContentEnd; i < n; ++i) {
@@ -180,7 +184,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
     //         |<-------- cached range ----------->|
     private void requestNonactiveImages() {
         int range = Math.max(mContentEnd - mActiveEnd, mActiveStart - mContentStart);
-        for (int i = 0 ;i < range; ++i) {
+        for (int i = 0; i < range; ++i) {
             requestImagesInSlot(mActiveEnd + i);
             requestImagesInSlot(mActiveStart - 1 - i);
         }
@@ -188,24 +192,30 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
 
     private void cancelNonactiveImages() {
         int range = Math.max(mContentEnd - mActiveEnd, mActiveStart - mContentStart);
-        for (int i = 0 ;i < range; ++i) {
+        for (int i = 0; i < range; ++i) {
             cancelImagesInSlot(mActiveEnd + i);
             cancelImagesInSlot(mActiveStart - 1 - i);
         }
     }
 
     private void requestImagesInSlot(int thumbnailIndex) {
-        if (thumbnailIndex < mContentStart || thumbnailIndex >= mContentEnd) return;
+        if (thumbnailIndex < mContentStart || thumbnailIndex >= mContentEnd)
+            return;
         AlbumSetEntry entry = mData[thumbnailIndex % mData.length];
-        if (entry.coverLoader != null) entry.coverLoader.startLoad();
-        if (entry.labelLoader != null) entry.labelLoader.startLoad();
+        if (entry.coverLoader != null)
+            entry.coverLoader.startLoad();
+        if (entry.labelLoader != null)
+            entry.labelLoader.startLoad();
     }
 
     private void cancelImagesInSlot(int thumbnailIndex) {
-        if (thumbnailIndex < mContentStart || thumbnailIndex >= mContentEnd) return;
+        if (thumbnailIndex < mContentStart || thumbnailIndex >= mContentEnd)
+            return;
         AlbumSetEntry entry = mData[thumbnailIndex % mData.length];
-        if (entry.coverLoader != null) entry.coverLoader.cancelLoad();
-        if (entry.labelLoader != null) entry.labelLoader.cancelLoad();
+        if (entry.coverLoader != null)
+            entry.coverLoader.cancelLoad();
+        if (entry.labelLoader != null)
+            entry.labelLoader.cancelLoad();
     }
 
     private static long getDataVersion(MediaObject object) {
@@ -216,10 +226,14 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
 
     private void freeSlotContent(int thumbnailIndex) {
         AlbumSetEntry entry = mData[thumbnailIndex % mData.length];
-        if (entry.coverLoader != null) entry.coverLoader.recycle();
-        if (entry.labelLoader != null) entry.labelLoader.recycle();
-        if (entry.labelTexture != null) entry.labelTexture.recycle();
-        if (entry.bitmapTexture != null) entry.bitmapTexture.recycle();
+        if (entry.coverLoader != null)
+            entry.coverLoader.recycle();
+        if (entry.labelLoader != null)
+            entry.labelLoader.recycle();
+        if (entry.labelTexture != null)
+            entry.labelTexture.recycle();
+        if (entry.bitmapTexture != null)
+            entry.bitmapTexture.recycle();
         mData[thumbnailIndex % mData.length] = null;
     }
 
@@ -280,13 +294,15 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
     }
 
     private static boolean startLoadBitmap(BitmapLoader loader) {
-        if (loader == null) return false;
+        if (loader == null)
+            return false;
         loader.startLoad();
         return loader.isRequestInProgress();
     }
 
     private void uploadBackgroundTextureInSlot(int index) {
-        if (index < mContentStart || index >= mContentEnd) return;
+        if (index < mContentStart || index >= mContentEnd)
+            return;
         AlbumSetEntry entry = mData[index % mData.length];
         if (entry.bitmapTexture != null) {
             mContentUploader.addTexture(entry.bitmapTexture);
@@ -297,7 +313,8 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
     }
 
     private void updateTextureUploadQueue() {
-        if (!mIsActive) return;
+        if (!mIsActive)
+            return;
         mContentUploader.clear();
         mLabelUploader.clear();
 
@@ -324,8 +341,10 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         mActiveRequestCount = 0;
         for (int i = mActiveStart, n = mActiveEnd; i < n; ++i) {
             AlbumSetEntry entry = mData[i % mData.length];
-            if (startLoadBitmap(entry.coverLoader)) ++mActiveRequestCount;
-            if (startLoadBitmap(entry.labelLoader)) ++mActiveRequestCount;
+            if (startLoadBitmap(entry.coverLoader))
+                ++mActiveRequestCount;
+            if (startLoadBitmap(entry.labelLoader))
+                ++mActiveRequestCount;
         }
         if (mActiveRequestCount == 0) {
             requestNonactiveImages();
@@ -338,9 +357,12 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
     public void onSizeChanged(int size) {
         if (mIsActive && mSize != size) {
             mSize = size;
-            if (mListener != null) mListener.onSizeChanged(mSize);
-            if (mContentEnd > mSize) mContentEnd = mSize;
-            if (mActiveEnd > mSize) mActiveEnd = mSize;
+            if (mListener != null)
+                mListener.onSizeChanged(mSize);
+            if (mContentEnd > mSize)
+                mContentEnd = mSize;
+            if (mActiveEnd > mSize)
+                mActiveEnd = mSize;
         }
     }
 
@@ -352,7 +374,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
 
         // If the updated content is not cached, ignore it
         if (index < mContentStart || index >= mContentEnd) {
-            LLog.w(TAG, String.format("invalid update: %s is outside (%s, %s)", index, mContentStart, mContentEnd) );
+            LLog.w(TAG, String.format("invalid update: %s is outside (%s, %s)", index, mContentStart, mContentEnd));
             return;
         }
 
@@ -376,6 +398,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
 
     public void pause() {
         mIsActive = false;
+        mThumbnailCacheLoader.pause();
         mLabelUploader.clear();
         mContentUploader.clear();
         TiledTexture.freeResources();
@@ -386,6 +409,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
 
     public void resume() {
         mIsActive = true;
+        mThumbnailCacheLoader.resume();
         TiledTexture.prepareResources();
         for (int i = mContentStart, n = mContentEnd; i < n; ++i) {
             prepareSlotContent(i);
@@ -397,6 +421,8 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         public void updateEntry();
     }
 
+    private ThumbCacheLoader mThumbnailCacheLoader = null;
+    
     private class AlbumCoverLoader extends BitmapLoader implements EntryUpdater {
         private MediaItem mMediaItem;
         private final int mSlotIndex;
@@ -408,7 +434,8 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
 
         @Override
         protected Future<Bitmap> submitBitmapTask(FutureListener<Bitmap> l) {
-            return mThreadPool.submit(mMediaItem.requestImage(MediaItem.TYPE_MICROTHUMBNAIL, null), l);
+            return mThreadPool.submit(mMediaItem.requestImage(MediaItem.TYPE_MICROTHUMBNAIL, mSlotIndex,
+                     mMediaItem.getDateInMs(), mThumbnailCacheLoader), l);
         }
 
         @Override
@@ -419,7 +446,8 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         @Override
         public void updateEntry() {
             Bitmap bitmap = getBitmap();
-            if (bitmap == null) return; // error or recycled
+            if (bitmap == null)
+                return; // error or recycled
 
             AlbumSetEntry entry = mData[mSlotIndex % mData.length];
             TiledTexture texture = new TiledTexture(bitmap);
@@ -429,8 +457,10 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
             if (isActiveSlot(mSlotIndex)) {
                 mContentUploader.addTexture(texture);
                 --mActiveRequestCount;
-                if (mActiveRequestCount == 0) requestNonactiveImages();
-                if (mListener != null) mListener.onContentChanged();
+                if (mActiveRequestCount == 0)
+                    requestNonactiveImages();
+                if (mListener != null)
+                    mListener.onContentChanged();
             } else {
                 mContentUploader.addTexture(texture);
             }
@@ -482,7 +512,8 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         @Override
         public void updateEntry() {
             Bitmap bitmap = getBitmap();
-            if (bitmap == null) return; // Error or recycled
+            if (bitmap == null)
+                return; // Error or recycled
 
             AlbumSetEntry entry = mData[mSlotIndex % mData.length];
             BitmapTexture texture = new BitmapTexture(bitmap);
@@ -492,8 +523,10 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
             if (isActiveSlot(mSlotIndex)) {
                 mLabelUploader.addFgTexture(texture);
                 --mActiveRequestCount;
-                if (mActiveRequestCount == 0) requestNonactiveImages();
-                if (mListener != null) mListener.onContentChanged();
+                if (mActiveRequestCount == 0)
+                    requestNonactiveImages();
+                if (mListener != null)
+                    mListener.onContentChanged();
             } else {
                 mLabelUploader.addBgTexture(texture);
             }
@@ -501,13 +534,15 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
     }
 
     public void onThumbnailSizeChanged(int width, int height) {
-        if (mSlotWidth == width) return;
+        if (mSlotWidth == width)
+            return;
 
         mSlotWidth = width;
         mLoadingLabel = null;
         mLabelMaker.setLabelWidth(mSlotWidth);
 
-        if (!mIsActive) return;
+        if (!mIsActive)
+            return;
 
         for (int i = mContentStart, n = mContentEnd; i < n; ++i) {
             AlbumSetEntry entry = mData[i % mData.length];

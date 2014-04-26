@@ -4,7 +4,6 @@ package com.xjt.letool.views.fragment;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.activities.BaseActivity;
-import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.data.DataManager;
 import com.xjt.letool.view.GLController;

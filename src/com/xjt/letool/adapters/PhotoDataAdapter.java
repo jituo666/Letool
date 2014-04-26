@@ -695,7 +695,7 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
                 return newPlaceholderScreenNail(mItem);
             }
 
-            Bitmap bitmap = mItem.requestImage(MediaItem.TYPE_THUMBNAIL, null).run(jc);
+            Bitmap bitmap = mItem.requestImage(MediaItem.TYPE_THUMBNAIL).run(jc);
             if (jc.isCancelled()) return null;
             if (bitmap != null) {
                 bitmap = BitmapUtils.rotateBitmap(bitmap,

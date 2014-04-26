@@ -14,13 +14,13 @@ import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.exif.ExifInterface;
 import com.xjt.letool.data.utils.BitmapDecodeUtils;
 
-public class LocalBlobRequest extends BlobCacheRequest {
+public class LocalImageBlobRequest extends BlobCacheRequest {
 
-    private static final String TAG = LocalBlobRequest.class.getSimpleName();
+    private static final String TAG = LocalImageBlobRequest.class.getSimpleName();
 
     private String mLocalFilePath;
 
-    public LocalBlobRequest(LetoolApp application, MediaPath path, long timeModified,
+    public LocalImageBlobRequest(LetoolApp application, MediaPath path, long timeModified,
             int type, String localFilePath) {
         super(application, path, timeModified, type, MediaItem.getTargetSize(type));
 

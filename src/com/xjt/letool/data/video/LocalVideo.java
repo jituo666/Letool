@@ -17,6 +17,9 @@ import com.xjt.letool.data.MediaDetails;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.cache1.BlobCacheRequest;
+import com.xjt.letool.data.cache1.LocalVideoBlobRequest;
+import com.xjt.letool.data.cache2.LocalThumbRequest;
+import com.xjt.letool.data.cache2.ThumbCacheLoader;
 import com.xjt.letool.data.image.LocalMediaItem;
 import com.xjt.letool.data.source.LocalAlbum;
 import com.xjt.letool.data.utils.BitmapUtils;
@@ -106,9 +109,11 @@ public class LocalVideo extends LocalMediaItem {
     }
 
     private void parseResolution(String resolution) {
-        if (resolution == null) return;
+        if (resolution == null)
+            return;
         int m = resolution.indexOf('x');
-        if (m == -1) return;
+        if (m == -1)
+            return;
         try {
             int w = Integer.parseInt(resolution.substring(0, m));
             int h = Integer.parseInt(resolution.substring(m + 1));
@@ -138,26 +143,16 @@ public class LocalVideo extends LocalMediaItem {
     }
 
     @Override
-    public Job<Bitmap> requestImage(int type, Cursor cusor) {
-        return new LocalVideoRequest(mApplication, getPath(), dateModifiedInSec, type, filePath);
+    public Job<Bitmap> requestImage(int type, int index, long dateTaken,ThumbCacheLoader loader) {
+        return new LocalThumbRequest(loader, type, index, dateTaken,filePath);
     }
 
-    public static class LocalVideoRequest extends BlobCacheRequest {
-        private String mLocalFilePath;
-
-        LocalVideoRequest(LetoolApp application, MediaPath path, long timeModified,
-                int type, String localFilePath) {
-            super(application, path, timeModified, type, MediaItem.getTargetSize(type));
-            mLocalFilePath = localFilePath;
-        }
-
-        @Override
-        public Bitmap onDecodeOriginal(JobContext jc, int type) {
-            Bitmap bitmap = BitmapUtils.createVideoThumbnail(mLocalFilePath);
-            if (bitmap == null || jc.isCancelled()) return null;
-            return bitmap;
-        }
+    @Override
+    public Job<Bitmap> requestImage(int type) {
+        return new LocalVideoBlobRequest(mApplication, getPath(), dateModifiedInSec, type, filePath);
     }
+
+    
 
     @Override
     public Job<BitmapRegionDecoder> requestLargeImage() {
@@ -167,7 +162,7 @@ public class LocalVideo extends LocalMediaItem {
 
     @Override
     public int getSupportedOperations() {
-        return SUPPORT_DELETE | SUPPORT_SHARE | SUPPORT_PLAY | SUPPORT_INFO ;
+        return SUPPORT_DELETE | SUPPORT_SHARE | SUPPORT_PLAY | SUPPORT_INFO;
     }
 
     @Override
@@ -175,7 +170,7 @@ public class LocalVideo extends LocalMediaItem {
         LetoolUtils.assertNotInRenderThread();
         Uri baseUri = Video.Media.EXTERNAL_CONTENT_URI;
         mApplication.getContentResolver().delete(baseUri, "_id=?",
-                new String[]{String.valueOf(id)});
+                new String[] { String.valueOf(id) });
     }
 
     @Override
