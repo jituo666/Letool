@@ -335,9 +335,9 @@ public class ThumbnailFragment extends LetoolFragment implements EyePosition.Eye
         mEyePosition = new EyePosition(getAndroidContext(), this);
         initBrowseActionBar();
 
-        RelativePosition f = new RelativePosition();
-        f.setAbsolutePosition(360, 640);
-        mThumbnailView.startScatteringAnimation(f);
+//        RelativePosition f = new RelativePosition();
+//        f.setAbsolutePosition(360, 640);
+//        mThumbnailView.startScatteringAnimation(f);
         return rootView;
     }
 
