@@ -3,7 +3,6 @@ package com.xjt.letool.views.render;
 import android.graphics.Color;
 
 import com.xjt.letool.adapters.ThumbnailDataWindow;
-import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.loader.ThumbnailDataLoader;
 import com.xjt.letool.selectors.SelectionManager;
@@ -13,7 +12,6 @@ import com.xjt.letool.views.opengl.ColorTexture;
 import com.xjt.letool.views.opengl.FadeInTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.opengl.Texture;
-import com.xjt.letool.views.opengl.TiledTexture;
 
 public class ThumbnailRenderer extends AbstractThumbnailRender {
 
@@ -24,8 +22,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
     private MediaPath mHighlightItemPath = null;
     private ThumbnailFilter mThumbnailFilter;
 
-    private static final int PLACE_HOLDER_COLOR = 0xFF222222;
-    private static final int CACHE_SIZE = 96;
+    private static final int CACHE_SIZE = 48;
 
     private final ColorTexture mWaitLoadingTexture;
     private final int mPlaceholderColor = Color.GRAY;
@@ -99,14 +96,9 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
         }
     }
 
-
     @Override
     public void onThumbnailSizeChanged(int width, int height) {
-        // Donothing
-    }
-    
-    private static Texture checkTexture(Texture texture) {
-        return (texture instanceof TiledTexture) && !((TiledTexture) texture).isReady() ? null : texture;
+        // Do nothing
     }
 
     @Override
@@ -117,24 +109,20 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
         ThumbnailDataWindow.AlbumEntry entry = mDataWindow.get(index);
 
         int renderRequestFlags = 0;
-
-        Texture content = checkTexture(entry.content);
-        if (content == null) {
-            content = mWaitLoadingTexture;
-            entry.isWaitDisplayed = true;
-        } else if (entry.isWaitDisplayed) {
-            entry.isWaitDisplayed = false;
-            //content = new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
-            entry.content = entry.bitmapTexture;
+        Texture texture = entry.bitmapTexture;
+        if (texture == null) {
+            texture = mWaitLoadingTexture;
+            entry.isWaitLoadingDisplayed = true;
         }
-
-        drawContent(canvas, content, width, height, entry.rotation);
-        if ((content instanceof FadeInTexture) && ((FadeInTexture) content).isAnimating()) {
+//        else if (entry.isWaitLoadingDisplayed) {
+//            entry.isWaitLoadingDisplayed = false;
+//            texture = new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
+//        }
+        drawContent(canvas, texture, width, height, entry.rotation);
+        if ((texture instanceof FadeInTexture) && ((FadeInTexture) texture).isAnimating()) {
             renderRequestFlags |= ThumbnailView.RENDER_MORE_FRAME;
         }
-        //
         renderRequestFlags |= renderOverlay(canvas, index, entry, width, height);
-
         return renderRequestFlags;
     }
 

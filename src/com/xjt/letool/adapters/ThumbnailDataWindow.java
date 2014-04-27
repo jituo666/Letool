@@ -15,9 +15,7 @@ import com.xjt.letool.data.loader.ThumbnailDataLoader;
 import com.xjt.letool.data.utils.BitmapLoader;
 import com.xjt.letool.utils.Utils;
 import com.xjt.letool.views.fragment.LetoolFragment;
-import com.xjt.letool.views.opengl.Texture;
 import com.xjt.letool.views.opengl.TiledTexture;
-import com.xjt.letool.views.opengl.TiledTextureUploader;
 
 /**
  * control the data window ,[activate range:media data], [content range: meta
@@ -31,7 +29,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
     private static final String TAG = "AlbumDataWindow";
 
     private static final int MSG_UPDATE_ENTRY = 0;
-    private static final int JOB_LIMIT = 1;
+    private static final int JOB_LIMIT = 2;
     private int mActiveRequestCount = 0;
     private boolean mIsActive = false;
 
@@ -39,7 +37,6 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
     private final AlbumEntry mImageData[];
     private final SynchronizedHandler mHandler;
     private final JobLimiter mThreadPool;
-    private final TiledTextureUploader mTileUploader;
 
     private int mSize;
 
@@ -49,7 +46,6 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
     private int mActiveStart = 0;
     private int mActiveEnd = 0;
 
-    private ThumbCacheLoader mThumbnailCacheLoader = null;
     private DataListener mDataListener;
 
     public static interface DataListener {
@@ -63,9 +59,8 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
         public MediaPath path;
         public int rotation;
         public int mediaType;
-        public boolean isWaitDisplayed;
+        public boolean isWaitLoadingDisplayed;
         public TiledTexture bitmapTexture;
-        public Texture content;
         private BitmapLoader contentLoader;
     }
 
@@ -84,8 +79,6 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
         };
 
         mThreadPool = new JobLimiter(fragment.getThreadPool(), JOB_LIMIT);
-        mTileUploader = new TiledTextureUploader(fragment.getGLController());
-        mThumbnailCacheLoader = new ThumbCacheLoader(fragment.getAndroidContext(), source.getMediaSource().getPath().getIdentity());
     }
 
     public void setListener(DataListener listener) {
@@ -131,27 +124,6 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
         mContentEnd = contentEnd;
     }
 
-    private void updateTextureUploadQueue() {
-        if (!mIsActive)
-            return;
-        mTileUploader.clear();
-
-        // add foreground textures
-        for (int i = mActiveStart, n = mActiveEnd; i < n; ++i) {
-            AlbumEntry entry = mImageData[i % mImageData.length];
-            if (entry.bitmapTexture != null) {
-                mTileUploader.addTexture(entry.bitmapTexture);
-            }
-        }
-
-        // add background textures
-        int range = Math.max((mContentEnd - mActiveEnd), (mActiveStart - mContentStart));
-        for (int i = 0; i < range; ++i) {
-            uploadBgTextureInSlot(mActiveEnd + i);
-            uploadBgTextureInSlot(mActiveStart - i - 1);
-        }
-    }
-
     /**
      * 1,set image or video cache range. 2,set image's/video's meta data range.
      * 1,|_____1/2 data length_____|__________________move by step__________________|______data length_________|
@@ -169,7 +141,6 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
                 0, Math.max(0, mSize - data.length));
         int contentEnd = Math.min(contentStart + data.length, mSize);
         setContentWindow(contentStart, contentEnd);
-        updateTextureUploadQueue();
         if (mIsActive)
             updateAllImageRequests();
     }
@@ -183,15 +154,6 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
 
     public boolean isActiveSlot(int slotIndex) {
         return slotIndex >= mActiveStart && slotIndex < mActiveEnd;
-    }
-
-    private void uploadBgTextureInSlot(int index) {
-        if (index < mContentEnd && index >= mContentStart) {
-            AlbumEntry entry = mImageData[index % mImageData.length];
-            if (entry.bitmapTexture != null) {
-                mTileUploader.addTexture(entry.bitmapTexture);
-            }
-        }
     }
 
     // We would like to request non active slots in the following order:
@@ -221,7 +183,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
         if (slotIndex < mContentStart || slotIndex >= mContentEnd)
             return false;
         AlbumEntry entry = mImageData[slotIndex % mImageData.length];
-        if (entry.content != null || entry.item == null)
+        if (entry.bitmapTexture != null || entry.item == null)
             return false;
         entry.contentLoader.startLoad();
         return entry.contentLoader.isRequestInProgress();
@@ -271,19 +233,18 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
     }
 
     public void resume() {
+        LLog.i(TAG, " resume1:" + System.currentTimeMillis());
         mIsActive = true;
-        mThumbnailCacheLoader.resume();
         TiledTexture.prepareResources();
         for (int i = mContentStart, n = mContentEnd; i < n; ++i) {
             prepareSlotContent(i);
         }
+        LLog.i(TAG, " resume2:" + System.currentTimeMillis());
         updateAllImageRequests(); // Frist start no use, just for backing from other
     }
 
     public void pause() {
         mIsActive = false;
-        mThumbnailCacheLoader.pause();
-        mTileUploader.clear();
         TiledTexture.freeResources();
         for (int i = mContentStart, n = mContentEnd; i < n; ++i) {
             freeSlotContent(i);
@@ -292,7 +253,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
 
     @Override
     public void onContentChanged(int index) {
-        //LLog.i(TAG, "onContentChanged:" + index);
+        LLog.i(TAG, "onContentChanged trigger when  database prepared:" + index + " :" + System.currentTimeMillis());
         if (index >= mContentStart && index < mContentEnd && mIsActive) {
             freeSlotContent(index);
             prepareSlotContent(index);
@@ -319,7 +280,6 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
     private class ThumbnailLoader extends BitmapLoader {
         private final int mSlotIndex;
         private final MediaItem mItem;
-        long time = System.currentTimeMillis();
 
         public ThumbnailLoader(int slotIndex, MediaItem item) {
             mSlotIndex = slotIndex;
@@ -328,10 +288,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
 
         @Override
         protected Future<Bitmap> submitBitmapTask(FutureListener<Bitmap> l) {
-            //mThumbnailCacheLoader.updateCurrentIndex(mSlotIndex, mItem.getDateInMs(), mItem.getFilePath());
-            time = System.currentTimeMillis();
-            return mThreadPool.submit(mItem.requestImage(MediaItem.TYPE_MICROTHUMBNAIL,
-                    mSlotIndex, mItem.getDateInMs(), mThumbnailCacheLoader), this);
+            return mThreadPool.submit(mItem.requestImage(MediaItem.TYPE_MICROTHUMBNAIL),this);
         }
 
         @Override
@@ -345,16 +302,14 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
                 return; // error or recycled
             AlbumEntry entry = mImageData[mSlotIndex % mImageData.length];
             entry.bitmapTexture = new TiledTexture(bitmap);
-            entry.content = entry.bitmapTexture;
             if (isActiveSlot(mSlotIndex)) {
-                mTileUploader.addTexture(entry.bitmapTexture);
                 --mActiveRequestCount;
                 if (mActiveRequestCount == 0)
                     requestNonactiveImages();
-                if (mDataListener != null)
+                if (mDataListener != null) {
                     mDataListener.onContentChanged();
-            } else {
-                mTileUploader.addTexture(entry.bitmapTexture);
+                    LLog.i(TAG, "onContentChanged trigger when  image prepared:" + mSlotIndex + "   :" + System.currentTimeMillis());
+                }
             }
         }
     }

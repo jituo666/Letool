@@ -178,7 +178,7 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
     public void onDrawFrame(GL10 gl) {
         AnimationTime.update();
         mRenderLock.lock();
-
+        LLog.i(TAG, "+++++++++++++++++++++++++++++++[[[[  onDrawFrame  ]]]+++++++++++++++++++++++++++++++++++++++++++++++");
         while (mFreeze) {
             mFreezeCondition.awaitUninterruptibly();
         }

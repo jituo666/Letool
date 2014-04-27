@@ -103,8 +103,6 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
                 ((EntryUpdater) message.obj).updateEntry();
             }
         };
-
-        mThumbnailCacheLoader = new ThumbCacheLoader(fragment.getAndroidContext());
     }
 
     public void setListener(Listener listener) {
@@ -398,7 +396,6 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
 
     public void pause() {
         mIsActive = false;
-        mThumbnailCacheLoader.pause();
         mLabelUploader.clear();
         mContentUploader.clear();
         TiledTexture.freeResources();
@@ -409,7 +406,6 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
 
     public void resume() {
         mIsActive = true;
-        mThumbnailCacheLoader.resume();
         TiledTexture.prepareResources();
         for (int i = mContentStart, n = mContentEnd; i < n; ++i) {
             prepareSlotContent(i);
@@ -420,8 +416,6 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
     private static interface EntryUpdater {
         public void updateEntry();
     }
-
-    private ThumbCacheLoader mThumbnailCacheLoader = null;
     
     private class AlbumCoverLoader extends BitmapLoader implements EntryUpdater {
         private MediaItem mMediaItem;
@@ -434,8 +428,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
 
         @Override
         protected Future<Bitmap> submitBitmapTask(FutureListener<Bitmap> l) {
-            return mThreadPool.submit(mMediaItem.requestImage(MediaItem.TYPE_MICROTHUMBNAIL, mSlotIndex,
-                     mMediaItem.getDateInMs(), mThumbnailCacheLoader), l);
+            return mThreadPool.submit(mMediaItem.requestImage(MediaItem.TYPE_MICROTHUMBNAIL), l);
         }
 
         @Override

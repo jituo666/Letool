@@ -26,12 +26,12 @@ public abstract class ThumbCacheRequest implements Job<Bitmap> {
     private long mDateToken;
     private ThumbCacheLoader mLoader;
 
-    public ThumbCacheRequest(ThumbCacheLoader loader, int type, int index, String pathHashCode, long dateTaken, int targetSize) {
+    public ThumbCacheRequest(ThumbCacheLoader loader, int type, int index, String path, long dateTaken, int targetSize) {
         mType = type;
         mTargetSize = targetSize;
         mLoader = loader;
         mIndex = index;
-        mLocalFilePath = pathHashCode;
+        mLocalFilePath = path;
         mDateToken = dateTaken;
     }
 
@@ -45,13 +45,12 @@ public abstract class ThumbCacheRequest implements Job<Bitmap> {
         if (jc.isCancelled())
             return null;
 
-        long time = System.currentTimeMillis();
+        long time = System.currentTimeMillis(), timesql;
 
         byte data[] = mLoader.getThumbData(mIndex, mLocalFilePath, mDateToken);
 
-        LLog.w(TAG, " read data from db, sepent: " + (System.currentTimeMillis() - time) + " datalengh:" + (data == null ? 0 : data.length));
         if (data != null && data.length > 0) {
-            time = System.currentTimeMillis();
+            timesql = System.currentTimeMillis() - time;
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
             Bitmap bitmap;
@@ -63,10 +62,9 @@ public abstract class ThumbCacheRequest implements Job<Bitmap> {
             if (bitmap == null && !jc.isCancelled()) {
                 LLog.w(TAG, "decode cached failed " + debugTag());
             }
-            LLog.w(TAG,  "create bitmap from data, spent:" + (System.currentTimeMillis() - time));
+            LLog.w(TAG, "index" + mIndex + " sqlite load:" + timesql + " make bitmap:" + (System.currentTimeMillis() - time-timesql));
             return bitmap;
         }
-        LLog.w(TAG, "-----------------no cache ,create it " + debugTag());
         Bitmap bitmap = onDecodeOriginal(jc, mType);
         if (jc.isCancelled())
             return null;
@@ -89,6 +87,7 @@ public abstract class ThumbCacheRequest implements Job<Bitmap> {
         if (jc.isCancelled())
             return null;
 
+        LLog.w(TAG,  "create bitmap from orignal image, spent:" + (System.currentTimeMillis() - time));
         return bitmap;
     }
 

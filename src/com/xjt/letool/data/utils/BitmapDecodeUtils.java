@@ -69,11 +69,8 @@ public class BitmapDecodeUtils {
             options = new Options();
         jc.setCancelListener(new DecodeCanceller(options));
         setOptionsMutable(options);
-        long time = System.currentTimeMillis();
         Bitmap org = BitmapFactory.decodeByteArray(bytes, offset, length, options);
-        LLog.w(TAG, "1, spent:" + (System.currentTimeMillis() - time));
         Bitmap b = ensureGLCompatibleBitmap(org);
-        LLog.w(TAG, "2, spent:" + (System.currentTimeMillis() - time));
         return b;
     }
 
@@ -237,21 +234,20 @@ public class BitmapDecodeUtils {
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static Bitmap decodeUsingPool(JobContext jc, byte[] data, int offset, int length, BitmapFactory.Options options) {
-        if (b == null) {
+        //if (b == null) {
             if (options == null)
                 options = new BitmapFactory.Options();
             if (options.inSampleSize < 1)
                 options.inSampleSize = 1;
             options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            options.inBitmap = (options.inSampleSize == 1)
-                    ? findCachedBitmap(jc, data, offset, length, options) : null;
+            options.inBitmap = (options.inSampleSize == 1) ? findCachedBitmap(jc, data, offset, length, options) : null;
             try {
                 Bitmap bitmap = decode(jc, data, offset, length, options);
                 if (options.inBitmap != null && options.inBitmap != bitmap) {
                     LetoolBitmapPool.getInstance().put(options.inBitmap);
                     options.inBitmap = null;
                 }
-                b = bitmap;
+                //b = bitmap;
                 return bitmap;
             } catch (IllegalArgumentException e) {
                 if (options.inBitmap == null)
@@ -262,9 +258,9 @@ public class BitmapDecodeUtils {
                 options.inBitmap = null;
                 return decode(jc, data, offset, length, options);
             }
-        }
+        //}
 
-        return b;
+        //return b;
     }
 
     private static Bitmap b;
@@ -279,8 +275,7 @@ public class BitmapDecodeUtils {
         if (options.inSampleSize < 1)
             options.inSampleSize = 1;
         options.inPreferredConfig = Bitmap.Config.RGB_565;
-        options.inBitmap = (options.inSampleSize == 1)
-                ? findCachedBitmap(jc, fileDescriptor, options) : null;
+        options.inBitmap = (options.inSampleSize == 1) ? findCachedBitmap(jc, fileDescriptor, options) : null;
         try {
             Bitmap bitmap = BitmapDecodeUtils.decode(jc, fileDescriptor, options);
             if (options.inBitmap != null && options.inBitmap != bitmap) {
@@ -299,8 +294,7 @@ public class BitmapDecodeUtils {
         }
     }
 
-    private static Bitmap findCachedBitmap(JobContext jc, byte[] data,
-            int offset, int length, Options options) {
+    private static Bitmap findCachedBitmap(JobContext jc, byte[] data,int offset, int length, Options options) {
         decodeBounds(jc, data, offset, length, options);
         return LetoolBitmapPool.getInstance().get(options.outWidth, options.outHeight);
     }
