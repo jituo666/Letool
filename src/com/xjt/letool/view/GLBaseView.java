@@ -10,6 +10,7 @@ import com.xjt.letool.utils.Utils;
 import com.xjt.letool.views.opengl.GLESCanvas;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.SystemClock;
 import android.view.MotionEvent;
@@ -23,7 +24,7 @@ import android.view.View;
 @SuppressLint("WrongCall")
 public class GLBaseView {
 
-    private static final String TAG = "GLBaseView";
+    private static final String TAG = GLBaseView.class.getSimpleName();
 
     protected final Rect mBounds = new Rect();
     protected final Rect mPaddings = new Rect();
@@ -272,7 +273,7 @@ public class GLBaseView {
     protected void renderBackground(GLESCanvas view) {
         if (mBackgroundColor != null) {
             view.clearBuffer(mBackgroundColor);
-            LLog.i(TAG, "");
+            LLog.i(TAG, Color.BLACK + "........................................" + mBackgroundColor);
         }
         if (mTransition != null && mTransition.isActive()) {
             mTransition.applyBackground(this, view);

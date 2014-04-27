@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="default_background">#FFFFFFFF</color>
+    <color name="default_background_thumbnail">#FFFFFFFF</color>
+    <color name="default_background_full_image">#FF000000</color>
 
     <!-- configuration for album set page -->
     <color name="albumset_background">#FF1A1A1A</color>

@@ -25,6 +25,7 @@ import com.xjt.letool.data.MediaObject;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.MediaSet;
 import com.xjt.letool.selectors.SelectionManager;
+import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.UsageStatistics;
 import com.xjt.letool.view.DetailsHelper;
 import com.xjt.letool.view.FullImageView;
@@ -32,13 +33,13 @@ import com.xjt.letool.view.GLBaseView;
 import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.GLRootView;
 import com.xjt.letool.view.DetailsHelper.DetailsSource;
+import com.xjt.letool.views.opengl.GLESCanvas;
 
 import com.xjt.letool.activities.BaseActivity;
 import com.xjt.letool.adapters.PhotoDataAdapter;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.OrientationManager;
 import com.xjt.letool.common.SynchronizedHandler;
-
 
 /**
  * @Author Jituo.Xuan
@@ -89,10 +90,9 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
 
     private GLRootView mGLRootView;
 
-    private LetoolApp mApplication;
     private SelectionManager mSelectionManager;
 
-    private FullImageView mPhotoView;
+    private FullImageView mFullImageView;
     private FullImageFragment.Model mModel;
     private DetailsHelper mDetailsHelper;
     private boolean mShowDetails;
@@ -144,7 +144,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         @Override
         protected void onLayout(
                 boolean changed, int left, int top, int right, int bottom) {
-            mPhotoView.layout(0, 0, right - left, bottom - top);
+            mFullImageView.layout(0, 0, right - left, bottom - top);
             if (mShowDetails) {
                 mDetailsHelper.layout(left, 0, right, bottom);
             }
@@ -154,7 +154,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     @Override
     public void onPictureCenter(boolean isCamera) {
         isCamera = isCamera || (mHasCameraScreennailOrPlaceholder);
-        mPhotoView.setWantPictureCenterCallbacks(false);
+        mFullImageView.setWantPictureCenterCallbacks(false);
         mHandler.removeMessages(MSG_ON_CAMERA_CENTER);
         mHandler.removeMessages(MSG_ON_PICTURE_CENTER);
         mHandler.sendEmptyMessage(isCamera ? MSG_ON_CAMERA_CENTER : MSG_ON_PICTURE_CENTER);
@@ -181,7 +181,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         if (mCurrentPhoto == photo)
             return;
         mCurrentPhoto = photo;
-        if (mPhotoView.getFilmMode()) {
+        if (mFullImageView.getFilmMode()) {
             requestDeferredUpdate();
         } else {
             updateUIForCurrentPhoto();
@@ -197,7 +197,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             return;
         mShowBars = true;
         mOrientationManager.unlockOrientation();
-
         getGLController().setLightsOutMode(false);
         refreshHidingMessage();
     }
@@ -212,7 +211,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
 
     private void refreshHidingMessage() {
         mHandler.removeMessages(MSG_HIDE_BARS);
-        if (!mIsMenuVisible && !mPhotoView.getFilmMode()) {
+        if (!mIsMenuVisible && !mFullImageView.getFilmMode()) {
             mHandler.sendEmptyMessageDelayed(MSG_HIDE_BARS, HIDE_BARS_TIMEOUT);
         }
     }
@@ -220,7 +219,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     private boolean canShowBars() {
         // No bars if we are showing camera preview.
         if (mCurrentIndex == 0
-                && !mPhotoView.getFilmMode())
+                && !mFullImageView.getFilmMode())
             return false;
 
         // No bars if it's not allowed.
@@ -278,8 +277,8 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         if (playVideo) {
             // determine if the point is at center (1/6) of the photo view.
             // (The position of the "play" icon is at center (1/6) of the photo)
-            int w = mPhotoView.getWidth();
-            int h = mPhotoView.getHeight();
+            int w = mFullImageView.getWidth();
+            int h = mFullImageView.getHeight();
             playVideo = (Math.abs(x - w / 2) * 12 <= w)
                     && (Math.abs(y - h / 2) * 12 <= h);
         }
@@ -376,7 +375,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             if (mModel != null) {
                 mModel.pause();
             }
-            mPhotoView.pause();
+            mFullImageView.pause();
             mHandler.removeMessages(MSG_HIDE_BARS);
             mHandler.removeMessages(MSG_REFRESH_BOTTOM_CONTROLS);
             onCommitDeleteImage();
@@ -420,7 +419,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
 
             mGLRootView.setContentPane(mRootPane);
             mModel.resume();
-            mPhotoView.resume();
+            mFullImageView.resume();
 
             if (!mShowBars) {
                 mGLRootView.setLightsOutMode(true);
@@ -433,7 +432,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     }
 
     @Override
-    public void onClick(View arg0) {
+    public void onClick(View v) {
 
     }
 
@@ -445,26 +444,24 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
 
     private void initViews() {
         mSelectionManager = new SelectionManager(mActivity, false);
+        mFullImageView = new FullImageView(this);
+        mFullImageView.setListener(this);
+        mFullImageView.setBackgroundColor(LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.default_background_thumbnail)));
+        mRootPane.addComponent(mFullImageView);
+        mOrientationManager = mActivity.getOrientationManager();
+        getGLController().setOrientationSource(mOrientationManager);
     }
 
     private void initDatas() {
-        /*        Bundle data = this.getArguments();
-                String albumTitle = data.getString(DataManager.KEY_ALBUM_TITLE);
-                long albumId = data.getLong(DataManager.KEY_ALBUM_ID, 0);
-                String albumMediaPath = data.getString(DataManager.KEY_MEDIA_PATH);
-                //boolean isCamera = data.getBoolean(DataManager.KEY_MEDIA_PATH, false);
-
-                LLog.i(TAG, " photo fragment onCreateView id:" + albumId + " albumTitle:" + albumTitle + " albumMediaPath:" + albumMediaPath + " isCamera:");
-                //mIsCamera = data.getBoolean(DataManager.KEY_IS_CAMERA);
-                //mAlbumTitle = data.getString(DataManager.KEY_ALBUM_TITLE);
-                //mDataPath = new MediaPath(data.getString(DataManager.KEY_MEDIA_PATH), data.getLong(DataManager.KEY_ALBUM_ID));
-                mMediaSet = getDataManager().getMediaSet(new MediaPath(albumMediaPath, albumId));
-                mSetPathString = data.getString(KEY_MEDIA_SET_PATH);
-
-                MediaPath itemPath = null;//itemPathString != null ? MediaPath.fromString(data.getString(KEY_MEDIA_ITEM_PATH)) : null;
-                mTreatBackAsUp = data.getBoolean(KEY_TREAT_BACK_AS_UP, false);
-                mStartInFilmstrip = data.getBoolean(KEY_START_IN_FILMSTRIP, false);
-                mCurrentIndex = data.getInt(KEY_INDEX_HINT, 0);*/
+        Bundle data = this.getArguments();
+        String albumTitle = data.getString(BaseActivity.KEY_ALBUM_TITLE);
+        long albumId = data.getLong(BaseActivity.KEY_ALBUM_ID, 0);
+        String albumMediaPath = data.getString(BaseActivity.KEY_MEDIA_PATH);
+        LLog.i(TAG, " photo fragment onCreateView id:" + albumId + " albumTitle:" + albumTitle + " albumMediaPath:" + albumMediaPath + " isCamera:");
+        mMediaSet = getDataManager().getMediaSet(new MediaPath(albumMediaPath, albumId));
+        mTreatBackAsUp = data.getBoolean(KEY_TREAT_BACK_AS_UP, false);
+        mStartInFilmstrip = data.getBoolean(KEY_START_IN_FILMSTRIP, false);
+        mCurrentIndex = data.getInt(KEY_INDEX_HINT, 0);
     }
 
     @Override
@@ -475,32 +472,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
 
         initViews();
         initDatas();
-
-        Bundle data = this.getArguments();
-        String albumTitle = data.getString(BaseActivity.KEY_ALBUM_TITLE);
-        long albumId = data.getLong(BaseActivity.KEY_ALBUM_ID, 0);
-        String albumMediaPath = data.getString(BaseActivity.KEY_MEDIA_PATH);
-        boolean isCamera = data.getBoolean(BaseActivity.KEY_MEDIA_PATH, false);
-
-        LLog.i(TAG, " photo fragment onCreateView id:" + albumId + " albumTitle:" + albumTitle + " albumMediaPath:" + albumMediaPath + " isCamera:");
-        //mIsCamera = data.getBoolean(DataManager.KEY_IS_CAMERA);
-        //mAlbumTitle = data.getString(DataManager.KEY_ALBUM_TITLE);
-        //mDataPath = new MediaPath(data.getString(DataManager.KEY_MEDIA_PATH), data.getLong(DataManager.KEY_ALBUM_ID));
-        mMediaSet = getDataManager().getMediaSet(new MediaPath(albumMediaPath, albumId));
-        mSetPathString = data.getString(KEY_MEDIA_SET_PATH);
-
-        MediaPath itemPath = null;//itemPathString != null ? MediaPath.fromString(data.getString(KEY_MEDIA_ITEM_PATH)) : null;
-        mTreatBackAsUp = data.getBoolean(KEY_TREAT_BACK_AS_UP, false);
-        mStartInFilmstrip = data.getBoolean(KEY_START_IN_FILMSTRIP, false);
-        mCurrentIndex = data.getInt(KEY_INDEX_HINT, 0);
-
-        mPhotoView = new FullImageView(this);
-        mPhotoView.setListener(this);
-        mRootPane.addComponent(mPhotoView);
-        mApplication = (LetoolApp) ((Activity) mActivity).getApplication();
-        mOrientationManager = mActivity.getOrientationManager();
-        getGLController().setOrientationSource(mOrientationManager);
-
         mHandler = new SynchronizedHandler(getGLController()) {
 
             @Override
@@ -511,11 +482,9 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
                         break;
                     }
                     case MSG_REFRESH_BOTTOM_CONTROLS: {
-
                         break;
                     }
                     case MSG_ON_FULL_SCREEN_CHANGED: {
-
                         break;
                     }
                     case MSG_UPDATE_ACTION_BAR: {
@@ -541,11 +510,9 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
                         break;
                     }
                     case MSG_ON_CAMERA_CENTER: {
-
                         break;
                     }
                     case MSG_ON_PICTURE_CENTER: {
-
                         break;
                     }
                     case MSG_REFRESH_IMAGE: {
@@ -573,23 +540,16 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         };
 
         mSelectionManager.setSourceMediaSet(mMediaSet);
-        mSetPathString = "/filter/delete/{" + mSetPathString + "}";
-        //mMediaSet = getDataManager().getMediaSet(mSetPathString, 0);
-        if (mMediaSet == null) {
-            LLog.w(TAG, "failed to restore " + mSetPathString);
+        MediaPath itemPath = null;
+        int mediaItemCount = mMediaSet.getMediaItemCount();
+        if (mediaItemCount > 0) {
+            if (mCurrentIndex >= mediaItemCount)
+                mCurrentIndex = 0;
+            itemPath = mMediaSet.getMediaItem(mCurrentIndex, 1).get(0).getPath();
         }
-        if (itemPath == null) {
-            int mediaItemCount = mMediaSet.getMediaItemCount();
-            if (mediaItemCount > 0) {
-                if (mCurrentIndex >= mediaItemCount)
-                    mCurrentIndex = 0;
-                itemPath = mMediaSet.getMediaItem(mCurrentIndex, 1)
-                        .get(0).getPath();
-            }
-        }
-        PhotoDataAdapter pda = new PhotoDataAdapter(this, mPhotoView, mMediaSet, itemPath, mCurrentIndex, 0, false, false);
+        PhotoDataAdapter pda = new PhotoDataAdapter(this, mFullImageView, mMediaSet, itemPath, mCurrentIndex, 0, false, false);
         mModel = pda;
-        mPhotoView.setModel(mModel);
+        mFullImageView.setModel(mModel);
 
         pda.setDataListener(new PhotoDataAdapter.DataListener() {
 
@@ -597,19 +557,17 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             public void onPhotoChanged(int index, MediaPath item) {
                 int oldIndex = mCurrentIndex;
                 mCurrentIndex = index;
-
                 if (mHasCameraScreennailOrPlaceholder) {
                     if (mCurrentIndex > 0) {
                         mSkipUpdateCurrentPhoto = false;
                     }
-
                     if (oldIndex == 0 && mCurrentIndex > 0
-                            && !mPhotoView.getFilmMode()) {
-                        mPhotoView.setFilmMode(true);
+                            && !mFullImageView.getFilmMode()) {
+                        mFullImageView.setFilmMode(true);
                     } else if (oldIndex == 2 && mCurrentIndex == 1) {
-                        mPhotoView.stopScrolling();
+                        mFullImageView.stopScrolling();
                     } else if (oldIndex >= 1 && mCurrentIndex == 0) {
-                        mPhotoView.setWantPictureCenterCallbacks(true);
+                        mFullImageView.setWantPictureCenterCallbacks(true);
                         mSkipUpdateCurrentPhoto = true;
                     }
                 }
@@ -643,12 +601,12 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         //} else {
         // Get default media set by the URI
         /*            MediaItem mediaItem = (MediaItem) getDataManager().getMediaObject(itemPath);
-                    mModel = new SinglePhotoDataAdapter(mActivity, mPhotoView, mediaItem);
-                    mPhotoView.setModel(mModel);
+                    mModel = new SinglePhotoDataAdapter(mActivity, mFullImageView, mediaItem);
+                    mFullImageView.setModel(mModel);
                     updateCurrentPhoto(mediaItem);
                     mShowSpinner = false;*/
         //}
-        mPhotoView.setFilmMode(mStartInFilmstrip && mMediaSet.getMediaItemCount() > 1);
+        mFullImageView.setFilmMode(mStartInFilmstrip && mMediaSet.getMediaItemCount() > 1);
         return rootView;
     }
 

@@ -247,7 +247,7 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
         ThumbnailLayout layout = new ThumbnailContractLayout(mConfig.albumSetSpec);
         mThumbnailView = new ThumbnailView(this, layout);
         mThumbnailView.setBackgroundColor(
-                LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.default_background))
+                LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.default_background_thumbnail))
                 );
         mThumbnailViewRenderer = new ThumbnailSetRenderer(this, mThumbnailView);
         layout.setRenderer(mThumbnailViewRenderer);

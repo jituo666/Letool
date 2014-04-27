@@ -247,9 +247,7 @@ public class FullImageView extends GLBaseView {
         mPlaceholderColor = mContext.getResources().getColor(R.color.photo_placeholder);
         mEdgeView = new EdgeView(mContext);
         addComponent(mEdgeView);
-        mNoThumbnailText = StringTexture.newInstance(
-                mContext.getString(R.string.no_thumbnail),
-                DEFAULT_TEXT_SIZE, Color.WHITE);
+        mNoThumbnailText = StringTexture.newInstance(mContext.getString(R.string.no_thumbnail),DEFAULT_TEXT_SIZE, Color.WHITE);
 
         mHandler = new MyHandler(activity.getGLController());
 
@@ -1456,8 +1454,7 @@ public class FullImageView extends GLBaseView {
     @Override
     protected void render(GLESCanvas canvas) {
         if (mFirst) {
-            // Make sure the fields are properly initialized before checking  whether isCamera()
-            mPictures.get(0).reload();
+            mPictures.get(0).reload(); // Make sure the fields are properly initialized before checking  whether isCamera()
         }
         // Check if the camera preview occupies the full screen.
         boolean full = !mFilmMode && mPictures.get(0).isCamera() && mPositionController.isCenter() && mPositionController.isAtMinimalScale();
@@ -1478,8 +1475,7 @@ public class FullImageView extends GLBaseView {
             // In page mode, we draw only one previous/next photo. But if we are
             // doing capture animation, we want to draw all photos.
             boolean inPageMode = (mPositionController.getFilmRatio() == 0f);
-            boolean inCaptureAnimation =
-                    ((mHolding & HOLD_CAPTURE_ANIMATION) != 0);
+            boolean inCaptureAnimation =((mHolding & HOLD_CAPTURE_ANIMATION) != 0);
             if (inPageMode && !inCaptureAnimation) {
                 neighbors = 1;
             } else {

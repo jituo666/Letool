@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
-import com.xjt.letool.data.DataManager;
 import com.xjt.letool.views.fragment.FullImageFragment;
 
 public class FullImageActivity extends BaseActivity {
@@ -29,13 +28,13 @@ public class FullImageActivity extends BaseActivity {
         String albumTitle = getIntent().getStringExtra(KEY_ALBUM_TITLE);
         long albumId = getIntent().getLongExtra(KEY_ALBUM_ID, 0);
         String albumMediaPath = getIntent().getStringExtra(KEY_MEDIA_PATH);
-        //boolean isCamera = getIntent().getBooleanExtra(KEY_MEDIA_PATH, false);
+        int currentIndex = getIntent().getIntExtra(FullImageFragment.KEY_INDEX_HINT, 0);
         data.putString(KEY_ALBUM_TITLE, albumTitle);
         data.putLong(KEY_ALBUM_ID, albumId);
         data.putString(KEY_MEDIA_PATH, albumMediaPath);
         data.putBoolean(KEY_IS_CAMERA, false);
+        data.putInt(FullImageFragment.KEY_INDEX_HINT, currentIndex);
         fragment.setArguments(data);
-        LLog.i(TAG, " start album id:" + albumId + " albumTitle:" + albumTitle + " albumMediaPath:" + albumMediaPath + " isCamera:");
         mFragmentManager.beginTransaction().add(R.id.root_container, fragment, "PhotoFragment").commit();
     }
 

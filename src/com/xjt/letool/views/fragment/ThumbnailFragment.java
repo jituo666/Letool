@@ -58,7 +58,6 @@ public class ThumbnailFragment extends LetoolFragment implements EyePosition.Eye
     private static final String TAG = ThumbnailFragment.class.getSimpleName();
 
     private GLRootView mGLRootView;
-    private TransitionStore mTransitionStore = new TransitionStore();
     public static final String KEY_RESUME_ANIMATION = "resume_animation";
     private static final int BIT_LOADING_RELOAD = 1;
     private static final int BIT_LOADING_SYNC = 2;
@@ -267,7 +266,7 @@ public class ThumbnailFragment extends LetoolFragment implements EyePosition.Eye
         mConfig = ViewConfigs.AlbumPage.get(getAndroidContext());
         ThumbnailLayout layout = new ThumbnailContractLayout(mConfig.albumSpec);
         mThumbnailView = new ThumbnailView(this, layout);
-        mThumbnailView.setBackgroundColor(LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.default_background)));
+        mThumbnailView.setBackgroundColor(LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.default_background_thumbnail)));
         mRender = new ThumbnailRenderer(this, mThumbnailView, mSelector);
         layout.setRenderer(mRender);
         mThumbnailView.setThumbnailRenderer(mRender);
@@ -515,6 +514,7 @@ public class ThumbnailFragment extends LetoolFragment implements EyePosition.Eye
         it.putExtra(BaseActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
         it.putExtra(BaseActivity.KEY_IS_CAMERA, false);
         it.putExtra(BaseActivity.KEY_ALBUM_TITLE, mData.getName());
+        it.putExtra(FullImageFragment.KEY_INDEX_HINT, index);
         startActivity(it);
     }
 }

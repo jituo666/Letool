@@ -1,8 +1,10 @@
+
 package com.xjt.letool.data;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapRegionDecoder;
 
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.ThreadPool.Job;
 import com.xjt.letool.data.cache2.ThumbCacheLoader;
 import com.xjt.letool.data.utils.BytesBufferPool;
@@ -10,7 +12,10 @@ import com.xjt.letool.views.opengl.ScreenNail;
 
 // MediaItem represents an image or a video item.
 public abstract class MediaItem extends MediaObject {
+
     // NOTE: These type numbers are stored in the image cache, so it should not not be changed without resetting the cache.
+    private static final String TAG = MediaItem.class.getSimpleName();
+
     public static final int TYPE_THUMBNAIL = 1;
     public static final int TYPE_MICROTHUMBNAIL = 2;
 
@@ -28,11 +33,11 @@ public abstract class MediaItem extends MediaObject {
     private static int sMicrothumbnailTargetSize = 128;
     private static int sThumbnailTargetSize = 640;
 
-    // TODO: fix default value for latlng and change this.
     public static final double INVALID_LATLNG = 0f;
 
     public abstract Job<Bitmap> requestImage(int type);
-    public abstract Job<Bitmap> requestImage(int type, int index, long dateTaken,ThumbCacheLoader loader);
+
+    public abstract Job<Bitmap> requestImage(int type, int index, long dateTaken, ThumbCacheLoader loader);
 
     public abstract Job<BitmapRegionDecoder> requestLargeImage();
 
@@ -107,5 +112,7 @@ public abstract class MediaItem extends MediaObject {
         if (sMicrothumbnailTargetSize != microSize) {
             sMicrothumbnailTargetSize = microSize;
         }
+
+        LLog.i(TAG, " MediaItem.sThumbnailTargetSize:" + sThumbnailTargetSize +  " MediaItem.sMicrothumbnailTargetSize:" + sMicrothumbnailTargetSize);
     }
 }

@@ -161,7 +161,7 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
             boolean isPanorama, boolean isStaticCamera) {
         mSource = Utils.checkNotNull(mediaSet);
         mPhotoView = Utils.checkNotNull(view);
-        //mItemPath = Utils.checkNotNull(itemPath);
+        mItemPath = Utils.checkNotNull(itemPath);
         mCurrentIndex = indexHint;
         mCameraIndex = cameraIndex;
         mIsPanorama = isPanorama;
