@@ -60,7 +60,7 @@ public class LetoolUtils {
 
     public static void initialize(Context context) {
         DisplayMetrics metrics = new DisplayMetrics();
-        WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         wm.getDefaultDisplay().getMetrics(metrics);
         sPixelDensity = metrics.density;
         LLog.i("letooltag", " resume sPixelDensity:" + sPixelDensity);
@@ -70,19 +70,19 @@ public class LetoolUtils {
     }
 
     private static void initializeThumbnailSizes(DisplayMetrics metrics, Resources r) {
-        int maxPixels = Math.max(metrics.heightPixels, metrics.widthPixels);
+        int maxPixels = Math.min(metrics.heightPixels, metrics.widthPixels);
 
         // For screen-nails, we never need to completely fill the screen
-        //MediaItem.setThumbnailSizes(maxPixels / 2, maxPixels / 5);
+        MediaItem.setThumbnailSizes(maxPixels / 3 * 2, maxPixels / 3);
         //TiledScreenNail.setMaxSide(maxPixels / 2);
     }
 
     public static float[] intColorToFloatARGBArray(int from) {
         return new float[] {
-            Color.alpha(from) / 255f,
-            Color.red(from) / 255f,
-            Color.green(from) / 255f,
-            Color.blue(from) / 255f
+                Color.alpha(from) / 255f,
+                Color.red(from) / 255f,
+                Color.green(from) / 255f,
+                Color.blue(from) / 255f
         };
     }
 
@@ -133,25 +133,25 @@ public class LetoolUtils {
 
     public static double fastDistanceMeters(double latRad1, double lngRad1,
             double latRad2, double lngRad2) {
-       if ((Math.abs(latRad1 - latRad2) > RAD_PER_DEG)
-             || (Math.abs(lngRad1 - lngRad2) > RAD_PER_DEG)) {
-           return accurateDistanceMeters(latRad1, lngRad1, latRad2, lngRad2);
-       }
-       // Approximate sin(x) = x.
-       double sineLat = (latRad1 - latRad2);
+        if ((Math.abs(latRad1 - latRad2) > RAD_PER_DEG)
+                || (Math.abs(lngRad1 - lngRad2) > RAD_PER_DEG)) {
+            return accurateDistanceMeters(latRad1, lngRad1, latRad2, lngRad2);
+        }
+        // Approximate sin(x) = x.
+        double sineLat = (latRad1 - latRad2);
 
-       // Approximate sin(x) = x.
-       double sineLng = (lngRad1 - lngRad2);
+        // Approximate sin(x) = x.
+        double sineLng = (lngRad1 - lngRad2);
 
-       // Approximate cos(lat1) * cos(lat2) using
-       // cos((lat1 + lat2)/2) ^ 2
-       double cosTerms = Math.cos((latRad1 + latRad2) / 2.0);
-       cosTerms = cosTerms * cosTerms;
-       double trigTerm = sineLat * sineLat + cosTerms * sineLng * sineLng;
-       trigTerm = Math.sqrt(trigTerm);
+        // Approximate cos(lat1) * cos(lat2) using
+        // cos((lat1 + lat2)/2) ^ 2
+        double cosTerms = Math.cos((latRad1 + latRad2) / 2.0);
+        cosTerms = cosTerms * cosTerms;
+        double trigTerm = sineLat * sineLat + cosTerms * sineLng * sineLng;
+        trigTerm = Math.sqrt(trigTerm);
 
-       // Approximate arcsin(x) = x
-       return EARTH_RADIUS_METERS * trigTerm;
+        // Approximate arcsin(x) = x
+        return EARTH_RADIUS_METERS * trigTerm;
     }
 
     public static double accurateDistanceMeters(double lat1, double lng1,
@@ -162,7 +162,6 @@ public class LetoolUtils {
         return (2 * Math.atan2(Math.sqrt(x), Math.sqrt(Math.max(0.0,
                 1.0 - x)))) * EARTH_RADIUS_METERS;
     }
-
 
     public static final double toMile(double meter) {
         return meter / 1609;
@@ -193,8 +192,8 @@ public class LetoolUtils {
             List<ResolveInfo> infos = packageManager.queryIntentActivities(
                     new Intent(Intent.ACTION_EDIT).setType(mimeType), 0);
             prefs.edit().putInt(updateKey, version)
-                        .putBoolean(hasKey, !infos.isEmpty())
-                        .commit();
+                    .putBoolean(hasKey, !infos.isEmpty())
+                    .commit();
         }
 
         return prefs.getBoolean(hasKey, true);
@@ -208,14 +207,15 @@ public class LetoolUtils {
             List<ResolveInfo> infos = packageManager.queryIntentActivities(
                     new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA), 0);
             prefs.edit().putInt(KEY_CAMERA_UPDATE, version)
-                        .putBoolean(KEY_HAS_CAMERA, !infos.isEmpty())
-                        .commit();
+                    .putBoolean(KEY_HAS_CAMERA, !infos.isEmpty())
+                    .commit();
         }
         return prefs.getBoolean(KEY_HAS_CAMERA, true);
     }
 
     public static boolean isCameraAvailable(Context context) {
-        if (sCameraAvailableInitialized) return sCameraAvailable;
+        if (sCameraAvailableInitialized)
+            return sCameraAvailable;
         PackageManager pm = context.getPackageManager();
         Intent cameraIntent = IntentHelper.getCameraIntent(context);
         List<ResolveInfo> apps = pm.queryIntentActivities(cameraIntent, 0);
@@ -240,7 +240,7 @@ public class LetoolUtils {
     public static void startGalleryActivity(Context context) {
         Intent intent = new Intent(context, BaseActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }
 
@@ -308,7 +308,8 @@ public class LetoolUtils {
                         return path;
                     } else {
                         path = searchDirForPath(file, bucketId);
-                        if (path != null) return path;
+                        if (path != null)
+                            return path;
                     }
                 }
             }
@@ -380,11 +381,11 @@ public class LetoolUtils {
         }
         return false;
     }
-//
-//    public static boolean isPanorama(MediaItem item) {
-//        if (item == null) return false;
-//        int w = item.getWidth();
-//        int h = item.getHeight();
-//        return (h > 0 && w / h >= 2);
-//    }
+    //
+    //    public static boolean isPanorama(MediaItem item) {
+    //        if (item == null) return false;
+    //        int w = item.getWidth();
+    //        int h = item.getHeight();
+    //        return (h > 0 && w / h >= 2);
+    //    }
 }

@@ -443,8 +443,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
 
         @Override
         protected Future<Bitmap> submitBitmapTask(FutureListener<Bitmap> l) {
-            return mThreadPool.submit(mLabelMaker.requestLabel(
-                    mTitle, String.valueOf(mTotalCount), mSourceType), l);
+            return mThreadPool.submit(mLabelMaker.requestLabel(mTitle, String.valueOf(mTotalCount), mSourceType), l);
         }
 
         @Override

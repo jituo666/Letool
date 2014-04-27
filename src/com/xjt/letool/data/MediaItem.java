@@ -102,10 +102,10 @@ public abstract class MediaItem extends MediaObject {
         return sMicroThumbBufferPool;
     }
 
-//    public static void setThumbnailSizes(int size, int microSize) {
-//        sThumbnailTargetSize = size;
-//        if (sMicrothumbnailTargetSize != microSize) {
-//            sMicrothumbnailTargetSize = microSize;
-//        }
-//    }
+    public static void setThumbnailSizes(int size, int microSize) {
+        sThumbnailTargetSize = size;
+        if (sMicrothumbnailTargetSize != microSize) {
+            sMicrothumbnailTargetSize = microSize;
+        }
+    }
 }
