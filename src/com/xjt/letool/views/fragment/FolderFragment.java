@@ -1,4 +1,3 @@
-
 package com.xjt.letool.views.fragment;
 
 import java.lang.ref.WeakReference;
@@ -303,13 +302,7 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-        /*
-         * case R.id.action_cancel:
-         * activity.setResult(Activity.RESULT_CANCELED); activity.finish();
-         * return true; case R.id.action_select:
-         * mSelectionManager.setAutoLeaveSelectionMode(false);
-         * mSelectionManager.enterSelectionMode(); return true;
-         */
+
             case R.id.action_details:
                 if (mThumbnailSetAdapter.size() != 0) {
                     if (mShowDetails) {
@@ -321,19 +314,6 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
                     Toast.makeText(getAndroidContext(), getText(R.string.no_albums_alert), Toast.LENGTH_SHORT).show();
                 }
                 return true;
-                /*
-                 * case R.id.action_camera: {
-                 * LetoolUtils.startCameraActivity(activity); return true; }
-                 * case R.id.action_manage_offline: { Bundle data = new
-                 * Bundle(); String mediaPath =
-                 * mActivity.getDataManager().getTopSetPath
-                 * (DataManager.INCLUDE_ALL);
-                 * data.putString(ThumbnailSetPage.KEY_MEDIA_PATH, mediaPath);
-                 * mActivity.getPageManager().startState(ManageCachePage.class,
-                 * data); return true; } case R.id.action_settings: {
-                 * activity.startActivity(new Intent(activity,
-                 * LetoolSettings.class)); return true; }
-                 */
             default:
                 return false;
         }

@@ -313,10 +313,9 @@ public class ThumbnailFragment extends LetoolFragment implements EyePosition.Eye
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        LLog.i(TAG, "onCreateView");
+        LLog.i(TAG, "onCreateView" + System.currentTimeMillis());
         View rootView = inflater.inflate(R.layout.gl_root_view, container, false);
         mGLRootView = (GLRootView) rootView.findViewById(R.id.gl_root_view);
-        LLog.i(TAG, "onCreateView:" + mGLRootView);
         initializeViews();
         initializeData();
         mHandler = new SynchronizedHandler(mGLRootView) {
@@ -335,6 +334,10 @@ public class ThumbnailFragment extends LetoolFragment implements EyePosition.Eye
         };
         mEyePosition = new EyePosition(getAndroidContext(), this);
         initBrowseActionBar();
+
+        RelativePosition f = new RelativePosition();
+        f.setAbsolutePosition(360, 640);
+        mThumbnailView.startScatteringAnimation(f);
         return rootView;
     }
 
@@ -359,26 +362,12 @@ public class ThumbnailFragment extends LetoolFragment implements EyePosition.Eye
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflator) {
         super.onCreateOptionsMenu(menu, inflator);
         LLog.i(TAG, "onCreateOptionsMenu");
-        //GalleryActionBar actionBar = mActivity.getGalleryActionBar();
-
         if (mGetContent) {
             inflator.inflate(R.menu.pickup, menu);
-            //int typeBits = mData.getInt(LetoolBaseActivity.KEY_TYPE_BITS,DataManager.INCLUDE_IMAGE);
-            //actionBar.setTitle(LetoolUtils.getSelectionModePrompt(typeBits));
         } else {
             inflator.inflate(R.menu.album, menu);
-            //actionBar.setTitle(mData.getName());
-
-            /*
-             * FilterUtils.setupMenuItems(actionBar, mMediaSetPath, true);
-             * menu.findItem(R.id.action_group_by).setVisible(mShowClusterMenu);
-             * menu.findItem(R.id.action_camera).setVisible(
-             * MediaSetUtils.isCameraSource(mMediaSetPath) &&
-             * LetoolUtils.isCameraAvailable(mActivity));
-             */
 
         }
-        //actionBar.setSubtitle(null);
     }
 
     @Override
@@ -396,7 +385,7 @@ public class ThumbnailFragment extends LetoolFragment implements EyePosition.Eye
     @Override
     public void onResume() {
         super.onResume();
-        LLog.i(TAG, "onResume");
+        LLog.i(TAG, "onResume" + System.currentTimeMillis());
         mGLRootView.onResume();
         mGLRootView.lockRenderThread();
         try {

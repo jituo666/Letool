@@ -10,10 +10,8 @@ import com.xjt.letool.data.loader.ThumbnailSetDataLoader;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.views.fragment.LetoolFragment;
 import com.xjt.letool.views.opengl.ColorTexture;
-import com.xjt.letool.views.opengl.FadeInTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.opengl.Texture;
-import com.xjt.letool.views.opengl.TiledTexture;
 import com.xjt.letool.views.opengl.UploadedTexture;
 import com.xjt.letool.views.utils.AlbumLabelMaker;
 import com.xjt.letool.views.utils.ViewConfigs;
@@ -114,10 +112,6 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
 
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    private static Texture checkContentTexture(Texture texture) {
-        return ((texture instanceof TiledTexture) && !((TiledTexture) texture).isReady()) ? null : texture;
-    }
-
     private static Texture checkLabelTexture(Texture texture) {
         return ((texture instanceof UploadedTexture) && ((UploadedTexture) texture).isUploading()) ? null : texture;
     }
@@ -134,20 +128,12 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
 
     protected int renderContent(GLESCanvas canvas, AlbumSetEntry entry, int width, int height) {
         int renderRequestFlags = 0;
-
-        Texture content = checkContentTexture(entry.content);
+        Texture content = entry.bitmapTexture;
         if (content == null) {
             content = mWaitLoadingTexture;
             entry.isWaitLoadingDisplayed = true;
-        } else if (entry.isWaitLoadingDisplayed) {
-            entry.isWaitLoadingDisplayed = false;
-            content = new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
-            entry.content = content;
         }
         drawContent(canvas, content, width, height, entry.rotation);
-        if ((content instanceof FadeInTexture) && ((FadeInTexture) content).isAnimating()) {
-            renderRequestFlags |= ThumbnailView.RENDER_MORE_FRAME;
-        }
         return renderRequestFlags;
     }
 

@@ -97,9 +97,9 @@ public class LocalAlbum extends MediaSet {
 
     @Override
     public ArrayList<MediaItem> getMediaItem(int start, int count) {
+        LLog.w(TAG, "query getMediaItem: " + System.currentTimeMillis());
         DataManager dataManager = mApplication.getDataManager();
-        Uri uri = mBaseUri.buildUpon()
-                .appendQueryParameter("limit", start + "," + count).build();
+        Uri uri = mBaseUri.buildUpon().appendQueryParameter("limit", start + "," + count).build();
         ArrayList<MediaItem> list = new ArrayList<MediaItem>();
         LetoolUtils.assertNotInRenderThread();
         Cursor cursor = mResolver.query(
@@ -122,6 +122,7 @@ public class LocalAlbum extends MediaSet {
         } finally {
             cursor.close();
         }
+        LLog.w(TAG, "query getMediaItem: " + System.currentTimeMillis());
         return list;
     }
 
@@ -210,8 +211,7 @@ public class LocalAlbum extends MediaSet {
     @Override
     public int getMediaItemCount() {
         if (mCachedCount == INVALID_COUNT) {
-            Cursor cursor = mResolver.query(
-                    mBaseUri, COUNT_PROJECTION, mWhereClause,
+            Cursor cursor = mResolver.query(mBaseUri, COUNT_PROJECTION, mWhereClause,
                     new String[]{String.valueOf(mBucketId)}, null);
             if (cursor == null) {
                 LLog.w(TAG, "query fail");

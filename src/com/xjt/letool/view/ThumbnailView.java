@@ -1,6 +1,5 @@
 package com.xjt.letool.view;
 
-import com.xjt.letool.activities.BaseActivity;
 import com.xjt.letool.animations.AnimationTime;
 import com.xjt.letool.animations.ThumbnailAnim;
 import com.xjt.letool.animations.ThumbnailRisingAnim;
@@ -264,8 +263,10 @@ public class ThumbnailView extends GLBaseView {
         boolean paperActive = isPaperAcitivated();
         more |= paperActive;
         more |= advanceAnimation(animTime);
+        if (mAnimation != null) {
+            more |= mAnimation.calculate(animTime);
+        }
         canvas.translate(-mScrollX, -mScrollY);
-
         for (int i = mLayout.getVisibleEnd() - 1; i >= mLayout.getVisibleStart(); --i) {
             if ((renderItem(canvas, i, 0, paperActive) & RENDER_MORE_FRAME) != 0)
                 more = true;
@@ -347,7 +348,7 @@ public class ThumbnailView extends GLBaseView {
      * @return
      */
     public void setThumbnailCount(int thumbnailCount) {
-       mLayout.setThumbnailCount(thumbnailCount);
+        mLayout.setThumbnailCount(thumbnailCount);
         // mStartIndex is applied the first time setSlotCount is called.
         if (mStartIndex != ThumbnailLayout.INDEX_NONE) {
             setCenterIndex(mStartIndex);

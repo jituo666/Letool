@@ -3,7 +3,6 @@ package com.xjt.letool.data.loader;
 import android.os.Message;
 import android.os.Process;
 
-import com.xjt.letool.activities.BaseActivity;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
 import com.xjt.letool.data.ContentListener;
@@ -75,25 +74,26 @@ public class ThumbnailDataLoader {
             @Override
             public void handleMessage(Message message) {
                 switch (message.what) {
-                case MSG_RUN_OBJECT:
-                    ((Runnable) message.obj).run();
-                    return;
-                case MSG_LOAD_START:
-                    if (mLoadingListener != null)
-                        mLoadingListener.onLoadingStarted();
-                    return;
-                case MSG_LOAD_FINISH:
-                    if (mLoadingListener != null) {
-                        boolean loadFailed = (mFailedVersion == MediaObject.INVALID_DATA_VERSION);
-                        mLoadingListener.onLoadingFinished(loadFailed);
-                    }
-                    return;
+                    case MSG_RUN_OBJECT:
+                        ((Runnable) message.obj).run();
+                        return;
+                    case MSG_LOAD_START:
+                        if (mLoadingListener != null)
+                            mLoadingListener.onLoadingStarted();
+                        return;
+                    case MSG_LOAD_FINISH:
+                        if (mLoadingListener != null) {
+                            boolean loadFailed = (mFailedVersion == MediaObject.INVALID_DATA_VERSION);
+                            mLoadingListener.onLoadingFinished(loadFailed);
+                        }
+                        return;
                 }
             }
         };
     }
 
     public void resume() {
+        LLog.i(TAG, "resume" + System.currentTimeMillis());
         mSource.addContentListener(mSourceListener);
         mReloadTask = new ReloadTask();
         mReloadTask.start();
@@ -140,6 +140,7 @@ public class ThumbnailDataLoader {
     public MediaSet getMediaSource() {
         return mSource;
     }
+
     private void clearThumbnail(int Index) {
         mData[Index] = null;
         mItemVersion[Index] = MediaObject.INVALID_DATA_VERSION;
@@ -216,8 +217,7 @@ public class ThumbnailDataLoader {
 
     private <T> T executeAndWait(Callable<T> callable) {
         FutureTask<T> task = new FutureTask<T>(callable);
-        mMainHandler.sendMessage(
-                mMainHandler.obtainMessage(MSG_RUN_OBJECT, task));
+        mMainHandler.sendMessage(mMainHandler.obtainMessage(MSG_RUN_OBJECT, task));
         try {
             return task.get();
         } catch (InterruptedException e) {
@@ -299,7 +299,7 @@ public class ThumbnailDataLoader {
                     mItemVersion[index] = itemVersion;
                     mData[index] = updateItem;
                     if (mDataListener != null && i >= mActiveStart && i < mActiveEnd) {
-                        //LLog.i(TAG, "UpdateContent:" + index);
+                        LLog.i(TAG, "UpdateContent:" + index + " :" + System.currentTimeMillis());
                         mDataListener.onContentChanged(i);
                     }
                 }
@@ -324,12 +324,16 @@ public class ThumbnailDataLoader {
             if (mIsLoading == loading)
                 return;
             mIsLoading = loading;
+            if (loading)
+                LLog.i(TAG, "MSG_LOAD_START" + System.currentTimeMillis());
+            else
+                LLog.i(TAG, "MSG_LOAD_FINISH" + System.currentTimeMillis());
             mMainHandler.sendEmptyMessage(loading ? MSG_LOAD_START : MSG_LOAD_FINISH);
         }
 
         @Override
         public void run() {
-            Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+            Process.setThreadPriority(Process.THREAD_PRIORITY_DEFAULT);
 
             boolean updateComplete = false;
             while (mActive) {
@@ -342,12 +346,14 @@ public class ThumbnailDataLoader {
                 }
                 mDirty = false;
                 updateLoading(true);
+                LLog.i(TAG, "xxxx1" + System.currentTimeMillis());
                 long version;
                 synchronized (DataManager.LOCK) {
                     version = mSource.reload();
                 }
                 UpdateInfo info = executeAndWait(new GetUpdateInfo(version));
                 updateComplete = info == null;
+                LLog.i(TAG, "xxxx2" + System.currentTimeMillis());
                 if (updateComplete)
                     continue;
                 synchronized (DataManager.LOCK) {
