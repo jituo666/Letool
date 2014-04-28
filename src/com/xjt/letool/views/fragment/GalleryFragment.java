@@ -49,9 +49,9 @@ import android.widget.Toast;
  * @Date 9:40:26 PM Apr 20, 2014
  * @Comments:null
  */
-public class FolderFragment extends LetoolFragment implements EyePosition.EyePositionListener, SelectionListener {
+public class GalleryFragment extends LetoolFragment implements EyePosition.EyePositionListener, SelectionListener {
 
-    private static final String TAG = FolderFragment.class.getSimpleName();
+    private static final String TAG = GalleryFragment.class.getSimpleName();
 
     private GLRootView mGLRootView;
     public static final String KEY_EMPTY_ALBUM = "empty-album";
@@ -257,22 +257,22 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
 
             @Override
             public void onDown(int index) {
-                FolderFragment.this.onDown(index);
+                GalleryFragment.this.onDown(index);
             }
 
             @Override
             public void onUp(boolean followedByLongPress) {
-                FolderFragment.this.onUp(followedByLongPress);
+                GalleryFragment.this.onUp(followedByLongPress);
             }
 
             @Override
             public void onSingleTapUp(int slotIndex) {
-                FolderFragment.this.onSingleTapUp(slotIndex);
+                GalleryFragment.this.onSingleTapUp(slotIndex);
             }
 
             @Override
             public void onLongTap(int slotIndex) {
-                FolderFragment.this.onLongTap(slotIndex);
+                GalleryFragment.this.onLongTap(slotIndex);
             }
         });
     }
@@ -344,7 +344,7 @@ public class FolderFragment extends LetoolFragment implements EyePosition.EyePos
         LetoolActionBar actionBar = getLetoolActionBar();
         actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
         actionBar.setTitleIcon(R.drawable.ic_drawer);
-        actionBar.setTitleText(R.string.common_folder);
+        actionBar.setTitleText(R.string.common_gallery);
         return rootView;
     }
 

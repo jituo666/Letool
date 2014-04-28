@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 
 import android.content.res.Configuration;
+import android.graphics.Color;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -148,6 +149,12 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             if (mShowDetails) {
                 mDetailsHelper.layout(left, 0, right, bottom);
             }
+        }
+
+        @Override
+        protected void render(GLESCanvas canvas) {
+            canvas.clearBuffer(LetoolUtils.intColorToFloatARGBArray(Color.BLACK));
+            super.render(canvas);
         }
     };
 

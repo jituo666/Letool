@@ -53,9 +53,9 @@ import android.widget.Toast;
  * @Date 9:48:35 AM Apr 19, 2014
  * @Comments:null
  */
-public class ThumbnailFragment extends LetoolFragment implements EyePosition.EyePositionListener, SelectionListener {
+public class PhotoFragment extends LetoolFragment implements EyePosition.EyePositionListener, SelectionListener {
 
-    private static final String TAG = ThumbnailFragment.class.getSimpleName();
+    private static final String TAG = PhotoFragment.class.getSimpleName();
 
     private GLRootView mGLRootView;
     public static final String KEY_RESUME_ANIMATION = "resume_animation";
@@ -276,22 +276,22 @@ public class ThumbnailFragment extends LetoolFragment implements EyePosition.Eye
 
             @Override
             public void onDown(int index) {
-                ThumbnailFragment.this.onDown(index);
+                PhotoFragment.this.onDown(index);
             }
 
             @Override
             public void onUp(boolean followedByLongPress) {
-                ThumbnailFragment.this.onUp(followedByLongPress);
+                PhotoFragment.this.onUp(followedByLongPress);
             }
 
             @Override
             public void onSingleTapUp(int slotIndex) {
-                ThumbnailFragment.this.onSingleTapUp(slotIndex);
+                PhotoFragment.this.onSingleTapUp(slotIndex);
             }
 
             @Override
             public void onLongTap(int slotIndex) {
-                ThumbnailFragment.this.onLongTap(slotIndex);
+                PhotoFragment.this.onLongTap(slotIndex);
             }
         });
     }

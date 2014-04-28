@@ -42,14 +42,14 @@ public class SlidingMenuFragment extends Fragment {
 
     private static final SlidingMenuItem[] SLIDING_MENUS = new SlidingMenuItem[] {
             new SlidingMenuItem(SLIDING_MENU_PHOTO, R.drawable.ic_action_view_as_list, R.string.common_photo, true, true),
-            new SlidingMenuItem(SLIDING_MENU_FOLDER, R.drawable.ic_action_about, R.string.common_folder, true, true),
+            new SlidingMenuItem(SLIDING_MENU_FOLDER, R.drawable.ic_action_about, R.string.common_gallery, true, true),
             new SlidingMenuItem(SLIDING_MENU_SETTING, R.drawable.ic_action_settings, R.string.common_settings, true, true),
             new SlidingMenuItem(SLIDING_MENU_EXIT, R.drawable.ic_action_exit, R.string.common_exit, true, true),
     };
 
     private static final Class<?>[] MenuFragmentClasses = new Class<?>[] {
-            ThumbnailFragment.class,
-            FolderFragment.class,
+            PhotoFragment.class,
+            GalleryFragment.class,
             SettingFragment.class
 
     };
@@ -125,14 +125,14 @@ public class SlidingMenuFragment extends Fragment {
     }
 
     private void initFragmentData(Fragment f) {
-        if (f instanceof ThumbnailFragment) {
+        if (f instanceof PhotoFragment) {
             Bundle data = new Bundle();
             data.putLong(BaseActivity.KEY_ALBUM_ID, MediaSetUtils.CAMERA_BUCKET_ID);
             data.putString(BaseActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
             data.putBoolean(BaseActivity.KEY_IS_CAMERA, true);
             data.putString(BaseActivity.KEY_ALBUM_TITLE, getString(R.string.common_photo));
             f.setArguments(data);
-        } else if (f instanceof FolderFragment) {
+        } else if (f instanceof GalleryFragment) {
             Bundle data = new Bundle();
             data.putString(BaseActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
             f.setArguments(data);

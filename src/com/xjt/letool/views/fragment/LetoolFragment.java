@@ -24,10 +24,10 @@ public abstract class LetoolFragment extends Fragment implements LetoolContext, 
 
     private static final String TAG = "LetoolFragment";
 
-    public static final String FRAGMENT_TAG_THUMBNAIL = ThumbnailFragment.class.getSimpleName();
+    public static final String FRAGMENT_TAG_THUMBNAIL = PhotoFragment.class.getSimpleName();
     public static final String FRAGMENT_TAG_FULL_IMAGE = FullImageFragment.class.getSimpleName();
     public static final String FRAGMENT_TAG_SLIDING_MENU = SlidingMenuFragment.class.getSimpleName();
-    public static final String FRAGMENT_TAG_FOLDER = FolderFragment.class.getSimpleName();
+    public static final String FRAGMENT_TAG_FOLDER = GalleryFragment.class.getSimpleName();
     public static final String FRAGMENT_TAG_SETTINGS = SettingFragment.class.getSimpleName();
     public static final String FRAGMENT_TAG_ABOUT = AboutFragment.class.getSimpleName();
     public static final String FRAGMENT_TAG_HIDE_LIST = HideListFragment.class.getSimpleName();

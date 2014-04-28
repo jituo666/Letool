@@ -8,7 +8,7 @@ import com.xjt.letool.data.MediaSetUtils;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.Utils;
 import com.xjt.letool.views.fragment.LetoolFragment;
-import com.xjt.letool.views.fragment.ThumbnailFragment;
+import com.xjt.letool.views.fragment.PhotoFragment;
 
 import android.os.Bundle;
 import android.content.Intent;
@@ -58,7 +58,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public void startDefaultAction() {
-        Fragment fragment = new ThumbnailFragment();
+        Fragment fragment = new PhotoFragment();
         Bundle data = new Bundle();
         data.putLong(KEY_ALBUM_ID, MediaSetUtils.CAMERA_BUCKET_ID);
         data.putString(KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
@@ -75,7 +75,7 @@ public class MainActivity extends BaseActivity {
         int typeBits = LetoolUtils.determineTypeBits(this, intent);
         data.putInt(KEY_TYPE_BITS, typeBits);
         //
-        Fragment fragment = new ThumbnailFragment();
+        Fragment fragment = new PhotoFragment();
         data.putLong(KEY_ALBUM_ID, MediaSetUtils.CAMERA_BUCKET_ID);
         data.putString(KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
         data.putBoolean(KEY_IS_CAMERA, true);
@@ -103,7 +103,7 @@ public class MainActivity extends BaseActivity {
         int typeBits = LetoolUtils.determineTypeBits(this, intent);
         data.putInt(KEY_TYPE_BITS, typeBits);
         //
-        Fragment fragment = new ThumbnailFragment();
+        Fragment fragment = new PhotoFragment();
         data.putLong(KEY_ALBUM_ID, MediaSetUtils.CAMERA_BUCKET_ID);
         data.putString(KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
         data.putBoolean(KEY_IS_CAMERA, true);

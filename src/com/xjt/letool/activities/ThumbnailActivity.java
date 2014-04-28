@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
-import com.xjt.letool.views.fragment.ThumbnailFragment;
+import com.xjt.letool.views.fragment.PhotoFragment;
 
 
 /**
@@ -29,7 +29,7 @@ public class ThumbnailActivity extends BaseActivity {
         setContentView(R.layout.layout_main);
         super.onCreate(savedInstanceState);
         mFragmentManager = getSupportFragmentManager();
-        Fragment fragment = new ThumbnailFragment();
+        Fragment fragment = new PhotoFragment();
         Bundle data = new Bundle();
         String albumTitle = getIntent().getStringExtra(KEY_ALBUM_TITLE);
         long albumId = getIntent().getLongExtra(KEY_ALBUM_ID, 0);

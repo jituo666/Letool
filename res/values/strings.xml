@@ -1163,7 +1163,7 @@ CHAR LIMIT = NONE]
     </plurals>
     <!-- =========================================================================================================================== -->
     <string name="common_photo">照片</string>
-    <string name="common_folder">文件夹</string>
+    <string name="common_gallery">图库</string>
     <string name="common_settings">设置</string>
     <string name="common_exit">退出</string>
     <string name="sliding_menu_title_hide_list">隐藏列表</string>
