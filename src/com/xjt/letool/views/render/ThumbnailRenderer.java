@@ -9,8 +9,10 @@ import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.views.fragment.LetoolFragment;
 import com.xjt.letool.views.opengl.ColorTexture;
+import com.xjt.letool.views.opengl.FadeInTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.opengl.Texture;
+import com.xjt.letool.views.opengl.TiledTexture;
 
 public class ThumbnailRenderer extends AbstractThumbnailRender {
 
@@ -100,18 +102,33 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
         // Do nothing
     }
 
+    private static Texture checkTexture(Texture texture) {
+        return (texture instanceof TiledTexture) && !((TiledTexture) texture).isReady() ? null : texture;
+    }
+
     @Override
     public int renderThumbnail(GLESCanvas canvas, int index, int pass, int width, int height) {
         if (mThumbnailFilter != null && !mThumbnailFilter.acceptThumbnail(index))
             return 0;
         ThumbnailDataWindow.AlbumEntry entry = mDataWindow.get(index);
+
         int renderRequestFlags = 0;
-        Texture texture = entry.bitmapTexture;
-        if (texture == null) {
-            texture = mWaitLoadingTexture;
-            entry.isWaitLoadingDisplayed = true;
+
+        Texture content = checkTexture(entry.content);
+        if (content == null) {
+            content = mWaitLoadingTexture;
+            entry.isWaitDisplayed = true;
+        } else if (entry.isWaitDisplayed) {
+            entry.isWaitDisplayed = false;
+            content = new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
+            entry.content = content;
         }
-        drawContent(canvas, texture, width, height, entry.rotation);
+
+        drawContent(canvas, content, width, height, entry.rotation);
+        if ((content instanceof FadeInTexture) && ((FadeInTexture) content).isAnimating()) {
+            renderRequestFlags |= ThumbnailView.RENDER_MORE_FRAME;
+        }
+        //
         renderRequestFlags |= renderOverlay(canvas, index, entry, width, height);
         return renderRequestFlags;
     }

@@ -10,12 +10,13 @@ import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
 import com.xjt.letool.data.MediaItem;
 import com.xjt.letool.data.MediaPath;
-import com.xjt.letool.data.cache2.ThumbCacheLoader;
 import com.xjt.letool.data.loader.ThumbnailDataLoader;
 import com.xjt.letool.data.utils.BitmapLoader;
 import com.xjt.letool.utils.Utils;
 import com.xjt.letool.views.fragment.LetoolFragment;
+import com.xjt.letool.views.opengl.Texture;
 import com.xjt.letool.views.opengl.TiledTexture;
+import com.xjt.letool.views.opengl.TiledTextureUploader;
 
 /**
  * control the data window ,[activate range:media data], [content range: meta
@@ -34,10 +35,10 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
     private boolean mIsActive = false;
 
     private final ThumbnailDataLoader mDataSource;
+    private DataListener mDataListener;
     private final AlbumEntry mImageData[];
     private final SynchronizedHandler mHandler;
     private final JobLimiter mThreadPool;
-
     private int mSize;
 
     private int mContentStart = 0;
@@ -46,7 +47,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
     private int mActiveStart = 0;
     private int mActiveEnd = 0;
 
-    private DataListener mDataListener;
+    private final TiledTextureUploader mTileUploader;
 
     public static interface DataListener {
         public void onSizeChanged(int size);
@@ -59,8 +60,9 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
         public MediaPath path;
         public int rotation;
         public int mediaType;
-        public boolean isWaitLoadingDisplayed;
+        public boolean isWaitDisplayed;
         public TiledTexture bitmapTexture;
+        public Texture content;
         private BitmapLoader contentLoader;
     }
 
@@ -69,7 +71,6 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
         mDataSource = source;
         mImageData = new AlbumEntry[cacheSize];
         mSize = source.size();
-
         mHandler = new SynchronizedHandler(fragment.getGLController()) {
             @Override
             public void handleMessage(Message message) {
@@ -77,8 +78,8 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
                 ((ThumbnailLoader) message.obj).updateEntry();
             }
         };
-
         mThreadPool = new JobLimiter(fragment.getThreadPool(), JOB_LIMIT);
+        mTileUploader = new TiledTextureUploader(fragment.getGLController());
     }
 
     public void setListener(DataListener listener) {
@@ -141,8 +142,39 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
                 0, Math.max(0, mSize - data.length));
         int contentEnd = Math.min(contentStart + data.length, mSize);
         setContentWindow(contentStart, contentEnd);
+        updateTextureUploadQueue();
         if (mIsActive)
             updateAllImageRequests();
+    }
+
+    private void updateTextureUploadQueue() {
+        if (!mIsActive)
+            return;
+        mTileUploader.clear();
+
+        // add foreground textures
+        for (int i = mActiveStart, n = mActiveEnd; i < n; ++i) {
+            AlbumEntry entry = mImageData[i % mImageData.length];
+            if (entry.bitmapTexture != null) {
+                mTileUploader.addTexture(entry.bitmapTexture);
+            }
+        }
+
+        // add background textures
+        int range = Math.max((mContentEnd - mActiveEnd), (mActiveStart - mContentStart));
+        for (int i = 0; i < range; ++i) {
+            uploadBgTextureInSlot(mActiveEnd + i);
+            uploadBgTextureInSlot(mActiveStart - i - 1);
+        }
+    }
+
+    private void uploadBgTextureInSlot(int index) {
+        if (index < mContentEnd && index >= mContentStart) {
+            AlbumEntry entry = mImageData[index % mImageData.length];
+            if (entry.bitmapTexture != null) {
+                mTileUploader.addTexture(entry.bitmapTexture);
+            }
+        }
     }
 
     public AlbumEntry get(int slotIndex) {
@@ -183,7 +215,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
         if (slotIndex < mContentStart || slotIndex >= mContentEnd)
             return false;
         AlbumEntry entry = mImageData[slotIndex % mImageData.length];
-        if (entry.bitmapTexture != null || entry.item == null)
+        if (entry.content != null || entry.item == null)
             return false;
         entry.contentLoader.startLoad();
         return entry.contentLoader.isRequestInProgress();
@@ -245,6 +277,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
 
     public void pause() {
         mIsActive = false;
+        mTileUploader.clear();
         TiledTexture.freeResources();
         for (int i = mContentStart, n = mContentEnd; i < n; ++i) {
             freeSlotContent(i);
@@ -288,7 +321,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
 
         @Override
         protected Future<Bitmap> submitBitmapTask(FutureListener<Bitmap> l) {
-            return mThreadPool.submit(mItem.requestImage(MediaItem.TYPE_MICROTHUMBNAIL),this);
+            return mThreadPool.submit(mItem.requestImage(MediaItem.TYPE_MICROTHUMBNAIL), this);
         }
 
         @Override
@@ -302,14 +335,18 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
                 return; // error or recycled
             AlbumEntry entry = mImageData[mSlotIndex % mImageData.length];
             entry.bitmapTexture = new TiledTexture(bitmap);
+            entry.content = entry.bitmapTexture;
             if (isActiveSlot(mSlotIndex)) {
+                mTileUploader.addTexture(entry.bitmapTexture);
                 --mActiveRequestCount;
                 if (mActiveRequestCount == 0)
                     requestNonactiveImages();
                 if (mDataListener != null) {
                     mDataListener.onContentChanged();
-                    LLog.i(TAG, "onContentChanged trigger when  image prepared:" + mSlotIndex + "   :" + System.currentTimeMillis());
+                    LLog.i(TAG, " image prepared:" + mSlotIndex + "   :" + System.currentTimeMillis());
                 }
+            } else {
+                mTileUploader.addTexture(entry.bitmapTexture);
             }
         }
     }

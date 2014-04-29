@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.xjt.letool.LetoolApp;
 import com.xjt.letool.R;
 import com.xjt.letool.data.MediaDetails;
 import com.xjt.letool.data.MediaItem;
