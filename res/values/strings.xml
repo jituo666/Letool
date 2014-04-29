@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
-    <string name="app_name">了图</string>
     <!-- Title for picture frame gadget to show in list of all available gadgets -->
     <string name="gadget_title">Picture frame</string>
 
@@ -135,16 +134,6 @@
 
     <!-- Title of a menu item to switch from Gallery to Camera app [CHAR LIMIT=30] -->
     <string name="switch_to_camera">Switch to Camera</string>
-
-    <!--
-         String indicating how many media item(s) is(are) selected
-            eg. 1 selected [CHAR LIMIT=30]
-    -->
-    <plurals name="number_of_items_selected">
-        <item quantity="zero">%1$d selected</item>
-        <item quantity="one">%1$d selected</item>
-        <item quantity="other">%1$d selected</item>
-    </plurals>
 
     <!--
          String indicating how many media album(s) is(are) selected
@@ -1162,6 +1151,8 @@ CHAR LIMIT = NONE]
         <item quantity="other">%1$d photos</item>
     </plurals>
     <!-- =========================================================================================================================== -->
+
+    <string name="app_name">了图</string>
     <string name="common_photo">照片</string>
     <string name="common_gallery">图库</string>
     <string name="common_settings">设置</string>
@@ -1169,5 +1160,15 @@ CHAR LIMIT = NONE]
     <string name="sliding_menu_title_hide_list">隐藏列表</string>
     <string name="sliding_menu_title_about">关于</string>
     <string name="sliding_menu_title_home">主页</string>
+
+    <!--
+         String indicating how many media item(s) is(are) selected
+            eg. 1 selected [CHAR LIMIT=30]
+    -->
+    <plurals name="number_of_items_selected">
+        <item quantity="zero">%1$d 项</item>
+        <item quantity="one">%1$d 项</item>
+        <item quantity="other">%1$d 项</item>
+    </plurals>
 
 </resources>

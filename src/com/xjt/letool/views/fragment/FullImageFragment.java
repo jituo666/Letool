@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.xjt.letool.R;
 import com.xjt.letool.data.MediaDetails;
 import com.xjt.letool.data.MediaItem;
-import com.xjt.letool.data.MediaObject;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.MediaSet;
 import com.xjt.letool.selectors.SelectionManager;
@@ -107,14 +106,9 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     private boolean mIsMenuVisible;
     private MediaItem mCurrentPhoto = null;
     private boolean mIsActive;
-    private String mSetPathString;
     private OrientationManager mOrientationManager;
     private boolean mTreatBackAsUp;
     private boolean mStartInFilmstrip;
-    private boolean mHasCameraScreennailOrPlaceholder = false;
-
-    private boolean mSkipUpdateCurrentPhoto = false;
-    private static final long CAMERA_SWITCH_CUTOFF_THRESHOLD_MS = 300;
 
     private static final long DEFERRED_UPDATE_MS = 250;
     private boolean mDeferredUpdateWaiting = false;
@@ -123,8 +117,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     // The item that is deleted (but it can still be undeleted before commiting)
     private MediaPath mDeletePath;
     private boolean mDeleteIsFocus;  // whether the deleted item was in focus
-
-    private Uri[] mNfcPushUris = new Uri[1];
 
     private BaseActivity mActivity;
 
@@ -159,7 +151,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
 
     @Override
     public void onPictureCenter(boolean isCamera) {
-        isCamera = isCamera || (mHasCameraScreennailOrPlaceholder);
         mFullImageView.setWantPictureCenterCallbacks(false);
         mHandler.removeMessages(MSG_ON_CAMERA_CENTER);
         mHandler.removeMessages(MSG_ON_PICTURE_CENTER);
@@ -224,19 +215,15 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
 
     private boolean canShowBars() {
         // No bars if we are showing camera preview.
-        if (mCurrentIndex == 0
-                && !mFullImageView.getFilmMode())
+        if (mCurrentIndex == 0 && !mFullImageView.getFilmMode())
             return false;
-
         // No bars if it's not allowed.
         if (!mActionBarAllowed)
             return false;
-
         Configuration config = getResources().getConfiguration();
         if (config.touchscreen == Configuration.TOUCHSCREEN_NOTOUCH) {
             return false;
         }
-
         return true;
     }
 
@@ -317,8 +304,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
 
     @Override
     public void onFullScreenChanged(boolean full) {
-        Message m = mHandler.obtainMessage(
-                MSG_ON_FULL_SCREEN_CHANGED, full ? 1 : 0, 0);
+        Message m = mHandler.obtainMessage(MSG_ON_FULL_SCREEN_CHANGED, full ? 1 : 0, 0);
         m.sendToTarget();
     }
 
@@ -339,8 +325,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     public void onUndoDeleteImage() {
         if (mDeletePath == null)
             return;
-        // If the deletion was done on the focused item, we want the model to
-        // focus on it when it is undeleted.
+        // If the deletion was done on the focused item, we want the model to focus on it when it is undeleted.
         if (mDeleteIsFocus)
             mModel.setFocusHintPath(mDeletePath);
 
@@ -563,29 +548,32 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             public void onPhotoChanged(int index, MediaPath item) {
                 int oldIndex = mCurrentIndex;
                 mCurrentIndex = index;
-                if (mHasCameraScreennailOrPlaceholder) {
-                    if (mCurrentIndex > 0) {
-                        mSkipUpdateCurrentPhoto = false;
-                    }
-                    if (oldIndex == 0 && mCurrentIndex > 0
-                            && !mFullImageView.getFilmMode()) {
-                        mFullImageView.setFilmMode(true);
-                    } else if (oldIndex == 2 && mCurrentIndex == 1) {
-                        mFullImageView.stopScrolling();
-                    } else if (oldIndex >= 1 && mCurrentIndex == 0) {
-                        mFullImageView.setWantPictureCenterCallbacks(true);
-                        mSkipUpdateCurrentPhoto = true;
-                    }
-                }
-                if (!mSkipUpdateCurrentPhoto) {
-                    if (item != null) {
-                        MediaItem photo = mModel.getMediaItem(0);
-                        if (photo != null)
-                            updateCurrentPhoto(photo);
-                    }
-                    updateBars();
-                }
+//                if (mHasCameraScreennailOrPlaceholder) {
+//                    if (mCurrentIndex > 0) {
+//                        mSkipUpdateCurrentPhoto = false;
+//                    }
+//                    if (oldIndex == 0 && mCurrentIndex > 0 && !mFullImageView.getFilmMode()) {
+//                        mFullImageView.setFilmMode(true);
+//                    } else if (oldIndex == 2 && mCurrentIndex == 1) {
+//                        mFullImageView.stopScrolling();
+//                    } else if (oldIndex >= 1 && mCurrentIndex == 0) {
+//                        mFullImageView.setWantPictureCenterCallbacks(true);
+//                        mSkipUpdateCurrentPhoto = true;
+//                    }
+//                }
+//                if (!mSkipUpdateCurrentPhoto) {
+//                    if (item != null) {
+//                        MediaItem photo = mModel.getMediaItem(0);
+//                        if (photo != null)
+//                            updateCurrentPhoto(photo);
+//                    }
+//                    updateBars();
+//                }
                 refreshHidingMessage();
+            }
+
+            @Override
+            public void onLoadingStarted() {
             }
 
             @Override
@@ -595,14 +583,10 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
                     if (photo != null)
                         updateCurrentPhoto(photo);
                 } else if (mIsActive) {
-
                     getActivity().finish();
                 }
             }
 
-            @Override
-            public void onLoadingStarted() {
-            }
         });
         //} else {
         // Get default media set by the URI
@@ -640,16 +624,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         @Override
         public int setIndex() {
             return mModel.getCurrentIndex();
-        }
-    }
-
-    private static String getMediaTypeString(MediaItem item) {
-        if (item.getMediaType() == MediaObject.MEDIA_TYPE_VIDEO) {
-            return "Video";
-        } else if (item.getMediaType() == MediaObject.MEDIA_TYPE_IMAGE) {
-            return "Photo";
-        } else {
-            return "Unknown:" + item.getMediaType();
         }
     }
 
