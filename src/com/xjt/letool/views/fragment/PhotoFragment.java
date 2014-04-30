@@ -8,7 +8,6 @@ import com.xjt.letool.common.EyePosition;
 import com.xjt.letool.common.Future;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
-import com.xjt.letool.common.TransitionStore;
 import com.xjt.letool.data.DataManager;
 import com.xjt.letool.data.MediaDetails;
 import com.xjt.letool.data.MediaItem;
@@ -57,40 +56,38 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
 
     private static final String TAG = PhotoFragment.class.getSimpleName();
 
-    private GLRootView mGLRootView;
     public static final String KEY_RESUME_ANIMATION = "resume_animation";
     private static final int BIT_LOADING_RELOAD = 1;
     private static final int BIT_LOADING_SYNC = 2;
     private static final int MSG_PICK_PHOTO = 0;
 
-    //data
-    private MediaPath mDataPath;
-    private MediaSet mData;
+    //photo data
+    private MediaPath mDataSetPath;
+    private MediaSet mDataSet;
     private DetailsHelper mDetailsHelper;
     private MyDetailsSource mDetailsSource;
-    private ThumbnailDataLoader mAlbumDataLoader;
+    private boolean mShowDetails;
+    private ThumbnailDataLoader mAlbumDataSetLoader;
     private boolean mLoadingFailed;
     private int mLoadingBits = 0;
     private Future<Integer> mSyncTask = null; // synchronize data
     private boolean mInitialSynced = false;
-    private boolean mShowDetails;
-    private String mAlbumTitle;
-    private boolean mIsCamera = false;
 
     //views
+    private GLRootView mGLRootView;
     private ViewConfigs.AlbumPage mConfig;
     private ThumbnailView mThumbnailView;
     private ThumbnailRenderer mRender;
     private RelativePosition mOpenCenter = new RelativePosition();
     private boolean mIsActive = false;
-    private float mUserDistance; // in pixel
 
+    private String mAlbumTitle;
+    private boolean mIsCamera = false;
     private boolean mGetContent;
     private SynchronizedHandler mHandler;
     protected SelectionManager mSelector;
-    //private LetoolBaseActivity mActivity;
-    private EyePosition mEyePosition;
-    // The eyes' position of the user, the origin is at the center of the device and the unit is in pixels.
+    private EyePosition mEyePosition; // The eyes' position of the user, the origin is at the center of the device and the unit is in pixels.
+    private float mUserDistance; // in pixel
     private float mX;
     private float mY;
     private float mZ;
@@ -149,20 +146,20 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
 
         @Override
         public int size() {
-            return mAlbumDataLoader.size();
+            return mAlbumDataSetLoader.size();
         }
 
         @Override
         public int setIndex() {
             MediaPath id = mSelector.getSelected(false).get(0);
-            mIndex = mAlbumDataLoader.findItem(id);
+            mIndex = mAlbumDataSetLoader.findItem(id);
             return mIndex;
         }
 
         @Override
         public MediaDetails getDetails() {
             // this relies on setIndex() being called beforehand
-            MediaObject item = mAlbumDataLoader.get(mIndex);
+            MediaObject item = mAlbumDataSetLoader.get(mIndex);
             if (item != null) {
                 mRender.setHighlightItemPath(item.getPath());
                 return item.getDetails();
@@ -201,7 +198,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     private void clearLoadingBit(int loadTaskBit) {
         mLoadingBits &= ~loadTaskBit;
         if (mLoadingBits == 0 && mIsActive) {
-            if (mAlbumDataLoader.size() == 0) {
+            if (mAlbumDataSetLoader.size() == 0) {
                 Toast.makeText(getAndroidContext(), R.string.empty_album, Toast.LENGTH_LONG).show();
             }
         }
@@ -224,7 +221,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
             return;
 
         if (mSelector.inSelectionMode()) {
-            MediaItem item = mAlbumDataLoader.get(thumbnailIndex);
+            MediaItem item = mAlbumDataSetLoader.get(thumbnailIndex);
             if (item == null)
                 return; // Item not ready yet, ignore the click
             mSelector.toggle(item.getPath());
@@ -239,7 +236,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     public void onLongTap(int thumbnailIndex) {
         if (mGetContent)
             return;
-        MediaItem item = mAlbumDataLoader.get(thumbnailIndex);
+        MediaItem item = mAlbumDataSetLoader.get(thumbnailIndex);
         if (item == null)
             return;
         mSelector.setAutoLeaveSelectionMode(true);
@@ -270,7 +267,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         mRender = new ThumbnailRenderer(this, mThumbnailView, mSelector);
         layout.setRenderer(mRender);
         mThumbnailView.setThumbnailRenderer(mRender);
-        mRender.setModel(mAlbumDataLoader);
+        mRender.setModel(mAlbumDataSetLoader);
         mRootPane.addComponent(mThumbnailView);
         mThumbnailView.setListener(new ThumbnailView.SimpleListener() {
 
@@ -300,14 +297,14 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         Bundle data = getArguments();
         mIsCamera = data.getBoolean(BaseActivity.KEY_IS_CAMERA);
         mAlbumTitle = data.getString(BaseActivity.KEY_ALBUM_TITLE);
-        mDataPath = new MediaPath(data.getString(BaseActivity.KEY_MEDIA_PATH), data.getLong(BaseActivity.KEY_ALBUM_ID));
-        mData = getDataManager().getMediaSet(mDataPath);
-        if (mData == null) {
-            Utils.fail("MediaSet is null. Path = %s", mDataPath);
+        mDataSetPath = new MediaPath(data.getString(BaseActivity.KEY_MEDIA_PATH), data.getLong(BaseActivity.KEY_ALBUM_ID));
+        mDataSet = getDataManager().getMediaSet(mDataSetPath);
+        if (mDataSet == null) {
+            Utils.fail("MediaSet is null. Path = %s", mDataSetPath);
         }
-        mAlbumDataLoader = new ThumbnailDataLoader(this, mData);
-        mAlbumDataLoader.setLoadingListener(new MetaDataLoadingListener());
-        mRender.setModel(mAlbumDataLoader);
+        mAlbumDataSetLoader = new ThumbnailDataLoader(this, mDataSet);
+        mAlbumDataSetLoader.setLoadingListener(new MetaDataLoadingListener());
+        mRender.setModel(mAlbumDataSetLoader);
     }
 
     @Override
@@ -333,10 +330,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         };
         mEyePosition = new EyePosition(getAndroidContext(), this);
         initBrowseActionBar();
-
-//        RelativePosition f = new RelativePosition();
-//        f.setAbsolutePosition(360, 640);
-//        mThumbnailView.startScatteringAnimation(f);
+        mThumbnailView.startScatteringAnimation(mOpenCenter);
         return rootView;
     }
 
@@ -393,13 +387,13 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
             // Set the reload bit here to prevent it exit this page in clearLoadingBit().
             setLoadingBit(BIT_LOADING_RELOAD);
             mLoadingFailed = false;
-            mAlbumDataLoader.resume();
+            mAlbumDataSetLoader.resume();
             mRender.resume();
             mRender.setPressedIndex(-1);
             mEyePosition.resume();
             if (!mInitialSynced) {
                 setLoadingBit(BIT_LOADING_SYNC);
-                //mSyncTask = mData.requestSync(this);
+                //mSyncTask = mDataSet.requestSync(this);
             }
         } finally {
             mGLRootView.unlockRenderThread();
@@ -415,7 +409,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         try {
             mIsActive = false;
             mRender.setThumbnailFilter(null);
-            mAlbumDataLoader.pause();
+            mAlbumDataSetLoader.pause();
             mRender.pause();
             DetailsHelper.pause();
             mEyePosition.resume();
@@ -510,10 +504,10 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     private void pickPhoto(int index) {
         Intent it = new Intent();
         it.setClass(getAndroidContext(), FullImageActivity.class);
-        it.putExtra(BaseActivity.KEY_ALBUM_ID, mData.getPath().getIdentity());
+        it.putExtra(BaseActivity.KEY_ALBUM_ID, mDataSet.getPath().getIdentity());
         it.putExtra(BaseActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
         it.putExtra(BaseActivity.KEY_IS_CAMERA, false);
-        it.putExtra(BaseActivity.KEY_ALBUM_TITLE, mData.getName());
+        it.putExtra(BaseActivity.KEY_ALBUM_TITLE, mDataSet.getName());
         it.putExtra(FullImageFragment.KEY_INDEX_HINT, index);
         startActivity(it);
     }

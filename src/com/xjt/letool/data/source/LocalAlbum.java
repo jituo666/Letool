@@ -47,8 +47,7 @@ public class LocalAlbum extends MediaSet {
     private final String mItemPath;
     private int mCachedCount = INVALID_COUNT;
 
-    public LocalAlbum(MediaPath path, LetoolApp application, long bucketId,
-            boolean isImage, String name) {
+    public LocalAlbum(MediaPath path, LetoolApp application, long bucketId, boolean isImage, String name) {
         super(path, nextVersionNumber());
         mApplication = application;
         mResolver = application.getContentResolver();
@@ -97,7 +96,7 @@ public class LocalAlbum extends MediaSet {
 
     @Override
     public ArrayList<MediaItem> getMediaItem(int start, int count) {
-        LLog.w(TAG, "query getMediaItem: " + System.currentTimeMillis());
+        long time = System.currentTimeMillis();
         DataManager dataManager = mApplication.getDataManager();
         Uri uri = mBaseUri.buildUpon().appendQueryParameter("limit", start + "," + count).build();
         ArrayList<MediaItem> list = new ArrayList<MediaItem>();
@@ -115,19 +114,17 @@ public class LocalAlbum extends MediaSet {
             while (cursor.moveToNext()) {
                 int id = cursor.getInt(0);  // _id must be in the first column
                 MediaPath childPath = new MediaPath(mItemPath,id);
-                MediaItem item = loadOrUpdateItem(childPath, cursor,
-                        dataManager, mApplication, mIsImage);
+                MediaItem item = loadOrUpdateItem(childPath, cursor, dataManager, mApplication, mIsImage);
                 list.add(item);
             }
         } finally {
             cursor.close();
         }
-        LLog.w(TAG, "query getMediaItem: " + System.currentTimeMillis());
+        LLog.w(TAG, "query getMediaItem count:"+ count + " spend "+ (System.currentTimeMillis() - time));
         return list;
     }
 
-    private static MediaItem loadOrUpdateItem(MediaPath path, Cursor cursor,
-            DataManager dataManager, LetoolApp app, boolean isImage) {
+    private static MediaItem loadOrUpdateItem(MediaPath path, Cursor cursor, DataManager dataManager, LetoolApp app, boolean isImage) {
         LocalMediaItem item = (LocalMediaItem) path.getObject();
         if (item == null) {
             if (isImage) {
@@ -149,7 +146,6 @@ public class LocalAlbum extends MediaSet {
         int idLow = ids.get(0);
         int idHigh = ids.get(ids.size() - 1);
 
-        // prepare the query parameters
         Uri baseUri;
         String[] projection;
         String itemPath;
@@ -166,8 +162,7 @@ public class LocalAlbum extends MediaSet {
         ContentResolver resolver = application.getContentResolver();
         DataManager dataManager = application.getDataManager();
         Cursor cursor = resolver.query(baseUri, projection, "_id BETWEEN ? AND ?",
-                new String[]{String.valueOf(idLow), String.valueOf(idHigh)},
-                "_id");
+                new String[]{String.valueOf(idLow), String.valueOf(idHigh)}, "_id");
         if (cursor == null) {
             LLog.w(TAG, "query fail" + baseUri);
             return result;
@@ -202,8 +197,7 @@ public class LocalAlbum extends MediaSet {
         }
     }
 
-    public static Cursor getItemCursor(ContentResolver resolver, Uri uri,
-            String[] projection, long id) {
+    public static Cursor getItemCursor(ContentResolver resolver, Uri uri, String[] projection, long id) {
         return resolver.query(uri, projection, "_id=?",
                 new String[]{String.valueOf(id)}, null);
     }
