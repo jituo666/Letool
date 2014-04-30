@@ -3,6 +3,7 @@ package com.xjt.letool.views.render;
 import android.graphics.Color;
 
 import com.xjt.letool.adapters.ThumbnailDataWindow;
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.data.MediaPath;
 import com.xjt.letool.data.loader.ThumbnailDataLoader;
 import com.xjt.letool.selectors.SelectionManager;
@@ -119,6 +120,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
             content = mWaitLoadingTexture;
             entry.isWaitDisplayed = true;
         } else if (entry.isWaitDisplayed) {
+            LLog.i(TAG, " ------------ renderThumbnail:" + index + "   :" + System.currentTimeMillis());
             entry.isWaitDisplayed = false;
             content = new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
             entry.content = content;

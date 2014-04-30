@@ -343,7 +343,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
                     requestNonactiveImages();
                 if (mDataListener != null) {
                     mDataListener.onContentChanged();
-                    LLog.i(TAG, " image prepared:" + mSlotIndex + "   :" + System.currentTimeMillis());
+                    LLog.i(TAG, " ------ prepared:" + mSlotIndex + "   :" + System.currentTimeMillis());
                 }
             } else {
                 mTileUploader.addTexture(entry.bitmapTexture);
