@@ -10,10 +10,8 @@ import com.xjt.letool.data.cache2.ThumbCacheLoader;
 import com.xjt.letool.data.utils.BytesBufferPool;
 import com.xjt.letool.views.opengl.ScreenNail;
 
-// MediaItem represents an image or a video item.
 public abstract class MediaItem extends MediaObject {
 
-    // NOTE: These type numbers are stored in the image cache, so it should not not be changed without resetting the cache.
     private static final String TAG = MediaItem.class.getSimpleName();
 
     public static final int TYPE_THUMBNAIL = 1;
@@ -62,7 +60,6 @@ public abstract class MediaItem extends MediaObject {
         return null;
     }
 
-    // The rotation of the full-resolution image. By default, it returns the value of getRotation().
     public int getFullImageRotation() {
         return getRotation();
     }
@@ -81,13 +78,10 @@ public abstract class MediaItem extends MediaObject {
         return "";
     }
 
-    // Returns width and height of the media item.
-    // Returns 0, 0 if the information is not available.
     public abstract int getWidth();
 
     public abstract int getHeight();
 
-    // This is an alternative for requestImage() in PhotoPage. If this is implemented, you don't need to implement requestImage().
     public ScreenNail getScreenNail() {
         return null;
     }
@@ -112,7 +106,6 @@ public abstract class MediaItem extends MediaObject {
         if (sMicrothumbnailTargetSize != microSize) {
             sMicrothumbnailTargetSize = microSize;
         }
-
         LLog.i(TAG, " MediaItem.sThumbnailTargetSize:" + sThumbnailTargetSize +  " MediaItem.sMicrothumbnailTargetSize:" + sMicrothumbnailTargetSize);
     }
 }

@@ -18,7 +18,7 @@ import java.lang.reflect.Method;
 
 public class BitmapUtils {
     private static final String TAG = "BitmapUtils";
-    private static final int DEFAULT_JPEG_QUALITY = 60;
+    private static final int DEFAULT_JPEG_QUALITY = 90;
     public static final int UNCONSTRAINED = -1;
 
     private BitmapUtils(){}
