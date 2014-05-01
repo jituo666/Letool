@@ -1,3 +1,4 @@
+
 package com.xjt.letool.views.opengl;
 
 import android.graphics.Bitmap;
@@ -15,12 +16,11 @@ public interface GLESCanvas {
 
     // Tells GLCanvas the size of the underlying GL surface. This should be
     // called before first drawing and when the size of GL surface is changed.
-    // This is called by GLRoot and should not be called by the clients
-    // who only want to draw on the GLCanvas. Both width and height must be
-    // nonnegative.
+    // This is called by GLController and should not be called by the clients
+    // who only want to draw on the GLCanvas. Both width and height must be nonnegative.
     public abstract void setSize(int width, int height);
 
-    // Clear the drawing buffers. This should only be used by GLRoot.
+    // Clear the drawing buffers. This should only be used by GLController.
     public abstract void clearBuffer();
 
     public abstract void clearBuffer(float[] argb);
@@ -44,60 +44,49 @@ public interface GLESCanvas {
 
     public abstract void multiplyMatrix(float[] matrix, int offset);
 
-    // Pushes the configuration state (matrix, and alpha) onto
-    // a private stack.
+    // Pushes the configuration state (matrix, and alpha) onto a private stack.
     public abstract void save();
 
     // Same as save(), but only save those specified in saveFlags.
     public abstract void save(int saveFlags);
-
     public static final int SAVE_FLAG_ALL = 0xFFFFFFFF;
     public static final int SAVE_FLAG_ALPHA = 0x01;
     public static final int SAVE_FLAG_MATRIX = 0x02;
 
     // Pops from the top of the stack as current configuration state (matrix,
     // alpha, and clip). This call balances a previous call to save(), and is
-    // used to remove all modifications to the configuration state since the
-    // last save call.
+    // used to remove all modifications to the configuration state since the last save call.
     public abstract void restore();
 
-    // Draws a line using the specified paint from (x1, y1) to (x2, y2).
-    // (Both end points are included).
+    // Draws a line using the specified paint from (x1, y1) to (x2, y2). (Both end points are included).
     public abstract void drawLine(float x1, float y1, float x2, float y2, GLPaint paint);
 
-    // Draws a rectangle using the specified paint from (x1, y1) to (x2, y2).
-    // (Both end points are included).
+    // Draws a rectangle using the specified paint from (x1, y1) to (x2, y2). (Both end points are included).
     public abstract void drawRect(float x1, float y1, float x2, float y2, GLPaint paint);
 
     // Fills the specified rectangle with the specified color.
     public abstract void fillRect(float x, float y, float width, float height, int color);
 
     // Draws a texture to the specified rectangle.
-    public abstract void drawTexture(
-            BasicTexture texture, int x, int y, int width, int height);
+    public abstract void drawTexture(BasicTexture texture, int x, int y, int width, int height);
 
-    public abstract void drawMesh(BasicTexture tex, int x, int y, int xyBuffer,
-            int uvBuffer, int indexBuffer, int indexCount);
+    public abstract void drawMesh(BasicTexture tex, int x, int y, int xyBuffer, int uvBuffer, int indexBuffer, int indexCount);
 
     // Draws the source rectangle part of the texture to the target rectangle.
     public abstract void drawTexture(BasicTexture texture, RectF source, RectF target);
 
     // Draw a texture with a specified texture transform.
-    public abstract void drawTexture(BasicTexture texture, float[] mTextureTransform,
-                int x, int y, int w, int h);
+    public abstract void drawTexture(BasicTexture texture, float[] mTextureTransform, int x, int y, int w, int h);
 
-    // Draw two textures to the specified rectangle. The actual texture used is
-    // from * (1 - ratio) + to * ratio
+    // Draw two textures to the specified rectangle. The actual texture used is from * (1 - ratio) + to * ratio
     // The two textures must have the same size.
-    public abstract void drawMixed(BasicTexture from, int toColor,
-            float ratio, int x, int y, int w, int h);
+    public abstract void drawMixed(BasicTexture from, int toColor, float ratio, int x, int y, int w, int h);
 
     // Draw a region of a texture and a specified color to the specified
     // rectangle. The actual color used is from * (1 - ratio) + to * ratio.
     // The region of the texture is defined by parameter "src". The target
     // rectangle is specified by parameter "target".
-    public abstract void drawMixed(BasicTexture from, int toColor,
-            float ratio, RectF src, RectF target);
+    public abstract void drawMixed(BasicTexture from, int toColor, float ratio, RectF src, RectF target);
 
     // Unloads the specified texture from the canvas. The resource allocated
     // to draw the texture will be released. The specified texture will return
@@ -108,8 +97,7 @@ public interface GLESCanvas {
     // Delete the specified buffer object, similar to unloadTexture.
     public abstract void deleteBuffer(int bufferId);
 
-    // Delete the textures and buffers in GL side. This function should only be
-    // called in the GL thread.
+    // Delete the textures and buffers in GL side. This function should only be called in the GL thread.
     public abstract void deleteRecycledResources();
 
     // Dump statistics information and clear the counters. For debug only.
@@ -157,9 +145,7 @@ public interface GLESCanvas {
      * @param format The texture format (e.g. GL_RGBA)
      * @param type The texture type (e.g. GL_UNSIGNED_BYTE)
      */
-    public abstract void texSubImage2D(BasicTexture texture, int xOffset, int yOffset,
-            Bitmap bitmap,
-            int format, int type);
+    public abstract void texSubImage2D(BasicTexture texture, int xOffset, int yOffset, Bitmap bitmap, int format, int type);
 
     /**
      * Generates buffers and uploads the buffer data.

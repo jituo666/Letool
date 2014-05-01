@@ -11,7 +11,7 @@ import com.xjt.letool.utils.Utils;
 public abstract class BasicTexture implements Texture {
 
     @SuppressWarnings("unused")
-    private static final String TAG = "BasicTexture";
+    private static final String TAG = BasicTexture.class.getSimpleName();
     protected static final int UNSPECIFIED = -1;
 
     protected static final int STATE_UNLOADED = 0;
@@ -33,8 +33,7 @@ public abstract class BasicTexture implements Texture {
     private boolean mHasBorder;
 
     protected GLESCanvas mCanvasRef = null;
-    private static WeakHashMap<BasicTexture, Object> sAllTextures
-            = new WeakHashMap<BasicTexture, Object>();
+    private static WeakHashMap<BasicTexture, Object> sAllTextures = new WeakHashMap<BasicTexture, Object>();
     private static ThreadLocal sInFinalizer = new ThreadLocal();
 
     protected BasicTexture(GLESCanvas canvas, int id, int state) {
@@ -64,8 +63,7 @@ public abstract class BasicTexture implements Texture {
         mTextureWidth = width > 0 ? Utils.nextPowerOf2(width) : 0;
         mTextureHeight = height > 0 ? Utils.nextPowerOf2(height) : 0;
         if (mTextureWidth > MAX_TEXTURE_SIZE || mTextureHeight > MAX_TEXTURE_SIZE) {
-            LLog.w(TAG, String.format("texture is too large: %d x %d",
-                    mTextureWidth, mTextureHeight), new Exception());
+            LLog.w(TAG, String.format("texture is too large: %d x %d", mTextureWidth, mTextureHeight), new Exception());
         }
     }
 
@@ -99,15 +97,12 @@ public abstract class BasicTexture implements Texture {
 
     // Returns true if the texture has one pixel transparent border around the
     // actual content. This is used to avoid jigged edges.
-    //
     // The jigged edges appear because we use GL_CLAMP_TO_EDGE for texture wrap
     // mode (GL_CLAMP is not available in OpenGL ES), so a pixel partially
     // covered by the texture will use the color of the edge texel. If we add
     // the transparent border, the color of the edge texel will be mixed with
     // appropriate amount of transparent.
-    //
-    // Currently our background is black, so we can draw the thumbnails without
-    // enabling blending.
+    // Currently our background is black, so we can draw the thumbnails without enabling blending.
     public boolean hasBorder() {
         return mHasBorder;
     }

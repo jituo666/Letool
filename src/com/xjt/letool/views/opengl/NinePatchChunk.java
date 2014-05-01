@@ -5,8 +5,7 @@ import android.graphics.Rect;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
-// See "frameworks/base/include/utils/ResourceTypes.h" for the format of
-// NinePatch chunk.
+// See "frameworks/base/include/utils/ResourceTypes.h" for the format of NinePatch chunk.
 class NinePatchChunk {
 
     public static final int NO_COLOR = 0x00000001;

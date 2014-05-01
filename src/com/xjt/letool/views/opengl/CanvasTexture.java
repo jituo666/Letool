@@ -1,12 +1,12 @@
 package com.xjt.letool.views.opengl;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 
 // CanvasTexture is a texture whose content is the drawing on a Canvas.
-// The subclasses should override onDraw() to draw on the bitmap.
-// By default CanvasTexture is not opaque.
+// The subclasses should override onDraw() to draw on the bitmap. By default CanvasTexture is not opaque.
 abstract class CanvasTexture extends UploadedTexture {
     protected Canvas mCanvas;
     private final Config mConfig;
@@ -17,6 +17,7 @@ abstract class CanvasTexture extends UploadedTexture {
         setOpaque(false);
     }
 
+    @SuppressLint("WrongCall")
     @Override
     protected Bitmap onGetBitmap() {
         Bitmap bitmap = Bitmap.createBitmap(mWidth, mHeight, mConfig);

@@ -11,17 +11,13 @@ import java.util.HashMap;
 import javax.microedition.khronos.opengles.GL11;
 
 // UploadedTextures use a Bitmap for the content of the texture.
-//
 // Subclasses should implement onGetBitmap() to provide the Bitmap and
 // implement onFreeBitmap(mBitmap) which will be called when the Bitmap
 // is not needed anymore.
-//
 // isContentValid() is meaningful only when the isLoaded() returns true.
 // It means whether the content needs to be updated.
-//
 // The user of this class should call recycle() when the texture is not
 // needed anymore.
-//
 // By default an UploadedTexture is opaque (so it can be drawn faster without
 // blending). The user or subclass can override it using setOpaque().
 public abstract class UploadedTexture extends BasicTexture {

@@ -1,3 +1,4 @@
+
 package com.xjt.letool.views.opengl;
 
 import android.graphics.Bitmap;
@@ -18,6 +19,7 @@ import com.xjt.letool.common.LLog;
 import com.xjt.letool.utils.IntArray;
 
 public class GLES20Canvas implements GLESCanvas {
+
     // ************** Constants **********************
     private static final String TAG = GLES20Canvas.class.getSimpleName();
     private static final int FLOAT_SIZE = Float.SIZE / Byte.SIZE;
@@ -47,8 +49,8 @@ public class GLES20Canvas implements GLESCanvas {
     };
 
     private static final float[] BOUNDS_COORDINATES = {
-        0, 0, 0, 1,
-        1, 1, 0, 1,
+            0, 0, 0, 1,
+            1, 1, 0, 1,
     };
 
     private static final String POSITION_ATTRIBUTE = "aPosition";
@@ -164,6 +166,7 @@ public class GLES20Canvas implements GLESCanvas {
     private static final int INDEX_TEXTURE_COORD = 2;
 
     private abstract static class ShaderParameter {
+
         public int handle;
         protected final String mName;
 
@@ -175,6 +178,7 @@ public class GLES20Canvas implements GLESCanvas {
     }
 
     private static class UniformShaderParameter extends ShaderParameter {
+
         public UniformShaderParameter(String name) {
             super(name);
         }
@@ -187,6 +191,7 @@ public class GLES20Canvas implements GLESCanvas {
     }
 
     private static class AttributeShaderParameter extends ShaderParameter {
+
         public AttributeShaderParameter(String name) {
             super(name);
         }
@@ -265,14 +270,11 @@ public class GLES20Canvas implements GLESCanvas {
         int meshVertexShader = loadShader(GLES20.GL_VERTEX_SHADER, MESH_VERTEX_SHADER);
         int drawFragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, DRAW_FRAGMENT_SHADER);
         int textureFragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, TEXTURE_FRAGMENT_SHADER);
-        int oesTextureFragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER,
-                OES_TEXTURE_FRAGMENT_SHADER);
+        int oesTextureFragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, OES_TEXTURE_FRAGMENT_SHADER);
 
         mDrawProgram = assembleProgram(drawVertexShader, drawFragmentShader, mDrawParameters);
-        mTextureProgram = assembleProgram(textureVertexShader, textureFragmentShader,
-                mTextureParameters);
-        mOesTextureProgram = assembleProgram(textureVertexShader, oesTextureFragmentShader,
-                mOesTextureParameters);
+        mTextureProgram = assembleProgram(textureVertexShader, textureFragmentShader, mTextureParameters);
+        mOesTextureProgram = assembleProgram(textureVertexShader, oesTextureFragmentShader, mOesTextureParameters);
         mMeshProgram = assembleProgram(meshVertexShader, textureFragmentShader, mMeshParameters);
         GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA);
         checkError();
@@ -472,8 +474,7 @@ public class GLES20Canvas implements GLESCanvas {
         mCountDrawLine++;
     }
 
-    private void draw(int type, int offset, int count, float x, float y, float width, float height,
-            GLPaint paint) {
+    private void draw(int type, int offset, int count, float x, float y, float width, float height, GLPaint paint) {
         draw(type, offset, count, x, y, width, height, paint.getColor(), paint.getLineWidth());
     }
 
@@ -534,8 +535,7 @@ public class GLES20Canvas implements GLESCanvas {
         checkError();
     }
 
-    private void draw(ShaderParameter[] params, int type, int count, float x, float y, float width,
-            float height) {
+    private void draw(ShaderParameter[] params, int type, int count, float x, float y, float width, float height) {
         setMatrix(params, x, y, width, height);
         int positionHandle = params[INDEX_POSITION].handle;
         GLES20.glEnableVertexAttribArray(positionHandle);
@@ -811,19 +811,19 @@ public class GLES20Canvas implements GLESCanvas {
     }
 
     @Override
-    public void endRenderTarget() {
-        RawTexture oldTexture = mTargetTextures.remove(mTargetTextures.size() - 1);
-        RawTexture texture = getTargetTexture();
-        setRenderTarget(oldTexture, texture);
-        restore(); // restore matrix and alpha
-    }
-
-    @Override
     public void beginRenderTarget(RawTexture texture) {
         save(); // save matrix and alpha and blending
         RawTexture oldTexture = getTargetTexture();
         mTargetTextures.add(texture);
         setRenderTarget(oldTexture, texture);
+    }
+
+    @Override
+    public void endRenderTarget() {
+        RawTexture oldTexture = mTargetTextures.remove(mTargetTextures.size() - 1);
+        RawTexture texture = getTargetTexture();
+        setRenderTarget(oldTexture, texture);
+        restore(); // restore matrix and alpha
     }
 
     private RawTexture getTargetTexture() {
@@ -912,8 +912,7 @@ public class GLES20Canvas implements GLESCanvas {
     }
 
     @Override
-    public void texSubImage2D(BasicTexture texture, int xOffset, int yOffset, Bitmap bitmap,
-            int format, int type) {
+    public void texSubImage2D(BasicTexture texture, int xOffset, int yOffset, Bitmap bitmap, int format, int type) {
         int target = texture.getTarget();
         GLES20.glBindTexture(target, texture.getId());
         checkError();
@@ -936,8 +935,7 @@ public class GLES20Canvas implements GLESCanvas {
         int bufferId = mTempIntArray[0];
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, bufferId);
         checkError();
-        GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER, buffer.capacity() * elementSize, buffer,
-                GLES20.GL_STATIC_DRAW);
+        GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER, buffer.capacity() * elementSize, buffer, GLES20.GL_STATIC_DRAW);
         checkError();
         return bufferId;
     }
