@@ -13,8 +13,8 @@ import android.text.TextUtils;
 import com.xjt.letool.R;
 import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.common.ThreadPool.JobContext;
-import com.xjt.letool.data.DataSourceType;
-import com.xjt.letool.data.utils.LetoolBitmapPool;
+import com.xjt.letool.imagedata.utils.LetoolBitmapPool;
+import com.xjt.letool.metadata.DataSourceType;
 import com.xjt.letool.views.render.ThumbnailSetRenderer;
 
 public class AlbumLabelMaker {

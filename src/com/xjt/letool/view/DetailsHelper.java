@@ -8,7 +8,7 @@ import android.view.View.MeasureSpec;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
 import com.xjt.letool.activities.BaseActivity;
-import com.xjt.letool.data.MediaDetails;
+import com.xjt.letool.metadata.MediaDetails;
 import com.xjt.letool.view.DetailsAddressResolver.AddressResolvingListener;
 
 public class DetailsHelper {

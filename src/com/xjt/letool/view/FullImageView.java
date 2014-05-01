@@ -15,14 +15,14 @@ import com.xjt.letool.R;
 import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
-import com.xjt.letool.data.MediaItem;
-import com.xjt.letool.data.MediaObject;
-import com.xjt.letool.data.MediaPath;
+import com.xjt.letool.fragment.LetoolFragment;
+import com.xjt.letool.metadata.MediaItem;
+import com.xjt.letool.metadata.MediaObject;
+import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.RangeArray;
 import com.xjt.letool.utils.UsageStatistics;
 import com.xjt.letool.utils.Utils;
-import com.xjt.letool.views.fragment.LetoolFragment;
 import com.xjt.letool.views.layout.FullImageLayout;
 import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.opengl.ResourceTexture;
@@ -219,19 +219,16 @@ public class FullImageView extends GLBaseView {
     private int mNextBound;
 
     // This variable prevents us doing snapback until its values goes to 0. This
-    // happens if the user gesture is still in progress or we are in a capture
-    // animation.
+    // happens if the user gesture is still in progress or we are in a capture animation.
     private int mHolding;
     private static final int HOLD_TOUCH_DOWN = 1;
     private static final int HOLD_CAPTURE_ANIMATION = 2;
     private static final int HOLD_DELETE = 4;
 
     // mTouchBoxIndex is the index of the box that is touched by the down
-    // gesture in film mode. The value Integer.MAX_VALUE means no box was
-    // touched.
+    // gesture in film mode. The value Integer.MAX_VALUE means no box was touched.
     private int mTouchBoxIndex = Integer.MAX_VALUE;
-    // Whether the box indicated by mTouchBoxIndex is deletable. Only meaningful
-    // if mTouchBoxIndex is not Integer.MAX_VALUE.
+    // Whether the box indicated by mTouchBoxIndex is deletable. Only meaningful if mTouchBoxIndex is not Integer.MAX_VALUE.
     private boolean mTouchBoxDeletable;
     // This is the index of the last deleted item. This is only used as a hint
     // to hide the undo button when we are too far away from the deleted
@@ -419,8 +416,7 @@ public class FullImageView extends GLBaseView {
         boolean wasDeleting = mPositionController.hasDeletingBox();
 
         // Move the boxes
-        mPositionController.moveBox(fromIndex, mPrevBound < 0, mNextBound > 0,
-                mModel.isCamera(0), mSizes);
+        mPositionController.moveBox(fromIndex, mPrevBound < 0, mNextBound > 0, mModel.isCamera(0), mSizes);
 
         for (int i = -SCREEN_NAIL_MAX; i <= SCREEN_NAIL_MAX; i++) {
             setPictureSize(i);
@@ -428,21 +424,18 @@ public class FullImageView extends GLBaseView {
 
         boolean isDeleting = mPositionController.hasDeletingBox();
 
-        // If the deletion is done, make HOLD_DELETE persist for only the time
-        // needed for a snapback animation.
+        // If the deletion is done, make HOLD_DELETE persist for only the time,needed for a snapback animation.
         if (wasDeleting && !isDeleting) {
             mHandler.removeMessages(MSG_DELETE_DONE);
             Message m = mHandler.obtainMessage(MSG_DELETE_DONE);
-            mHandler.sendMessageDelayed(
-                    m, FullImageLayout.SNAPBACK_ANIMATION_TIME);
+            mHandler.sendMessageDelayed(m, FullImageLayout.SNAPBACK_ANIMATION_TIME);
         }
 
         invalidate();
     }
 
     public boolean isDeleting() {
-        return (mHolding & HOLD_DELETE) != 0
-                && mPositionController.hasDeletingBox();
+        return (mHolding & HOLD_DELETE) != 0 && mPositionController.hasDeletingBox();
     }
 
     public void notifyImageChange(int index) {
@@ -461,8 +454,7 @@ public class FullImageView extends GLBaseView {
     }
 
     @Override
-    protected void onLayout(
-            boolean changeSize, int left, int top, int right, int bottom) {
+    protected void onLayout(boolean changeSize, int left, int top, int right, int bottom) {
         int w = right - left;
         int h = bottom - top;
         mTileView.layout(0, 0, w, h);
@@ -471,8 +463,7 @@ public class FullImageView extends GLBaseView {
         GLController root = getGLController();
         int displayRotation = root.getDisplayRotation();
         int compensation = root.getCompensation();
-        if (mDisplayRotation != displayRotation
-                || mCompensation != compensation) {
+        if (mDisplayRotation != displayRotation || mCompensation != compensation) {
             mDisplayRotation = displayRotation;
             mCompensation = compensation;
 

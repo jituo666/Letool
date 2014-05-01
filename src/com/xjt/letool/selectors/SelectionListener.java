@@ -1,7 +1,7 @@
 
 package com.xjt.letool.selectors;
 
-import com.xjt.letool.data.MediaPath;
+import com.xjt.letool.metadata.MediaPath;
 
 public interface SelectionListener {
     public void onSelectionModeChange(int mode);

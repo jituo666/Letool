@@ -1,8 +1,9 @@
+
 package com.xjt.letool;
 
 import com.xjt.letool.common.ThreadPool;
-import com.xjt.letool.data.DataManager;
-import com.xjt.letool.data.cache1.BlobCacheService;
+import com.xjt.letool.imagedata.blobcache.BlobCacheService;
+import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.utils.LetoolUtils;
 
 import android.app.Application;
@@ -42,8 +43,8 @@ public class LetoolAppImpl extends Application implements LetoolApp {
 
     @Override
     public BlobCacheService getImageCacheService() {
-        // This method may block on file I/O so a dedicated lock is needed here.
-        synchronized (mLock) {
+
+        synchronized (mLock) { // This method may block on file I/O so a dedicated lock is needed here.
             if (mImageCacheService == null) {
                 mImageCacheService = new BlobCacheService(getAndroidContext());
             }

@@ -2,10 +2,10 @@ package com.xjt.letool.selectors;
 
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.activities.BaseActivity;
-import com.xjt.letool.data.DataManager;
-import com.xjt.letool.data.MediaItem;
-import com.xjt.letool.data.MediaPath;
-import com.xjt.letool.data.MediaSet;
+import com.xjt.letool.metadata.DataManager;
+import com.xjt.letool.metadata.MediaItem;
+import com.xjt.letool.metadata.MediaPath;
+import com.xjt.letool.metadata.MediaSet;
 
 import java.util.ArrayList;
 import java.util.HashSet;

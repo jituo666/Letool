@@ -3,12 +3,12 @@ package com.xjt.letool.activities;
 
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
-import com.xjt.letool.data.DataManager;
-import com.xjt.letool.data.MediaSetUtils;
+import com.xjt.letool.fragment.LetoolFragment;
+import com.xjt.letool.fragment.PhotoFragment;
+import com.xjt.letool.metadata.DataManager;
+import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.Utils;
-import com.xjt.letool.views.fragment.LetoolFragment;
-import com.xjt.letool.views.fragment.PhotoFragment;
 
 import android.os.Bundle;
 import android.content.Intent;

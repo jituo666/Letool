@@ -6,8 +6,8 @@ import android.content.res.Resources;
 import android.os.Looper;
 
 import com.xjt.letool.common.ThreadPool;
-import com.xjt.letool.data.DataManager;
-import com.xjt.letool.data.cache1.BlobCacheService;
+import com.xjt.letool.imagedata.blobcache.BlobCacheService;
+import com.xjt.letool.metadata.DataManager;
 
 public interface LetoolApp {
     public DataManager getDataManager();

@@ -31,8 +31,8 @@ import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.PackagesMonitor;
 import com.xjt.letool.common.ThreadPool.CancelListener;
 import com.xjt.letool.common.ThreadPool.JobContext;
-import com.xjt.letool.data.DataManager;
-import com.xjt.letool.data.MediaItem;
+import com.xjt.letool.metadata.DataManager;
+import com.xjt.letool.metadata.MediaItem;
 
 public class LetoolUtils {
     private static final String TAG = "GalleryUtils";

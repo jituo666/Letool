@@ -8,12 +8,12 @@ import com.xjt.letool.common.FutureListener;
 import com.xjt.letool.common.JobLimiter;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
-import com.xjt.letool.data.MediaItem;
-import com.xjt.letool.data.MediaPath;
-import com.xjt.letool.data.loader.ThumbnailDataLoader;
-import com.xjt.letool.data.utils.BitmapLoader;
+import com.xjt.letool.fragment.LetoolFragment;
+import com.xjt.letool.imagedata.utils.BitmapLoader;
+import com.xjt.letool.metadata.MediaItem;
+import com.xjt.letool.metadata.MediaPath;
+import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.utils.Utils;
-import com.xjt.letool.views.fragment.LetoolFragment;
 import com.xjt.letool.views.opengl.Texture;
 import com.xjt.letool.views.opengl.TiledTexture;
 import com.xjt.letool.views.opengl.TiledTextureUploader;
@@ -138,8 +138,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
         mActiveStart = start;
         mActiveEnd = end;
 
-        int contentStart = Utils.clamp((start + end) / 2 - data.length / 2,
-                0, Math.max(0, mSize - data.length));
+        int contentStart = Utils.clamp((start + end) / 2 - data.length / 2,0, Math.max(0, mSize - data.length));
         int contentEnd = Math.min(contentStart + data.length, mSize);
         setContentWindow(contentStart, contentEnd);
         updateTextureUploadQueue();

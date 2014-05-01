@@ -4,11 +4,11 @@ import android.graphics.Color;
 
 import com.xjt.letool.adapters.ThumbnailDataWindow;
 import com.xjt.letool.common.LLog;
-import com.xjt.letool.data.MediaPath;
-import com.xjt.letool.data.loader.ThumbnailDataLoader;
+import com.xjt.letool.fragment.LetoolFragment;
+import com.xjt.letool.metadata.MediaPath;
+import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.view.ThumbnailView;
-import com.xjt.letool.views.fragment.LetoolFragment;
 import com.xjt.letool.views.opengl.ColorTexture;
 import com.xjt.letool.views.opengl.FadeInTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;

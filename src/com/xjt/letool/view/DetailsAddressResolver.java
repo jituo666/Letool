@@ -11,7 +11,7 @@ import com.xjt.letool.common.Future;
 import com.xjt.letool.common.FutureListener;
 import com.xjt.letool.common.ThreadPool.Job;
 import com.xjt.letool.common.ThreadPool.JobContext;
-import com.xjt.letool.data.MediaDetails;
+import com.xjt.letool.metadata.MediaDetails;
 import com.xjt.letool.utils.LetoolUtils;
 
 public class DetailsAddressResolver {

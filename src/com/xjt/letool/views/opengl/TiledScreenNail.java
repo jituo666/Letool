@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.RectF;
 
 import com.xjt.letool.animations.AnimationTime;
-import com.xjt.letool.data.utils.LetoolBitmapPool;
+import com.xjt.letool.imagedata.utils.LetoolBitmapPool;
 import com.xjt.letool.utils.Utils;
 
 // This is a ScreenNail wraps a Bitmap. There are some extra functions:

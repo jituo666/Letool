@@ -42,7 +42,7 @@
         </activity>
 
         <provider
-            android:name="com.xjt.letool.data.provider.LetoolProvider"
+            android:name="com.xjt.letool.imagedata.provider.LetoolProvider"
             android:authorities="lt_provider_authories"
             android:exported="true"
             android:multiprocess="false"

@@ -18,29 +18,34 @@ public class LetoolActionBar {
     public static final int ACTION_BAR_MODE_BROWSE = 0;
     public static final int ACTION_BAR_MODE_SELECTION = 1;
     public static final int ACTION_BAR_MODE_SETTINGS = 2;
+    public static final int ACTION_BAR_MODE_FULL_IMAGE = 3;
 
     private BaseActivity mActivity;
     public static final int ACTION_BAR_MODE[] = {
             ACTION_BAR_MODE_BROWSE,
             ACTION_BAR_MODE_SELECTION,
-            ACTION_BAR_MODE_SETTINGS
+            ACTION_BAR_MODE_SETTINGS,
+            ACTION_BAR_MODE_FULL_IMAGE
     };
 
     public static final int ACTION_MODE_LAYOUT_ID[] = {
             R.layout.action_bar_normal,
             R.layout.action_bar_selection,
-            R.layout.action_bar_settings
+            R.layout.action_bar_settings,
+            R.layout.action_bar_full_iamge
     };
 
     public static final int ACTION_MODE_TITLE_VIEW_ID[] = {
             R.id.navi_text,
             R.id.selection_counter,
             R.id.navi_text,
+            R.id.navi_text,
     };
 
     public static final int ACTION_BUTTON_IDS[] = {
             R.id.action_navi,
             R.id.operation_delete,
+            R.id.action_navi,
             R.id.action_navi,
     };
 
@@ -84,7 +89,7 @@ public class LetoolActionBar {
     }
 
     public void setTitleIcon(int resId) {
-        if (mCurActionBarMode == ACTION_BAR_MODE_BROWSE || mCurActionBarMode == ACTION_BAR_MODE_SETTINGS ) {
+        if (mCurActionBarMode != ACTION_BAR_MODE_SELECTION ) {
             ImageView natviButton = (ImageView) mActionModePanel.findViewById(R.id.action_navi_tip);
             natviButton.setImageResource(resId);
         }
