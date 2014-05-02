@@ -1,3 +1,4 @@
+
 package com.xjt.letool.views.opengl;
 
 import android.graphics.Bitmap;
@@ -7,22 +8,16 @@ import com.xjt.letool.animations.AnimationTime;
 import com.xjt.letool.imagedata.utils.LetoolBitmapPool;
 import com.xjt.letool.utils.Utils;
 
-// This is a ScreenNail wraps a Bitmap. There are some extra functions:
-//
-// - If we need to draw before the bitmap is available, we draw a rectange of
-// placeholder color (gray).
-//
-// - When the the bitmap is available, and we have drawn the placeholder color
-// before, we will do a fade-in animation.
+// - This is a ScreenNail wraps a Bitmap. There are some extra functions:
+// - If we need to draw before the bitmap is available, we draw a rectange of placeholder color (gray).
+// - When the the bitmap is available, and we have drawn the placeholder color before, we will do a fade-in animation.
 public class TiledScreenNail implements ScreenNail {
+
     @SuppressWarnings("unused")
     private static final String TAG = "TiledScreenNail";
 
-    // The duration of the fading animation in milliseconds
-    private static final int DURATION = 180;
-
+    private static final int DURATION = 180; // The duration of the fading animation in milliseconds
     private static int sMaxSide = 640;
-
     // These are special values for mAnimationStartTime
     private static final long ANIMATION_NOT_NEEDED = -1;
     private static final long ANIMATION_NEEDED = -2;
@@ -46,13 +41,20 @@ public class TiledScreenNail implements ScreenNail {
         setSize(width, height);
     }
 
-    // This gets overridden by bitmap_screennail_placeholder
-    // in GalleryUtils.initialize
+    // This gets overridden by bitmap_screennail_placeholder in GalleryUtils.initialize
     private static int mPlaceholderColor = 0xFF222222;
     private static boolean mDrawPlaceholder = true;
 
     public static void setPlaceholderColor(int color) {
         mPlaceholderColor = color;
+    }
+
+    public static void disableDrawPlaceholder() {
+        mDrawPlaceholder = false;
+    }
+
+    public static void enableDrawPlaceholder() {
+        mDrawPlaceholder = true;
     }
 
     private void setSize(int width, int height) {
@@ -65,26 +67,24 @@ public class TiledScreenNail implements ScreenNail {
         mHeight = Math.round(scale * height);
     }
 
-    // Combines the two ScreenNails.
-    // Returns the used one and recycle the unused one.
+    // Combines the two ScreenNails.Returns the used one and recycle the unused one.
     public ScreenNail combine(ScreenNail other) {
         if (other == null) {
             return this;
         }
-
         if (!(other instanceof TiledScreenNail)) {
             recycle();
             return other;
         }
-
-        // Now both are TiledScreenNail. Move over the information about width,
-        // height, and Bitmap, then recycle the other.
+        // Now both are TiledScreenNail. Move over the information about width,height, and Bitmap, then recycle the other.
         TiledScreenNail newer = (TiledScreenNail) other;
         mWidth = newer.mWidth;
         mHeight = newer.mHeight;
         if (newer.mTexture != null) {
-            if (mBitmap != null) LetoolBitmapPool.getInstance().put(mBitmap);
-            if (mTexture != null) mTexture.recycle();
+            if (mBitmap != null)
+                LetoolBitmapPool.getInstance().put(mBitmap);
+            if (mTexture != null)
+                mTexture.recycle();
             mBitmap = newer.mBitmap;
             mTexture = newer.mTexture;
             newer.mBitmap = null;
@@ -95,8 +95,10 @@ public class TiledScreenNail implements ScreenNail {
     }
 
     public void updatePlaceholderSize(int width, int height) {
-        if (mBitmap != null) return;
-        if (width == 0 || height == 0) return;
+        if (mBitmap != null)
+            return;
+        if (width == 0 || height == 0)
+            return;
         setSize(width, height);
     }
 
@@ -126,21 +128,13 @@ public class TiledScreenNail implements ScreenNail {
         }
     }
 
-    public static void disableDrawPlaceholder() {
-        mDrawPlaceholder = false;
-    }
-
-    public static void enableDrawPlaceholder() {
-        mDrawPlaceholder = true;
-    }
-
     @Override
     public void draw(GLESCanvas canvas, int x, int y, int width, int height) {
         if (mTexture == null || !mTexture.isReady()) {
             if (mAnimationStartTime == ANIMATION_NOT_NEEDED) {
                 mAnimationStartTime = ANIMATION_NEEDED;
             }
-            if(mDrawPlaceholder) {
+            if (mDrawPlaceholder) {
                 canvas.fillRect(x, y, width, height, mPlaceholderColor);
             }
             return;
@@ -151,8 +145,7 @@ public class TiledScreenNail implements ScreenNail {
         }
 
         if (isAnimating()) {
-            mTexture.drawMixed(canvas, mPlaceholderColor, getRatio(), x, y,
-                    width, height);
+            mTexture.drawMixed(canvas, mPlaceholderColor, getRatio(), x, y, width, height);
         } else {
             mTexture.draw(canvas, x, y, width, height);
         }
@@ -161,20 +154,19 @@ public class TiledScreenNail implements ScreenNail {
     @Override
     public void draw(GLESCanvas canvas, RectF source, RectF dest) {
         if (mTexture == null || !mTexture.isReady()) {
-            canvas.fillRect(dest.left, dest.top, dest.width(), dest.height(),
-                    mPlaceholderColor);
+            canvas.fillRect(dest.left, dest.top, dest.width(), dest.height(), mPlaceholderColor);
             return;
         }
-
         mTexture.draw(canvas, source, dest);
     }
 
     public boolean isAnimating() {
         // The TiledTexture may not be uploaded completely yet.
-        // In that case, we count it as animating state and we will draw
-        // the placeholder in TileImageView.
-        if (mTexture == null || !mTexture.isReady()) return true;
-        if (mAnimationStartTime < 0) return false;
+        // In that case, we count it as animating state and we will draw the placeholder in TileImageView.
+        if (mTexture == null || !mTexture.isReady())
+            return true;
+        if (mAnimationStartTime < 0)
+            return false;
         if (AnimationTime.get() - mAnimationStartTime >= DURATION) {
             mAnimationStartTime = ANIMATION_DONE;
             return false;

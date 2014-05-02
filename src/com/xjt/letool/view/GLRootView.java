@@ -1,3 +1,4 @@
+
 package com.xjt.letool.view;
 
 import java.util.ArrayDeque;
@@ -38,7 +39,7 @@ import android.view.MotionEvent;
  */
 public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer, GLController {
 
-    private static final String TAG = "GLRootView";
+    private static final String TAG = GLRootView.class.getSimpleName();
 
     private static final int FLAG_INITIALIZED = 1;
     private static final int FLAG_NEED_LAYOUT = 2;
@@ -81,7 +82,7 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
         } else {
             setEGLConfigChooser(5, 6, 5, 0, 0, 0);
         }
-        //setEGLConfigChooser(mLetoolEGLChooser);
+        // setEGLConfigChooser(mLetoolEGLChooser);
         setRenderer(this);
         if (ApiHelper.USE_888_PIXEL_FORMAT) {
             getHolder().setFormat(PixelFormat.RGB_888);
@@ -139,6 +140,7 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
     }
 
     private Runnable mRequestRenderOnAnimationFrame = new Runnable() {
+
         @Override
         public void run() {
             superRequestRender();
@@ -160,7 +162,6 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
         try {
             mGL = gl;
             mCanvas = ApiHelper.HAS_GLES20_REQUIRED ? new GLES20Canvas() : new GLES11Canvas(gl);
-            //mCanvas = new GLES11Canvas(gl);
             BasicTexture.invalidateAllTextures();
 
         } finally {
@@ -191,11 +192,9 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
 
     private void onDrawFrameLocked(GL10 gl) {
 
-        // release the unbound textures and deleted buffers.
-        mCanvas.deleteRecycledResources();
+        mCanvas.deleteRecycledResources();// release the unbound textures and deleted buffers.
 
-        // reset texture upload limit
-        UploadedTexture.resetUploadLimit();
+        UploadedTexture.resetUploadLimit();// reset texture upload limit
 
         mRenderRequested = false;
 
@@ -210,8 +209,7 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
         if (mContentView != null) {
             mContentView.render(mCanvas);
         } else {
-            // Make sure we always draw something to prevent displaying garbage
-            mCanvas.clearBuffer();
+            mCanvas.clearBuffer();// Make sure we always draw something to prevent displaying garbage
         }
         mCanvas.restore();
 
@@ -293,13 +291,13 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
     }
 
     private void layoutContentPane() {
-        mFlags &= ~FLAG_NEED_LAYOUT;
 
         int w = getWidth();
         int h = getHeight();
         int displayRotation = 0;
         int compensation = 0;
 
+        mFlags &= ~FLAG_NEED_LAYOUT;
         // Get the new orientation values
         if (mOrientationSource != null) {
             displayRotation = mOrientationSource.getDisplayRotation();
@@ -334,8 +332,6 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
         if (mContentView != null && w != 0 && h != 0) {
             mContentView.layout(0, 0, w, h);
         }
-        // Uncomment this to dump the view hierarchy.
-        //mContentView.dumpTree("");
     }
 
     @Override
@@ -412,8 +408,8 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private class IdleRunner implements Runnable {
-        // true if the idle runner is in the queue
-        private boolean mActive = false;
+
+        private boolean mActive = false;// true if the idle runner is in the queue
 
         @Override
         public void run() {
@@ -440,8 +436,7 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
         }
 
         public void enable() {
-            // Who gets the flag can add it to the queue
-            if (mActive)
+            if (mActive) // Who gets the flag can add it to the queue
                 return;
             mActive = true;
             queueEvent(this);

@@ -239,8 +239,7 @@ public class GLES20Canvas implements GLESCanvas {
     private int mCountFillRect = 0;
     private int mCountDrawLine = 0;
 
-    // Buffer for framebuffer IDs -- we keep track so we can switch the attached
-    // texture.
+    // Buffer for framebuffer IDs -- we keep track so we can switch the attached texture.
     private int[] mFrameBuffer = new int[1];
 
     // Bound textures.

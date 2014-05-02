@@ -36,8 +36,7 @@ public class TileImageViewAdapter implements TileImageView.TileSource {
     }
 
     // Caller is responsible to recycle the ScreenNail
-    public synchronized void setScreenNail(
-            ScreenNail screenNail, int width, int height) {
+    public synchronized void setScreenNail(ScreenNail screenNail, int width, int height) {
         Utils.checkNotNull(screenNail);
         mScreenNail = screenNail;
         mImageWidth = width;
@@ -54,8 +53,7 @@ public class TileImageViewAdapter implements TileImageView.TileSource {
     }
 
     private int calculateLevelCount() {
-        return Math.max(0, Utils.ceilLog2(
-                (float) mImageWidth / mScreenNail.getWidth()));
+        return Math.max(0, Utils.ceilLog2((float) mImageWidth / mScreenNail.getWidth()));
     }
 
     // Gets a sub image on a rectangle of the current photo. For example,
@@ -87,10 +85,8 @@ public class TileImageViewAdapter implements TileImageView.TileSource {
             regionDecoder = mRegionDecoder;
             if (regionDecoder == null) return null;
 
-            // We need to clear a reused bitmap, if wantRegion is not fully
-            // within the image.
-            needClear = !new Rect(0, 0, mImageWidth, mImageHeight)
-                    .contains(wantRegion);
+            // We need to clear a reused bitmap, if wantRegion is not fully within the image.
+            needClear = !new Rect(0, 0, mImageWidth, mImageHeight).contains(wantRegion);
         }
 
         Bitmap bitmap = LetoolBitmapPool.getInstance().get(tileSize, tileSize);
@@ -124,8 +120,7 @@ public class TileImageViewAdapter implements TileImageView.TileSource {
         return bitmap;
     }
 
-    private Bitmap getTileWithoutReusingBitmap(
-            int level, int x, int y, int tileSize) {
+    private Bitmap getTileWithoutReusingBitmap(int level, int x, int y, int tileSize) {
         int t = tileSize << level;
         Rect wantRegion = new Rect(x, y, x + t, y + t);
 
