@@ -16,16 +16,16 @@ package com.xjt.letool.views.opengl;
 //-- FadeInTexture
 //-- FadeOutTexture
 //-- BasicTexture
-// --ExtTexture
-// -- UploadedTexture
-//    -- BitmapTexture
-//    -- TileTexture
-//    -- ResourceTexture
-//       -- NinePatchTexture
-//    -- CanvasTexture
-//       -- StringTexture
-//       -- MultiLineTexture
-//       -- StringTexture
+//  -- ExtTexture
+//  -- UploadedTexture
+//      -- BitmapTexture
+//      -- TileTexture
+//      -- ResourceTexture
+//          -- NinePatchTexture
+//      -- CanvasTexture
+//          -- StringTexture
+//          -- MultiLineTexture
+//       -  - StringTexture
 //
 public interface Texture {
 

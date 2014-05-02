@@ -24,8 +24,7 @@ public class ResourceTexture extends UploadedTexture {
     protected Bitmap onGetBitmap() {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        return BitmapFactory.decodeResource(
-                mContext.getResources(), mResId, options);
+        return BitmapFactory.decodeResource(mContext.getResources(), mResId, options);
     }
 
     @Override

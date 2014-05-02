@@ -138,10 +138,8 @@ public interface GLESCanvas {
      * Calls glTexSubImage2D to upload a bitmap to the texture.
      *
      * @param texture The target texture to write to.
-     * @param xOffset Specifies a texel offset in the x direction within the
-     *            texture array.
-     * @param yOffset Specifies a texel offset in the y direction within the
-     *            texture array.
+     * @param xOffset Specifies a texel offset in the x direction within the texture array.
+     * @param yOffset Specifies a texel offset in the y direction within the texture array.
      * @param format The texture format (e.g. GL_RGBA)
      * @param type The texture type (e.g. GL_UNSIGNED_BYTE)
      */
@@ -149,7 +147,6 @@ public interface GLESCanvas {
 
     /**
      * Generates buffers and uploads the buffer data.
-     *
      * @param buffer The buffer to upload
      * @return The buffer ID that was generated.
      */
@@ -157,7 +154,6 @@ public interface GLESCanvas {
 
     /**
      * Generates buffers and uploads the element array buffer data.
-     *
      * @param buffer The buffer to upload
      * @return The buffer ID that was generated.
      */
@@ -173,7 +169,6 @@ public interface GLESCanvas {
      * Gets the bounds given by x, y, width, and height as well as the internal
      * matrix state. There is no special handling for non-90-degree rotations.
      * It only considers the lower-left and upper-right corners as the bounds.
-     *
      * @param bounds The output bounds to write to.
      * @param x The left side of the input rectangle.
      * @param y The bottom of the input rectangle.

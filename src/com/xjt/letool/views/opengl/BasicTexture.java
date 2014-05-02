@@ -138,8 +138,7 @@ public abstract class BasicTexture implements Texture {
         freeResource();
     }
 
-    // yield() is called when the texture will not be used temporarily,
-    // so it can free some resources.
+    // yield() is called when the texture will not be used temporarily,so it can free some resources.
     // The default implementation unloads the texture from GL memory, so
     // the subclass should make sure it can reload the texture to GL memory
     // later, or it will have to override this method.

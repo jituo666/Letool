@@ -20,8 +20,7 @@ public class NinePatchTexture extends ResourceTexture {
     @SuppressWarnings("unused")
     private static final String TAG = "NinePatchTexture";
     private NinePatchChunk mChunk;
-    private SmallCache<NinePatchInstance> mInstanceCache
-            = new SmallCache<NinePatchInstance>();
+    private SmallCache<NinePatchInstance> mInstanceCache = new SmallCache<NinePatchInstance>();
 
     public NinePatchTexture(Context context, int resId) {
         super(context, resId);

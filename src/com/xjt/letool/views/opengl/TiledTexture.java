@@ -48,8 +48,7 @@ public class TiledTexture implements Texture {
     private final RectF mDestRect = new RectF();
 
     public static class Uploader implements OnGLIdleListener {
-        private final ArrayDeque<TiledTexture> mTextures =
-                new ArrayDeque<TiledTexture>(INIT_CAPACITY);
+        private final ArrayDeque<TiledTexture> mTextures = new ArrayDeque<TiledTexture>(INIT_CAPACITY);
 
         private final GLController mGLController;
         private boolean mIsQueued = false;
@@ -176,13 +175,11 @@ public class TiledTexture implements Texture {
 
         synchronized (mTiles) {
             Tile next = mTiles[mUploadIndex++];
-
             // Make sure tile has not already been recycled by the time
             // this is called (race condition in onGLIdle)
             if (next.bitmap != null) {
                 boolean hasBeenLoad = next.isLoaded();
                 next.updateContent(canvas);
-
                 // It will take some time for a texture to be drawn for the first
                 // time. When scrolling, we need to draw several tiles on the screen
                 // at the same time. It may cause a UI jank even these textures has

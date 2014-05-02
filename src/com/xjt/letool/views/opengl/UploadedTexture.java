@@ -1,3 +1,4 @@
+
 package com.xjt.letool.views.opengl;
 
 import android.graphics.Bitmap;
@@ -12,27 +13,23 @@ import javax.microedition.khronos.opengles.GL11;
 
 // UploadedTextures use a Bitmap for the content of the texture.
 // Subclasses should implement onGetBitmap() to provide the Bitmap and
-// implement onFreeBitmap(mBitmap) which will be called when the Bitmap
-// is not needed anymore.
+// implement onFreeBitmap(mBitmap) which will be called when the Bitmap is not needed anymore.
 // isContentValid() is meaningful only when the isLoaded() returns true.
 // It means whether the content needs to be updated.
-// The user of this class should call recycle() when the texture is not
-// needed anymore.
+// The user of this class should call recycle() when the texture is not needed anymore.
 // By default an UploadedTexture is opaque (so it can be drawn faster without
 // blending). The user or subclass can override it using setOpaque().
 public abstract class UploadedTexture extends BasicTexture {
 
+    private static final String TAG = UploadedTexture.class.getSimpleName();
     // To prevent keeping allocation the borders, we store those used borders here.
     // Since the length will be power of two, it won't use too much memory.
     private static HashMap<BorderKey, Bitmap> sBorderLines = new HashMap<BorderKey, Bitmap>();
     private static BorderKey sBorderKey = new BorderKey();
 
     @SuppressWarnings("unused")
-    private static final String TAG = "Texture";
     private boolean mContentValid = true;
-
-    // indicate this textures is being uploaded in background
-    private boolean mIsUploading = false;
+    private boolean mIsUploading = false; // indicate this textures is being uploaded in background
     private boolean mOpaque = true;
     private boolean mThrottled = false;
     private static int sUploadedCount;
@@ -40,6 +37,36 @@ public abstract class UploadedTexture extends BasicTexture {
 
     protected Bitmap mBitmap;
     private int mBorder;
+
+    private static class BorderKey implements Cloneable {
+
+        public boolean vertical;
+        public Config config;
+        public int length;
+
+        @Override
+        public int hashCode() {
+            int x = config.hashCode() ^ length;
+            return vertical ? x : -x;
+        }
+
+        @Override
+        public boolean equals(Object object) {
+            if (!(object instanceof BorderKey))
+                return false;
+            BorderKey o = (BorderKey) object;
+            return vertical == o.vertical && config == o.config && length == o.length;
+        }
+
+        @Override
+        public BorderKey clone() {
+            try {
+                return (BorderKey) super.clone();
+            } catch (CloneNotSupportedException e) {
+                throw new AssertionError(e);
+            }
+        }
+    }
 
     protected UploadedTexture() {
         this(false);
@@ -61,50 +88,18 @@ public abstract class UploadedTexture extends BasicTexture {
         return mIsUploading;
     }
 
-    private static class BorderKey implements Cloneable {
-        public boolean vertical;
-        public Config config;
-        public int length;
-
-        @Override
-        public int hashCode() {
-            int x = config.hashCode() ^ length;
-            return vertical ? x : -x;
-        }
-
-        @Override
-        public boolean equals(Object object) {
-            if (!(object instanceof BorderKey)) return false;
-            BorderKey o = (BorderKey) object;
-            return vertical == o.vertical
-                    && config == o.config && length == o.length;
-        }
-
-        @Override
-        public BorderKey clone() {
-            try {
-                return (BorderKey) super.clone();
-            } catch (CloneNotSupportedException e) {
-                throw new AssertionError(e);
-            }
-        }
-    }
-
     protected void setThrottled(boolean throttled) {
         mThrottled = throttled;
     }
 
-    private static Bitmap getBorderLine(
-            boolean vertical, Config config, int length) {
+    private static Bitmap getBorderLine(boolean vertical, Config config, int length) {
         BorderKey key = sBorderKey;
         key.vertical = vertical;
         key.config = config;
         key.length = length;
         Bitmap bitmap = sBorderLines.get(key);
         if (bitmap == null) {
-            bitmap = vertical
-                    ? Bitmap.createBitmap(1, length, config)
-                    : Bitmap.createBitmap(length, 1, config);
+            bitmap = vertical? Bitmap.createBitmap(1, length, config) : Bitmap.createBitmap(length, 1, config);
             sBorderLines.put(key.clone(), bitmap);
         }
         return bitmap;
@@ -130,13 +125,15 @@ public abstract class UploadedTexture extends BasicTexture {
 
     @Override
     public int getWidth() {
-        if (mWidth == UNSPECIFIED) getBitmap();
+        if (mWidth == UNSPECIFIED)
+            getBitmap();
         return mWidth;
     }
 
     @Override
     public int getHeight() {
-        if (mWidth == UNSPECIFIED) getBitmap();
+        if (mWidth == UNSPECIFIED)
+            getBitmap();
         return mHeight;
     }
 
@@ -145,7 +142,8 @@ public abstract class UploadedTexture extends BasicTexture {
     protected abstract void onFreeBitmap(Bitmap bitmap);
 
     protected void invalidateContent() {
-        if (mBitmap != null) freeBitmap();
+        if (mBitmap != null)
+            freeBitmap();
         mContentValid = false;
         mWidth = UNSPECIFIED;
         mHeight = UNSPECIFIED;
@@ -218,7 +216,6 @@ public abstract class UploadedTexture extends BasicTexture {
                         // Left border
                         Bitmap line = getBorderLine(true, config, texHeight);
                         canvas.texSubImage2D(this, 0, 0, line, format, type);
-
                         // Top border
                         line = getBorderLine(false, config, texWidth);
                         canvas.texSubImage2D(this, 0, 0, line, format, type);
@@ -272,6 +269,7 @@ public abstract class UploadedTexture extends BasicTexture {
     @Override
     public void recycle() {
         super.recycle();
-        if (mBitmap != null) freeBitmap();
+        if (mBitmap != null)
+            freeBitmap();
     }
 }
