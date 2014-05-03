@@ -114,17 +114,20 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
 
         int renderRequestFlags = 0;
 
-        Texture content = checkTexture(entry.content);
+        Texture content = entry.compressTexture;
         if (content == null) {
             content = mWaitLoadingTexture;
-            entry.isWaitDisplayed = true;
-        } else if (entry.isWaitDisplayed) {
-            LLog.i(TAG, " ------------ renderThumbnail:" + index + "   :" + System.currentTimeMillis());
-            entry.isWaitDisplayed = false;
-            //content = new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
-            content = entry.compressTexture;
-            entry.content = content;
+            //entry.isWaitDisplayed = true;
+        } else {
+            //LLog.i(TAG, " ------------ renderThumbnail:" + index + "   :" + System.currentTimeMillis());
         }
+//        else if (entry.isWaitDisplayed) {
+//            LLog.i(TAG, " ------------ renderThumbnail:" + index + "   :" + System.currentTimeMillis());
+//            entry.isWaitDisplayed = false;
+//            //content = new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
+//            content = entry.compressTexture;
+//            entry.content = content;
+//        }
 
         drawContent(canvas, content, width, height, entry.rotation);
         if ((content instanceof FadeInTexture) && ((FadeInTexture) content).isAnimating()) {

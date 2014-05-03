@@ -114,8 +114,10 @@ public abstract class BasicTexture implements Texture {
 
     @Override
     public void draw(GLESCanvas canvas, int x, int y) {
-        LLog.i(TAG, "x:" + x + " y:" + y + " w:" + getWidth() + " h:" + getHeight());
+        long time = System.currentTimeMillis();
         canvas.drawTexture(this, x, y, getWidth(), getHeight());
+
+        LLog.i(TAG,getId() +  " ------------ draw:" + (System.currentTimeMillis() - time) + "   :" + System.currentTimeMillis());
     }
 
     @Override

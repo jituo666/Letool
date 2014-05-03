@@ -33,7 +33,6 @@ public abstract class CompressTexture extends BasicTexture {
     
     protected CompressTexture(ETC1Texture texture) {
         super(null, 0, STATE_UNLOADED);
-        mETC1Texture = texture;
     }
 
     protected void setIsUploading(boolean uploading) {
@@ -54,7 +53,6 @@ public abstract class CompressTexture extends BasicTexture {
             mETC1Texture = onGetETC1Texture();
             int w = mETC1Texture.getWidth();
             int h = mETC1Texture.getHeight();
-            LLog.i(TAG, " xxx:" + w + " yyy:" + h);
             if (mWidth == UNSPECIFIED) {
                 setSize(w, h);
             }
@@ -111,9 +109,7 @@ public abstract class CompressTexture extends BasicTexture {
                 return;
             }
             uploadToCanvas(canvas);
-            LLog.i(TAG, " --------onBind1" + this.getId());
         } else if (!mContentValid) {
-            LLog.i(TAG, " --------onBind2" + this.getId());
             ETC1Texture texture = getETC1Texture();
             GLES20.glCompressedTexImage2D(GL10.GL_TEXTURE_2D, 0, ETC1.ETC1_RGB8_OES, texture.getWidth(), texture.getHeight(), 0, texture.getData().capacity(), texture.getData());
             freeETC1Texture();

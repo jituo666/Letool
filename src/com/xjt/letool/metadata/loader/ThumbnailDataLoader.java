@@ -333,7 +333,7 @@ public class ThumbnailDataLoader {
 
         @Override
         public void run() {
-            Process.setThreadPriority(Process.THREAD_PRIORITY_DEFAULT);
+            Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
 
             boolean updateComplete = false;
             while (mActive) {
@@ -358,7 +358,7 @@ public class ThumbnailDataLoader {
                     continue;
                 synchronized (DataManager.LOCK) {
                     if (info.version != version) {
-                        info.size = mSource.getMediaItemCount();
+                        info.size = mSource.getMediaItemCount(); 
                         info.version = version;
                     }
                     if (info.reloadCount > 0) {

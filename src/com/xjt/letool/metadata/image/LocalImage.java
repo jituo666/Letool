@@ -308,10 +308,11 @@ public class LocalImage extends LocalMediaItem {
 
         @Override
         public ETC1Texture run(JobContext jc) {
-
-            InputStream input = mApplication.getResources().openRawResource(R.raw.slid);
+            long time = System.currentTimeMillis();
+            InputStream input = mApplication.getResources().openRawResource(R.raw.slid0);
             try {
                 ETC1Util.ETC1Texture texture = ETC1Util.createTexture(input);
+                LLog.i(TAG, "------TexureLoader:" + (System.currentTimeMillis() - time));
                 return texture;
             } catch (IOException e) {
                 Log.w(TAG, "Could not load texture: " + e);

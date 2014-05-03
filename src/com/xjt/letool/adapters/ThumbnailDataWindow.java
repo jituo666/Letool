@@ -311,8 +311,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
                     requestNonactiveImages();
                 if (mDataListener != null) {
                     mDataListener.onContentChanged();
-                    LLog.i(TAG, " ------ prepared:" + mSlotIndex + "   :" + System.currentTimeMillis()
-                             + " compressTexture = null ? :" + (entry.compressTexture  == null));
+                    LLog.i(TAG, " ------ prepared:" + mSlotIndex + "   :" + System.currentTimeMillis()  + " compressTexture = null ? :" + (entry.compressTexture  == null));
                 }
             } else {
             }

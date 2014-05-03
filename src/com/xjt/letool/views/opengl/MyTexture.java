@@ -8,8 +8,10 @@ import android.opengl.ETC1Util.ETC1Texture;
 public class MyTexture extends CompressTexture {
 
     protected ETC1Texture mContentTexture;
+    
     public MyTexture(ETC1Texture texture) {
         super(texture);
+        mContentTexture = texture;
     }
 
     @Override
