@@ -91,7 +91,6 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
 
     @Override
     public void onVisibleRangeChanged(int visibleStart, int visibleEnd) {
-
         //LLog.i(TAG, "onVisibleRangeChanged visibleStart:" + visibleStart + " visibleEnd:" + visibleEnd);
         if (mDataWindow != null) {
             mDataWindow.setActiveWindow(visibleStart, visibleEnd);
@@ -122,7 +121,8 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
         } else if (entry.isWaitDisplayed) {
             LLog.i(TAG, " ------------ renderThumbnail:" + index + "   :" + System.currentTimeMillis());
             entry.isWaitDisplayed = false;
-            content = new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
+            //content = new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
+            content = entry.compressTexture;
             entry.content = content;
         }
 

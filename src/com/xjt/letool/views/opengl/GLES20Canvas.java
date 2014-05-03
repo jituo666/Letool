@@ -4,6 +4,8 @@ package com.xjt.letool.views.opengl;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.opengl.ETC1Util.ETC1Texture;
+import android.opengl.ETC1;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
@@ -14,6 +16,8 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import javax.microedition.khronos.opengles.GL10;
 
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.utils.IntArray;
@@ -282,8 +286,7 @@ public class GLES20Canvas implements GLESCanvas {
     private static FloatBuffer createBuffer(float[] values) {
         // First create an nio buffer, then create a VBO from it.
         int size = values.length * FLOAT_SIZE;
-        FloatBuffer buffer = ByteBuffer.allocateDirect(size).order(ByteOrder.nativeOrder())
-                .asFloatBuffer();
+        FloatBuffer buffer = ByteBuffer.allocateDirect(size).order(ByteOrder.nativeOrder()).asFloatBuffer();
         buffer.put(values, 0, values.length).position(0);
         return buffer;
     }
@@ -318,7 +321,6 @@ public class GLES20Canvas implements GLESCanvas {
         // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
         // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
         int shader = GLES20.glCreateShader(type);
-
         // add the source code to the shader and compile it
         GLES20.glShaderSource(shader, shaderCode);
         checkError();
@@ -620,8 +622,7 @@ public class GLES20Canvas implements GLESCanvas {
     }
 
     // This function changes the source coordinate to the texture coordinates.
-    // It also clips the source and target coordinates if it is beyond the
-    // bound of the texture.
+    // It also clips the source and target coordinates if it is beyond the bound of the texture.
     private static void convertCoordinate(RectF source, RectF target, BasicTexture texture) {
         int width = texture.getWidth();
         int height = texture.getHeight();
@@ -910,6 +911,15 @@ public class GLES20Canvas implements GLESCanvas {
         GLUtils.texImage2D(target, 0, bitmap, 0);
     }
 
+
+    @Override
+    public void initializeTexture(BasicTexture texture, ETC1Texture eTexture) {
+        int target = texture.getTarget();
+        GLES20.glBindTexture(target, texture.getId());
+        checkError();
+        GLES20.glCompressedTexImage2D(GL10.GL_TEXTURE_2D, 0, ETC1.ETC1_RGB8_OES, eTexture.getWidth(), eTexture.getHeight(), 0, eTexture.getData().capacity(), eTexture.getData());
+    }
+    
     @Override
     public void texSubImage2D(BasicTexture texture, int xOffset, int yOffset, Bitmap bitmap, int format, int type) {
         int target = texture.getTarget();
@@ -985,4 +995,5 @@ public class GLES20Canvas implements GLESCanvas {
     public GLId getGLId() {
         return mGLId;
     }
+
 }

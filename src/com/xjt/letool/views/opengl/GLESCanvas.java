@@ -4,6 +4,7 @@ package com.xjt.letool.views.opengl;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.opengl.ETC1Util.ETC1Texture;
 
 /**
  * @Author Jituo.Xuan
@@ -49,6 +50,7 @@ public interface GLESCanvas {
 
     // Same as save(), but only save those specified in saveFlags.
     public abstract void save(int saveFlags);
+
     public static final int SAVE_FLAG_ALL = 0xFFFFFFFF;
     public static final int SAVE_FLAG_ALPHA = 0x01;
     public static final int SAVE_FLAG_MATRIX = 0x02;
@@ -133,6 +135,14 @@ public interface GLESCanvas {
      * @param bitmap The bitmap to initialize the bitmap with.
      */
     public abstract void initializeTexture(BasicTexture texture, Bitmap bitmap);
+
+    /**
+     * Initializes the texture to a size by calling texImage2D on it.
+     *
+     * @param texture The texture to initialize the size.
+     * @param bitmap The bitmap to initialize the bitmap with.
+     */
+    public abstract void initializeTexture(BasicTexture texture, ETC1Texture eTexture);
 
     /**
      * Calls glTexSubImage2D to upload a bitmap to the texture.

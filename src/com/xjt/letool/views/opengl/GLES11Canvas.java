@@ -3,6 +3,7 @@ package com.xjt.letool.views.opengl;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.opengl.ETC1Util.ETC1Texture;
 import android.opengl.GLU;
 import android.opengl.GLUtils;
 import android.opengl.Matrix;
@@ -975,5 +976,11 @@ public class GLES11Canvas implements GLESCanvas {
     @Override
     public GLId getGLId() {
         return mGLId;
+    }
+
+    @Override
+    public void initializeTexture(BasicTexture texture, ETC1Texture eTexture) {
+        // TODO Auto-generated method stub
+        
     }
 }

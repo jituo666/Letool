@@ -3,6 +3,7 @@ package com.xjt.letool.metadata;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapRegionDecoder;
+import android.opengl.ETC1Util.ETC1Texture;
 
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.ThreadPool.Job;
@@ -36,6 +37,8 @@ public abstract class MediaItem extends MediaObject {
     public abstract Job<Bitmap> requestImage(int type);
 
     public abstract Job<Bitmap> requestImage(int type, int index, long dateTaken, DataBaseCache loader);
+
+    public abstract Job<ETC1Texture> requestImage(int type,int extra);
 
     public abstract Job<BitmapRegionDecoder> requestLargeImage();
 
@@ -106,6 +109,6 @@ public abstract class MediaItem extends MediaObject {
         if (sMicrothumbnailTargetSize != microSize) {
             sMicrothumbnailTargetSize = microSize;
         }
-        LLog.i(TAG, " MediaItem.sThumbnailTargetSize:" + sThumbnailTargetSize +  " MediaItem.sMicrothumbnailTargetSize:" + sMicrothumbnailTargetSize);
+        LLog.i(TAG, " MediaItem.sThumbnailTargetSize:" + sThumbnailTargetSize + " MediaItem.sMicrothumbnailTargetSize:" + sMicrothumbnailTargetSize);
     }
 }

@@ -1,3 +1,4 @@
+
 package com.xjt.letool.metadata.image;
 
 import android.annotation.TargetApi;
@@ -7,12 +8,16 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapRegionDecoder;
 import android.net.Uri;
+import android.opengl.ETC1Util;
+import android.opengl.ETC1Util.ETC1Texture;
 import android.os.Build;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Images.ImageColumns;
 import android.provider.MediaStore.MediaColumns;
+import android.util.Log;
 
 import com.xjt.letool.LetoolApp;
+import com.xjt.letool.R;
 import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.ThreadPool.Job;
@@ -33,6 +38,7 @@ import com.xjt.letool.utils.LetoolUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 // LocalImage represents an image in the local storage.
 public class LocalImage extends LocalMediaItem {
@@ -157,11 +163,11 @@ public class LocalImage extends LocalMediaItem {
 
     @Override
     public Job<Bitmap> requestImage(int type) {
-        return new LocalImageBlobRequest(mApplication,mPath,dateModifiedInSec, type,filePath);
+        return new LocalImageBlobRequest(mApplication, mPath, dateModifiedInSec, type, filePath);
     }
-    
+
     @Override
-    public Job<Bitmap> requestImage(int type, int index, long dateTaken,DataBaseCache loader) {
+    public Job<Bitmap> requestImage(int type, int index, long dateTaken, DataBaseCache loader) {
         return new LocalThumbRequest(loader, type, index, dateTaken, filePath);
     }
 
@@ -171,6 +177,7 @@ public class LocalImage extends LocalMediaItem {
     }
 
     public static class LocalLargeImageRequest implements Job<BitmapRegionDecoder> {
+
         String mLocalFilePath;
 
         public LocalLargeImageRequest(String localFilePath) {
@@ -208,7 +215,9 @@ public class LocalImage extends LocalMediaItem {
         ContentResolver contentResolver = mApplication.getContentResolver();
         //SaveImage.deleteAuxFiles(contentResolver, getContentUri());
         contentResolver.delete(baseUri, "_id=?",
-                new String[] { String.valueOf(id) });
+                new String[] {
+                    String.valueOf(id)
+                });
     }
 
     @Override
@@ -241,7 +250,9 @@ public class LocalImage extends LocalMediaItem {
         }
 
         values.put(Images.Media.ORIENTATION, rotation);
-        mApplication.getContentResolver().update(baseUri, values, "_id=?", new String[] { String.valueOf(id) });
+        mApplication.getContentResolver().update(baseUri, values, "_id=?", new String[] {
+            String.valueOf(id)
+        });
     }
 
     @Override
@@ -285,5 +296,33 @@ public class LocalImage extends LocalMediaItem {
     @Override
     public String getFilePath() {
         return filePath;
+    }
+
+    @Override
+    public Job<ETC1Texture> requestImage(int type, int extra) {
+        // TODO Auto-generated method stub
+        return new TexureLoader();
+    }
+
+    public class TexureLoader implements Job<ETC1Texture> {
+
+        @Override
+        public ETC1Texture run(JobContext jc) {
+
+            InputStream input = mApplication.getResources().openRawResource(R.raw.slid);
+            try {
+                ETC1Util.ETC1Texture texture = ETC1Util.createTexture(input);
+                return texture;
+            } catch (IOException e) {
+                Log.w(TAG, "Could not load texture: " + e);
+            } finally {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    // ignore exception thrown from close.
+                }
+            }
+            return null;
+        }
     }
 }
