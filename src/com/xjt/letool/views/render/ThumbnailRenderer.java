@@ -116,7 +116,8 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
 
         Texture content = entry.compressTexture;
         if (content == null) {
-            content = mWaitLoadingTexture;
+            return renderRequestFlags;
+            //content = mWaitLoadingTexture;
             //entry.isWaitDisplayed = true;
         } else {
             //LLog.i(TAG, " ------------ renderThumbnail:" + index + "   :" + System.currentTimeMillis());

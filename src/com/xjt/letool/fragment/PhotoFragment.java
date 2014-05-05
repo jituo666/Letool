@@ -330,7 +330,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         };
         mEyePosition = new EyePosition(getAndroidContext(), this);
         initBrowseActionBar();
-        mThumbnailView.startScatteringAnimation(mOpenCenter);
+        //mThumbnailView.startScatteringAnimation(mOpenCenter);
         return rootView;
     }
 

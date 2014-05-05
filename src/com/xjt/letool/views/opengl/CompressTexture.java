@@ -104,6 +104,7 @@ public abstract class CompressTexture extends BasicTexture {
      * @param canvas
      */
     public void updateContent(GLESCanvas canvas) {
+        LLog.i(TAG, "------updateContent:" + isLoaded());
         if (!isLoaded()) {
             if (mThrottled && ++sUploadedCount > UPLOAD_LIMIT) {
                 return;
