@@ -41,8 +41,8 @@ public class SlidingMenuFragment extends Fragment {
     public static final int SLIDING_MENU_EXIT = 3;
 
     private static final SlidingMenuItem[] SLIDING_MENUS = new SlidingMenuItem[] {
-            new SlidingMenuItem(SLIDING_MENU_PHOTO, R.drawable.ic_action_view_as_list, R.string.common_photo, true, true),
-            new SlidingMenuItem(SLIDING_MENU_FOLDER, R.drawable.ic_action_about, R.string.common_gallery, true, true),
+            new SlidingMenuItem(SLIDING_MENU_PHOTO, R.drawable.ic_action_photo, R.string.common_photo, true, true),
+            new SlidingMenuItem(SLIDING_MENU_FOLDER, R.drawable.ic_action_gallery, R.string.common_gallery, true, true),
             new SlidingMenuItem(SLIDING_MENU_SETTING, R.drawable.ic_action_settings, R.string.common_settings, true, true),
             new SlidingMenuItem(SLIDING_MENU_EXIT, R.drawable.ic_action_exit, R.string.common_exit, true, true),
     };

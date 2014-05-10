@@ -1,3 +1,4 @@
+
 package com.xjt.letool.fragment;
 
 import java.lang.ref.WeakReference;
@@ -287,6 +288,13 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         mThumbnailViewRenderer.setModel(mThumbnailSetAdapter);
     }
 
+    private void initBrowseActionBar() {
+        LetoolActionBar actionBar = getLetoolActionBar();
+        actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
+        actionBar.setTitleIcon(R.drawable.ic_drawer);
+        actionBar.setTitleText(R.string.common_gallery);
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -339,12 +347,9 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
             }
         };
         initializeViews();
+        initBrowseActionBar();
         initializeData();
         mEyePosition = new EyePosition(getAndroidContext(), this);
-        LetoolActionBar actionBar = getLetoolActionBar();
-        actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
-        actionBar.setTitleIcon(R.drawable.ic_drawer);
-        actionBar.setTitleText(R.string.common_gallery);
         return rootView;
     }
 
@@ -542,6 +547,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
             case SelectionManager.LEAVE_SELECTION_MODE: {
                 getLetoolActionBar().setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
                 mRootPane.invalidate();
+                initBrowseActionBar();
                 break;
             }
             case SelectionManager.SELECT_ALL_MODE: {
