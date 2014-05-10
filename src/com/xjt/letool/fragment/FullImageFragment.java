@@ -48,7 +48,7 @@ import com.xjt.letool.common.SynchronizedHandler;
  */
 public class FullImageFragment extends LetoolFragment implements FullImageView.Listener {
 
-    private static final String TAG = "PhotoPage";
+    private static final String TAG = FullImageFragment.class.getSimpleName();
 
     private static final int MSG_HIDE_BARS = 1;
     private static final int MSG_ON_FULL_SCREEN_CHANGED = 4;
@@ -64,7 +64,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     private static final int MSG_UPDATE_SHARE_URI = 15;
     private static final int MSG_UPDATE_PANORAMA_UI = 16;
 
-    private static final int HIDE_BARS_TIMEOUT = 3500;
     private static final int UNFREEZE_GLROOT_TIMEOUT = 250;
 
     public static final String KEY_MEDIA_SET_PATH = "media-set-path";
@@ -102,7 +101,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     private int mCurrentIndex = 0;
     private boolean mShowBars = true;
     private volatile boolean mActionBarAllowed = true;
-    private boolean mIsMenuVisible;
     private MediaItem mCurrentPhoto = null;
     private boolean mIsActive;
     private OrientationManager mOrientationManager;
@@ -133,8 +131,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     private final GLBaseView mRootPane = new GLBaseView() {
 
         @Override
-        protected void onLayout(
-                boolean changed, int left, int top, int right, int bottom) {
+        protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
             mFullImageView.layout(0, 0, right - left, bottom - top);
             if (mShowDetails) {
                 mDetailsHelper.layout(left, 0, right, bottom);
@@ -193,24 +190,20 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             return;
         mShowBars = true;
         mOrientationManager.unlockOrientation();
-        mGLRootView.setLightsOutMode(false);
-        refreshHidingMessage();
+        LetoolActionBar actionBar = getLetoolActionBar();
+        actionBar.setVisible(View.VISIBLE);
+
     }
 
     private void hideBars() {
         if (!mShowBars)
             return;
         mShowBars = false;
-        mGLRootView.setLightsOutMode(true);
+        LetoolActionBar actionBar = getLetoolActionBar();
+        actionBar.setVisible(View.GONE);
         mHandler.removeMessages(MSG_HIDE_BARS);
     }
 
-    private void refreshHidingMessage() {
-        mHandler.removeMessages(MSG_HIDE_BARS);
-        if (!mIsMenuVisible && !mFullImageView.getFilmMode()) {
-            mHandler.sendEmptyMessageDelayed(MSG_HIDE_BARS, HIDE_BARS_TIMEOUT);
-        }
-    }
 
     private void updateActionBarMessage(String message) {
         LetoolActionBar actionBar = getLetoolActionBar();
@@ -277,6 +270,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             int h = mFullImageView.getHeight();
             playVideo = (Math.abs(x - w / 2) * 12 <= w) && (Math.abs(y - h / 2) * 12 <= h);
         }
+        toggleBars();
         /*
                 if (playVideo) {
                     getActivity().finish();
@@ -408,11 +402,10 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             mHandler.removeMessages(MSG_HIDE_BARS);
             UsageStatistics.onContentViewChanged(UsageStatistics.COMPONENT_GALLERY, "FilmstripPage");
         } else {
-            refreshHidingMessage();
             if (mCurrentIndex > 0) {
                 UsageStatistics.onContentViewChanged(UsageStatistics.COMPONENT_GALLERY, "SinglePhotoPage");
             } else {
-                UsageStatistics.onContentViewChanged(UsageStatistics.COMPONENT_CAMERA, "Unknown"); // TODO
+                UsageStatistics.onContentViewChanged(UsageStatistics.COMPONENT_CAMERA, "Unknown");
             }
         }
     }
@@ -482,30 +475,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
 
             @Override
             public void onPhotoChanged(int index, MediaPath item) {
-                int oldIndex = mCurrentIndex;
                 mCurrentIndex = index;
-                //                if (mHasCameraScreennailOrPlaceholder) {
-                //                    if (mCurrentIndex > 0) {
-                //                        mSkipUpdateCurrentPhoto = false;
-                //                    }
-                //                    if (oldIndex == 0 && mCurrentIndex > 0 && !mFullImageView.getFilmMode()) {
-                //                        mFullImageView.setFilmMode(true);
-                //                    } else if (oldIndex == 2 && mCurrentIndex == 1) {
-                //                        mFullImageView.stopScrolling();
-                //                    } else if (oldIndex >= 1 && mCurrentIndex == 0) {
-                //                        mFullImageView.setWantPictureCenterCallbacks(true);
-                //                        mSkipUpdateCurrentPhoto = true;
-                //                    }
-                //                }
-                //                if (!mSkipUpdateCurrentPhoto) {
-                //                    if (item != null) {
-                //                        MediaItem photo = mModel.getMediaItem(0);
-                //                        if (photo != null)
-                //                            updateCurrentPhoto(photo);
-                //                    }
-                //                    updateBars();
-                //                }
-                refreshHidingMessage();
                 updateActionBarMessage("大图浏览 (" + (mCurrentIndex + 1) + "/" + mediaItemCount + ")");
             }
 
@@ -525,14 +495,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             }
 
         });
-        //} else {
-        // Get default media set by the URI
-        /*            MediaItem mediaItem = (MediaItem) getDataManager().getMediaObject(itemPath);
-                    mModel = new SinglePhotoDataAdapter(mActivity, mFullImageView, mediaItem);
-                    mFullImageView.setModel(mModel);
-                    updateCurrentPhoto(mediaItem);
-                    mShowSpinner = false;*/
-        //}
         mFullImageView.setFilmMode(mStartInFilmstrip && mMediaSet.getMediaItemCount() > 1);
         mHandler = new SynchronizedHandler(mGLRootView) {
 

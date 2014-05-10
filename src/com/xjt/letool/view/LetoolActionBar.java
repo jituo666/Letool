@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -89,7 +90,7 @@ public class LetoolActionBar {
     }
 
     public void setTitleIcon(int resId) {
-        if (mCurActionBarMode != ACTION_BAR_MODE_SELECTION ) {
+        if (mCurActionBarMode != ACTION_BAR_MODE_SELECTION) {
             ImageView natviButton = (ImageView) mActionModePanel.findViewById(R.id.action_navi_tip);
             natviButton.setImageResource(resId);
         }
@@ -116,5 +117,24 @@ public class LetoolActionBar {
                 && mSelectionManager.inSelectionMode()) {
             mSelectionManager.leaveSelectionMode();
         }
+    }
+
+    public void setVisible(int visible) {
+        if (mBarContainer != null) {
+
+            mBarContainer.setVisibility(visible);
+            if (visible == View.VISIBLE) {
+                mBarContainer.startAnimation(AnimationUtils.loadAnimation(mActivity, R.anim.slide_top_in));
+            } else {
+                mBarContainer.startAnimation(AnimationUtils.loadAnimation(mActivity, R.anim.slide_top_out));
+            }
+        }
+    }
+
+    public int getHeight() {
+        if (mBarContainer != null) {
+            return mBarContainer.getHeight();
+        }
+        return 0;
     }
 }

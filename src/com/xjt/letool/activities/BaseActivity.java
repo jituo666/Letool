@@ -4,7 +4,6 @@ package com.xjt.letool.activities;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
-import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.OrientationManager;
 import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.fragment.LetoolFragment;

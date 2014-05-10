@@ -93,10 +93,11 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         @Override
         protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
             mEyePosition.resetPosition();
+            LetoolActionBar actionBar = getLetoolActionBar();
             int thumbnailViewLeft = left + mConfig.paddingLeft;
-            int thumbnailViewTop = mConfig.paddingTop;
-            int thumbnailViewBottom = bottom - top - mConfig.paddingBottom;
             int thumbnailViewRight = right - left - mConfig.paddingRight;
+            int thumbnailViewTop = top + mConfig.paddingTop + actionBar.getHeight();
+            int thumbnailViewBottom = bottom - top - mConfig.paddingBottom - actionBar.getHeight();
             if (mShowDetails) {
                 mDetailsHelper.layout(left, thumbnailViewTop, right, bottom);
             } else {
@@ -186,21 +187,21 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         }
     }
 
-    public void onSingleTapUp(int slotIndex) {
+    public void onSingleTapUp(int thumbnailIndex) {
         if (!mIsActive)
             return;
 
         if (mSelectionManager.inSelectionMode()) {
-            MediaSet targetSet = mThumbnailSetAdapter.getMediaSet(slotIndex);
+            MediaSet targetSet = mThumbnailSetAdapter.getMediaSet(thumbnailIndex);
             if (targetSet == null)
                 return; // Content is dirty, we shall reload soon
             mSelectionManager.toggle(targetSet.getPath());
             mThumbnailView.invalidate();
         } else {
             // Show pressed-up animation for the single-tap.
-            mThumbnailViewRenderer.setPressedIndex(slotIndex);
+            mThumbnailViewRenderer.setPressedIndex(thumbnailIndex);
             mThumbnailViewRenderer.setPressedUp();
-            mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_PICK_ALBUM, slotIndex, 0), FadeTexture.DURATION);
+            mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_PICK_ALBUM, thumbnailIndex, 0), FadeTexture.DURATION);
         }
     }
 
@@ -217,10 +218,10 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         }
     }
 
-    public void onLongTap(int slotIndex) {
+    public void onLongTap(int thumbnailIndex) {
         if (mGetContent)
             return;
-        MediaSet set = mThumbnailSetAdapter.getMediaSet(slotIndex);
+        MediaSet set = mThumbnailSetAdapter.getMediaSet(thumbnailIndex);
         if (set == null)
             return;
         mSelectionManager.setAutoLeaveSelectionMode(true);
@@ -267,13 +268,13 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
             }
 
             @Override
-            public void onSingleTapUp(int slotIndex) {
-                GalleryFragment.this.onSingleTapUp(slotIndex);
+            public void onSingleTapUp(int thumbnailIndex) {
+                GalleryFragment.this.onSingleTapUp(thumbnailIndex);
             }
 
             @Override
-            public void onLongTap(int slotIndex) {
-                GalleryFragment.this.onLongTap(slotIndex);
+            public void onLongTap(int thumbnailIndex) {
+                GalleryFragment.this.onLongTap(thumbnailIndex);
             }
         });
     }
@@ -511,10 +512,10 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         }
     }
 
-    private void pickAlbum(int slotIndex) {
+    private void pickAlbum(int thumbnailIndex) {
         if (!mIsActive)
             return;
-        MediaSet targetSet = mThumbnailSetAdapter.getMediaSet(slotIndex);
+        MediaSet targetSet = mThumbnailSetAdapter.getMediaSet(thumbnailIndex);
         if (targetSet == null)
             return; // Content is dirty, we shall reload soon
         if (targetSet.getTotalMediaItemCount() == 0) {

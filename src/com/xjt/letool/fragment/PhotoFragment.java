@@ -114,19 +114,20 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         @Override
         protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
             mEyePosition.resetPosition();
-            int slotViewLeft = left + mConfig.paddingLeft;
-            int slotViewTop = top + mConfig.paddingTop;
-            int slotViewBottom = bottom - top - mConfig.paddingBottom;
-            int slotViewRight = right - left - mConfig.paddingRight;
+            LetoolActionBar actionBar = getLetoolActionBar();
+            int thumbnailViewLeft = left + mConfig.paddingLeft;
+            int thumbnailViewRight = right - left - mConfig.paddingRight;
+            int thumbnailViewTop = top + mConfig.paddingTop + actionBar.getHeight();
+            int thumbnailViewBottom = bottom - top - mConfig.paddingBottom - actionBar.getHeight();
 
             if (mShowDetails) {
-                mDetailsHelper.layout(slotViewLeft, slotViewTop, right, bottom);
+                mDetailsHelper.layout(thumbnailViewLeft, thumbnailViewTop, right, bottom);
             } else {
                 mRender.setHighlightItemPath(null);
             }
             // Set the mThumbnailView as a reference point to the open animation
-            mOpenCenter.setReferencePosition(0, slotViewTop);
-            mThumbnailView.layout(slotViewLeft, slotViewTop, slotViewRight, slotViewBottom);
+            mOpenCenter.setReferencePosition(0, thumbnailViewTop);
+            mThumbnailView.layout(thumbnailViewLeft, thumbnailViewTop, thumbnailViewRight, thumbnailViewBottom);
             LetoolUtils.setViewPointMatrix(mMatrix, (right - left) / 2, (bottom - top) / 2, -mUserDistance);
         }
 
@@ -282,15 +283,26 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
             }
 
             @Override
-            public void onSingleTapUp(int slotIndex) {
-                PhotoFragment.this.onSingleTapUp(slotIndex);
+            public void onSingleTapUp(int thumbnailIndex) {
+                PhotoFragment.this.onSingleTapUp(thumbnailIndex);
             }
 
             @Override
-            public void onLongTap(int slotIndex) {
-                PhotoFragment.this.onLongTap(slotIndex);
+            public void onLongTap(int thumbnailIndex) {
+                PhotoFragment.this.onLongTap(thumbnailIndex);
             }
         });
+    }
+
+    private void initBrowseActionBar() {
+        LetoolActionBar actionBar = getLetoolActionBar();
+        actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
+        if (mIsCamera) {
+            actionBar.setTitleIcon(R.drawable.ic_drawer);
+        } else {
+            actionBar.setTitleIcon(R.drawable.ic_action_previous_item);
+        }
+        actionBar.setTitleText(mAlbumTitle);
     }
 
     private void initializeData() {
@@ -332,17 +344,6 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         initBrowseActionBar();
         //mThumbnailView.startScatteringAnimation(mOpenCenter);
         return rootView;
-    }
-
-    private void initBrowseActionBar() {
-        LetoolActionBar actionBar = getLetoolActionBar();
-        actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
-        if (mIsCamera) {
-            actionBar.setTitleIcon(R.drawable.ic_drawer);
-        } else {
-            actionBar.setTitleIcon(R.drawable.ic_action_previous_item);
-        }
-        actionBar.setTitleText(mAlbumTitle);
     }
 
     private void initSelectionActionBar() {

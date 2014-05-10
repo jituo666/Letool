@@ -57,7 +57,7 @@
     <!-- =============================================================================================== -->
 
     <drawable name="main_screen_bg">#ffffffff</drawable>
-    <drawable name="main_action_bar_bg">#ffe8e8e8</drawable>
+    <drawable name="main_action_bar_bg">#ffdddddd</drawable>
     <drawable name="main_sliding_menu_bg">#ffe8e8e8</drawable>
 
     <color name="major_text_color">#ff252525</color>

@@ -10,8 +10,8 @@
         android:layout_alignParentLeft="true"
         android:background="@drawable/common_item_bkg"
         android:gravity="center_vertical"
-        android:paddingRight="2dp"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:paddingRight="2dp" >
 
         <ImageView
             android:id="@+id/action_navi_tip"
@@ -45,7 +45,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_toRightOf="@id/sliding_menu_divider"
+        android:ellipsize="end"
         android:gravity="left|center_vertical"
+        android:singleLine="true"
         android:text="@string/app_name"
         android:textColor="@color/major_text_color"
         android:textSize="@dimen/letool_action_bar_text_size" />
