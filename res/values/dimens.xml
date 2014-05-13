@@ -147,15 +147,21 @@
     <dimen name="photoeditor_text_padding">10dp</dimen>
     <dimen name="photoeditor_original_text_size">18dp</dimen>
     <dimen name="photoeditor_original_text_margin">4dp</dimen>
-<!-- ========================================================================================== -->
-<dimen name="letool_action_bar_height">48dp</dimen>
-<dimen name="letool_action_bar_icon_size">32dp</dimen>
-<dimen name="letool_action_bar_text_size">20sp</dimen>
-<dimen name="letool_action_bar_text_size1">18sp</dimen>
-<dimen name="letool_sliding_menu_side_padding">4dp</dimen>
-<dimen name="letool_sliding_menu_item_height">48dp</dimen>
-<dimen name="letool_sliding_menu_logo_height">180dp</dimen>
-<dimen name="letool_sliding_menu_logo_width">240dp</dimen>
-<dimen name="letool_sliding_menu_icon_size">32dp</dimen>
-<dimen name="letool_sliding_menu_text_size">18sp</dimen>
+    <!-- ========================================================================================== -->
+    <dimen name="letool_action_bar_height">48dp</dimen>
+    <dimen name="letool_action_bar_icon_size">32dp</dimen>
+    <dimen name="letool_action_bar_text_size">20sp</dimen>
+    <dimen name="letool_action_bar_text_size1">18sp</dimen>
+    <dimen name="letool_sliding_menu_side_padding">4dp</dimen>
+    <dimen name="letool_sliding_menu_item_height">48dp</dimen>
+    <dimen name="letool_sliding_menu_logo_height">180dp</dimen>
+    <dimen name="letool_sliding_menu_logo_width">240dp</dimen>
+    <dimen name="letool_sliding_menu_icon_size">32dp</dimen>
+    <dimen name="letool_sliding_menu_text_size">18sp</dimen>
+    <dimen name="letool_settings_item_height">48dp</dimen>
+    <dimen name="letool_settings_major_item_height">24dp</dimen>
+    <dimen name="letool_settings_minor_item_height">18dp</dimen>
+    <dimen name="common_text_size_middle">16dp</dimen>
+    <dimen name="common_text_size_small">13dp</dimen>
+
 </resources>

@@ -233,6 +233,7 @@ public class ThumbnailView extends GLBaseView {
     ////////////////////////////////////////////////////////////////Render/////////////////////////////////////////////////////////////////
 
     public static interface Renderer {
+
         public void prepareDrawing();
 
         public void onVisibleRangeChanged(int visibleStart, int visibleEnd);
@@ -365,9 +366,7 @@ public class ThumbnailView extends GLBaseView {
             return;
         }
         Rect rect = mLayout.getThumbnailRect(index, mTempRect);
-        int position = ThumbnailLayout.WIDE
-                ? (rect.left + rect.right - getWidth()) / 2
-                : (rect.top + rect.bottom - getHeight()) / 2;
+        int position = ThumbnailLayout.WIDE ? (rect.left + rect.right - getWidth()) / 2 : (rect.top + rect.bottom - getHeight()) / 2;
         setScrollPosition(position);
     }
 

@@ -1171,4 +1171,11 @@ CHAR LIMIT = NONE]
         <item quantity="other">%1$d 项</item>
     </plurals>
 
+    <string name="photo_dir_title">我的照片目录</string>
+    <string name="photo_dir_desc">设置我的照片的目录列表</string>
+    <string name="gallery_dir_title">系统图库</string>
+    <string name="gallery_dir_desc">设置系统图库目录列表</string>
+    <string name="app_about_desc">作者、技术合作、版权等</string>
+    <string name="dashi_new_function_tip" translatable="false">New</string>
+
 </resources>

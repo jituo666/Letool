@@ -134,7 +134,6 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
     private long mSourceVersion = MediaObject.INVALID_DATA_VERSION;
     private int mSize = 0;
     private MediaPath mItemPath;
-    private int mCameraIndex;
     private boolean mIsPanorama;
     private boolean mIsStaticCamera;
     private boolean mIsActive;
@@ -157,13 +156,12 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
     // find the image being viewed. cameraIndex is the index of the camera
     // preview. If cameraIndex < 0, there is no camera preview.
     public PhotoDataAdapter(LetoolFragment activity, FullImageView view,
-            MediaSet mediaSet, MediaPath itemPath, int indexHint, int cameraIndex,
+            MediaSet mediaSet, MediaPath itemPath, int indexHint,
             boolean isPanorama, boolean isStaticCamera) {
         mSource = Utils.checkNotNull(mediaSet);
         mPhotoView = Utils.checkNotNull(view);
         mItemPath = Utils.checkNotNull(itemPath);
         mCurrentIndex = indexHint;
-        mCameraIndex = cameraIndex;
         mIsPanorama = isPanorama;
         mIsStaticCamera = isStaticCamera;
         mThreadPool = activity.getThreadPool();
@@ -477,7 +475,7 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
 
     @Override
     public boolean isCamera(int offset) {
-        return mCurrentIndex + offset == mCameraIndex;
+        return false;
     }
 
     @Override
@@ -729,8 +727,6 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
     // notification from MediaProvider, reload data, and show the actual image
     // or video data.
     private boolean isTemporaryItem(MediaItem mediaItem) {
-        // Must have camera to create a temporary item.
-        if (mCameraIndex < 0) return false;
         // Must be an item in camera roll.
         if (!(mediaItem instanceof LocalMediaItem)) return false;
         LocalMediaItem item = (LocalMediaItem) mediaItem;
@@ -1056,11 +1052,7 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
                 if (index == MediaSet.INDEX_NOT_FOUND) {
                     index = info.indexHint;
                     int focusHintDirection = mFocusHintDirection;
-                    if (index == (mCameraIndex + 1)) {
-                        focusHintDirection = FOCUS_HINT_NEXT;
-                    }
-                    if (focusHintDirection == FOCUS_HINT_PREVIOUS
-                            && index > 0) {
+                    if (focusHintDirection == FOCUS_HINT_PREVIOUS && index > 0) {
                         index--;
                     }
                 }

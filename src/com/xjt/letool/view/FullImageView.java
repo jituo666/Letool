@@ -115,10 +115,6 @@ public class FullImageView extends GLBaseView {
 
         public void onFullScreenChanged(boolean full);
 
-        public void onActionBarAllowed(boolean allowed);
-
-        public void onActionBarWanted();
-
         public void onCurrentImageUpdated();
 
         public void onDeleteImage(MediaPath path, int offset);
@@ -972,7 +968,7 @@ public class FullImageView extends GLBaseView {
         private boolean mHadFling;
 
         @Override
-        public boolean onSingleTapUp(float x, float y) {
+        public boolean onSingleTapConfirmed(float x, float y) {
             // On crespo running Android 2.3.6 (gingerbread), a pinch out gesture results in the
             // following call sequence: onDown(), onUp() and then onSingleTapUp(). The correct
             // sequence for a single-tap-up gesture should be: onDown(), onSingleTapUp() and onUp().
@@ -980,31 +976,17 @@ public class FullImageView extends GLBaseView {
             // no onSingleTapUp(). Base on these observations, the following condition is added to
             // filter out the false alarm where onSingleTapUp() is called within a pinch out
             // gesture. The framework fix went into ICS. Refer to b/4588114.
-            if (Build.VERSION.SDK_INT < ApiHelper.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                if ((mHolding & HOLD_TOUCH_DOWN) == 0) {
-                    return true;
-                }
-            }
+//            if (Build.VERSION.SDK_INT < ApiHelper.VERSION_CODES.ICE_CREAM_SANDWICH) {
+//                if ((mHolding & HOLD_TOUCH_DOWN) == 0) {
+//                    return true;
+//                }
+//            }
 
-            // We do this in addition to onUp() because we want the snapback of
-            // setFilmMode to happen.
+            // We do this in addition to onUp() because we want the snapback of setFilmMode to happen.
             mHolding &= ~HOLD_TOUCH_DOWN;
-
             if (mFilmMode && !mDownInScrolling) {
                 switchToHitPicture((int) (x + 0.5f), (int) (y + 0.5f));
-
-                // If this is a lock screen photo, let the listener handle the
-                // event. Tapping on lock screen photo should take the user
-                // directly to the lock screen.
-                MediaItem item = mModel.getMediaItem(0);
-                int supported = 0;
-                if (item != null)
-                    supported = item.getSupportedOperations();
-                /*                if ((supported & MediaItem.SUPPORT_ACTION) == 0) {
-                                    setFilmMode(false);
-                                    mIgnoreUpEvent = true;
-                                    return true;
-                                }*/
+                mIgnoreUpEvent = true;
             }
 
             if (mListener != null) {
@@ -1027,8 +1009,7 @@ public class FullImageView extends GLBaseView {
                 return false;
             FullImageLayout controller = mPositionController;
             float scale = controller.getImageScale();
-            // onDoubleTap happened on the second ACTION_DOWN.
-            // We need to ignore the next UP event.
+            // onDoubleTap happened on the second ACTION_DOWN. We need to ignore the next UP event.
             mIgnoreUpEvent = true;
             if (scale <= .75f || controller.isAtMinimalScale()) {
                 controller.zoomIn(x, y, Math.max(1.0f, scale * 1.5f));
@@ -1079,8 +1060,7 @@ public class FullImageView extends GLBaseView {
             if (Math.abs(delta) >= size) {
                 delta = delta > 0 ? maxScrollDistance : -maxScrollDistance;
             } else {
-                delta = maxScrollDistance *
-                        FloatMath.sin((delta / size) * (float) (Math.PI / 2));
+                delta = maxScrollDistance * FloatMath.sin((delta / size) * (float) (Math.PI / 2));
             }
             return (int) (delta + 0.5f);
         }
@@ -1158,14 +1138,14 @@ public class FullImageView extends GLBaseView {
                 return true;
             // We ignore the scaling gesture if it is a camera preview.
             mIgnoreScalingGesture = mPictures.get(0).isCamera();
+
+            LLog.i(TAG, "onScaleBegin------------------mIgnoreScalingGesture:" + mIgnoreScalingGesture );
             if (mIgnoreScalingGesture) {
                 return true;
             }
             mPositionController.beginScale(focusX, focusY);
-            // We can change mode if we are in film mode, or we are in page
-            // mode and at minimal scale.
-            mCanChangeMode = mFilmMode
-                    || mPositionController.isAtMinimalScale();
+            // We can change mode if we are in film mode, or we are in page mode and at minimal scale.
+            mCanChangeMode = mFilmMode || mPositionController.isAtMinimalScale();
             mAccScale = 1f;
             return true;
         }
@@ -1331,17 +1311,7 @@ public class FullImageView extends GLBaseView {
         mGestureListener.setSwipingEnabled(enabled);
     }
 
-    private void updateActionBar() {
-        boolean isCamera = mPictures.get(0).isCamera();
-        if (isCamera && !mFilmMode) {
-            // Move into camera in page mode, lock
-            mListener.onActionBarAllowed(false);
-        } else {
-            mListener.onActionBarAllowed(true);
-            if (mFilmMode)
-                mListener.onActionBarWanted();
-        }
-    }
+
 
     public void setFilmMode(boolean enabled) {
         if (mFilmMode == enabled)
@@ -1349,9 +1319,8 @@ public class FullImageView extends GLBaseView {
         mFilmMode = enabled;
         mPositionController.setFilmMode(mFilmMode);
         mModel.setNeedFullImage(!enabled);
-        mModel.setFocusHintDirection(
-                mFilmMode ? Model.FOCUS_HINT_PREVIOUS : Model.FOCUS_HINT_NEXT);
-        updateActionBar();
+        mModel.setFocusHintDirection(mFilmMode ? Model.FOCUS_HINT_PREVIOUS : Model.FOCUS_HINT_NEXT);
+
         mListener.onFilmModeChanged(enabled);
     }
 
@@ -1543,6 +1512,7 @@ public class FullImageView extends GLBaseView {
     // Switch to the previous or next picture if the hit position is inside
     // one of their boxes. This runs in main thread.
     private void switchToHitPicture(int x, int y) {
+
         if (mPrevBound < 0) {
             Rect r = mPositionController.getPosition(-1);
             if (r.right >= x) {
@@ -1572,8 +1542,7 @@ public class FullImageView extends GLBaseView {
         if (mFilmMode)
             return false;
 
-        // Avoid swiping images if we're possibly flinging to view the
-        // zoomed in picture vertically.
+        // Avoid swiping images if we're possibly flinging to view the zoomed in picture vertically.
         FullImageLayout controller = mPositionController;
         boolean isMinimal = controller.isAtMinimalScale();
         int edges = controller.getImageAtEdges();
@@ -1690,9 +1659,6 @@ public class FullImageView extends GLBaseView {
         if (offset == 1) {
             if (mNextBound <= 0)
                 return false;
-            // Temporary disable action bar until the capture animation is done.
-            if (!mFilmMode)
-                mListener.onActionBarAllowed(false);
             switchToNextImage();
             mPositionController.startCaptureAnimationSlide(-1);
         } else if (offset == -1) {
@@ -1702,8 +1668,7 @@ public class FullImageView extends GLBaseView {
                 setFilmMode(false);
 
             // If we are too far away from the first image (so that we don't
-            // have all the ScreenNails in-between), we go directly without
-            // animation.
+            // have all the ScreenNails in-between), we go directly without animation.
             if (mModel.getCurrentIndex() > SCREEN_NAIL_MAX) {
                 switchToFirstImage();
                 mPositionController.skipToFinalPosition();
@@ -1723,11 +1688,6 @@ public class FullImageView extends GLBaseView {
 
     private void captureAnimationDone(int offset) {
         mHolding &= ~HOLD_CAPTURE_ANIMATION;
-        if (offset == 1 && !mFilmMode) {
-            // Now the capture animation is done, enable the action bar.
-            mListener.onActionBarAllowed(true);
-            mListener.onActionBarWanted();
-        }
         snapback();
     }
 

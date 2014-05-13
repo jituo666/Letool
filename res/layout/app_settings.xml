@@ -1,16 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-   android:background="@drawable/main_screen_bg"
+    android:layout_height="wrap_content"
+    android:background="@drawable/main_settings_block_bg"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginTop="56dp"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/textView1"
+
+    <include
+        android:id="@+id/photo_direcory"
+        layout="@layout/app_settings_item_normal" />
+
+    <View
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Settings"
-        android:textSize="48sp" />
+        android:layout_height="1dp"
+        android:background="@drawable/common_list_divider" />
+
+    <include
+        android:id="@+id/gallery_direcory"
+        layout="@layout/app_settings_item_normal" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/common_list_divider" />
+
+    <include
+        android:id="@+id/clear_cache"
+        layout="@layout/app_settings_item_normal" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/common_list_divider" />
+
+    <include
+        android:id="@+id/app_about"
+        layout="@layout/app_settings_item_normal" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/common_list_divider" />
+
+    <include
+        android:id="@+id/app_about"
+        layout="@layout/app_settings_item_normal" />
 
 </LinearLayout>

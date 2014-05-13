@@ -29,7 +29,6 @@
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/selection_divider"
         android:gravity="left|center_vertical"
-        android:text="180"
         android:textColor="@color/major_text_color"
         android:textSize="@dimen/letool_action_bar_text_size1" />
 

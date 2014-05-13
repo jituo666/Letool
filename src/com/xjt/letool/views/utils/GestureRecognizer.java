@@ -13,7 +13,7 @@ public class GestureRecognizer {
     private static final String TAG = "GestureRecognizer";
 
     public interface Listener {
-        boolean onSingleTapUp(float x, float y);
+        boolean onSingleTapConfirmed(float x, float y);
         boolean onDoubleTap(float x, float y);
         boolean onScroll(float dx, float dy, float totalX, float totalY);
         boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY);
@@ -56,11 +56,10 @@ public class GestureRecognizer {
         cancelEvent.recycle();
     }
 
-    private class MyGestureListener
-                extends GestureDetector.SimpleOnGestureListener {
+    private class MyGestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
-        public boolean onSingleTapUp(MotionEvent e) {
-            return mListener.onSingleTapUp(e.getX(), e.getY());
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+            return mListener.onSingleTapConfirmed(e.getX(), e.getY());
         }
 
         @Override

@@ -3,7 +3,6 @@ package com.xjt.letool.views.layout;
 import android.graphics.Rect;
 
 import com.xjt.letool.animations.IntegerAnim;
-import com.xjt.letool.common.LLog;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.view.ThumbnailView.Renderer;
 

@@ -118,7 +118,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
             int thumbnailViewLeft = left + mConfig.paddingLeft;
             int thumbnailViewRight = right - left - mConfig.paddingRight;
             int thumbnailViewTop = top + mConfig.paddingTop + actionBar.getHeight();
-            int thumbnailViewBottom = bottom - top - mConfig.paddingBottom - actionBar.getHeight();
+            int thumbnailViewBottom = bottom - top - mConfig.paddingBottom;
 
             if (mShowDetails) {
                 mDetailsHelper.layout(thumbnailViewLeft, thumbnailViewTop, right, bottom);

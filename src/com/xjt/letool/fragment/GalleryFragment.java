@@ -97,7 +97,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
             int thumbnailViewLeft = left + mConfig.paddingLeft;
             int thumbnailViewRight = right - left - mConfig.paddingRight;
             int thumbnailViewTop = top + mConfig.paddingTop + actionBar.getHeight();
-            int thumbnailViewBottom = bottom - top - mConfig.paddingBottom - actionBar.getHeight();
+            int thumbnailViewBottom = bottom - top - mConfig.paddingBottom;
             if (mShowDetails) {
                 mDetailsHelper.layout(left, thumbnailViewTop, right, bottom);
             } else {

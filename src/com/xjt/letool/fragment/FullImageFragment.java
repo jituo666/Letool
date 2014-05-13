@@ -4,7 +4,6 @@ package com.xjt.letool.fragment;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 
-import android.content.res.Configuration;
 import android.graphics.Color;
 
 import android.net.Uri;
@@ -52,9 +51,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
 
     private static final int MSG_HIDE_BARS = 1;
     private static final int MSG_ON_FULL_SCREEN_CHANGED = 4;
-    private static final int MSG_UPDATE_ACTION_BAR = 5;
     private static final int MSG_UNFREEZE_GLROOT = 6;
-    private static final int MSG_WANT_BARS = 7;
     private static final int MSG_REFRESH_BOTTOM_CONTROLS = 8;
     private static final int MSG_ON_CAMERA_CENTER = 9;
     private static final int MSG_ON_PICTURE_CENTER = 10;
@@ -100,7 +97,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
 
     private int mCurrentIndex = 0;
     private boolean mShowBars = true;
-    private volatile boolean mActionBarAllowed = true;
     private MediaItem mCurrentPhoto = null;
     private boolean mIsActive;
     private OrientationManager mOrientationManager;
@@ -190,8 +186,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             return;
         mShowBars = true;
         mOrientationManager.unlockOrientation();
-        LetoolActionBar actionBar = getLetoolActionBar();
-        actionBar.setVisible(View.VISIBLE);
+        getLetoolActionBar().setVisible(View.VISIBLE);
 
     }
 
@@ -199,49 +194,21 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         if (!mShowBars)
             return;
         mShowBars = false;
-        LetoolActionBar actionBar = getLetoolActionBar();
-        actionBar.setVisible(View.GONE);
+        getLetoolActionBar().setVisible(View.GONE);
         mHandler.removeMessages(MSG_HIDE_BARS);
-    }
-
-
-    private void updateActionBarMessage(String message) {
-        LetoolActionBar actionBar = getLetoolActionBar();
-        actionBar.setTitleText(message);
-    }
-
-    private boolean canShowBars() {
-        // No bars if we are showing camera preview.
-        if (mCurrentIndex == 0 && !mFullImageView.getFilmMode())
-            return false;
-        // No bars if it's not allowed.
-        if (!mActionBarAllowed)
-            return false;
-        Configuration config = getResources().getConfiguration();
-        if (config.touchscreen == Configuration.TOUCHSCREEN_NOTOUCH) {
-            return false;
-        }
-        return true;
-    }
-
-    private void wantBars() {
-        if (canShowBars())
-            showBars();
     }
 
     private void toggleBars() {
         if (mShowBars) {
             hideBars();
         } else {
-            if (canShowBars())
-                showBars();
+            showBars();
         }
     }
 
-    private void updateBars() {
-        if (!canShowBars()) {
-            hideBars();
-        }
+    private void updateActionBarMessage(String message) {
+        LetoolActionBar actionBar = getLetoolActionBar();
+        actionBar.setTitleText(message);
     }
 
     private void hideDetails() {
@@ -256,14 +223,11 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     public void onSingleTapUp(int x, int y) {
 
         MediaItem item = mModel.getMediaItem(0);
-        if (item == null) {
-            // item is not ready or it is camera preview, ignore
+        if (item == null) { // item is not ready or it is camera preview, ignore
             return;
         }
-
         int supported = item.getSupportedOperations();
         boolean playVideo = ((supported & MediaItem.SUPPORT_PLAY) != 0);
-
         if (playVideo) {
             // determine if the point is at center (1/6) of the photo view.(The position of the "play" icon is at center (1/6) of the photo)
             int w = mFullImageView.getWidth();
@@ -271,31 +235,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             playVideo = (Math.abs(x - w / 2) * 12 <= w) && (Math.abs(y - h / 2) * 12 <= h);
         }
         toggleBars();
-        /*
-                if (playVideo) {
-                    getActivity().finish();
-                } else if (goBack) {
-                    onBackPressed();
-                } else if (unlock) {
-                    Intent intent = new Intent(mActivity, GalleryActivity.class);
-                    intent.putExtra(GalleryActivity.KEY_DISMISS_KEYGUARD, true);
-                    mActivity.startActivity(intent);
-                } else if (launchCamera) {
-                    launchCamera();
-                } else {
-                    toggleBars();
-                }*/
-    }
-
-    @Override
-    public void onActionBarAllowed(boolean allowed) {
-        mActionBarAllowed = allowed;
-        mHandler.sendEmptyMessage(MSG_UPDATE_ACTION_BAR);
-    }
-
-    @Override
-    public void onActionBarWanted() {
-        mHandler.sendEmptyMessage(MSG_WANT_BARS);
     }
 
     @Override
@@ -373,7 +312,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             mIsActive = false;
             mGLRootView.unfreeze();
             mHandler.removeMessages(MSG_UNFREEZE_GLROOT);
-
             DetailsHelper.pause();
             // Hide the detail dialog on exit
             if (mShowDetails)
@@ -467,12 +405,11 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
                 mCurrentIndex = 0;
             itemPath = mMediaSet.getMediaItem(mCurrentIndex, 1).get(0).getPath();
         }
-        PhotoDataAdapter pda = new PhotoDataAdapter(this, mFullImageView, mMediaSet, itemPath, mCurrentIndex, 0, false, false);
+        PhotoDataAdapter pda = new PhotoDataAdapter(this, mFullImageView, mMediaSet, itemPath, mCurrentIndex, false, false);
         mModel = pda;
         mFullImageView.setModel(mModel);
 
         pda.setDataListener(new PhotoDataAdapter.DataListener() {
-
             @Override
             public void onPhotoChanged(int index, MediaPath item) {
                 mCurrentIndex = index;
@@ -509,14 +446,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
                         break;
                     }
                     case MSG_ON_FULL_SCREEN_CHANGED: {
-                        break;
-                    }
-                    case MSG_UPDATE_ACTION_BAR: {
-                        updateBars();
-                        break;
-                    }
-                    case MSG_WANT_BARS: {
-                        wantBars();
                         break;
                     }
                     case MSG_UNFREEZE_GLROOT: {
