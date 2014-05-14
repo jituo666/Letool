@@ -14,7 +14,7 @@ import com.xjt.letool.imagedata.utils.BitmapDecodeUtils;
 import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaPath;
 
-public class LocalETCBlobRequest extends BlobCacheRequest {
+public class LocalETCBlobRequest extends ETCCacheRequest {
 
     private static final String TAG = LocalETCBlobRequest.class.getSimpleName();
 

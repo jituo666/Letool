@@ -24,7 +24,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
     private MediaPath mHighlightItemPath = null;
     private ThumbnailFilter mThumbnailFilter;
 
-    private static final int CACHE_SIZE = 48;
+    private static final int CACHE_SIZE = 96;
 
     private final ColorTexture mWaitLoadingTexture;
     private final int mPlaceholderColor = Color.GRAY;
@@ -116,19 +116,15 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
 
         Texture content = entry.compressTexture;
         if (content == null) {
-            return renderRequestFlags;
-            //content = mWaitLoadingTexture;
-            //entry.isWaitDisplayed = true;
-        } else {
-            //LLog.i(TAG, " ------------ renderThumbnail:" + index + "   :" + System.currentTimeMillis());
+            content = mWaitLoadingTexture;
+            entry.isWaitDisplayed = true;
+        } else if (entry.isWaitDisplayed) {
+            LLog.i(TAG, " ------------ renderThumbnail:" + index + "   :" + System.currentTimeMillis());
+            entry.isWaitDisplayed = false;
+            content = new FadeInTexture(mPlaceholderColor, entry.compressTexture);
+            //content = entry.compressTexture;
+            entry.content = content;
         }
-//        else if (entry.isWaitDisplayed) {
-//            LLog.i(TAG, " ------------ renderThumbnail:" + index + "   :" + System.currentTimeMillis());
-//            entry.isWaitDisplayed = false;
-//            //content = new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
-//            content = entry.compressTexture;
-//            entry.content = content;
-//        }
 
         drawContent(canvas, content, width, height, entry.rotation);
         if ((content instanceof FadeInTexture) && ((FadeInTexture) content).isAnimating()) {

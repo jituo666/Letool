@@ -140,7 +140,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
             entry.isWaitLoadingDisplayed = true;
         } else if (entry.isWaitLoadingDisplayed) {
             entry.isWaitLoadingDisplayed = false;
-            content = new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
+            content = entry.bitmapTexture;//new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
             entry.content = content;
         }
         drawContent(canvas, content, width, height, entry.rotation);

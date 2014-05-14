@@ -1,10 +1,13 @@
+
 package com.xjt.letool.imagedata.blobcache;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
 import android.opengl.ETC1Util;
 import android.opengl.ETC1Util.ETC1Texture;
 
@@ -12,7 +15,6 @@ import com.xjt.letool.LetoolApp;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.ThreadPool.Job;
 import com.xjt.letool.common.ThreadPool.JobContext;
-import com.xjt.letool.imagedata.utils.BitmapDecodeUtils;
 import com.xjt.letool.imagedata.utils.BitmapUtils;
 import com.xjt.letool.imagedata.utils.BytesBufferPool.BytesBuffer;
 import com.xjt.letool.metadata.MediaItem;
@@ -37,8 +39,7 @@ public abstract class ETCCacheRequest implements Job<ETC1Texture> {
     }
 
     private String debugTag() {
-        return mPath + "," + mTimeModified + ","
-                + ((mType == MediaItem.TYPE_THUMBNAIL) ? "THUMB" : (mType == MediaItem.TYPE_MICROTHUMBNAIL) ? "MICROTHUMB" : "?");
+        return mPath + "," + mTimeModified + "," + ((mType == MediaItem.TYPE_THUMBNAIL) ? "THUMB" : (mType == MediaItem.TYPE_MICROTHUMBNAIL) ? "MICROTHUMB" : "?");
     }
 
     @Override
@@ -53,6 +54,8 @@ public abstract class ETCCacheRequest implements Job<ETC1Texture> {
             if (found) {
                 return ETC1Util.createTexture(new ByteArrayInputStream(buffer.data, buffer.offset, buffer.length));
             }
+        } catch (IOException e) {
+
         } finally {
             MediaItem.getBytesBufferPool().recycle(buffer);
         }
@@ -69,14 +72,23 @@ public abstract class ETCCacheRequest implements Job<ETC1Texture> {
         } else {
             bitmap = BitmapUtils.resizeDownBySideLength(bitmap, mTargetSize, true);
         }
+        bitmap =  bitmap.copy(Bitmap.Config.RGB_565, true);
         if (jc.isCancelled())
             return null;
-        ETC1Texture texture;
-        texture = ETC1Util.compressTexture(bitmap.compress(CompressFormat.JPEG, 60, 0), mTargetSize, mTargetSize, 2, 0);
-        //byte[] array = BitmapUtils.compressToBytes(bitmap);
+        ByteBuffer bb = ByteBuffer.allocateDirect(bitmap.getRowBytes() * bitmap.getHeight()); // size is good
+        bb.order(ByteOrder.nativeOrder());
+        bitmap.copyPixelsToBuffer(bb);
+        bb.position(0);
+        ETC1Texture texture = ETC1Util.compressTexture(bb, mTargetSize, mTargetSize, 2, 2 * mTargetSize);
         if (jc.isCancelled())
             return null;
-        cacheService.putImageData(mPath, mTimeModified, mType, texture.getData().array());
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        try {
+            ETC1Util.writeTexture(texture, os);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        cacheService.putImageData(mPath, mTimeModified, mType, os.toByteArray());
         return texture;
     }
 

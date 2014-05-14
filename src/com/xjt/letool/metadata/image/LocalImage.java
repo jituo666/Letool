@@ -22,6 +22,7 @@ import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.ThreadPool.Job;
 import com.xjt.letool.common.ThreadPool.JobContext;
+import com.xjt.letool.imagedata.blobcache.LocalETCBlobRequest;
 import com.xjt.letool.imagedata.blobcache.LocalImageBlobRequest;
 import com.xjt.letool.imagedata.dbcache.DataBaseCache;
 import com.xjt.letool.imagedata.dbcache.LocalThumbRequest;
@@ -301,7 +302,7 @@ public class LocalImage extends LocalMediaItem {
     @Override
     public Job<ETC1Texture> requestImage(int type, int extra) {
         // TODO Auto-generated method stub
-        return new TexureLoader();
+        return new LocalETCBlobRequest(mApplication,mPath,dateTakenInMs,type,filePath);
     }
 
     public class TexureLoader implements Job<ETC1Texture> {
