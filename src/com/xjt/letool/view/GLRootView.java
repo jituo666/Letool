@@ -1,4 +1,3 @@
-
 package com.xjt.letool.view;
 
 import java.util.ArrayDeque;
@@ -177,9 +176,9 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
 
     @Override
     public void onDrawFrame(GL10 gl) {
+        long time = System.currentTimeMillis();
         AnimationTime.update();
         mRenderLock.lock();
-        LLog.i(TAG, "+++++++++++++++++++++++++++++++[[[[  onDrawFrame  ]]]+++++++++++++++++++++++++++++++++++++++++++++++");
         while (mFreeze) {
             mFreezeCondition.awaitUninterruptibly();
         }
@@ -188,6 +187,8 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
         } finally {
             mRenderLock.unlock();
         }
+
+        LLog.i(TAG, "+++++++++++[[[[  onDrawFrame  ]]] spend:" + (System.currentTimeMillis() - time) + " :" + System.currentTimeMillis());
     }
 
     private void onDrawFrameLocked(GL10 gl) {
@@ -224,7 +225,6 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
         if (UploadedTexture.uploadLimitReached()) {
             requestRender();
         }
-
         synchronized (mIdleListeners) {
             if (!mIdleListeners.isEmpty())
                 mIdleRunner.enable();
@@ -326,8 +326,7 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
             w = h;
             h = tmp;
         }
-        LLog.i(TAG, "layout content pane " + w + "x" + h
-                + " (compensation " + mCompensation + ")");
+        LLog.i(TAG, "layout content pane " + w + "x" + h + " (compensation " + mCompensation + ")");
         if (mContentView != null && w != 0 && h != 0) {
             mContentView.layout(0, 0, w, h);
         }
@@ -423,6 +422,7 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
             boolean keepInQueue;
             try {
                 keepInQueue = listener.onGLIdle(mCanvas, mRenderRequested);
+
             } finally {
                 mRenderLock.unlock();
             }

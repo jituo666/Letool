@@ -24,7 +24,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
     private MediaPath mHighlightItemPath = null;
     private ThumbnailFilter mThumbnailFilter;
 
-    private static final int CACHE_SIZE = 48;
+    private static final int CACHE_SIZE = 96;
 
     private final ColorTexture mWaitLoadingTexture;
     private final int mPlaceholderColor = Color.GRAY;
@@ -104,6 +104,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
     }
 
     private static Texture checkTexture(Texture texture) {
+
         return (texture instanceof TiledTexture) && !((TiledTexture) texture).isReady() ? null : texture;
     }
 

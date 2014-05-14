@@ -4,11 +4,13 @@ import java.util.ArrayDeque;
 
 import android.os.SystemClock;
 
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.GLController.OnGLIdleListener;
 
 public class TiledTextureUploader implements OnGLIdleListener {
 
+    private static final String TAG = TiledTextureUploader.class.getSimpleName();
     private static final int INIT_CAPACITY = 8;
 
     // We are targeting at 60fps, so we have 16ms for each frame.
@@ -46,10 +48,12 @@ public class TiledTextureUploader implements OnGLIdleListener {
             long now = SystemClock.uptimeMillis();
             long dueTime = now + UPLOAD_TILE_LIMIT;
             while (now < dueTime && !deque.isEmpty()) {
+                long time = System.currentTimeMillis();
                 TiledTexture t = deque.peekFirst();
                 if (t.uploadNextTile(canvas)) {
                     deque.removeFirst();
                     mGLController.requestRender();
+                    //LLog.i(TAG, "-----------:::" + (System.currentTimeMillis() - time));
                 }
                 now = SystemClock.uptimeMillis();
             }
