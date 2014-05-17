@@ -386,10 +386,9 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             LLog.i(TAG, " photo fragment onCreateView id:" + albumId + " albumTitle:" + albumTitle + " albumMediaPath:" + albumMediaPath + " isCamera:");
             mMediaSet = getDataManager().getMediaSet(new MediaPath(albumMediaPath, albumId));
         } else {
-            mMediaSet = new PhotoAlbum(new MediaPath(data.getString(BaseActivity.KEY_MEDIA_PATH), MediaSetUtils.CAMERA_BUCKET_ID_EX), (LetoolApp) getActivity().getApplication()
-                    , new int[] {
-                            MediaSetUtils.CAMERA_BUCKET_ID_EX, MediaSetUtils.CAMERA_BUCKET_ID_IN
-                    }, true, getString(R.string.common_photo));
+            mMediaSet = new PhotoAlbum(new MediaPath(data.getString(BaseActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0])
+                    , (LetoolApp) getActivity().getApplication()
+                    , MediaSetUtils.MY_ALBUM_BUCKETS, true, getString(R.string.common_photo));
         }
         mTreatBackAsUp = data.getBoolean(KEY_TREAT_BACK_AS_UP, false);
         mStartInFilmstrip = data.getBoolean(KEY_START_IN_FILMSTRIP, false);

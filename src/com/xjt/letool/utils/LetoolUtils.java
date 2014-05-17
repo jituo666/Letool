@@ -34,18 +34,18 @@ import com.xjt.letool.common.ThreadPool.CancelListener;
 import com.xjt.letool.common.ThreadPool.JobContext;
 import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.metadata.MediaItem;
+import com.xjt.letool.views.opengl.TiledScreenNail;
 
 public class LetoolUtils {
 
-    private static final String TAG = "GalleryUtils";
-    private static final String MAPS_PACKAGE_NAME = "com.google.android.apps.maps";
-    private static final String MAPS_CLASS_NAME = "com.google.android.maps.MapsActivity";
-    private static final String CAMERA_LAUNCHER_NAME = "com.android.camera.CameraLauncher";
+    private static final String TAG = LetoolUtils.class.getSimpleName();
 
     public static final String MIME_TYPE_IMAGE = "image/*";
     public static final String MIME_TYPE_VIDEO = "video/*";
-    public static final String MIME_TYPE_PANORAMA360 = "application/vnd.google.panorama360+jpg";
     public static final String MIME_TYPE_ALL = "*/*";
+
+    private static final String MAPS_PACKAGE_NAME = "com.google.android.apps.maps";
+    private static final String MAPS_CLASS_NAME = "com.google.android.maps.MapsActivity";
 
     private static final String DIR_TYPE_IMAGE = "vnd.android.cursor.dir/image";
     private static final String DIR_TYPE_VIDEO = "vnd.android.cursor.dir/video";
@@ -67,16 +67,15 @@ public class LetoolUtils {
         sPixelDensity = metrics.density;
         LLog.i("letooltag", " resume sPixelDensity:" + sPixelDensity);
         Resources r = context.getResources();
-        //TiledScreenNail.setPlaceholderColor(r.getColor(R.color.bitmap_screennail_placeholder));
+        TiledScreenNail.setPlaceholderColor(r.getColor(R.color.bitmap_screennail_placeholder));
         initializeThumbnailSizes(metrics, r);
     }
 
     private static void initializeThumbnailSizes(DisplayMetrics metrics, Resources r) {
         int maxPixels = Math.min(metrics.heightPixels, metrics.widthPixels);
-
         // For screen-nails, we never need to completely fill the screen
         MediaItem.setThumbnailSizes(maxPixels / 3 * 2, maxPixels / 3);
-        //TiledScreenNail.setMaxSide(maxPixels / 2);
+        TiledScreenNail.setMaxSide(maxPixels / 2);
     }
 
     public static float[] intColorToFloatARGBArray(int from) {
@@ -161,8 +160,7 @@ public class LetoolUtils {
         double dlat = Math.sin(0.5 * (lat2 - lat1));
         double dlng = Math.sin(0.5 * (lng2 - lng1));
         double x = dlat * dlat + dlng * dlng * Math.cos(lat1) * Math.cos(lat2);
-        return (2 * Math.atan2(Math.sqrt(x), Math.sqrt(Math.max(0.0,
-                1.0 - x)))) * EARTH_RADIUS_METERS;
+        return (2 * Math.atan2(Math.sqrt(x), Math.sqrt(Math.max(0.0, 1.0 - x)))) * EARTH_RADIUS_METERS;
     }
 
     public static final double toMile(double meter) {
@@ -173,7 +171,6 @@ public class LetoolUtils {
     public static void fakeBusy(JobContext jc, int timeout) {
         final ConditionVariable cv = new ConditionVariable();
         jc.setCancelListener(new CancelListener() {
-
             @Override
             public void onCancel() {
                 cv.open();
@@ -229,8 +226,7 @@ public class LetoolUtils {
 
     public static void startCameraActivity(Context context) {
         Intent intent = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA)
-                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        | Intent.FLAG_ACTIVITY_NEW_TASK);
+                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         try {
             context.startActivity(intent);
         } catch (ActivityNotFoundException e) {
@@ -281,8 +277,7 @@ public class LetoolUtils {
         }
     }
 
-    public static void setViewPointMatrix(
-            float matrix[], float x, float y, float z) {
+    public static void setViewPointMatrix(float matrix[], float x, float y, float z) {
         // The matrix is
         // -z,  0,  x,  0
         //  0, -z,  y,  0
@@ -299,8 +294,7 @@ public class LetoolUtils {
         return path.toLowerCase().hashCode();
     }
 
-    // Return the local path that matches the given bucketId. If no match is
-    // found, return null
+    // Return the local path that matches the given bucketId. If no match is found, return null
     public static String searchDirForPath(File dir, int bucketId) {
         File[] files = dir.listFiles();
         if (files != null) {
@@ -363,8 +357,7 @@ public class LetoolUtils {
     public static int getSelectionModePrompt(int typeBits) {
         if ((typeBits & DataManager.INCLUDE_VIDEO) != 0) {
             return (typeBits & DataManager.INCLUDE_IMAGE) == 0
-                    ? R.string.select_video
-                    : R.string.select_item;
+                    ? R.string.select_video : R.string.select_item;
         }
         return R.string.select_image;
     }

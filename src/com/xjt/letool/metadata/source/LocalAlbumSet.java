@@ -140,12 +140,16 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
             while (cursor.moveToNext()) {
                 if ((typeBits & (1 << cursor.getInt(INDEX_MEDIA_TYPE))) != 0) {
                     int bucketId = cursor.getInt(INDEX_BUCKET_ID);
-                    if (bucketId == MediaSetUtils.CAMERA_BUCKET_ID_EX || bucketId == MediaSetUtils.CAMERA_BUCKET_ID_IN) {
-                        continue;
+                    boolean isCamera = false;
+                    for (int id : MediaSetUtils.MY_ALBUM_BUCKETS) {
+                        if (id == bucketId) {
+                            isCamera = true;
+                            break;
+                        }
                     }
-                    BucketEntry entry = new BucketEntry(
-                            bucketId,
-                            cursor.getString(INDEX_BUCKET_NAME));
+                    if (isCamera)
+                        continue;
+                    BucketEntry entry = new BucketEntry(bucketId, cursor.getString(INDEX_BUCKET_NAME));
                     if (!buffer.contains(entry)) {
                         buffer.add(entry);
                     }
@@ -173,21 +177,13 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
         @Override
         @SuppressWarnings("unchecked")
         public ArrayList<MediaSet> run(JobContext jc) {
-            // Note: it will be faster if we only select media_type and
-            // bucket_id.
+            // Note: it will be faster if we only select media_type and bucket_id.
             // need to test the performance if that is worth
             BucketEntry[] entries = loadBucketEntries(jc);
-
             if (jc.isCancelled())
                 return null;
-
             int offset = 0;
-            // Move camera and download bucket to the front, while keeping the order of others.
-            int index = findBucket(entries, MediaSetUtils.CAMERA_BUCKET_ID);
-            if (index != -1) {
-                circularShiftRight(entries, offset++, index);
-            }
-            index = findBucket(entries, MediaSetUtils.DOWNLOAD_BUCKET_ID);
+            int index = findBucket(entries, MediaSetUtils.DOWNLOAD_BUCKET_ID);
             if (index != -1) {
                 circularShiftRight(entries, offset++, index);
             }

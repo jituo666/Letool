@@ -320,12 +320,9 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
             }
         } else {
             mAlbumTitle = getString(R.string.common_photo);
-            mDataSetPath = new MediaPath(data.getString(BaseActivity.KEY_MEDIA_PATH), MediaSetUtils.CAMERA_BUCKET_ID_EX);
+            mDataSetPath = new MediaPath(data.getString(BaseActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]);
             mDataSet = new PhotoAlbum(mDataSetPath, (LetoolApp) getActivity().getApplication()
-                    , new int[] {
-                            MediaSetUtils.CAMERA_BUCKET_ID_EX, MediaSetUtils.CAMERA_BUCKET_ID_IN
-                    },
-                    true, getString(R.string.common_photo));
+                    , MediaSetUtils.MY_ALBUM_BUCKETS, true, getString(R.string.common_photo));
 
         }
         mAlbumDataSetLoader = new ThumbnailDataLoader(this, mDataSet);

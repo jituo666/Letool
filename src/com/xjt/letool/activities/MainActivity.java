@@ -6,7 +6,6 @@ import com.xjt.letool.common.LLog;
 import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.fragment.PhotoFragment;
 import com.xjt.letool.metadata.DataManager;
-import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.Utils;
 
@@ -74,10 +73,8 @@ public class MainActivity extends BaseActivity {
         data.putInt(KEY_TYPE_BITS, typeBits);
         //
         Fragment fragment = new PhotoFragment();
-        data.putLong(KEY_ALBUM_ID, MediaSetUtils.CAMERA_BUCKET_ID);
         data.putString(KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
         data.putBoolean(KEY_IS_CAMERA, true);
-        data.putString(KEY_ALBUM_TITLE, getString(R.string.common_photo));
         fragment.setArguments(data);
         getSupportFragmentManager().beginTransaction().add(R.id.root_container, fragment, LetoolFragment.FRAGMENT_TAG_THUMBNAIL).commit();
     }
@@ -102,10 +99,8 @@ public class MainActivity extends BaseActivity {
         data.putInt(KEY_TYPE_BITS, typeBits);
         //
         Fragment fragment = new PhotoFragment();
-        data.putLong(KEY_ALBUM_ID, MediaSetUtils.CAMERA_BUCKET_ID);
         data.putString(KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
         data.putBoolean(KEY_IS_CAMERA, true);
-        data.putString(KEY_ALBUM_TITLE, getString(R.string.common_photo));
         fragment.setArguments(data);
         getSupportFragmentManager().beginTransaction().add(R.id.root_container, fragment, LetoolFragment.FRAGMENT_TAG_THUMBNAIL).commit();
     }

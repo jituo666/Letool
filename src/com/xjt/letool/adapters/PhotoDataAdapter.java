@@ -689,9 +689,9 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
 
             // If this is a temporary item, don't try to get its bitmap because
             // it won't be available. We will get its bitmap after a data reload.
-            if (isTemporaryItem(mItem)) {
+/*            if (isTemporaryItem(mItem)) {
                 return newPlaceholderScreenNail(mItem);
-            }
+            }*/
 
             Bitmap bitmap = mItem.requestImage(MediaItem.TYPE_THUMBNAIL).run(jc);
             if (jc.isCancelled()) return null;
@@ -712,9 +712,9 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
 
         @Override
         public BitmapRegionDecoder run(JobContext jc) {
-            if (isTemporaryItem(mItem)) {
+/*            if (isTemporaryItem(mItem)) {
                 return null;
-            }
+            }*/
             return mItem.requestLargeImage().run(jc);
         }
     }
@@ -726,7 +726,7 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
     // yet. When the image or video data is actually saved, we will get
     // notification from MediaProvider, reload data, and show the actual image
     // or video data.
-    private boolean isTemporaryItem(MediaItem mediaItem) {
+/*    private boolean isTemporaryItem(MediaItem mediaItem) {
         // Must be an item in camera roll.
         if (!(mediaItem instanceof LocalMediaItem)) return false;
         LocalMediaItem item = (LocalMediaItem) mediaItem;
@@ -738,7 +738,7 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
         // Must be created in the last 10 seconds.
         if (item.getDateInMs() - System.currentTimeMillis() > 10000) return false;
         return true;
-    }
+    }*/
 
     // Create a default ScreenNail when a ScreenNail is needed, but we don't yet
     // have one available (because the image data is still being saved, or the

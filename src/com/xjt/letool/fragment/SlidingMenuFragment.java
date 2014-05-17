@@ -127,10 +127,8 @@ public class SlidingMenuFragment extends Fragment {
     private void initFragmentData(Fragment f) {
         if (f instanceof PhotoFragment) {
             Bundle data = new Bundle();
-            data.putLong(BaseActivity.KEY_ALBUM_ID, MediaSetUtils.CAMERA_BUCKET_ID);
             data.putString(BaseActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
             data.putBoolean(BaseActivity.KEY_IS_CAMERA, true);
-            data.putString(BaseActivity.KEY_ALBUM_TITLE, getString(R.string.common_photo));
             f.setArguments(data);
         } else if (f instanceof GalleryFragment) {
             Bundle data = new Bundle();
