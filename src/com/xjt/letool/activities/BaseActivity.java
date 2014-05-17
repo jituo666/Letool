@@ -43,7 +43,7 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
     private LetoolActionBar mActionBar;
     private LetoolSlidingMenu mSlidingMenu;
     private OrientationManager mOrientationManager;
-    private FragmentManager mFragmentManager;
+    protected FragmentManager mFragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -16,13 +16,10 @@ public class FullImageActivity extends BaseActivity {
     public static final int REQUEST_FOR_PHOTO = 100;
     public static final String KEY_MEDIA_SET_PATH = "media_set_path";
 
-    private FragmentManager mFragmentManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.layout_main);
         super.onCreate(savedInstanceState);
-        mFragmentManager = getSupportFragmentManager();
         Fragment fragment = new FullImageFragment();
         Bundle data = new Bundle();
         String albumTitle = getIntent().getStringExtra(KEY_ALBUM_TITLE);

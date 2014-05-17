@@ -1153,8 +1153,8 @@ CHAR LIMIT = NONE]
     <!-- =========================================================================================================================== -->
 
     <string name="app_name">了图</string>
-    <string name="common_photo">我的照片</string>
-    <string name="common_gallery">系统图库</string>
+    <string name="common_photo">照片</string>
+    <string name="common_gallery">图库</string>
     <string name="common_settings">设置</string>
     <string name="common_exit">退出</string>
     <string name="sliding_menu_title_hide_list">隐藏列表</string>
@@ -1171,11 +1171,15 @@ CHAR LIMIT = NONE]
         <item quantity="other">%1$d 项</item>
     </plurals>
 
-    <string name="photo_dir_title">我的照片目录</string>
-    <string name="photo_dir_desc">设置我的照片的目录列表</string>
-    <string name="gallery_dir_title">系统图库</string>
-    <string name="gallery_dir_desc">设置系统图库目录列表</string>
-    <string name="app_about_desc">作者、技术合作、版权等</string>
+
+    <string name="clear_cache_title">清理缓存</string>
+    <string name="clear_cache_desc">当前缓存大小100M，手机剩余存储100M</string>
+    <string name="version_update_check_title">版本更新检查</string>
+    <string name="version_update_check_desc">当前版本1.0，更新日期2014-3-15</string>
+    <string name="author_title">作者</string>
+    <string name="author_desc">Jetoo.Xuan QQ:32437506 微信:ice-man_love</string>
+    <string name="app_about_title">关于</string>
+    <string name="app_about_desc">有关作者、技术合作、版权等一些信息的描述</string>
     <string name="dashi_new_function_tip" translatable="false">New</string>
 
 </resources>

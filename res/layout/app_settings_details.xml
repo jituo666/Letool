@@ -1,16 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/main_screen_bg"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/textView1"
+    <include
+        android:id="@+id/app_settings_bar"
+        layout="@layout/action_bar_common" />
+
+    <FrameLayout
+        android:id="@+id/settings_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="Hide List"
-        android:textSize="48sp" />
+        android:layout_height="match_parent" >
+    </FrameLayout>
 
 </LinearLayout>

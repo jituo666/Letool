@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.xjt.letool.R;
-import com.xjt.letool.activities.BaseActivity;
 import com.xjt.letool.settings.LetoolPreference;
 import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.LetoolActionBar;
@@ -19,16 +18,14 @@ import com.xjt.letool.view.LetoolActionBar;
  */
 public class SettingFragment extends LetoolFragment {
 
-    private BaseActivity mActivity;
-
-    private LetoolPreference mPhotoDir;
-    private LetoolPreference mGalleryDir;
+    private LetoolPreference mAuthorDesc;
+    private LetoolPreference mClearCache;
+    private LetoolPreference mVersionCheck;
     private LetoolPreference mAbout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivity = (BaseActivity) getActivity();
     }
 
     private void initBrowseActionBar() {
@@ -39,14 +36,14 @@ public class SettingFragment extends LetoolFragment {
     }
 
     private void initViews() {
-        mPhotoDir.setMajorText(getString(R.string.photo_dir_title));
-        mPhotoDir.setMinorText(getString(R.string.photo_dir_desc));
-        mGalleryDir.setMajorText(getString(R.string.gallery_dir_title));
-        mGalleryDir.setMinorText(getString(R.string.gallery_dir_desc));
-        mAbout.setMajorText(getString(R.string.sliding_menu_title_about));
-        mAbout.setMinorText(getString(R.string.app_about_desc));
-        mPhotoDir.setOnClickListener(this);
-        mGalleryDir.setOnClickListener(this);
+        mClearCache.setSettingItemText(getString(R.string.clear_cache_title), getString(R.string.clear_cache_desc));
+        mVersionCheck.setSettingItemText(getString(R.string.version_update_check_title), getString(R.string.version_update_check_desc));
+
+        mAuthorDesc.setSettingItemText(getString(R.string.author_title), getString(R.string.author_desc));
+        mAbout.setSettingItemText(getString(R.string.app_about_title), getString(R.string.app_about_desc));
+        mAuthorDesc.setOnClickListener(this);
+        mClearCache.setOnClickListener(this);
+        mVersionCheck.setOnClickListener(this);
         mAbout.setOnClickListener(this);
     }
 
@@ -54,8 +51,9 @@ public class SettingFragment extends LetoolFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.app_settings, container, false);
         initBrowseActionBar();
-        mPhotoDir = (LetoolPreference) rootView.findViewById(R.id.photo_direcory);
-        mGalleryDir = (LetoolPreference) rootView.findViewById(R.id.gallery_direcory);
+        mAuthorDesc = (LetoolPreference) rootView.findViewById(R.id.author_desc);
+        mClearCache = (LetoolPreference) rootView.findViewById(R.id.clear_cache);
+        mVersionCheck = (LetoolPreference) rootView.findViewById(R.id.version_update_check);
         mAbout = (LetoolPreference) rootView.findViewById(R.id.app_about);
         initViews();
         return rootView;
@@ -65,14 +63,10 @@ public class SettingFragment extends LetoolFragment {
     public void onClick(View v) {
         if (v.getId() == R.id.action_navi) {
             getLetoolSlidingMenu().toggle();
-        } else if (v.getId() == R.id.photo_direcory) {
-            //getLetoolSlidingMenu().toggle();
-        }
-        else if (v.getId() == R.id.gallery_direcory) {
-            //getLetoolSlidingMenu().toggle();
-        }
-        else if (v.getId() == R.id.app_about) {
-            //getLetoolSlidingMenu().toggle();
+        } else if (v.getId() == R.id.clear_cache) {
+        } else if (v.getId() == R.id.version_update_check) {
+        } else if (v.getId() == R.id.author_desc) {
+        } else if (v.getId() == R.id.app_about) {
         }
     }
 

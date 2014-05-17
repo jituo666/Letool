@@ -30,7 +30,6 @@ public abstract class LetoolFragment extends Fragment implements LetoolContext, 
     public static final String FRAGMENT_TAG_FOLDER = GalleryFragment.class.getSimpleName();
     public static final String FRAGMENT_TAG_SETTINGS = SettingFragment.class.getSimpleName();
     public static final String FRAGMENT_TAG_ABOUT = AboutFragment.class.getSimpleName();
-    public static final String FRAGMENT_TAG_HIDE_LIST = HideListFragment.class.getSimpleName();
 
     @Override
     public DataManager getDataManager() {

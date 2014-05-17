@@ -3,6 +3,8 @@ package com.xjt.letool.settings;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,11 +30,13 @@ public class LetoolPreference extends RelativeLayout {
         mMinorText = (TextView) findViewById(R.id.item_minor_title);
     }
 
-    public void setMajorText(CharSequence title) {
+    public void setSettingItemText(CharSequence title, CharSequence desc) {
         mMajorText.setText(title);
+        mMinorText.setText(desc);
     }
 
-    public void setMinorText(CharSequence title) {
-        mMinorText.setText(title);
+    public void setSettingItemText(int title, int desc) {
+        mMajorText.setText(title);
+        mMinorText.setText(desc);
     }
 }

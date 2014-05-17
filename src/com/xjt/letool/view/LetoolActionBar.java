@@ -30,10 +30,10 @@ public class LetoolActionBar {
     };
 
     public static final int ACTION_MODE_LAYOUT_ID[] = {
-            R.layout.action_bar_normal,
+            R.layout.action_bar_common,
             R.layout.action_bar_selection,
-            R.layout.action_bar_settings,
-            R.layout.action_bar_full_iamge
+            R.layout.action_bar_common,
+            R.layout.action_bar_common
     };
 
     public static final int ACTION_MODE_TITLE_VIEW_ID[] = {
