@@ -1,3 +1,4 @@
+
 package com.xjt.letool.metadata.source;
 
 import android.content.ContentResolver;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 // LocalAlbumSet lists all image or video albums in the local storage.
 // The path should be "/local/image", "local/video" or "/local/all"
 public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<MediaSet>> {
+
     public static final String PATH_IMAGE = "/local/image/";
     public static final String PATH_VIDEO = "/local/video/";
 
@@ -137,8 +139,12 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
         try {
             while (cursor.moveToNext()) {
                 if ((typeBits & (1 << cursor.getInt(INDEX_MEDIA_TYPE))) != 0) {
+                    int bucketId = cursor.getInt(INDEX_BUCKET_ID);
+                    if (bucketId == MediaSetUtils.CAMERA_BUCKET_ID_EX || bucketId == MediaSetUtils.CAMERA_BUCKET_ID_IN) {
+                        continue;
+                    }
                     BucketEntry entry = new BucketEntry(
-                            cursor.getInt(INDEX_BUCKET_ID),
+                            bucketId,
                             cursor.getString(INDEX_BUCKET_NAME));
                     if (!buffer.contains(entry)) {
                         buffer.add(entry);
@@ -271,6 +277,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
         if (mLoadBuffer == null)
             mLoadBuffer = new ArrayList<MediaSet>();
         mHandler.post(new Runnable() {
+
             @Override
             public void run() {
                 notifyContentChanged();
@@ -285,6 +292,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
     }
 
     private static class BucketEntry {
+
         public String bucketName;
         public int bucketId;
 

@@ -60,10 +60,8 @@ public class MainActivity extends BaseActivity {
     public void startDefaultAction() {
         Fragment fragment = new PhotoFragment();
         Bundle data = new Bundle();
-        data.putLong(KEY_ALBUM_ID, MediaSetUtils.CAMERA_BUCKET_ID);
         data.putString(KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
         data.putBoolean(KEY_IS_CAMERA, true);
-        data.putString(KEY_ALBUM_TITLE, getString(R.string.common_photo));
         fragment.setArguments(data);
         getSupportFragmentManager().beginTransaction().add(R.id.root_container, fragment, LetoolFragment.FRAGMENT_TAG_THUMBNAIL).commit();
     }

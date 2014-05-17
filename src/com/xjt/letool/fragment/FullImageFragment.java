@@ -17,11 +17,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.xjt.letool.LetoolApp;
 import com.xjt.letool.R;
 import com.xjt.letool.metadata.MediaDetails;
 import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.MediaSet;
+import com.xjt.letool.metadata.MediaSetUtils;
+import com.xjt.letool.metadata.source.PhotoAlbum;
 import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.UsageStatistics;
@@ -373,11 +376,21 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
 
     private void initDatas() {
         Bundle data = this.getArguments();
-        String albumTitle = data.getString(BaseActivity.KEY_ALBUM_TITLE);
-        long albumId = data.getLong(BaseActivity.KEY_ALBUM_ID, 0);
-        String albumMediaPath = data.getString(BaseActivity.KEY_MEDIA_PATH);
-        LLog.i(TAG, " photo fragment onCreateView id:" + albumId + " albumTitle:" + albumTitle + " albumMediaPath:" + albumMediaPath + " isCamera:");
-        mMediaSet = getDataManager().getMediaSet(new MediaPath(albumMediaPath, albumId));
+        boolean isCamera = data.getBoolean(BaseActivity.KEY_IS_CAMERA);
+
+        LLog.i(TAG, "============isCamera:" + isCamera);
+        if (!isCamera) {
+            String albumTitle = data.getString(BaseActivity.KEY_ALBUM_TITLE);
+            long albumId = data.getLong(BaseActivity.KEY_ALBUM_ID, 0);
+            String albumMediaPath = data.getString(BaseActivity.KEY_MEDIA_PATH);
+            LLog.i(TAG, " photo fragment onCreateView id:" + albumId + " albumTitle:" + albumTitle + " albumMediaPath:" + albumMediaPath + " isCamera:");
+            mMediaSet = getDataManager().getMediaSet(new MediaPath(albumMediaPath, albumId));
+        } else {
+            mMediaSet = new PhotoAlbum(new MediaPath(data.getString(BaseActivity.KEY_MEDIA_PATH), MediaSetUtils.CAMERA_BUCKET_ID_EX), (LetoolApp) getActivity().getApplication()
+                    , new int[] {
+                            MediaSetUtils.CAMERA_BUCKET_ID_EX, MediaSetUtils.CAMERA_BUCKET_ID_IN
+                    }, true, getString(R.string.common_photo));
+        }
         mTreatBackAsUp = data.getBoolean(KEY_TREAT_BACK_AS_UP, false);
         mStartInFilmstrip = data.getBoolean(KEY_START_IN_FILMSTRIP, false);
         mCurrentIndex = data.getInt(KEY_INDEX_HINT, 0);

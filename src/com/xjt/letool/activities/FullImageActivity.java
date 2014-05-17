@@ -3,8 +3,6 @@ package com.xjt.letool.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.fragment.FullImageFragment;
@@ -29,7 +27,7 @@ public class FullImageActivity extends BaseActivity {
         data.putString(KEY_ALBUM_TITLE, albumTitle);
         data.putLong(KEY_ALBUM_ID, albumId);
         data.putString(KEY_MEDIA_PATH, albumMediaPath);
-        data.putBoolean(KEY_IS_CAMERA, false);
+        data.putBoolean(KEY_IS_CAMERA,  getIntent().getBooleanExtra(KEY_IS_CAMERA, false));
         data.putInt(FullImageFragment.KEY_INDEX_HINT, currentIndex);
         fragment.setArguments(data);
         mFragmentManager.beginTransaction().add(R.id.root_container, fragment, "PhotoFragment").commit();

@@ -1,3 +1,4 @@
+
 package com.xjt.letool.utils;
 
 import android.annotation.TargetApi;
@@ -35,6 +36,7 @@ import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.metadata.MediaItem;
 
 public class LetoolUtils {
+
     private static final String TAG = "GalleryUtils";
     private static final String MAPS_PACKAGE_NAME = "com.google.android.apps.maps";
     private static final String MAPS_CLASS_NAME = "com.google.android.maps.MapsActivity";
@@ -171,6 +173,7 @@ public class LetoolUtils {
     public static void fakeBusy(JobContext jc, int timeout) {
         final ConditionVariable cv = new ConditionVariable();
         jc.setCancelListener(new CancelListener() {
+
             @Override
             public void onCancel() {
                 cv.open();
@@ -381,11 +384,23 @@ public class LetoolUtils {
         }
         return false;
     }
-    //
-    //    public static boolean isPanorama(MediaItem item) {
-    //        if (item == null) return false;
-    //        int w = item.getWidth();
-    //        int h = item.getHeight();
-    //        return (h > 0 && w / h >= 2);
-    //    }
+
+    //for debug 
+    public static void printfSystemDirs() {
+
+        LLog.i(TAG, "================UtilStorage o:" + UtilStorage.getInstance().getExternalSdCardPath() + "/DCIM/Camera");
+        LLog.i(TAG, "================UtilStorage i:" + UtilStorage.getInstance().getInnerSdCardPath() + "/DCIM/Camera");
+        LLog.i(TAG, "================getRootDirectory:" + Environment.getRootDirectory().toString());
+        LLog.i(TAG, "================getDataDirectory:" + Environment.getDataDirectory().toString());
+        LLog.i(TAG, "================getExternalStorageDirectory:" + Environment.getExternalStorageDirectory().toString());
+        LLog.i(TAG, "================getExternalStorageState:" + Environment.getExternalStorageState());
+        LLog.i(TAG, "================getDownloadCacheDirectory:" + Environment.getDownloadCacheDirectory().toString());
+        //
+        LLog.i(TAG, "================DIRECTORY_DCIM:" + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).toString());
+        LLog.i(TAG, "================DIRECTORY_PICTURES:" + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString());
+        LLog.i(TAG, "================DIRECTORY_DOWNLOADS:" + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString());
+        LLog.i(TAG, "================DIRECTORY_MOVIES:" + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).toString());
+        LLog.i(TAG, "================DIRECTORY_MUSIC:" + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).toString());
+
+    }
 }

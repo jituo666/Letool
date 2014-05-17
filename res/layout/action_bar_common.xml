@@ -49,7 +49,6 @@
         android:ellipsize="end"
         android:gravity="left|center_vertical"
         android:singleLine="true"
-        android:text="@string/app_name"
         android:textColor="@color/major_text_color"
         android:textSize="@dimen/letool_action_bar_text_size" />
 

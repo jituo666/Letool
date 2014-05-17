@@ -3,6 +3,7 @@ package com.xjt.letool.metadata;
 import android.os.Environment;
 
 import com.xjt.letool.utils.LetoolUtils;
+import com.xjt.letool.utils.UtilStorage;
 
 import java.util.Comparator;
 
@@ -13,6 +14,10 @@ public class MediaSetUtils {
 
     public static final int CAMERA_BUCKET_ID = LetoolUtils.getBucketId(
             Environment.getExternalStorageDirectory().toString() + "/DCIM/Camera");
+    public static final int CAMERA_BUCKET_ID_EX = LetoolUtils.getBucketId(
+            UtilStorage.getInstance().getExternalSdCardPath().toString() + "/DCIM/Camera");
+    public static final int CAMERA_BUCKET_ID_IN = LetoolUtils.getBucketId(
+            UtilStorage.getInstance().getInnerSdCardPath().toString() + "/DCIM/Camera");
     public static final int DOWNLOAD_BUCKET_ID = LetoolUtils.getBucketId(
             Environment.getExternalStorageDirectory().toString() + "/"
                     + DOWNLOAD);
