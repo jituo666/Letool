@@ -6,6 +6,7 @@ import android.os.Environment;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.UtilStorage;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 
 public class MediaSetUtils {
@@ -28,12 +29,17 @@ public class MediaSetUtils {
 
     public static void initializeMyAlbumBuckets() {
         //common
-        MY_ALBUM_BUCKETS = new int[] {
-                LetoolUtils.getBucketId(
-                        UtilStorage.getInstance().getExternalSdCardPath().toString() + "/DCIM/Camera"),
-                LetoolUtils.getBucketId(
-                        UtilStorage.getInstance().getInnerSdCardPath().toString() + "/DCIM/Camera")
-        };
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        if (UtilStorage.getInstance().getExternalSdCardPath() != null) {
+            list.add(LetoolUtils.getBucketId(UtilStorage.getInstance().getExternalSdCardPath().toString() + "/DCIM/Camera"));
+        }
+        if (UtilStorage.getInstance().getInnerSdCardPath()!= null) {
+            list.add(LetoolUtils.getBucketId(UtilStorage.getInstance().getInnerSdCardPath().toString() + "/DCIM/Camera"));
+        }
+        MY_ALBUM_BUCKETS = new int[list.size()];
+        for (int i = 0;i < list.size();i ++) {
+            MY_ALBUM_BUCKETS[i] = list.get(i).intValue();
+        }
     }
 
     // Sort MediaSets by name

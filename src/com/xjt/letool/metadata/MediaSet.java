@@ -326,4 +326,5 @@ public abstract class MediaSet extends MediaObject {
             if (listener != null) listener.onSyncDone(MediaSet.this, mResult);
         }
     }
+    
 }
