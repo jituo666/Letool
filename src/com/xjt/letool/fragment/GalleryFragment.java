@@ -437,6 +437,9 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (mMediaSet != null) {
+            mMediaSet.closeCursor();
+        }
         LLog.i(TAG, "onDestroy");
     }
 

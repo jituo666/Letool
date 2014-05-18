@@ -172,6 +172,7 @@ public class LocalAlbum extends MediaSet {
         }
     }
 
+    @Override
     public void closeCursor() {
         if (mAlbumCursor != null) {
             try {

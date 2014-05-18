@@ -424,7 +424,9 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     @Override
     public void onDestroy() {
         super.onDestroy();
-
+        if (mDataSet != null) {
+            mDataSet.closeCursor();
+        }
         LLog.i(TAG, "onDestroy");
     }
 

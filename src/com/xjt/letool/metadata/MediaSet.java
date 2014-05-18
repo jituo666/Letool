@@ -1,3 +1,4 @@
+
 package com.xjt.letool.metadata;
 
 import com.xjt.letool.common.Future;
@@ -15,6 +16,7 @@ import java.util.WeakHashMap;
 // getTotalMediaItemCount() returns the number of all MediaItems, including
 // those in sub-MediaSets.
 public abstract class MediaSet extends MediaObject {
+
     private static final String TAG = "MediaSet";
 
     public static final int MEDIAITEM_BATCH_FETCH_COUNT = 500;
@@ -26,6 +28,7 @@ public abstract class MediaSet extends MediaObject {
 
     /** Listener to be used with requestSync(SyncListener). */
     public static interface SyncListener {
+
         /**
          * Called when the sync task completed. Completion may be due to normal termination,
          * an exception, or cancellation.
@@ -57,10 +60,12 @@ public abstract class MediaSet extends MediaObject {
 
     public MediaItem getCoverMediaItem() {
         ArrayList<MediaItem> items = getMediaItem(0, 1);
-        if (items.size() > 0) return items.get(0);
+        if (items.size() > 0)
+            return items.get(0);
         for (int i = 0, n = getSubMediaSetCount(); i < n; i++) {
             MediaItem cover = getSubMediaSet(i).getCoverMediaItem();
-            if (cover != null) return cover;
+            if (cover != null)
+                return cover;
         }
         return null;
     }
@@ -102,15 +107,18 @@ public abstract class MediaSet extends MediaObject {
         ArrayList<MediaItem> list = getMediaItem(
                 start, MEDIAITEM_BATCH_FETCH_COUNT);
         int index = getIndexOf(path, list);
-        if (index != INDEX_NOT_FOUND) return start + index;
+        if (index != INDEX_NOT_FOUND)
+            return start + index;
 
         // try to find it globally
         start = start == 0 ? MEDIAITEM_BATCH_FETCH_COUNT : 0;
         list = getMediaItem(start, MEDIAITEM_BATCH_FETCH_COUNT);
         while (true) {
             index = getIndexOf(path, list);
-            if (index != INDEX_NOT_FOUND) return start + index;
-            if (list.size() < MEDIAITEM_BATCH_FETCH_COUNT) return INDEX_NOT_FOUND;
+            if (index != INDEX_NOT_FOUND)
+                return start + index;
+            if (list.size() < MEDIAITEM_BATCH_FETCH_COUNT)
+                return INDEX_NOT_FOUND;
             start += MEDIAITEM_BATCH_FETCH_COUNT;
             list = getMediaItem(start, MEDIAITEM_BATCH_FETCH_COUNT);
         }
@@ -118,7 +126,8 @@ public abstract class MediaSet extends MediaObject {
 
     protected int getIndexOf(MediaPath path, ArrayList<MediaItem> list) {
         for (int i = 0, n = list.size(); i < n; ++i) {
-            if (list.get(i).mPath == path) return i;
+            if (list.get(i).mPath == path)
+                return i;
         }
         return INDEX_NOT_FOUND;
     }
@@ -176,6 +185,7 @@ public abstract class MediaSet extends MediaObject {
     }
 
     public static interface ItemConsumer {
+
         void consume(int index, MediaItem item);
     }
 
@@ -227,8 +237,10 @@ public abstract class MediaSet extends MediaObject {
     }
 
     private static final Future<Integer> FUTURE_STUB = new Future<Integer>() {
+
         @Override
-        public void cancel() {}
+        public void cancel() {
+        }
 
         @Override
         public boolean isCancelled() {
@@ -246,7 +258,8 @@ public abstract class MediaSet extends MediaObject {
         }
 
         @Override
-        public void waitDone() {}
+        public void waitDone() {
+        }
     };
 
     protected Future<Integer> requestSyncOnMultipleSets(MediaSet[] sets, SyncListener listener) {
@@ -254,6 +267,7 @@ public abstract class MediaSet extends MediaObject {
     }
 
     private class MultiSetSyncFuture implements Future<Integer>, SyncListener {
+
         private static final String TAG = "Gallery.MultiSetSync";
 
         private final SyncListener mListener;
@@ -279,10 +293,13 @@ public abstract class MediaSet extends MediaObject {
 
         @Override
         public synchronized void cancel() {
-            if (mIsCancelled) return;
+            if (mIsCancelled)
+                return;
             mIsCancelled = true;
-            for (Future<Integer> future : mFutures) future.cancel();
-            if (mResult < 0) mResult = SYNC_RESULT_CANCELLED;
+            for (Future<Integer> future : mFutures)
+                future.cancel();
+            if (mResult < 0)
+                mResult = SYNC_RESULT_CANCELLED;
         }
 
         @Override
@@ -304,7 +321,8 @@ public abstract class MediaSet extends MediaObject {
         @Override
         public synchronized void waitDone() {
             try {
-                while (!isDone()) wait();
+                while (!isDone())
+                    wait();
             } catch (InterruptedException e) {
                 LLog.d(TAG, "waitDone() interrupted");
             }
@@ -315,7 +333,8 @@ public abstract class MediaSet extends MediaObject {
         public void onSyncDone(MediaSet mediaSet, int resultCode) {
             SyncListener listener = null;
             synchronized (this) {
-                if (resultCode == SYNC_RESULT_ERROR) mResult = SYNC_RESULT_ERROR;
+                if (resultCode == SYNC_RESULT_ERROR)
+                    mResult = SYNC_RESULT_ERROR;
                 --mPendingCount;
                 if (mPendingCount == 0) {
                     listener = mListener;
@@ -323,8 +342,12 @@ public abstract class MediaSet extends MediaObject {
                 }
                 LLog.d(TAG, "onSyncDone: " + Utils.maskDebugInfo(mediaSet.getName()) + " #pending=" + mPendingCount);
             }
-            if (listener != null) listener.onSyncDone(MediaSet.this, mResult);
+            if (listener != null)
+                listener.onSyncDone(MediaSet.this, mResult);
         }
     }
-    
+
+    public void closeCursor() {
+
+    }
 }

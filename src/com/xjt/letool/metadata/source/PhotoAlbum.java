@@ -155,6 +155,7 @@ public class PhotoAlbum extends MediaSet {
         return true;
     }
 
+    @Override
     public void closeCursor() {
         if (mAlbumCursor != null) {
             try {
