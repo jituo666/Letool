@@ -138,14 +138,18 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
     protected int renderContent(GLESCanvas canvas, AlbumSetEntry entry, int width, int height) {
         int renderRequestFlags = 0;
 
-        Texture content = checkContentTexture(entry.content);
+//        Texture content = checkContentTexture(entry.content);
+//        if (content == null) {
+//            content = mWaitLoadingTexture;
+//            entry.isWaitLoadingDisplayed = true;
+//        } else if (entry.isWaitLoadingDisplayed) {
+//            entry.isWaitLoadingDisplayed = false;
+//            content = new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
+//            entry.content = content;
+//        }
+        Texture content = entry.bitmapTexture;
         if (content == null) {
             content = mWaitLoadingTexture;
-            entry.isWaitLoadingDisplayed = true;
-        } else if (entry.isWaitLoadingDisplayed) {
-            entry.isWaitLoadingDisplayed = false;
-            content = new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
-            entry.content = content;
         }
         drawContent(canvas, content, width, height, entry.rotation);
         if ((content instanceof FadeInTexture) && ((FadeInTexture) content).isAnimating()) {

@@ -1,3 +1,4 @@
+
 package com.xjt.letool.views.render;
 
 import android.graphics.Color;
@@ -36,10 +37,12 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
     private LetoolFragment mFragment;
 
     public interface ThumbnailFilter {
+
         public boolean acceptThumbnail(int index);
     }
 
     private class MyDataListener implements ThumbnailDataWindow.DataListener {
+
         @Override
         public void onContentChanged() {
             mThumbnailView.invalidate();
@@ -116,17 +119,20 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
 
         int renderRequestFlags = 0;
 
-        Texture content = checkTexture(entry.content);
+        //        Texture content = checkTexture(entry.content);
+        //        if (content == null) {
+        //            content = mWaitLoadingTexture;
+        //            entry.isWaitDisplayed = true;
+        //        } else if (entry.isWaitDisplayed) {
+        //            LLog.i(TAG, " ------------ renderThumbnail:" + index + "   :" + System.currentTimeMillis());
+        //            entry.isWaitDisplayed = false;
+        //            content = new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
+        //            entry.content = content;
+        //        }
+        Texture content = entry.bitmapTexture;
         if (content == null) {
             content = mWaitLoadingTexture;
-            entry.isWaitDisplayed = true;
-        } else if (entry.isWaitDisplayed) {
-            LLog.i(TAG, " ------------ renderThumbnail:" + index + "   :" + System.currentTimeMillis());
-            entry.isWaitDisplayed = false;
-            content = new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
-            entry.content = content;
         }
-
         drawContent(canvas, content, width, height, entry.rotation);
         if ((content instanceof FadeInTexture) && ((FadeInTexture) content).isAnimating()) {
             renderRequestFlags |= ThumbnailView.RENDER_MORE_FRAME;
