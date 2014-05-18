@@ -3,7 +3,6 @@ package com.xjt.letool.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
@@ -20,7 +19,6 @@ public class ThumbnailActivity extends BaseActivity {
     private static final String TAG = ThumbnailActivity.class.getSimpleName();
 
     public static final int REQUEST_FOR_PHOTO = 100;
-    public static final String KEY_MEDIA_SET_PATH = "media_set_path";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

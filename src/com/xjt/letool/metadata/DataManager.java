@@ -203,7 +203,12 @@ public class DataManager {
         observer.registerNotifier(notifier);
     }
 
+    public void delete(MediaPath path) {
+        getMediaObject(path).delete();
+    }
+
     private static class DataObserver extends ContentObserver {
+
         private WeakHashMap<DataNotifier, Object> mNotifiers = new WeakHashMap<DataNotifier, Object>();
 
         public DataObserver(Handler handler) {

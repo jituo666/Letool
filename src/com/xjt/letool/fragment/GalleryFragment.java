@@ -18,6 +18,9 @@ import com.xjt.letool.metadata.loader.ThumbnailSetDataLoader;
 import com.xjt.letool.selectors.SelectionListener;
 import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.utils.LetoolUtils;
+import com.xjt.letool.view.CommonLoadingPanel;
+import com.xjt.letool.view.DeleteMediaListener;
+import com.xjt.letool.view.DeleteMediaListener.DeleteMediaProgressListener;
 import com.xjt.letool.view.DetailsHelper;
 import com.xjt.letool.view.GLBaseView;
 import com.xjt.letool.view.GLController;
@@ -27,12 +30,14 @@ import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.view.DetailsHelper.CloseListener;
 import com.xjt.letool.views.layout.ThumbnailContractLayout;
 import com.xjt.letool.views.layout.ThumbnailLayout;
+import com.xjt.letool.views.layout.ThumbnailLayout.LayoutListener;
 import com.xjt.letool.views.opengl.FadeTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.render.ThumbnailSetRenderer;
 import com.xjt.letool.views.utils.ViewConfigs;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -50,18 +55,21 @@ import android.widget.Toast;
  * @Date 9:40:26 PM Apr 20, 2014
  * @Comments:null
  */
-public class GalleryFragment extends LetoolFragment implements EyePosition.EyePositionListener, SelectionListener {
+public class GalleryFragment extends LetoolFragment implements EyePosition.EyePositionListener, SelectionListener, LayoutListener {
 
     private static final String TAG = GalleryFragment.class.getSimpleName();
 
-    private GLRootView mGLRootView;
     public static final String KEY_EMPTY_ALBUM = "empty-album";
-    private static final int DATA_CACHE_SIZE = 256;
+
+    private static final int MSG_LAYOUT_CONFIRMED = 0;
     private static final int MSG_PICK_ALBUM = 1;
+
     private static final int BIT_LOADING_RELOAD = 1;
     private static final int BIT_LOADING_SYNC = 2;
     private static final int REQUEST_DO_ANIMATION = 1;
 
+    private GLRootView mGLRootView;
+    private CommonLoadingPanel mLoadingInsie;
     private ThumbnailView mThumbnailView;
     private boolean mIsActive = false;
     private ViewConfigs.AlbumSetPage mConfig;
@@ -138,21 +146,6 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         mLoadingBits &= ~loadingBit;
         if (mLoadingBits == 0 && mIsActive) {
             if (mThumbnailSetAdapter.size() == 0) {
-                // If this is not the top of the gallery folder hierarchy,
-                // tell the parent AlbumSetPage instance to handle displaying
-                // the empty album toast, otherwise show it within this
-                // instance
-                //                if (mActivity.getPageManager().getStateCount() > 1) {
-                //                    Intent result = new Intent();
-                //                    result.putExtra(KEY_EMPTY_ALBUM, true);
-                //                    setStateResult(Activity.RESULT_OK, result);
-                //                    mActivity.getPageManager().finishState(this);
-                //                } else {
-                //                    mShowedEmptyToastForSelf = true;
-                //                    showEmptyAlbumToast(Toast.LENGTH_LONG);
-                //                    mThumbnailView.invalidate();
-                //
-                //                }
                 return;
             }
         }
@@ -251,8 +244,9 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         mThumbnailView.setBackgroundColor(
                 LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.default_background_thumbnail))
                 );
-        mThumbnailViewRenderer = new ThumbnailSetRenderer(this, mThumbnailView);
+        mThumbnailViewRenderer = new ThumbnailSetRenderer(this, mThumbnailView, mSelectionManager);
         layout.setRenderer(mThumbnailViewRenderer);
+        layout.setLayoutListener(this);
         mThumbnailView.setThumbnailRenderer(mThumbnailViewRenderer);
         mRootPane.addComponent(mThumbnailView);
         mThumbnailView.setListener(new ThumbnailView.SimpleListener() {
@@ -284,7 +278,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         mGetContent = data.getBoolean(BaseActivity.KEY_GET_CONTENT, false);
         mMediaSet = getDataManager().getMediaSet(data.getString(BaseActivity.KEY_MEDIA_PATH), -1000);
         mSelectionManager.setSourceMediaSet(mMediaSet);
-        mThumbnailSetAdapter = new ThumbnailSetDataLoader(this, mMediaSet, DATA_CACHE_SIZE);
+        mThumbnailSetAdapter = new ThumbnailSetDataLoader(this, mMediaSet);
         mThumbnailSetAdapter.setLoadingListener(new MyLoadingListener());
         mThumbnailViewRenderer.setModel(mThumbnailSetAdapter);
     }
@@ -333,11 +327,17 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         LLog.i(TAG, "onCreateView");
         View rootView = inflater.inflate(R.layout.gl_root_view, container, false);
         mGLRootView = (GLRootView) rootView.findViewById(R.id.gl_root_view);
+        mLoadingInsie = (CommonLoadingPanel) rootView.findViewById(R.id.loading);
+        mLoadingInsie.setVisibility(View.VISIBLE);
         mHandler = new SynchronizedHandler(mGLRootView) {
 
             @Override
             public void handleMessage(Message message) {
                 switch (message.what) {
+                    case MSG_LAYOUT_CONFIRMED: {
+                        mLoadingInsie.setVisibility(View.GONE);
+                        break;
+                    }
                     case MSG_PICK_ALBUM: {
                         pickAlbum(message.arg1);
                         break;
@@ -509,6 +509,23 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     public void onClick(View v) {
         if (v.getId() == R.id.action_navi) {
             getLetoolSlidingMenu().toggle();
+        } else if (v.getId() == R.id.operation_delete) {
+
+            DeleteMediaListener cdl = new DeleteMediaListener(getActivity(), mSelectionManager, getDataManager(),
+                    new DeleteMediaProgressListener() {
+
+                        @Override
+                        public void onConfirmDialogDismissed(boolean confirmed) {
+                            mSelectionManager.leaveSelectionMode();
+                        }
+
+                    });
+            new AlertDialog.Builder(getActivity())
+                    .setMessage(getString(R.string.common_delete_tip))
+                    .setOnCancelListener(cdl)
+                    .setPositiveButton(R.string.ok, cdl)
+                    .setNegativeButton(R.string.cancel, cdl)
+                    .create().show();
         }
     }
 
@@ -563,5 +580,10 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         int count = mSelectionManager.getSelectedCount();
         String format = getResources().getQuantityString(R.plurals.number_of_items_selected, count);
         getLetoolActionBar().setTitleText(String.format(format, count));
+    }
+
+    @Override
+    public void onLayoutBeing(int count) {
+        mHandler.obtainMessage(MSG_LAYOUT_CONFIRMED, count, 0).sendToTarget();
     }
 }

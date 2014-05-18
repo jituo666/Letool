@@ -9,11 +9,9 @@ import java.util.WeakHashMap;
 
 // MediaSet is a directory-like data structure.
 // It contains MediaItems and sub-MediaSets.
-//
 // The primary interface are:
 // getMediaItemCount(), getMediaItem() and
 // getSubMediaSetCount(), getSubMediaSet().
-//
 // getTotalMediaItemCount() returns the number of all MediaItems, including
 // those in sub-MediaSets.
 public abstract class MediaSet extends MediaObject {
@@ -323,8 +321,7 @@ public abstract class MediaSet extends MediaObject {
                     listener = mListener;
                     notifyAll();
                 }
-                LLog.d(TAG, "onSyncDone: " + Utils.maskDebugInfo(mediaSet.getName())
-                        + " #pending=" + mPendingCount);
+                LLog.d(TAG, "onSyncDone: " + Utils.maskDebugInfo(mediaSet.getName()) + " #pending=" + mPendingCount);
             }
             if (listener != null) listener.onSyncDone(MediaSet.this, mResult);
         }

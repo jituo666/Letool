@@ -24,6 +24,9 @@ import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.RelativePosition;
 import com.xjt.letool.utils.Utils;
+import com.xjt.letool.view.CommonLoadingPanel;
+import com.xjt.letool.view.DeleteMediaListener;
+import com.xjt.letool.view.DeleteMediaListener.DeleteMediaProgressListener;
 import com.xjt.letool.view.DetailsHelper;
 import com.xjt.letool.view.GLBaseView;
 import com.xjt.letool.view.GLController;
@@ -33,12 +36,14 @@ import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.view.DetailsHelper.CloseListener;
 import com.xjt.letool.views.layout.ThumbnailContractLayout;
 import com.xjt.letool.views.layout.ThumbnailLayout;
+import com.xjt.letool.views.layout.ThumbnailLayout.LayoutListener;
 import com.xjt.letool.views.opengl.FadeTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.render.ThumbnailRenderer;
 import com.xjt.letool.views.utils.ViewConfigs;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
@@ -55,14 +60,16 @@ import android.widget.Toast;
  * @Date 9:48:35 AM Apr 19, 2014
  * @Comments:null
  */
-public class PhotoFragment extends LetoolFragment implements EyePosition.EyePositionListener, SelectionListener {
+public class PhotoFragment extends LetoolFragment implements EyePosition.EyePositionListener, SelectionListener,
+        LayoutListener {
 
     private static final String TAG = PhotoFragment.class.getSimpleName();
 
     public static final String KEY_RESUME_ANIMATION = "resume_animation";
     private static final int BIT_LOADING_RELOAD = 1;
     private static final int BIT_LOADING_SYNC = 2;
-    private static final int MSG_PICK_PHOTO = 0;
+    private static final int MSG_LAYOUT_CONFIRMED = 0;
+    private static final int MSG_PICK_PHOTO = 1;
 
     //photo data
     private MediaPath mDataSetPath;
@@ -77,6 +84,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     private boolean mInitialSynced = false;
 
     //views
+    private CommonLoadingPanel mLoadingInsie;
     private GLRootView mGLRootView;
     private ViewConfigs.AlbumPage mConfig;
     private ThumbnailView mThumbnailView;
@@ -94,21 +102,6 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     private float mX;
     private float mY;
     private float mZ;
-
-    private class MetaDataLoadingListener implements DataLoadingListener {
-
-        @Override
-        public void onLoadingStarted() {
-            mLoadingFailed = false;
-            setLoadingBit(BIT_LOADING_RELOAD);
-        }
-
-        @Override
-        public void onLoadingFinished(boolean loadFailed) {
-            mLoadingFailed = loadFailed;
-            clearLoadingBit(BIT_LOADING_RELOAD);
-        }
-    }
 
     private final GLBaseView mRootPane = new GLBaseView() {
 
@@ -144,55 +137,19 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         }
     };
 
-    private class MyDetailsSource implements DetailsHelper.DetailsSource {
-
-        private int mIndex;
+    private class MetaDataLoadingListener implements DataLoadingListener {
 
         @Override
-        public int size() {
-            return mAlbumDataSetLoader.size();
-        }
-
-        @Override
-        public int setIndex() {
-            MediaPath id = mSelector.getSelected(false).get(0);
-            mIndex = mAlbumDataSetLoader.findItem(id);
-            return mIndex;
+        public void onLoadingStarted() {
+            mLoadingFailed = false;
+            setLoadingBit(BIT_LOADING_RELOAD);
         }
 
         @Override
-        public MediaDetails getDetails() {
-            // this relies on setIndex() being called beforehand
-            MediaObject item = mAlbumDataSetLoader.get(mIndex);
-            if (item != null) {
-                mRender.setHighlightItemPath(item.getPath());
-                return item.getDetails();
-            } else {
-                return null;
-            }
+        public void onLoadingFinished(boolean loadFailed) {
+            mLoadingFailed = loadFailed;
+            clearLoadingBit(BIT_LOADING_RELOAD);
         }
-    }
-
-    private void showDetails() {
-        mShowDetails = true;
-        if (mDetailsHelper == null) {
-            mDetailsHelper = new DetailsHelper(this, mRootPane, mDetailsSource);
-            mDetailsHelper.setCloseListener(new CloseListener() {
-
-                @Override
-                public void onClose() {
-                    hideDetails();
-                }
-            });
-        }
-        mDetailsHelper.show();
-    }
-
-    private void hideDetails() {
-        mShowDetails = false;
-        mDetailsHelper.hide();
-        mRender.setHighlightItemPath(null);
-        mThumbnailView.invalidate();
     }
 
     private void setLoadingBit(int loadTaskBit) {
@@ -206,6 +163,11 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
                 Toast.makeText(getAndroidContext(), R.string.empty_album, Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    @Override
+    public void onLayoutBeing(int count) {
+        mHandler.obtainMessage(MSG_LAYOUT_CONFIRMED, count, 0).sendToTarget();
     }
 
     private void onDown(int index) {
@@ -270,6 +232,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         mThumbnailView.setBackgroundColor(LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.default_background_thumbnail)));
         mRender = new ThumbnailRenderer(this, mThumbnailView, mSelector);
         layout.setRenderer(mRender);
+        layout.setLayoutListener(this);
         mThumbnailView.setThumbnailRenderer(mRender);
         mRender.setModel(mAlbumDataSetLoader);
         mRootPane.addComponent(mThumbnailView);
@@ -335,6 +298,8 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         LLog.i(TAG, "onCreateView" + System.currentTimeMillis());
         View rootView = inflater.inflate(R.layout.gl_root_view, container, false);
         mGLRootView = (GLRootView) rootView.findViewById(R.id.gl_root_view);
+        mLoadingInsie = (CommonLoadingPanel) rootView.findViewById(R.id.loading);
+        mLoadingInsie.setVisibility(View.VISIBLE);
         initializeViews();
         initializeData();
         mHandler = new SynchronizedHandler(mGLRootView) {
@@ -342,6 +307,10 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
             @Override
             public void handleMessage(Message message) {
                 switch (message.what) {
+                    case MSG_LAYOUT_CONFIRMED: {
+                        mLoadingInsie.setVisibility(View.GONE);
+                        break;
+                    }
                     case MSG_PICK_PHOTO: {
                         pickPhoto(message.arg1);
                         break;
@@ -482,6 +451,23 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
             } else {
                 getLetoolSlidingMenu().toggle();
             }
+        } else if (v.getId() == R.id.operation_delete) {
+
+            DeleteMediaListener cdl = new DeleteMediaListener(getActivity(), mSelector, getDataManager(),
+                    new DeleteMediaProgressListener() {
+
+                        @Override
+                        public void onConfirmDialogDismissed(boolean confirmed) {
+                            mSelector.leaveSelectionMode();
+                        }
+
+                    });
+            new AlertDialog.Builder(getActivity())
+                    .setMessage(getString(R.string.common_delete_tip))
+                    .setOnCancelListener(cdl)
+                    .setPositiveButton(R.string.ok, cdl)
+                    .setNegativeButton(R.string.cancel, cdl)
+                    .create().show();
         }
     }
 
@@ -527,4 +513,58 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         it.putExtra(FullImageFragment.KEY_INDEX_HINT, index);
         startActivity(it);
     }
+
+    //-----------------------------------------------details-----------------------------------------------------------------------
+
+    private class MyDetailsSource implements DetailsHelper.DetailsSource {
+
+        private int mIndex;
+
+        @Override
+        public int size() {
+            return mAlbumDataSetLoader.size();
+        }
+
+        @Override
+        public int setIndex() {
+            MediaPath id = mSelector.getSelected(false).get(0);
+            mIndex = mAlbumDataSetLoader.findItem(id);
+            return mIndex;
+        }
+
+        @Override
+        public MediaDetails getDetails() {
+            // this relies on setIndex() being called beforehand
+            MediaObject item = mAlbumDataSetLoader.get(mIndex);
+            if (item != null) {
+                mRender.setHighlightItemPath(item.getPath());
+                return item.getDetails();
+            } else {
+                return null;
+            }
+        }
+    }
+
+    private void showDetails() {
+        mShowDetails = true;
+        if (mDetailsHelper == null) {
+            mDetailsHelper = new DetailsHelper(this, mRootPane, mDetailsSource);
+            mDetailsHelper.setCloseListener(new CloseListener() {
+
+                @Override
+                public void onClose() {
+                    hideDetails();
+                }
+            });
+        }
+        mDetailsHelper.show();
+    }
+
+    private void hideDetails() {
+        mShowDetails = false;
+        mDetailsHelper.hide();
+        mRender.setHighlightItemPath(null);
+        mThumbnailView.invalidate();
+    }
+
 }

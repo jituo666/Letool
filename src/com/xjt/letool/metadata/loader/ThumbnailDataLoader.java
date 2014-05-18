@@ -1,3 +1,4 @@
+
 package com.xjt.letool.metadata.loader;
 
 import android.os.Message;
@@ -21,8 +22,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 public class ThumbnailDataLoader {
-    @SuppressWarnings("unused")
-    private static final String TAG = "AlbumDataAdapter";
+
+    private static final String TAG = ThumbnailDataLoader.class.getSimpleName();
     private static final int DATA_CACHE_SIZE = 1000;
 
     private static final int MSG_LOAD_START = 1;
@@ -35,32 +36,27 @@ public class ThumbnailDataLoader {
     private final MediaItem[] mData;
     private final long[] mItemVersion;
     private final long[] mSetVersion;
-
-    public static interface DataListener {
-        public void onContentChanged(int index);
-
-        public void onSizeChanged(int size);
-    }
-
     private int mActiveStart = 0;
     private int mActiveEnd = 0;
-
     private int mContentStart = 0;
     private int mContentEnd = 0;
-
+    private int mSize = 0;
     private final MediaSet mSource;
     private long mSourceVersion = MediaObject.INVALID_DATA_VERSION;
 
     private final SynchronizedHandler mMainHandler;
-    private int mSize = 0;
-
-    private DataListener mDataListener;
     private MySourceListener mSourceListener = new MySourceListener();
     private DataLoadingListener mLoadingListener;
-
+    private DataChangedListener mDataChangedListener;
     private ReloadTask mReloadTask;
-    // the data version on which last loading failed
-    private long mFailedVersion = MediaObject.INVALID_DATA_VERSION;
+    private long mFailedVersion = MediaObject.INVALID_DATA_VERSION; // the data version on which last loading failed
+
+    public static interface DataChangedListener {
+
+        public void onSizeChanged(int size);
+
+        public void onContentChanged(int index);
+    }
 
     public ThumbnailDataLoader(LetoolFragment context, MediaSet mediaSet) {
         mSource = mediaSet;
@@ -71,6 +67,7 @@ public class ThumbnailDataLoader {
         Arrays.fill(mSetVersion, MediaObject.INVALID_DATA_VERSION);
 
         mMainHandler = new SynchronizedHandler(context.getGLController()) {
+
             @Override
             public void handleMessage(Message message) {
                 switch (message.what) {
@@ -105,12 +102,10 @@ public class ThumbnailDataLoader {
         mSource.removeContentListener(mSourceListener);
     }
 
-    // Returns the index of the MediaItem with the given path or
-    // -1 if the path is not cached
-    public int findItem(MediaPath id) {
+    public int findItem(MediaPath path) {
         for (int i = mContentStart; i < mContentEnd; i++) {
             MediaItem item = mData[i % DATA_CACHE_SIZE];
-            if (item != null && id == item.getPath()) {
+            if (item != null && path == item.getPath()) {
                 return i;
             }
         }
@@ -119,8 +114,7 @@ public class ThumbnailDataLoader {
 
     public MediaItem get(int index) {
         if (!isActive(index)) {
-            throw new IllegalArgumentException(String.format(
-                    "%s not in (%s, %s)", index, mActiveStart, mActiveEnd));
+            throw new IllegalArgumentException(String.format("%s not in (%s, %s)", index, mActiveStart, mActiveEnd));
         }
         return mData[index % mData.length];
     }
@@ -152,7 +146,6 @@ public class ThumbnailDataLoader {
             return;
         int end = mContentEnd;
         int start = mContentStart;
-
         // We need change the content window before calling reloadData(...)
         synchronized (this) {
             mContentStart = contentStart;
@@ -181,17 +174,12 @@ public class ThumbnailDataLoader {
     public void setActiveWindow(int start, int end) {
         if (start == mActiveStart && end == mActiveEnd)
             return;
-
         Utils.assertTrue(start <= end && end - start <= mData.length && end <= mSize);
-
         int length = mData.length;
         mActiveStart = start;
         mActiveEnd = end;
-
-        // If no data is visible, keep the cache content
-        if (start == end)
+        if (start == end) // If no data is visible, keep the cache content
             return;
-
         int contentStart = Utils.clamp((start + end) / 2 - length / 2, 0, Math.max(0, mSize - length));
         int contentEnd = Math.min(contentStart + length, mSize);
         if (mContentStart > start || mContentEnd < end || Math.abs(contentStart - mContentStart) > MIN_LOAD_COUNT) {
@@ -200,6 +188,7 @@ public class ThumbnailDataLoader {
     }
 
     private class MySourceListener implements ContentListener {
+
         @Override
         public void onContentDirty() {
             if (mReloadTask != null)
@@ -207,8 +196,8 @@ public class ThumbnailDataLoader {
         }
     }
 
-    public void setDataListener(DataListener listener) {
-        mDataListener = listener;
+    public void setDataChangedListener(DataChangedListener listener) {
+        mDataChangedListener = listener;
     }
 
     public void setLoadingListener(DataLoadingListener listener) {
@@ -228,15 +217,16 @@ public class ThumbnailDataLoader {
     }
 
     private static class UpdateInfo {
+
         public long version;
         public int reloadStart;
         public int reloadCount;
-
         public int size;
         public ArrayList<MediaItem> items;
     }
 
     private class GetUpdateInfo implements Callable<UpdateInfo> {
+
         private final long mVersion;
 
         public GetUpdateInfo(long version) {
@@ -275,8 +265,8 @@ public class ThumbnailDataLoader {
             mSourceVersion = info.version;
             if (mSize != info.size) {
                 mSize = info.size;
-                if (mDataListener != null)
-                    mDataListener.onSizeChanged(mSize);
+                if (mDataChangedListener != null)
+                    mDataChangedListener.onSizeChanged(mSize);
                 if (mContentEnd > mSize)
                     mContentEnd = mSize;
                 if (mActiveEnd > mSize)
@@ -298,9 +288,9 @@ public class ThumbnailDataLoader {
                 if (mItemVersion[index] != itemVersion) {
                     mItemVersion[index] = itemVersion;
                     mData[index] = updateItem;
-                    if (mDataListener != null && i >= mActiveStart && i < mActiveEnd) {
+                    if (mDataChangedListener != null && i >= mActiveStart && i < mActiveEnd) {
                         LLog.i(TAG, "UpdateContent:" + index + " :" + System.currentTimeMillis());
-                        mDataListener.onContentChanged(i);
+                        mDataChangedListener.onContentChanged(i);
                     }
                 }
             }
@@ -346,14 +336,13 @@ public class ThumbnailDataLoader {
                 }
                 mDirty = false;
                 updateLoading(true);
-                LLog.i(TAG, "xxxx1" + System.currentTimeMillis());
                 long version;
                 synchronized (DataManager.LOCK) {
                     version = mSource.reload();
+                    LLog.i(TAG, "---------------1------------------" + version);
                 }
                 UpdateInfo info = executeAndWait(new GetUpdateInfo(version));
                 updateComplete = info == null;
-                LLog.i(TAG, "xxxx2" + System.currentTimeMillis());
                 if (updateComplete)
                     continue;
                 synchronized (DataManager.LOCK) {
@@ -362,7 +351,9 @@ public class ThumbnailDataLoader {
                         info.version = version;
                     }
                     if (info.reloadCount > 0) {
+                        LLog.i(TAG, "---------------7-1------------------" + System.currentTimeMillis());
                         info.items = mSource.getMediaItem(info.reloadStart, info.reloadCount);
+                        LLog.i(TAG, "---------------7-2------------------" + System.currentTimeMillis());
                     }
                 }
                 executeAndWait(new UpdateContent(info));

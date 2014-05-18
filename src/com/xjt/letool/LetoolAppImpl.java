@@ -10,6 +10,12 @@ import com.xjt.letool.utils.LetoolUtils;
 import android.app.Application;
 import android.content.Context;
 
+
+/**
+ * @Author Jituo.Xuan
+ * @Date 9:07:11 PM May 17, 2014
+ * @Comments:null
+ */
 public class LetoolAppImpl extends Application implements LetoolApp {
 
     private static final String TAG = LetoolAppImpl.class.getSimpleName();

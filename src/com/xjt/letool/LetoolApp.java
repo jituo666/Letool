@@ -10,6 +10,12 @@ import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.imagedata.blobcache.BlobCacheService;
 import com.xjt.letool.metadata.DataManager;
 
+
+/**
+ * @Author Jituo.Xuan
+ * @Date 9:07:03 PM May 17, 2014
+ * @Comments:null
+ */
 public interface LetoolApp {
 
     public DataManager getDataManager();

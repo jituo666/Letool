@@ -5,13 +5,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Process;
 
-import com.xjt.letool.activities.BaseActivity;
 import com.xjt.letool.metadata.ContentListener;
 import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaObject;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.utils.Utils;
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
 import com.xjt.letool.fragment.LetoolFragment;
 
@@ -21,11 +21,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 public class ThumbnailSetDataLoader {
-    @SuppressWarnings("unused")
-    private static final String TAG = "ThumbnailSetDataLoader";
+
+    private static final String TAG = ThumbnailSetDataLoader.class.getSimpleName();
+
+    private static final int DATA_CACHE_SIZE = 256;
 
     private static final int INDEX_NONE = -1;
-
     private static final int MIN_LOAD_COUNT = 4;
 
     private static final int MSG_LOAD_START = 1;
@@ -33,7 +34,9 @@ public class ThumbnailSetDataLoader {
     private static final int MSG_RUN_OBJECT = 3;
 
     public static interface DataListener {
+
         public void onContentChanged(int index);
+
         public void onSizeChanged(int size);
     }
 
@@ -61,17 +64,18 @@ public class ThumbnailSetDataLoader {
 
     private final MySourceListener mSourceListener = new MySourceListener();
 
-    public ThumbnailSetDataLoader(LetoolFragment activity, MediaSet albumSet, int cacheSize) {
+    public ThumbnailSetDataLoader(LetoolFragment activity, MediaSet albumSet) {
         mSource = Utils.checkNotNull(albumSet);
-        mCoverItem = new MediaItem[cacheSize];
-        mData = new MediaSet[cacheSize];
-        mTotalCount = new int[cacheSize];
-        mItemVersion = new long[cacheSize];
-        mSetVersion = new long[cacheSize];
+        mCoverItem = new MediaItem[DATA_CACHE_SIZE];
+        mData = new MediaSet[DATA_CACHE_SIZE];
+        mTotalCount = new int[DATA_CACHE_SIZE];
+        mItemVersion = new long[DATA_CACHE_SIZE];
+        mSetVersion = new long[DATA_CACHE_SIZE];
         Arrays.fill(mItemVersion, MediaObject.INVALID_DATA_VERSION);
         Arrays.fill(mSetVersion, MediaObject.INVALID_DATA_VERSION);
 
         mMainHandler = new SynchronizedHandler(activity.getGLController()) {
+
             @Override
             public void handleMessage(Message message) {
                 switch (message.what) {
@@ -79,10 +83,12 @@ public class ThumbnailSetDataLoader {
                         ((Runnable) message.obj).run();
                         return;
                     case MSG_LOAD_START:
-                        if (mLoadingListener != null) mLoadingListener.onLoadingStarted();
+                        if (mLoadingListener != null)
+                            mLoadingListener.onLoadingStarted();
                         return;
                     case MSG_LOAD_FINISH:
-                        if (mLoadingListener != null) mLoadingListener.onLoadingFinished(false);
+                        if (mLoadingListener != null)
+                            mLoadingListener.onLoadingFinished(false);
                         return;
                 }
             }
@@ -155,7 +161,8 @@ public class ThumbnailSetDataLoader {
     }
 
     private void setContentWindow(int contentStart, int contentEnd) {
-        if (contentStart == mContentStart && contentEnd == mContentEnd) return;
+        if (contentStart == mContentStart && contentEnd == mContentEnd)
+            return;
         int length = mCoverItem.length;
 
         int start = this.mContentStart;
@@ -180,28 +187,28 @@ public class ThumbnailSetDataLoader {
     }
 
     public void setActiveWindow(int start, int end) {
-        if (start == mActiveStart && end == mActiveEnd) return;
+        if (start == mActiveStart && end == mActiveEnd)
+            return;
 
-        Utils.assertTrue(start <= end
-                && end - start <= mCoverItem.length && end <= mSize);
+        Utils.assertTrue(start <= end && end - start <= mCoverItem.length && end <= mSize);
 
         mActiveStart = start;
         mActiveEnd = end;
 
         int length = mCoverItem.length;
         // If no data is visible, keep the cache content
-        if (start == end) return;
+        if (start == end)
+            return;
 
-        int contentStart = Utils.clamp((start + end) / 2 - length / 2,
-                0, Math.max(0, mSize - length));
+        int contentStart = Utils.clamp((start + end) / 2 - length / 2, 0, Math.max(0, mSize - length));
         int contentEnd = Math.min(contentStart + length, mSize);
-        if (mContentStart > start || mContentEnd < end
-                || Math.abs(contentStart - mContentStart) > MIN_LOAD_COUNT) {
+        if (mContentStart > start || mContentEnd < end || Math.abs(contentStart - mContentStart) > MIN_LOAD_COUNT) {
             setContentWindow(contentStart, contentEnd);
         }
     }
 
     private class MySourceListener implements ContentListener {
+
         @Override
         public void onContentDirty() {
             mReloadTask.notifyDirty();
@@ -217,9 +224,9 @@ public class ThumbnailSetDataLoader {
     }
 
     private static class UpdateInfo {
+
         public long version;
         public int index;
-
         public int size;
         public MediaSet item;
         public MediaItem cover;
@@ -239,7 +246,8 @@ public class ThumbnailSetDataLoader {
             int length = setVersion.length;
             for (int i = mContentStart, n = mContentEnd; i < n; ++i) {
                 int index = i % length;
-                if (setVersion[i % length] != version) return i;
+                if (setVersion[index] != version)
+                    return i;
             }
             return INDEX_NONE;
         }
@@ -247,7 +255,8 @@ public class ThumbnailSetDataLoader {
         @Override
         public UpdateInfo call() throws Exception {
             int index = getInvalidIndex(mVersion);
-            if (index == INDEX_NONE && mSourceVersion == mVersion) return null;
+            if (index == INDEX_NONE && mSourceVersion == mVersion)
+                return null;
             UpdateInfo info = new UpdateInfo();
             info.version = mSourceVersion;
             info.index = index;
@@ -257,6 +266,7 @@ public class ThumbnailSetDataLoader {
     }
 
     private class UpdateContent implements Callable<Void> {
+
         private final UpdateInfo mUpdateInfo;
 
         public UpdateContent(UpdateInfo info) {
@@ -266,21 +276,26 @@ public class ThumbnailSetDataLoader {
         @Override
         public Void call() {
             // Avoid notifying listeners of status change after pause Otherwise gallery will be in inconsistent state after resume.
-            if (mReloadTask == null) return null;
+            if (mReloadTask == null)
+                return null;
             UpdateInfo info = mUpdateInfo;
             mSourceVersion = info.version;
             if (mSize != info.size) {
                 mSize = info.size;
-                if (mDataListener != null) mDataListener.onSizeChanged(mSize);
-                if (mContentEnd > mSize) mContentEnd = mSize;
-                if (mActiveEnd > mSize) mActiveEnd = mSize;
+                if (mDataListener != null)
+                    mDataListener.onSizeChanged(mSize);
+                if (mContentEnd > mSize)
+                    mContentEnd = mSize;
+                if (mActiveEnd > mSize)
+                    mActiveEnd = mSize;
             }
             // Note: info.index could be INDEX_NONE, i.e., -1
             if (info.index >= mContentStart && info.index < mContentEnd) {
                 int pos = info.index % mCoverItem.length;
                 mSetVersion[pos] = info.version;
                 long itemVersion = info.item.getDataVersion();
-                if (mItemVersion[pos] == itemVersion) return null;
+                if (mItemVersion[pos] == itemVersion)
+                    return null;
                 mItemVersion[pos] = itemVersion;
                 mData[pos] = info.item;
                 mCoverItem[pos] = info.cover;
@@ -306,14 +321,15 @@ public class ThumbnailSetDataLoader {
         }
     }
 
-    // TODO: load active range first
     private class ReloadTask extends Thread {
+
         private volatile boolean mActive = true;
         private volatile boolean mDirty = true;
         private volatile boolean mIsLoading = false;
 
         private void updateLoading(boolean loading) {
-            if (mIsLoading == loading) return;
+            if (mIsLoading == loading)
+                return;
             mIsLoading = loading;
             mMainHandler.sendEmptyMessage(loading ? MSG_LOAD_START : MSG_LOAD_FINISH);
         }
@@ -321,27 +337,26 @@ public class ThumbnailSetDataLoader {
         @Override
         public void run() {
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-
             boolean updateComplete = false;
             while (mActive) {
                 synchronized (this) {
                     if (mActive && !mDirty && updateComplete) {
-                        if (!mSource.isLoading()) updateLoading(false);
+                        if (!mSource.isLoading())
+                            updateLoading(false);
                         Utils.waitWithoutInterrupt(this);
                         continue;
                     }
                 }
                 mDirty = false;
                 updateLoading(true);
-
                 long version = mSource.reload();
                 UpdateInfo info = executeAndWait(new GetUpdateInfo(version));
                 updateComplete = info == null;
-                if (updateComplete) continue;
+                if (updateComplete)
+                    continue;
                 if (info.version != version) {
                     info.version = version;
                     info.size = mSource.getSubMediaSetCount();
-
                     // If the size becomes smaller after reload(), we may
                     // receive from GetUpdateInfo an index which is too
                     // big. Because the main thread is not aware of the size
@@ -352,9 +367,10 @@ public class ThumbnailSetDataLoader {
                 }
                 if (info.index != INDEX_NONE) {
                     info.item = mSource.getSubMediaSet(info.index);
-                    if (info.item == null) continue;
-                    info.cover = info.item.getCoverMediaItem();
+                    if (info.item == null)
+                        continue;
                     info.totalCount = info.item.getTotalMediaItemCount();
+                    info.cover = info.item.getCoverMediaItem();
                 }
                 executeAndWait(new UpdateContent(info));
             }

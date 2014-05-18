@@ -8,6 +8,7 @@ import com.xjt.letool.adapters.ThumbnailSetDataWindow.AlbumSetEntry;
 import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.loader.ThumbnailSetDataLoader;
+import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.views.opengl.ColorTexture;
 import com.xjt.letool.views.opengl.FadeInTexture;
@@ -35,10 +36,12 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
     private boolean mAnimatePressedUp;
     private MediaPath mHighlightItemPath = null;
     private boolean mInSelectionMode;
+    private SelectionManager mMediaSelector;
 
     private LabelSpec mLabelSpec;
 
     public static class LabelSpec {
+
         public int labelBackgroundHeight;
         public int titleOffset;
         public int countOffset;
@@ -66,12 +69,12 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         }
     }
 
-    public ThumbnailSetRenderer(LetoolFragment activity, ThumbnailView thumbnailView) {
+    public ThumbnailSetRenderer(LetoolFragment activity, ThumbnailView thumbnailView, SelectionManager selector) {
         super(activity.getAndroidContext());
         mActivity = activity;
         mThumbnailView = thumbnailView;
         mPlaceholderColor = Color.GRAY;
-
+        mMediaSelector = selector;
         mLabelSpec = ViewConfigs.AlbumSetPage.get(activity.getAndroidContext()).labelSpec;
 
         mWaitLoadingTexture = new ColorTexture(mPlaceholderColor);
@@ -117,6 +120,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
     private static Texture checkLabelTexture(Texture texture) {
         return ((texture instanceof UploadedTexture) && ((UploadedTexture) texture).isUploading()) ? null : texture;
     }
+
     private static Texture checkContentTexture(Texture texture) {
         return ((texture instanceof TiledTexture) && !((TiledTexture) texture).isReady()) ? null : texture;
     }
@@ -127,7 +131,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         int renderRequestFlags = 0;
         renderRequestFlags |= renderContent(canvas, entry, width, height);
         renderRequestFlags |= renderLabel(canvas, entry, width, height);
-        renderRequestFlags |= renderOverlay(canvas, index, width, height);
+        renderRequestFlags |= renderOverlay(canvas, entry,index, width, height);
         return renderRequestFlags;
     }
 
@@ -161,7 +165,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         return 0;
     }
 
-    protected int renderOverlay(GLESCanvas canvas, int index, int width, int height) {
+    protected int renderOverlay(GLESCanvas canvas, AlbumSetEntry entry,int index, int width, int height) {
         int renderRequestFlags = 0;
 
         if (mPressedIndex == index) {
@@ -177,7 +181,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
             }
         } else if ((mHighlightItemPath != null)) {
             drawSelectedFrame(canvas, width, height);
-        } else if (mInSelectionMode) {
+        } else if (mInSelectionMode && mMediaSelector.isItemSelected(entry.setPath)) {
             drawSelectedFrame(canvas, width, height);
         }
         return renderRequestFlags;
@@ -187,7 +191,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
 
     @Override
     public void prepareDrawing() {
-        mInSelectionMode = false;
+        mInSelectionMode = mMediaSelector.inSelectionMode();
     }
 
     public void pause() {

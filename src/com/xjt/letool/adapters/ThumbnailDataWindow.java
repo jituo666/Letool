@@ -25,7 +25,7 @@ import com.xjt.letool.views.opengl.TiledTextureUploader;
  * @author jetoo
  * 
  */
-public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
+public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListener {
 
     private static final String TAG = "AlbumDataWindow";
 
@@ -67,7 +67,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataListener {
     }
 
     public ThumbnailDataWindow(LetoolFragment fragment, ThumbnailDataLoader source, int cacheSize) {
-        source.setDataListener(this);
+        source.setDataChangedListener(this);
         mDataSource = source;
         mImageData = new AlbumEntry[cacheSize];
         mSize = source.size();

@@ -7,7 +7,7 @@ import android.view.animation.DecelerateInterpolator;
 
 public class ThumbnailContractLayout extends ThumbnailLayout {
 
-    private static final String TAG = "ThumbnailContractLayout";
+    private static final String TAG = ThumbnailContractLayout.class.getSimpleName();
 
     public ThumbnailContractLayout(ThumbnailLayoutSpec spec) {
         mSpec = spec;
@@ -17,7 +17,6 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
     // (1) mUnitCount: the number of thumbnails we can fit into one column (or row).
     // (2) mContentLength: the width (or height) we need to display all the columns (rows).
     // (3) padding[]: the vertical and horizontal padding we need in order to put the thumbnails towards to the center of the display.
-    //
     // The "major" direction is the direction the user can scroll. The other direction is the "minor" direction.
     // The comments inside this method are the description when the major direction is horizontal (X), and the minor direction is vertical (Y).
     private void initThumbnailLayoutParameters(int majorLength, int minorLength, int majorUnitSize, int minorUnitSize) {
@@ -25,15 +24,8 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
         if (unitCount == 0)
             unitCount = 1;
         mUnitCount = unitCount;
-
-        // We put extra padding above and below the column.
-        int availableUnits = Math.min(mUnitCount, mThumbnailCount);
-        int usedMinorLength = availableUnits * minorUnitSize + (availableUnits - 1) * mThumbnailGap;
-
-        // Then calculate how many columns we need for all thumbnails.
         int count = ((mThumbnailCount + mUnitCount - 1) / mUnitCount);
         mContentLength = count * majorUnitSize + (count - 1) * mThumbnailGap;
-        // If the content length is less then the screen width, put extra padding in left and right.
         LLog.i(TAG, " initLayoutParameters rows:" + count + " column;" + unitCount);
     }
 
@@ -69,7 +61,8 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
                 mVerticalPadding.startAnimateTo(mHeight + mThumbnailGap);
             }
         }
-        updateVisibleThumbnailRange();
+        if (mThumbnailCount > 0)
+            updateVisibleThumbnailRange();
     }
 
     @Override

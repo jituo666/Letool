@@ -7,8 +7,12 @@ import android.os.Looper;
 
 import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.metadata.DataManager;
-import com.xjt.letool.view.LetoolSlidingMenu;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 9:07:17 PM May 17, 2014
+ * @Comments:null
+ */
 public interface LetoolContext {
 
     public DataManager getDataManager();
@@ -21,7 +25,4 @@ public interface LetoolContext {
 
     public ThreadPool getThreadPool();
 
-//    public LetoolActionBar getLetoolActionBar();
-//
-//    public LetoolSlidingMenu getLetoolSlidingMenu();
 }

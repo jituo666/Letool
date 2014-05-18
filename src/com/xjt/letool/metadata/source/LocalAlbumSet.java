@@ -224,8 +224,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
             return "";
         }
         try {
-            return cursor.moveToNext() ? cursor.getString(INDEX_BUCKET_NAME)
-                    : "";
+            return cursor.moveToNext() ? cursor.getString(INDEX_BUCKET_NAME): "";
         } finally {
             cursor.close();
         }
@@ -273,7 +272,6 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
         if (mLoadBuffer == null)
             mLoadBuffer = new ArrayList<MediaSet>();
         mHandler.post(new Runnable() {
-
             @Override
             public void run() {
                 notifyContentChanged();

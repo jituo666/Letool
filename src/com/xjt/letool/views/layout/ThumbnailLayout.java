@@ -1,3 +1,4 @@
+
 package com.xjt.letool.views.layout;
 
 import android.graphics.Rect;
@@ -8,7 +9,7 @@ import com.xjt.letool.view.ThumbnailView.Renderer;
 
 public abstract class ThumbnailLayout {
 
-    private static final String TAG = "ThumbnailLayout";
+    private static final String TAG = ThumbnailLayout.class.getSimpleName();
 
     public static final boolean WIDE = false;
     public static final int INDEX_NONE = -1;
@@ -32,6 +33,13 @@ public abstract class ThumbnailLayout {
     protected int mScrollPosition;
     protected IntegerAnim mVerticalPadding = new IntegerAnim();
     protected IntegerAnim mHorizontalPadding = new IntegerAnim();
+
+    private LayoutListener mLayoutListener;
+
+    public interface LayoutListener {
+
+        public void onLayoutBeing(int count);
+    }
 
     public int getThumbnailCount() {
         return mThumbnailCount;
@@ -63,15 +71,22 @@ public abstract class ThumbnailLayout {
         mRenderer = render;
     }
 
+    public void setLayoutListener(LayoutListener l) {
+        mLayoutListener = l;
+    }
+
     public void setThumbnailCount(int thumbnailCount) {
         if (thumbnailCount == mThumbnailCount)
             return;
         if (thumbnailCount > 0) {
-//            mVerticalPadding.setEnabled(true);
-//            mHorizontalPadding.setEnabled(true);
+            //            mVerticalPadding.setEnabled(true);
+            //            mHorizontalPadding.setEnabled(true);
         }
         mThumbnailCount = thumbnailCount;
         initThumbnailParameters();
+        if (mLayoutListener != null) {
+            mLayoutListener.onLayoutBeing(thumbnailCount);
+        }
     }
 
     public void setThumbnailViewSize(int width, int height) {
@@ -99,7 +114,6 @@ public abstract class ThumbnailLayout {
         if (mRenderer != null) {
             mRenderer.onVisibleRangeChanged(mVisibleStart, mVisibleEnd);
         }
-        //LLog.i(TAG, "onVisibleRangeChanged visibleStart:" + mVisibleStart + " visibleEnd:" + mVisibleEnd);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -112,8 +126,6 @@ public abstract class ThumbnailLayout {
     protected abstract void updateVisibleThumbnailRange();
 
     public boolean advanceAnimation(long animTime) {
-        // use '|' to make sure both sides will be executed
-        boolean anim = mVerticalPadding.calculate(animTime) | mHorizontalPadding.calculate(animTime);
-        return anim;
+        return mVerticalPadding.calculate(animTime) | mHorizontalPadding.calculate(animTime);
     }
 }

@@ -206,9 +206,7 @@ public class LocalImage extends LocalMediaItem {
         LetoolUtils.assertNotInRenderThread();
         Uri baseUri = Images.Media.EXTERNAL_CONTENT_URI;
         ContentResolver contentResolver = mApplication.getContentResolver();
-        //SaveImage.deleteAuxFiles(contentResolver, getContentUri());
-        contentResolver.delete(baseUri, "_id=?",
-                new String[] { String.valueOf(id) });
+        contentResolver.delete(baseUri, "_id=?", new String[] { String.valueOf(id) });
     }
 
     @Override
