@@ -1,3 +1,4 @@
+
 package com.xjt.letool.imagedata.blobcache;
 
 import android.content.Context;
@@ -11,7 +12,8 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class BlobCacheManager {
-    private static final String TAG = "BlobCacheManager";
+
+    private static final String TAG = BlobCacheManager.class.getSimpleName();
     private static final String KEY_CACHE_UP_TO_DATE = "cache-up-to-date";
     private static HashMap<String, BlobCache> sCacheMap = new HashMap<String, BlobCache>();
     private static boolean sOldCheckDone = false;
@@ -47,8 +49,22 @@ public class BlobCacheManager {
         } catch (Throwable t) {
             // ignore.
         }
-        if (n != 0) return;
+        if (n != 0)
+            return;
         pref.edit().putInt(KEY_CACHE_UP_TO_DATE, 1).commit();
+
+        File cacheDir = context.getExternalCacheDir();
+        String prefix = cacheDir.getAbsolutePath() + "/";
+
+        BlobCache.deleteFiles(prefix + "imgcache");
+        BlobCache.deleteFiles(prefix + "rev_geocoding");
+        BlobCache.deleteFiles(prefix + "bookmark");
+    }
+
+    // Removes the old files if the data is wiped.
+    public static void clearCachedFiles(Context context) {
+/*        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        pref.edit().putInt(KEY_CACHE_UP_TO_DATE, 1).commit();*/
 
         File cacheDir = context.getExternalCacheDir();
         String prefix = cacheDir.getAbsolutePath() + "/";

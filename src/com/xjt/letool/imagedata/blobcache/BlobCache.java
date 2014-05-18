@@ -420,8 +420,7 @@ public class BlobCache implements Closeable {
     // Returns false if the blob is not available (either the index file is
     // not sync with the data file, or one of them is corrupted). The length
     // of the blob is stored in the req.length variable.
-    private boolean getBlob(RandomAccessFile file, int offset,
-            LookupRequest req) throws IOException {
+    private boolean getBlob(RandomAccessFile file, int offset, LookupRequest req) throws IOException {
         byte[] header = mBlobHeader;
         long oldPosition = file.getFilePointer();
         try {

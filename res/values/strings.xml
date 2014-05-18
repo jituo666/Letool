@@ -61,7 +61,6 @@
          Title of a menu item to indicate performing the image crop operation
          [CHAR LIMIT=20]
     -->
-    <string name="ok">OK</string>
     <!-- Button indicating that the cropped image should be reverted back to the original -->
     <!-- Hint that appears when cropping an image with more than one face -->
     <string name="multiface_crop_help">Touch a face to begin.</string>
@@ -113,7 +112,6 @@
     </plurals>
 
     <string name="confirm">Confirm</string>
-    <string name="cancel">Cancel</string>
     <string name="share">Share</string>
     <string name="share_panorama">Share panorama</string>
     <string name="share_as_photo">Share as photo</string>
@@ -1171,9 +1169,8 @@ CHAR LIMIT = NONE]
         <item quantity="other">%1$d 项</item>
     </plurals>
 
-
     <string name="clear_cache_title">清理缓存</string>
-    <string name="clear_cache_desc">当前缓存大小100M，手机剩余存储100M</string>
+    <string name="clear_cache_desc">当前缓存大小 %1$s，手机剩余存储 %2$s</string>
     <string name="version_update_check_title">版本更新检查</string>
     <string name="version_update_check_desc">当前版本1.0，更新日期2014-3-15</string>
     <string name="author_title">作者</string>
@@ -1181,9 +1178,13 @@ CHAR LIMIT = NONE]
     <string name="app_about_title">关于</string>
     <string name="app_about_desc">有关作者、技术合作、版权等一些信息的描述</string>
     <string name="dashi_new_function_tip" translatable="false">New</string>
-    
     <string name="common_delete">删除</string>
     <string name="common_delete_tip">确定删除所选内容?</string>
     <string name="common_delete_waiting">正在删除,请稍候...</string>
+    <string name="common_clear_cache">清理缓存</string>
+    <string name="common_clear_cache_waitting">正在清理缓存,请稍候...</string>
+    <string name="common_exit_tip">确定退出软件？</string>
+    <string name="cancel">取消</string>
+    <string name="ok">确定</string>
 
 </resources>

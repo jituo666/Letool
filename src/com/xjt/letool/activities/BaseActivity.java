@@ -13,8 +13,12 @@ import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.view.LetoolActionBar;
 import com.xjt.letool.view.LetoolSlidingMenu;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnClickListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -44,6 +48,7 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
     private LetoolSlidingMenu mSlidingMenu;
     private OrientationManager mOrientationManager;
     protected FragmentManager mFragmentManager;
+    protected boolean mIsMainActivity = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +56,7 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
         mOrientationManager = new OrientationManager(this);
         mFragmentManager = getSupportFragmentManager();
         mSlidingMenu = new LetoolSlidingMenu(mFragmentManager);
-        mActionBar = new LetoolActionBar(this, (ViewGroup)findViewById(R.id.action_bar));
+        mActionBar = new LetoolActionBar(this, (ViewGroup) findViewById(R.id.action_bar));
     }
 
     @Override
@@ -108,6 +113,15 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
             ft.setCustomAnimations(0, R.anim.slide_left_out);
             ft.remove(f);
             ft.commit();
+        } else if (mIsMainActivity) {
+            ExitListener l = new ExitListener();
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.common_exit)
+                    .setMessage(getString(R.string.common_exit_tip))
+                    .setOnCancelListener(l)
+                    .setPositiveButton(R.string.ok, l)
+                    .setNegativeButton(R.string.cancel, l)
+                    .create().show();
         } else {
             super.onBackPressed();
         }
@@ -116,7 +130,23 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
 
+    public class ExitListener implements OnClickListener, OnCancelListener {
+
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            dialog.dismiss();
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            if (which == DialogInterface.BUTTON_POSITIVE) {
+                finish();
+            } else {
+                dialog.dismiss();
+            }
+        }
     }
 
     @Override

@@ -1,15 +1,25 @@
 
 package com.xjt.letool.fragment;
 
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StatFs;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.xjt.letool.R;
+import com.xjt.letool.common.LLog;
+import com.xjt.letool.imagedata.blobcache.BlobCacheManager;
+import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.settings.LetoolPreference;
+import com.xjt.letool.utils.StorageUtils;
+import com.xjt.letool.utils.StringUtils;
 import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.LetoolActionBar;
+
+import java.io.File;
 
 /**
  * @Author Jituo.Xuan
@@ -18,6 +28,7 @@ import com.xjt.letool.view.LetoolActionBar;
  */
 public class SettingFragment extends LetoolFragment {
 
+    private static final String TAG = SettingFragment.class.getSimpleName();
     private LetoolPreference mAuthorDesc;
     private LetoolPreference mClearCache;
     private LetoolPreference mVersionCheck;
@@ -36,7 +47,9 @@ public class SettingFragment extends LetoolFragment {
     }
 
     private void initViews() {
-        mClearCache.setSettingItemText(getString(R.string.clear_cache_title), getString(R.string.clear_cache_desc));
+        String x = getString(R.string.clear_cache_desc, getCacheSize(), StringUtils.formatBytes(StorageUtils.getExternalStorageAvailableSize()));
+        LLog.i(TAG, "-----------------getCacheSize():" + getCacheSize());
+        mClearCache.setSettingItemText(getString(R.string.clear_cache_title), x);
         mVersionCheck.setSettingItemText(getString(R.string.version_update_check_title), getString(R.string.version_update_check_desc));
 
         mAuthorDesc.setSettingItemText(getString(R.string.author_title), getString(R.string.author_desc));
@@ -64,6 +77,7 @@ public class SettingFragment extends LetoolFragment {
         if (v.getId() == R.id.action_navi) {
             getLetoolSlidingMenu().toggle();
         } else if (v.getId() == R.id.clear_cache) {
+            new ClearCacheTask().execute();
         } else if (v.getId() == R.id.version_update_check) {
         } else if (v.getId() == R.id.author_desc) {
         } else if (v.getId() == R.id.app_about) {
@@ -73,5 +87,62 @@ public class SettingFragment extends LetoolFragment {
     @Override
     public GLController getGLController() {
         return null;
+    }
+
+    private String getCacheSize() {
+        try {
+            return StringUtils.formatBytes(getFolderSize(getActivity().getApplication().getExternalCacheDir()));
+        } catch (Exception e) {
+            return "0B";
+        }
+    }
+
+    public static long getFolderSize(java.io.File file) throws Exception {
+        long size = 0;
+        java.io.File[] fileList = file.listFiles();
+        for (int i = 0; i < fileList.length; i++)
+        {
+            if (fileList[i].isDirectory())
+            {
+                size = size + getFolderSize(fileList[i]);
+            } else
+            {
+                size = size + fileList[i].length();
+            }
+        }
+        return size;
+    }
+
+    private class ClearCacheTask extends AsyncTask<Void, Void, Void> {
+
+        ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog = new ProgressDialog(getActivity());
+            dialog.setTitle(getActivity().getString(R.string.common_clear_cache));
+            dialog.setMessage(getActivity().getString(R.string.common_clear_cache_waitting));
+            dialog.setIndeterminate(true);
+            dialog.setCancelable(true);
+            dialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+            BlobCacheManager.clearCachedFiles(getAndroidContext());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+                String x = getString(R.string.clear_cache_desc, getCacheSize(), StringUtils.formatBytes(StorageUtils.getExternalStorageAvailableSize()));
+                LLog.i(TAG, "-----------------getCacheSize():" + getCacheSize());
+                mClearCache.setSettingItemText(getString(R.string.clear_cache_title), x);
+            }
+        }
     }
 }

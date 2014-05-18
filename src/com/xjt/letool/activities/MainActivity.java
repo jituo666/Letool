@@ -34,6 +34,7 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.layout_main);
         super.onCreate(savedInstanceState);
         initializeByIntent();
+        mIsMainActivity = true;
     }
 
     @Override
