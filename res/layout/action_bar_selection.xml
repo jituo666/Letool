@@ -37,7 +37,6 @@
         style="@style/MyWidget.ActionBarIconStyle"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:background="@drawable/common_item_bkg"
         android:src="@drawable/ic_action_discard" />
 
 </RelativeLayout>

@@ -18,8 +18,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/ic_action_previous_item"
-            android:scaleType="fitXY" />
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_action_previous_item" />
 
         <ImageView
             android:id="@+id/app_logo"
@@ -41,11 +41,20 @@
         android:background="@drawable/common_action_bar_divider"
         android:visibility="invisible" />
 
+    <ImageView
+        android:id="@+id/action_camera"
+        style="@style/MyWidget.ActionBarIconStyle"
+        android:layout_alignParentRight="true"
+        android:visibility="gone"
+        android:src="@drawable/ic_action_camera" />
+
     <TextView
         android:id="@+id/navi_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_toLeftOf="@id/action_camera"
         android:layout_toRightOf="@id/sliding_menu_divider"
+        android:layout_alignWithParentIfMissing="true"
         android:ellipsize="end"
         android:gravity="left|center_vertical"
         android:singleLine="true"

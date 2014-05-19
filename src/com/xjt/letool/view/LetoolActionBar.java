@@ -40,7 +40,7 @@ public class LetoolActionBar {
             R.id.navi_text,
             R.id.selection_counter,
             R.id.navi_text,
-            R.id.navi_text,
+            R.id.navi_text
     };
 
     public static final int ACTION_BUTTON_IDS[] = {
@@ -48,6 +48,7 @@ public class LetoolActionBar {
             R.id.operation_delete,
             R.id.action_navi,
             R.id.action_navi,
+            R.id.action_camera
     };
 
     public static interface OnActionModeListener extends View.OnClickListener {

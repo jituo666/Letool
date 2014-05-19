@@ -1,4 +1,3 @@
-
 package com.xjt.letool.fragment;
 
 import com.xjt.letool.LetoolApp;
@@ -45,8 +44,10 @@ import com.xjt.letool.views.utils.ViewConfigs;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -269,6 +270,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
             actionBar.setTitleIcon(R.drawable.ic_action_previous_item);
         }
         actionBar.setTitleText(mAlbumTitle);
+        actionBar.getActionPanel().findViewById(R.id.action_camera).setVisibility(View.VISIBLE);
     }
 
     private void initializeData() {
@@ -470,6 +472,9 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
                     .setPositiveButton(R.string.ok, cdl)
                     .setNegativeButton(R.string.cancel, cdl)
                     .create().show();
+        } else if (v.getId() == R.id.action_camera) {
+            Intent intent = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA );
+            startActivityForResult(intent, 1);
         }
     }
 

@@ -1,4 +1,3 @@
-
 package com.xjt.letool.metadata;
 
 import java.util.HashMap;
@@ -44,9 +43,7 @@ public class DataManager {
     public static final int INCLUDE_LOCAL_ALL_ONLY = INCLUDE_LOCAL_ONLY | INCLUDE_IMAGE | INCLUDE_VIDEO;
 
     // This is the path for the media set seen by the user at top level.
-    private static final String TOP_PATH = "/combo/{/mtp/*,/local/all/*,/picasa/all/*}";
-    private static final String TOP_IMAGE_PATH = "/combo/{/mtp/*,/local/image/*,/picasa/image/*}";
-    private static final String TOP_VIDEO_PATH = "/combo/{/local/video/*,/picasa/video/*}";
+    private static final String TOP_PATH = "/combo/{/local/all/*}";
     private static final String TOP_LOCAL_PATH = "/local/all/*";
     private static final String TOP_LOCAL_IMAGE_PATH = "/local/image/*";
     private static final String TOP_LOCAL_VIDEO_PATH = "/local/video/*";
@@ -204,7 +201,9 @@ public class DataManager {
     }
 
     public void delete(MediaPath path) {
-        getMediaObject(path).delete();
+        MediaObject o = getMediaObject(path);
+        if (o != null)
+            o.delete();
     }
 
     private static class DataObserver extends ContentObserver {
