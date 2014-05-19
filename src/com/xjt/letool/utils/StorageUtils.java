@@ -6,6 +6,8 @@ import java.io.File;
 import android.os.Environment;
 import android.os.StatFs;
 
+import com.xjt.letool.common.LLog;
+
 /**
  * Utility to obtain the internal and external storage info.
  */

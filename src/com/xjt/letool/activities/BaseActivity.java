@@ -21,12 +21,14 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 /**
  * @Author Jituo.Xuan
@@ -49,6 +51,7 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
     private OrientationManager mOrientationManager;
     protected FragmentManager mFragmentManager;
     protected boolean mIsMainActivity = false;
+    private boolean mWaitingForExit = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,14 +117,26 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
             ft.remove(f);
             ft.commit();
         } else if (mIsMainActivity) {
-            ExitListener l = new ExitListener();
+            if (mWaitingForExit) {
+                finish();
+            } else {
+                mWaitingForExit = true;
+                Toast.makeText(this, R.string.common_exit_tip, Toast.LENGTH_SHORT).show();
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        mWaitingForExit = false;
+                    }}, 3000);
+            }
+           /* ExitListener l = new ExitListener();
             new AlertDialog.Builder(this)
                     .setTitle(R.string.common_exit)
                     .setMessage(getString(R.string.common_exit_tip))
                     .setOnCancelListener(l)
                     .setPositiveButton(R.string.ok, l)
                     .setNegativeButton(R.string.cancel, l)
-                    .create().show();
+                    .create().show();*/
         } else {
             super.onBackPressed();
         }

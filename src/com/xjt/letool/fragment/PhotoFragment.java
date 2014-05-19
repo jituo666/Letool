@@ -22,6 +22,7 @@ import com.xjt.letool.selectors.SelectionListener;
 import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.RelativePosition;
+import com.xjt.letool.utils.StorageUtils;
 import com.xjt.letool.utils.Utils;
 import com.xjt.letool.view.CommonLoadingPanel;
 import com.xjt.letool.view.DeleteMediaListener;
@@ -54,6 +55,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -95,6 +97,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
 
     private String mAlbumTitle;
     private boolean mIsCamera = false;
+    private boolean mHasSDCard = false;
     private boolean mGetContent;
     private SynchronizedHandler mHandler;
     protected SelectionManager mSelector;
@@ -299,9 +302,9 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LLog.i(TAG, "onCreateView" + System.currentTimeMillis());
         View rootView = inflater.inflate(R.layout.gl_root_view, container, false);
+        mHasSDCard = StorageUtils.externalStorageAvailable();
+
         mGLRootView = (GLRootView) rootView.findViewById(R.id.gl_root_view);
-        mLoadingInsie = (CommonLoadingPanel) rootView.findViewById(R.id.loading);
-        mLoadingInsie.setVisibility(View.VISIBLE);
         initializeViews();
         initializeData();
         mHandler = new SynchronizedHandler(mGLRootView) {
@@ -324,6 +327,15 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         };
         mEyePosition = new EyePosition(getAndroidContext(), this);
         initBrowseActionBar();
+        if (!mHasSDCard) {
+            TextView emptyView = (TextView) rootView.findViewById(R.id.empty_view);
+            emptyView.setText(R.string.common_error_nosdcard);
+            emptyView.setVisibility(View.VISIBLE);
+            mGLRootView.setVisibility(View.GONE);
+        } else {
+            mLoadingInsie = (CommonLoadingPanel) rootView.findViewById(R.id.loading);
+            mLoadingInsie.setVisibility(View.VISIBLE);
+        }
         return rootView;
     }
 
@@ -360,48 +372,52 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     @Override
     public void onResume() {
         super.onResume();
-        LLog.i(TAG, "onResume" + System.currentTimeMillis());
-        mGLRootView.onResume();
-        mGLRootView.lockRenderThread();
-        try {
-            mIsActive = true;
-            mGLRootView.setContentPane(mRootPane);
-            // Set the reload bit here to prevent it exit this page in clearLoadingBit().
-            setLoadingBit(BIT_LOADING_RELOAD);
-            mLoadingFailed = false;
-            mAlbumDataSetLoader.resume();
-            mRender.resume();
-            mRender.setPressedIndex(-1);
-            mEyePosition.resume();
-            if (!mInitialSynced) {
-                setLoadingBit(BIT_LOADING_SYNC);
-                //mSyncTask = mDataSet.requestSync(this);
+        if (mHasSDCard) {
+            LLog.i(TAG, "onResume" + System.currentTimeMillis());
+            mGLRootView.onResume();
+            mGLRootView.lockRenderThread();
+            try {
+                mIsActive = true;
+                mGLRootView.setContentPane(mRootPane);
+                // Set the reload bit here to prevent it exit this page in clearLoadingBit().
+                setLoadingBit(BIT_LOADING_RELOAD);
+                mLoadingFailed = false;
+                mAlbumDataSetLoader.resume();
+                mRender.resume();
+                mRender.setPressedIndex(-1);
+                mEyePosition.resume();
+                if (!mInitialSynced) {
+                    setLoadingBit(BIT_LOADING_SYNC);
+                    //mSyncTask = mDataSet.requestSync(this);
+                }
+            } finally {
+                mGLRootView.unlockRenderThread();
             }
-        } finally {
-            mGLRootView.unlockRenderThread();
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        LLog.i(TAG, "onPause");
-        mGLRootView.onPause();
-        mGLRootView.lockRenderThread();
-        try {
-            mIsActive = false;
-            mRender.setThumbnailFilter(null);
-            mAlbumDataSetLoader.pause();
-            mRender.pause();
-            DetailsHelper.pause();
-            mEyePosition.resume();
-            if (mSyncTask != null) {
-                mSyncTask.cancel();
-                mSyncTask = null;
-                clearLoadingBit(BIT_LOADING_SYNC);
+        if (mHasSDCard) {
+            LLog.i(TAG, "onPause");
+            mGLRootView.onPause();
+            mGLRootView.lockRenderThread();
+            try {
+                mIsActive = false;
+                mRender.setThumbnailFilter(null);
+                mAlbumDataSetLoader.pause();
+                mRender.pause();
+                DetailsHelper.pause();
+                mEyePosition.resume();
+                if (mSyncTask != null) {
+                    mSyncTask.cancel();
+                    mSyncTask = null;
+                    clearLoadingBit(BIT_LOADING_SYNC);
+                }
+            } finally {
+                mGLRootView.unlockRenderThread();
             }
-        } finally {
-            mGLRootView.unlockRenderThread();
         }
     }
 
@@ -449,6 +465,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
 
     @Override
     public void onClick(View v) {
+        if (!mIsActive) return;
         if (v.getId() == R.id.action_navi) {
             if (!mIsCamera) {
                 getActivity().finish();

@@ -2,6 +2,7 @@
 package com.xjt.letool.imagedata.provider;
 
 import com.xjt.letool.common.LLog;
+import com.xjt.letool.utils.StorageUtils;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -88,7 +89,9 @@ public class LetoolProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        mOpenHelper = LetoolDataBaseHelper.getInstance(getContext());
+        if (StorageUtils.externalStorageAvailable()) {
+            mOpenHelper = LetoolDataBaseHelper.getInstance(getContext());
+        }
         return true;
     }
 

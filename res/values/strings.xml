@@ -1183,8 +1183,9 @@ CHAR LIMIT = NONE]
     <string name="common_delete_waiting">正在删除,请稍候...</string>
     <string name="common_clear_cache">清理缓存</string>
     <string name="common_clear_cache_waitting">正在清理缓存,请稍候...</string>
-    <string name="common_exit_tip">确定退出软件？</string>
+    <string name="common_exit_tip">再按一次退出软件？</string>
     <string name="cancel">取消</string>
     <string name="ok">确定</string>
+    <string name="common_error_nosdcard">没有检测到SD卡！</string>
 
 </resources>
