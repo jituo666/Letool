@@ -5,7 +5,13 @@
 
     <translate
         android:duration="300"
-        android:interpolator="@android:anim/accelerate_decelerate_interpolator"
         android:fromXDelta="-100.0%p"
+        android:interpolator="@android:anim/accelerate_decelerate_interpolator"
         android:toXDelta="0.0%" />
+
+<!--     <alpha
+        android:duration="2000"
+        android:fromAlpha="0.0"
+        android:toAlpha="0.5" /> -->
+
 </set>
