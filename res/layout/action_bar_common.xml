@@ -42,17 +42,17 @@
         android:visibility="invisible" />
 
     <ImageView
-        android:id="@+id/action_camera"
+        android:id="@+id/action_more"
         style="@style/MyWidget.ActionBarIconStyle"
         android:layout_alignParentRight="true"
         android:visibility="gone"
-        android:src="@drawable/ic_action_camera" />
+        android:src="@drawable/ic_action_more" />
 
     <TextView
         android:id="@+id/navi_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toLeftOf="@id/action_camera"
+        android:layout_toLeftOf="@id/action_more"
         android:layout_toRightOf="@id/sliding_menu_divider"
         android:layout_alignWithParentIfMissing="true"
         android:ellipsize="end"

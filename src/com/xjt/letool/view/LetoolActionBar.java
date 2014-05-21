@@ -48,7 +48,8 @@ public class LetoolActionBar {
             R.id.operation_delete,
             R.id.action_navi,
             R.id.action_navi,
-            R.id.action_camera
+            R.id.action_more,
+            R.id.enter_selection_indicate
     };
 
     public static interface OnActionModeListener extends View.OnClickListener {

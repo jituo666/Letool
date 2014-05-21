@@ -1,5 +1,6 @@
-
 package com.xjt.letool.activities;
+
+import java.util.List;
 
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
@@ -26,6 +27,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -127,16 +129,17 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
                     @Override
                     public void run() {
                         mWaitingForExit = false;
-                    }}, 3000);
+                    }
+                }, 3000);
             }
-           /* ExitListener l = new ExitListener();
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.common_exit)
-                    .setMessage(getString(R.string.common_exit_tip))
-                    .setOnCancelListener(l)
-                    .setPositiveButton(R.string.ok, l)
-                    .setNegativeButton(R.string.cancel, l)
-                    .create().show();*/
+            /* ExitListener l = new ExitListener();
+             new AlertDialog.Builder(this)
+                     .setTitle(R.string.common_exit)
+                     .setMessage(getString(R.string.common_exit_tip))
+                     .setOnCancelListener(l)
+                     .setPositiveButton(R.string.ok, l)
+                     .setNegativeButton(R.string.cancel, l)
+                     .create().show();*/
         } else {
             super.onBackPressed();
         }
@@ -197,4 +200,18 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
     public LetoolActionBar getLetoolActionBar() {
         return mActionBar;
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+            List<Fragment> list = mFragmentManager.getFragments();
+            for (Fragment f : list) {
+                if (f != null && (f instanceof LetoolFragment) && f.isResumed()) {
+                    ((LetoolFragment) f).onMenuClicked();
+                }
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 }

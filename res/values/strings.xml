@@ -1188,4 +1188,9 @@ CHAR LIMIT = NONE]
     <string name="ok">确定</string>
     <string name="common_error_nosdcard">没有检测到SD卡！</string>
 
+    <!-- popup menu -->
+    <string name="popup_menu_defaut_order">默认排序</string>
+    <string name="popup_menu_time_order">按时间排序</string>
+    <string name="popup_menu_select_mode">选择模式</string>
+
 </resources>

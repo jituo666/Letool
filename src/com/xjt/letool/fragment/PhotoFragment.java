@@ -20,6 +20,9 @@ import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.metadata.source.PhotoAlbum;
 import com.xjt.letool.selectors.SelectionListener;
 import com.xjt.letool.selectors.SelectionManager;
+import com.xjt.letool.surpport.MenuItem;
+import com.xjt.letool.surpport.PopupMenu;
+import com.xjt.letool.surpport.PopupMenu.OnMenuItemClickListener;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.RelativePosition;
 import com.xjt.letool.utils.StorageUtils;
@@ -45,14 +48,13 @@ import com.xjt.letool.views.utils.ViewConfigs;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Message;
-import android.provider.MediaStore;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -64,7 +66,7 @@ import android.widget.Toast;
  * @Comments:null
  */
 public class PhotoFragment extends LetoolFragment implements EyePosition.EyePositionListener, SelectionListener,
-        LayoutListener {
+        LayoutListener, OnMenuItemClickListener {
 
     private static final String TAG = PhotoFragment.class.getSimpleName();
 
@@ -89,6 +91,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     //views
     private CommonLoadingPanel mLoadingInsie;
     private GLRootView mGLRootView;
+    private View mMore;
     private ViewConfigs.AlbumPage mConfig;
     private ThumbnailView mThumbnailView;
     private ThumbnailRenderer mRender;
@@ -224,7 +227,6 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LLog.i(TAG, "onCreate");
-        setHasOptionsMenu(true);
     }
 
     private void initializeViews() {
@@ -273,7 +275,8 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
             actionBar.setTitleIcon(R.drawable.ic_action_previous_item);
         }
         actionBar.setTitleText(mAlbumTitle);
-        actionBar.getActionPanel().findViewById(R.id.action_camera).setVisibility(View.VISIBLE);
+        mMore = actionBar.getActionPanel().findViewById(R.id.action_more);
+        mMore.setVisibility(View.VISIBLE);
     }
 
     private void initializeData() {
@@ -343,30 +346,21 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         LetoolActionBar actionBar = getLetoolActionBar();
         actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_SELECTION, this);
         actionBar.setSelectionManager(mSelector);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflator) {
-        super.onCreateOptionsMenu(menu, inflator);
-        LLog.i(TAG, "onCreateOptionsMenu");
-        if (mGetContent) {
-            inflator.inflate(R.menu.pickup, menu);
-        } else {
-            inflator.inflate(R.menu.album, menu);
-
-        }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        return super.onOptionsItemSelected(item);
+        String format = getResources().getQuantityString(R.plurals.number_of_items_selected, 0);
+        actionBar.setTitleText(String.format(format, 0));
     }
 
     @Override
     public void onStart() {
         super.onStart();
         LLog.i(TAG, "onStart");
+    }
+
+    @Override
+    public void onMenuClicked() {
+        if (!mSelector.inSelectionMode()) {
+            showPopupMenu();
+        }
     }
 
     @Override
@@ -465,7 +459,8 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
 
     @Override
     public void onClick(View v) {
-        if (!mIsActive) return;
+        if (!mIsActive)
+            return;
         if (v.getId() == R.id.action_navi) {
             if (!mIsCamera) {
                 getActivity().finish();
@@ -489,10 +484,21 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
                     .setPositiveButton(R.string.ok, cdl)
                     .setNegativeButton(R.string.cancel, cdl)
                     .create().show();
-        } else if (v.getId() == R.id.action_camera) {
-            Intent intent = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA );
-            startActivityForResult(intent, 1);
+        } else if (v.getId() == R.id.action_more) {
+            showPopupMenu();
+        } else if (v.getId() == R.id.enter_selection_indicate) {
+            mSelector.leaveSelectionMode();
         }
+    }
+
+    public void showPopupMenu() {
+        PopupMenu popup = new PopupMenu(this.getActivity());
+        popup.setOnItemSelectedListener(this);
+        popup.add(0, R.string.popup_menu_defaut_order);
+        popup.add(1, R.string.popup_menu_time_order);
+        popup.add(2, R.string.popup_menu_select_mode);
+        popup.show(mMore);
+
     }
 
     @Override
@@ -589,6 +595,24 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         mDetailsHelper.hide();
         mRender.setHighlightItemPath(null);
         mThumbnailView.invalidate();
+    }
+
+    @Override
+    public void onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case 0:
+                break;
+
+            case 1:
+                break;
+
+            case 2:
+                if (mSelector != null) {
+                    mSelector.enterSelectionMode();
+                }
+                break;
+
+        }
     }
 
 }

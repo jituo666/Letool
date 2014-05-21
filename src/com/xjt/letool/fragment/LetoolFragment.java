@@ -1,4 +1,3 @@
-
 package com.xjt.letool.fragment;
 
 import com.xjt.letool.LetoolApp;
@@ -52,12 +51,16 @@ public abstract class LetoolFragment extends Fragment implements LetoolContext, 
     }
 
     public LetoolActionBar getLetoolActionBar() {
-        return ((BaseActivity)getActivity()).getLetoolActionBar();
+        return ((BaseActivity) getActivity()).getLetoolActionBar();
     }
 
     public LetoolSlidingMenu getLetoolSlidingMenu() {
-        return ((BaseActivity)getActivity()).getLetoolSlidingMenu();
+        return ((BaseActivity) getActivity()).getLetoolSlidingMenu();
     }
 
     public abstract GLController getGLController();
+
+    public void onMenuClicked() {
+
+    }
 }

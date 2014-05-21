@@ -1,80 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="title" format="string" />
-
-    <declare-styleable name="weightedlinearlayout">
-        <attr name="majorWeight" format="float" />
-        <attr name="minorWeight" format="float" />
-    </declare-styleable>
-    <declare-styleable name="linearlayout_title_theme">
-        <attr name="linearlayout_title_text" format="string" />
+    <declare-styleable name="Theme.GalleryBase">
+        <attr name="listPreferredItemHeightSmall" format="dimension" />
+        <attr name="switchStyle" format="reference" />
     </declare-styleable>
 
-    <!-- Axis properties declaration -->
+    <!-- Camera resources below -->
 
-    <declare-styleable name="Axis">
 
-        <!-- the max value of abscissa -->
-        <attr name="abscissaMax" format="integer" />
-
-        <!-- the interval value of the abscissa -->
-        <attr name="abscissaInterval" format="integer" />
-
-        <!-- the max value of the ordinate -->
-        <attr name="ordinateMax" format="integer" />
-
-        <!-- the interval value of the ordinate -->
-        <attr name="ordinateInterval" format="integer" />
+    <declare-styleable name="ListPreference">
+        <attr name="key" format="string" />
+        <attr name="defaultValue" format="string|reference" />
+        <attr name="entryValues" format="reference" />
+        <attr name="labelList" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="IconIndicator">
+        <attr name="icons" format="reference" />
+        <attr name="modes" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="IconListPreference">
+        <!-- If a preference does not have individual icons for each entry, it can has a single icon to represent it. -->
+        <attr name="singleIcon" format="reference" />
+        <attr name="icons" />
+        <attr name="largeIcons" format="reference" />
+        <attr name="images" format="reference" />
     </declare-styleable>
 
-    <!-- circleProgressbar declaration -->
-
-    <declare-styleable name="CircleProgressBar">
-        <attr name="maxcircle" format="integer" /> <!-- 进度条最大值 -->
-        <attr name="fill" format="boolean" /> <!-- 是否填充圆形区域 -->
-        <attr name="circleWidth" format="dimension" /> <!-- 画笔宽度，填充模式下无效，会被重置为0 -->
-        <attr name="circleColor" format="color" /> <!-- 画笔颜色 -->
-        <attr name="borderPadding" format="dimension" /> <!-- padding inside circle -->
-    </declare-styleable>
-
-    <declare-styleable name="LTToggleButton">
-        <attr name="textOn" format="string" />
-        <attr name="textOff" format="string" />
-        <attr name="disabledAlpha" format="float" />
-    </declare-styleable>
-
-    <declare-styleable name="LTPreference">
-        <attr name="layout" format="reference" />
-        <attr name="name" format="string" />
-        <attr name="title" />
-        <attr name="summary" format="string" />
-        <attr name="enabled" format="boolean" />
-        <attr name="type" format="string" />
-        <attr name="newTipShow" format="boolean" />
-    </declare-styleable>
-
-    <declare-styleable name="PickSelectView">
-        <attr name="title" />
-        <attr name="entries" format="reference" />
-    </declare-styleable>
-
-    <declare-styleable name="DxActionButton">
-        <attr name="icon" format="reference" />
-        <attr name="label" format="string" />
-    </declare-styleable>
-
-    <declare-styleable name="DxEmptyView">
-        <attr name="image" format="reference" />
-        <attr name="tips" format="string" />
-    </declare-styleable>
-
-    <declare-styleable name="DxPageBottomButton">
-        <attr name="text" format="string" />
-        <attr name="showCheckbox" format="boolean" />
-    </declare-styleable>
-
-    <declare-styleable name="DxTristateCheckbox">
-        <attr name="state_all" format="boolean" />
-        <attr name="state_apart" format="boolean" />
-    </declare-styleable>
 </resources>

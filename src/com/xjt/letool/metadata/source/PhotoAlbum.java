@@ -20,7 +20,6 @@ import com.xjt.letool.metadata.image.LocalImage;
 import com.xjt.letool.metadata.image.LocalMediaItem;
 import com.xjt.letool.metadata.video.LocalVideo;
 import com.xjt.letool.utils.LetoolUtils;
-import com.xjt.letool.utils.Utils;
 
 import java.util.ArrayList;
 

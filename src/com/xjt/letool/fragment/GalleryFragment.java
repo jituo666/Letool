@@ -293,34 +293,9 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        LLog.i(TAG, "onCreateOptionsMenu");
-        if (mGetContent) {
-            inflater.inflate(R.menu.pickup, menu);
-        } else {
-            inflater.inflate(R.menu.albumset, menu);
-        }
+
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-
-            case R.id.action_details:
-                if (mThumbnailSetAdapter.size() != 0) {
-                    if (mShowDetails) {
-                        hideDetails();
-                    } else {
-                        showDetails();
-                    }
-                } else {
-                    Toast.makeText(getAndroidContext(), getText(R.string.no_albums_alert), Toast.LENGTH_SHORT).show();
-                }
-                return true;
-            default:
-                return false;
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
