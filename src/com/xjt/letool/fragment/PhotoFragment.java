@@ -313,7 +313,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
             public void handleMessage(Message message) {
                 switch (message.what) {
                     case MSG_LAYOUT_CONFIRMED: {
-                        //mLoadingInsie.setVisibility(View.GONE);
+                        mLoadingInsie.setVisibility(View.GONE);
                         break;
                     }
                     case MSG_PICK_PHOTO: {

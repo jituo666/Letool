@@ -4,3 +4,29 @@
 4,图片sdcard缓存优化（blob和sqlite方式）-->5ms?
 5,纹理绘制速度优化，压缩问题，常驻纹理（需要调研）。-->5ms?
 6,第一次加载缩略图，需要生成缩略图（或者压缩纹理数据）。这个时间要优化。-->1ms?
+
+
+
+
+
+[qq] http://open.qq.com/
+[qq] http://connect.qq.com/
+[微信] https://open.weixin.qq.com/
+[微博] http://open.weibo.com/
+[百度] http://open.baidu.com/
+[360] http://dev.app.360.cn/
+[阿里巴巴] http://open.1688.com/
+[豌豆夹] http://open.wandoujia.com/home
+[友盟] http://www.umeng.com/
+[91] http://dev.91.com/
+
+安卓
+安智
+机峰
+应用汇
+木蚂蚁
+优亿
+搜狗应用
+
+TESTIN/monkey/junit/
+腾讯云等一键发布到多个市场
