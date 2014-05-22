@@ -131,7 +131,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         int renderRequestFlags = 0;
         renderRequestFlags |= renderContent(canvas, entry, width, height);
         renderRequestFlags |= renderLabel(canvas, entry, width, height);
-        renderRequestFlags |= renderOverlay(canvas, entry,index, width, height);
+        renderRequestFlags |= renderOverlay(canvas, entry,index, width, height - mLabelSpec.labelBackgroundHeight);
         return renderRequestFlags;
     }
 

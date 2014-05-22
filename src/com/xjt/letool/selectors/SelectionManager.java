@@ -1,7 +1,6 @@
 package com.xjt.letool.selectors;
 
 import com.xjt.letool.LetoolContext;
-import com.xjt.letool.activities.BaseActivity;
 import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaPath;
@@ -26,7 +25,7 @@ public class SelectionManager {
     private boolean mInverseSelection;
     private boolean mIsAlbumSet;
     private boolean mInSelectionMode;
-    private boolean mAutoLeave = true;
+    private boolean mAutoLeave = false;
     private int mTotal;
 
     public SelectionManager(LetoolContext activity, boolean isAlbumSet) {

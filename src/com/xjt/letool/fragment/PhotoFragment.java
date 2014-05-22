@@ -1,3 +1,4 @@
+
 package com.xjt.letool.fragment;
 
 import com.xjt.letool.LetoolApp;
@@ -50,6 +51,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -208,7 +210,6 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         MediaItem item = mAlbumDataSetLoader.get(thumbnailIndex);
         if (item == null)
             return;
-        mSelector.setAutoLeaveSelectionMode(true);
         mSelector.toggle(item.getPath());
         mThumbnailView.invalidate();
     }
@@ -456,8 +457,9 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
 
     @Override
     public void onClick(View v) {
-        if (!mIsActive)
+        if (!mIsActive) {
             return;
+        }
         if (v.getId() == R.id.action_navi) {
             if (!mIsCamera) {
                 getActivity().finish();
@@ -465,7 +467,13 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
                 getLetoolSlidingMenu().toggle();
             }
         } else if (v.getId() == R.id.operation_delete) {
-
+            int count = mSelector.getSelectedCount();
+            if (count <= 0) {
+                Toast t = Toast.makeText(getActivity(), R.string.common_selection_tip, Toast.LENGTH_SHORT);
+                t.setGravity(Gravity.CENTER, 0, 0);
+                t.show();
+                return;
+            }
             DeleteMediaListener cdl = new DeleteMediaListener(getActivity(), mSelector, getDataManager(),
                     new DeleteMediaProgressListener() {
 

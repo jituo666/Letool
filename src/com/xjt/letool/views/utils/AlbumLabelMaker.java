@@ -1,3 +1,4 @@
+
 package com.xjt.letool.views.utils;
 
 import com.xjt.letool.common.ThreadPool;
@@ -12,8 +13,9 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 
 public class AlbumLabelMaker {
-    private static final int FONT_COLOR_TITLE = 0xFF999fa5;//Color.BLACK;
-    private static final int FONT_COLOR_COUNT = 0xFFeeeeee;//Color.WHITE;
+
+    private static final int FONT_COLOR_TITLE = 0xFF333333;// 0xFF999fa5;//Color.BLACK;
+    private static final int FONT_COLOR_COUNT = 0xFF222222;// 0xFFeeeeee;//Color.WHITE;
 
     // We keep a border around the album label to prevent aliasing
     private static final int BORDER_SIZE = 1;
@@ -37,8 +39,7 @@ public class AlbumLabelMaker {
         return BORDER_SIZE;
     }
 
-    private static TextPaint getTextPaint(int textSize, int color,
-            boolean isBold) {
+    private static TextPaint getTextPaint(int textSize, int color, boolean isBold) {
         TextPaint paint = new TextPaint();
         paint.setTextSize(textSize);
         paint.setAntiAlias(true);
@@ -53,9 +54,7 @@ public class AlbumLabelMaker {
         if (mLabelWidth == width)
             return;
         mLabelWidth = width;
-        int borders = 2 * BORDER_SIZE;
-        mLabelWidth = width + borders;
-        mLabelHeight = mSpec.labelBackgroundHeight + borders;
+        mLabelHeight = mSpec.labelBackgroundHeight;
     }
 
     public ThreadPool.Job<Bitmap> requestLabel(String title, String count) {
@@ -72,6 +71,7 @@ public class AlbumLabelMaker {
     }
 
     private class AlbumLabelJob implements ThreadPool.Job<Bitmap> {
+
         private String mTitle;
         private String mCount;
 
@@ -91,8 +91,7 @@ public class AlbumLabelMaker {
             }
 
             if (bitmap == null) {
-                int borders = 2 * BORDER_SIZE;
-                bitmap = Bitmap.createBitmap(labelWidth + borders, mLabelHeight + borders, Config.ARGB_8888);
+                bitmap = Bitmap.createBitmap(labelWidth, mLabelHeight, Config.ARGB_8888);
             }
 
             // 新生成一个位图，在里面绘制标签内容
@@ -101,20 +100,21 @@ public class AlbumLabelMaker {
             canvas.drawColor(BACKGROUND_COLOR, PorterDuff.Mode.SRC);
             canvas.translate(BORDER_SIZE, BORDER_SIZE);
 
-            // draw album title
+            // draw title
             if (jc.isCancelled())
                 return null;
-            int x = (mLabelWidth - mSpec.titleOffset) / 2;
+            int x = (mLabelWidth - mSpec.titleOffset) / 2 + BORDER_SIZE;
             int y = mLabelHeight - mSpec.labelBackgroundHeight * 2 / 3;
             mTitlePaint.setTextAlign(Paint.Align.CENTER);
-            mTitle = TextUtils.ellipsize(mTitle, mTitlePaint, mLabelWidth, TextUtils.TruncateAt.END).toString();
+            mTitle = TextUtils.ellipsize(mTitle, mTitlePaint, mLabelWidth - 2 * BORDER_SIZE, TextUtils.TruncateAt.END).toString();
             canvas.drawText(mTitle, x, y, mTitlePaint);
             if (jc.isCancelled())
                 return null;
-            x = (mLabelWidth - mSpec.countOffset) / 2;
+            // draw count
+            x = (mLabelWidth - mSpec.countOffset) / 2 + BORDER_SIZE;
             y = (mLabelHeight) / 2 + mSpec.countOffset;
             mCountPaint.setTextAlign(Paint.Align.CENTER);
-            mCount = TextUtils.ellipsize(mCount, mCountPaint, mLabelWidth,TextUtils.TruncateAt.END).toString();
+            mCount = TextUtils.ellipsize(mCount, mCountPaint, mLabelWidth - 2 * BORDER_SIZE, TextUtils.TruncateAt.END).toString();
             canvas.drawText(mCount, x, y, mCountPaint);
             return bitmap;
         }

@@ -1,3 +1,4 @@
+
 package com.xjt.letool.adapters;
 
 import android.graphics.Bitmap;
@@ -26,10 +27,12 @@ import com.xjt.letool.views.render.ThumbnailSetRenderer;
 import com.xjt.letool.views.utils.AlbumLabelMaker;
 
 public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListener {
+
     private static final String TAG = "ThumbnailSetDataWindow";
     private static final int MSG_UPDATE_ALBUM_ENTRY = 1;
 
     public static interface Listener {
+
         public void onSizeChanged(int size);
 
         public void onContentChanged();
@@ -62,6 +65,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
     private final TextureUploader mLabelUploader;
 
     public static class AlbumSetEntry {
+
         public MediaSet album;
         public MediaItem coverItem;
         public Texture content;
@@ -94,6 +98,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         mLabelUploader = new TextureUploader(fragment.getGLController());
 
         mHandler = new SynchronizedHandler(fragment.getGLController()) {
+
             @Override
             public void handleMessage(Message message) {
                 Utils.assertTrue(message.what == MSG_UPDATE_ALBUM_ENTRY);
@@ -409,10 +414,12 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
     }
 
     private static interface EntryUpdater {
+
         public void updateEntry();
     }
 
     private class AlbumCoverLoader extends BitmapLoader implements EntryUpdater {
+
         private MediaItem mMediaItem;
         private final int mSlotIndex;
 
@@ -474,6 +481,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
     }
 
     private class AlbumLabelLoader extends BitmapLoader implements EntryUpdater {
+
         private final int mSlotIndex;
         private final String mTitle;
         private final int mTotalCount;
@@ -486,7 +494,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
 
         @Override
         protected Future<Bitmap> submitBitmapTask(FutureListener<Bitmap> l) {
-            return mThreadPool.submit(mLabelMaker.requestLabel(mTitle, String.valueOf(mTotalCount)), l);
+            return mThreadPool.submit(mLabelMaker.requestLabel(mTitle, "(" + String.valueOf(mTotalCount) + ")"), l);
         }
 
         @Override
