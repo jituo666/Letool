@@ -96,24 +96,31 @@
     <dimen name="stack_photo_height">120dp</dimen>
 
     <!-- configuration for legacy album set page -->
-    <integer name="albumset_rows_land">3</integer>
-    <integer name="albumset_rows_port">5</integer>
+    <integer name="albumset_rows_land">5</integer>
+    <integer name="albumset_rows_port">3</integer>
 
     <bool name="albumset_label_overLay">false</bool>
 
+    <dimen name="albumset_thumbnail_label_height">30dp</dimen>
     <dimen name="albumset_thumbnail_gap">4dp</dimen>
     <dimen name="albumset_padding_left">4dp</dimen>
     <dimen name="albumset_padding_top">4dp</dimen>
     <dimen name="albumset_padding_bottom">4dp</dimen>
     <dimen name="albumset_padding_right">4dp</dimen>
     <dimen name="albumset_label_background_height">30dp</dimen>
-    <dimen name="albumset_title_offset">10dp</dimen>
+    <!--
+         <dimen name="albumset_title_offset">10dp</dimen>
     <dimen name="albumset_count_offset">10dp</dimen>
     <dimen name="albumset_title_font_size">12sp</dimen>
     <dimen name="albumset_count_font_size">9sp</dimen>
+    -->
     <dimen name="albumset_left_margin">2dp</dimen>
     <dimen name="albumset_title_right_margin">20dp</dimen>
     <dimen name="albumset_icon_size">25dp</dimen>
+    <dimen name="albumset_title_offset">3dp</dimen>
+    <dimen name="albumset_count_offset">6dp</dimen>
+    <dimen name="albumset_title_font_size">16sp</dimen>
+    <dimen name="albumset_count_font_size">14sp</dimen>
 
     <!-- configuration for album page -->
     <dimen name="album_thumbnail_gap">4dp</dimen>

@@ -28,6 +28,7 @@ import com.xjt.letool.view.GLRootView;
 import com.xjt.letool.view.LetoolActionBar;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.view.DetailsHelper.CloseListener;
+import com.xjt.letool.views.layout.ContractThumbnailLayout;
 import com.xjt.letool.views.layout.ThumbnailContractLayout;
 import com.xjt.letool.views.layout.ThumbnailLayout;
 import com.xjt.letool.views.layout.ThumbnailLayout.LayoutListener;
@@ -239,7 +240,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         mSelectionManager = new SelectionManager(this, true);
         mSelectionManager.setSelectionListener(this);
         mConfig = ViewConfigs.AlbumSetPage.get(getAndroidContext());
-        ThumbnailLayout layout = new ThumbnailContractLayout(mConfig.albumSetSpec);
+        ThumbnailLayout layout = new ContractThumbnailLayout(mConfig.albumSetSpec);
         mThumbnailView = new ThumbnailView(this, layout);
         mThumbnailView.setBackgroundColor(
                 LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.default_background_thumbnail))

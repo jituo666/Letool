@@ -262,7 +262,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
                 entry.labelTexture = null;
             }
             if (album != null) {
-                entry.labelLoader = new AlbumLabelLoader(thumbnailIndex, title, totalCount, sourceType);
+                entry.labelLoader = new AlbumLabelLoader(thumbnailIndex, title, totalCount);
             }
         }
 
@@ -384,7 +384,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
 
     public BitmapTexture getLoadingTexture() {
         if (mLoadingLabel == null) {
-            Bitmap bitmap = mLabelMaker.requestLabel(mLoadingText, "", DataSourceType.TYPE_NOT_CATEGORIZED).run(ThreadPool.JOB_CONTEXT_STUB);
+            Bitmap bitmap = mLabelMaker.requestLabel(mLoadingText, "").run(ThreadPool.JOB_CONTEXT_STUB);
             mLoadingLabel = new BitmapTexture(bitmap);
             mLoadingLabel.setOpaque(false);
         }
@@ -477,18 +477,16 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         private final int mSlotIndex;
         private final String mTitle;
         private final int mTotalCount;
-        private final int mSourceType;
 
-        public AlbumLabelLoader(int thumbnailIndex, String title, int totalCount, int sourceType) {
+        public AlbumLabelLoader(int thumbnailIndex, String title, int totalCount) {
             mSlotIndex = thumbnailIndex;
             mTitle = title;
             mTotalCount = totalCount;
-            mSourceType = sourceType;
         }
 
         @Override
         protected Future<Bitmap> submitBitmapTask(FutureListener<Bitmap> l) {
-            return mThreadPool.submit(mLabelMaker.requestLabel(mTitle, String.valueOf(mTotalCount), mSourceType), l);
+            return mThreadPool.submit(mLabelMaker.requestLabel(mTitle, String.valueOf(mTotalCount)), l);
         }
 
         @Override
@@ -537,7 +535,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
                 entry.labelTexture = null;
             }
             if (entry.album != null) {
-                entry.labelLoader = new AlbumLabelLoader(i, entry.title, entry.totalCount, entry.sourceType);
+                entry.labelLoader = new AlbumLabelLoader(i, entry.title, entry.totalCount);
             }
         }
         updateAllImageRequests();

@@ -33,7 +33,7 @@ public final class ViewConfigs {
             albumSetSpec.rowsLand = r.getInteger(R.integer.albumset_rows_land);
             albumSetSpec.rowsPort = r.getInteger(R.integer.albumset_rows_port);
             albumSetSpec.thumbnailGap = r.getDimensionPixelSize(R.dimen.albumset_thumbnail_gap);
-            albumSetSpec.labelHeight = 0;
+            albumSetSpec.labelHeight = r.getDimensionPixelSize(R.dimen.albumset_thumbnail_label_height);
 
             paddingLeft = r.getDimensionPixelSize(R.dimen.albumset_padding_left);
             paddingTop = r.getDimensionPixelSize(R.dimen.albumset_padding_top);
