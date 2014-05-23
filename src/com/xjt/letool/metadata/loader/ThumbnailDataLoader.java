@@ -31,7 +31,7 @@ public class ThumbnailDataLoader {
     private static final int MSG_RUN_OBJECT = 3;
 
     private static final int MIN_LOAD_COUNT = 16;
-    private static final int MAX_LOAD_COUNT = 18;
+    private static final int MAX_LOAD_COUNT = 32;
 
     private final MediaItem[] mData;
     private final long[] mItemVersion;
@@ -339,7 +339,6 @@ public class ThumbnailDataLoader {
                 long version;
                 synchronized (DataManager.LOCK) {
                     version = mSource.reload();
-                    LLog.i(TAG, "---------------1------------------" + version);
                 }
                 UpdateInfo info = executeAndWait(new GetUpdateInfo(version));
                 updateComplete = info == null;
@@ -351,9 +350,7 @@ public class ThumbnailDataLoader {
                         info.version = version;
                     }
                     if (info.reloadCount > 0) {
-                        LLog.i(TAG, "---------------7-1------------------" + System.currentTimeMillis());
                         info.items = mSource.getMediaItem(info.reloadStart, info.reloadCount);
-                        LLog.i(TAG, "---------------7-2------------------" + System.currentTimeMillis());
                     }
                 }
                 executeAndWait(new UpdateContent(info));

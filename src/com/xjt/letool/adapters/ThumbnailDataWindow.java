@@ -99,25 +99,25 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
 
         if (contentStart >= mContentEnd || mContentStart >= contentEnd) {
             for (int i = mContentStart, n = mContentEnd; i < n; ++i) {
-                freeSlotContent(i);
+                freeThumbnailContent(i);
             }
             mDataSource.setActiveWindow(contentStart, contentEnd);
             for (int i = contentStart; i < contentEnd; ++i) {
-                prepareSlotContent(i);
+                prepareThumbnailContent(i);
             }
         } else {
             for (int i = mContentStart; i < contentStart; ++i) {
-                freeSlotContent(i);
+                freeThumbnailContent(i);
             }
             for (int i = contentEnd, n = mContentEnd; i < n; ++i) {
-                freeSlotContent(i);
+                freeThumbnailContent(i);
             }
             mDataSource.setActiveWindow(contentStart, contentEnd);
             for (int i = contentStart, n = mContentStart; i < n; ++i) {
-                prepareSlotContent(i);
+                prepareThumbnailContent(i);
             }
             for (int i = mContentEnd; i < contentEnd; ++i) {
-                prepareSlotContent(i);
+                prepareThumbnailContent(i);
             }
         }
 
@@ -162,12 +162,12 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
         // add background textures
         int range = Math.max((mContentEnd - mActiveEnd), (mActiveStart - mContentStart));
         for (int i = 0; i < range; ++i) {
-            uploadBgTextureInSlot(mActiveEnd + i);
-            uploadBgTextureInSlot(mActiveStart - i - 1);
+            uploadBgTextureInThumbnail(mActiveEnd + i);
+            uploadBgTextureInThumbnail(mActiveStart - i - 1);
         }
     }
 
-    private void uploadBgTextureInSlot(int index) {
+    private void uploadBgTextureInThumbnail(int index) {
         if (index < mContentEnd && index >= mContentStart) {
             AlbumEntry entry = mImageData[index % mImageData.length];
             if (entry.bitmapTexture != null) {
@@ -177,13 +177,13 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
     }
 
     public AlbumEntry get(int slotIndex) {
-        if (!isActiveSlot(slotIndex)) {
+        if (!isActiveThumbnail(slotIndex)) {
             Utils.fail("invalid slot: %s outsides (%s, %s)", slotIndex, mActiveStart, mActiveEnd);
         }
         return mImageData[slotIndex % mImageData.length];
     }
 
-    public boolean isActiveSlot(int slotIndex) {
+    public boolean isActiveThumbnail(int slotIndex) {
         return slotIndex >= mActiveStart && slotIndex < mActiveEnd;
     }
 
@@ -195,8 +195,8 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
     private void requestNonactiveImages() {
         int range = Math.max((mContentEnd - mActiveEnd), (mActiveStart - mContentStart));
         for (int i = 0; i < range; ++i) {
-            requestSlotImage(mActiveEnd + i);
-            requestSlotImage(mActiveStart - 1 - i);
+            requestThumbnailImage(mActiveEnd + i);
+            requestThumbnailImage(mActiveStart - 1 - i);
         }
     }
 
@@ -204,13 +204,13 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
         int range = Math.max(
                 (mContentEnd - mActiveEnd), (mActiveStart - mContentStart));
         for (int i = 0; i < range; ++i) {
-            cancelSlotImage(mActiveEnd + i);
-            cancelSlotImage(mActiveStart - 1 - i);
+            cancelThumbnailImage(mActiveEnd + i);
+            cancelThumbnailImage(mActiveStart - 1 - i);
         }
     }
 
     // return whether the request is in progress or not
-    private boolean requestSlotImage(int slotIndex) {
+    private boolean requestThumbnailImage(int slotIndex) {
         if (slotIndex < mContentStart || slotIndex >= mContentEnd)
             return false;
         AlbumEntry entry = mImageData[slotIndex % mImageData.length];
@@ -220,7 +220,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
         return entry.contentLoader.isRequestInProgress();
     }
 
-    private void cancelSlotImage(int slotIndex) {
+    private void cancelThumbnailImage(int slotIndex) {
         if (slotIndex < mContentStart || slotIndex >= mContentEnd)
             return;
         AlbumEntry item = mImageData[slotIndex % mImageData.length];
@@ -228,7 +228,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
             item.contentLoader.cancelLoad();
     }
 
-    private void prepareSlotContent(int slotIndex) {
+    private void prepareThumbnailContent(int slotIndex) {
         AlbumEntry entry = new AlbumEntry();
         MediaItem item = mDataSource.get(slotIndex); // item could be null;
         entry.item = item;
@@ -239,7 +239,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
         mImageData[slotIndex % mImageData.length] = entry;
     }
 
-    private void freeSlotContent(int slotIndex) {
+    private void freeThumbnailContent(int slotIndex) {
         AlbumEntry data[] = mImageData;
         int index = slotIndex % data.length;
         AlbumEntry entry = data[index];
@@ -253,7 +253,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
     private void updateAllImageRequests() {
         mActiveRequestCount = 0;
         for (int i = mActiveStart, n = mActiveEnd; i < n; ++i) {
-            if (requestSlotImage(i))
+            if (requestThumbnailImage(i))
                 ++mActiveRequestCount;
         }
         if (mActiveRequestCount == 0) {
@@ -268,7 +268,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
         mIsActive = true;
         TiledTexture.prepareResources();
         for (int i = mContentStart, n = mContentEnd; i < n; ++i) {
-            prepareSlotContent(i);
+            prepareThumbnailContent(i);
         }
         LLog.i(TAG, " resume2:" + System.currentTimeMillis());
         updateAllImageRequests(); // Frist start no use, just for backing from other
@@ -279,18 +279,18 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
         mTileUploader.clear();
         TiledTexture.freeResources();
         for (int i = mContentStart, n = mContentEnd; i < n; ++i) {
-            freeSlotContent(i);
+            freeThumbnailContent(i);
         }
     }
 
     @Override
     public void onContentChanged(int index) {
         if (index >= mContentStart && index < mContentEnd && mIsActive) {
-            freeSlotContent(index);
-            prepareSlotContent(index);
+            freeThumbnailContent(index);
+            prepareThumbnailContent(index);
             updateAllImageRequests();
-            if (mDataListener != null && isActiveSlot(index)) {
-                mDataListener.onContentChanged();
+            if (mDataListener != null && isActiveThumbnail(index)) {
+                //mDataListener.onContentChanged();
             }
         }
     }
@@ -309,11 +309,11 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
     }
 
     private class ThumbnailLoader extends BitmapLoader {
-        private final int mSlotIndex;
+        private final int mThumbnailIndex;
         private final MediaItem mItem;
 
         public ThumbnailLoader(int slotIndex, MediaItem item) {
-            mSlotIndex = slotIndex;
+            mThumbnailIndex = slotIndex;
             mItem = item;
         }
 
@@ -331,16 +331,17 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
             Bitmap bitmap = getBitmap();
             if (bitmap == null)
                 return; // error or recycled
-            AlbumEntry entry = mImageData[mSlotIndex % mImageData.length];
+            LLog.i(TAG, "-------------bitmap load ok!--------------:" + (mThumbnailIndex) + ":" + System.currentTimeMillis());
+            AlbumEntry entry = mImageData[mThumbnailIndex % mImageData.length];
             entry.bitmapTexture = new TiledTexture(bitmap);
             entry.content = entry.bitmapTexture;
-            if (isActiveSlot(mSlotIndex)) {
+            if (isActiveThumbnail(mThumbnailIndex)) {
                 mTileUploader.addTexture(entry.bitmapTexture);
                 --mActiveRequestCount;
                 if (mActiveRequestCount == 0)
                     requestNonactiveImages();
                 if (mDataListener != null) {
-                    mDataListener.onContentChanged();
+                    //mDataListener.onContentChanged();
                 }
             } else {
                 mTileUploader.addTexture(entry.bitmapTexture);

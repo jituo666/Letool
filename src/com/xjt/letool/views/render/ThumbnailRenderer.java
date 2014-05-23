@@ -122,7 +122,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
         if (content == null) {
             content = mWaitLoadingTexture;
         } else {
-            LLog.i(TAG, " ------------ renderThumbnail:" + index + "   :" + System.currentTimeMillis());
+            //LLog.i(TAG, " ------------ renderThumbnail:" + index + "   :" + System.currentTimeMillis());
         }
         drawContent(canvas, content, width, height, entry.rotation);
         if ((content instanceof FadeInTexture) && ((FadeInTexture) content).isAnimating()) {

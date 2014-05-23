@@ -73,7 +73,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         super(activity.getAndroidContext());
         mActivity = activity;
         mThumbnailView = thumbnailView;
-        mPlaceholderColor = Color.GRAY;
+        mPlaceholderColor = Color.TRANSPARENT;
         mMediaSelector = selector;
         mLabelSpec = ViewConfigs.AlbumSetPage.get(activity.getAndroidContext()).labelSpec;
 
@@ -129,7 +129,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
     public int renderThumbnail(GLESCanvas canvas, int index, int pass, int width, int height) {
         AlbumSetEntry entry = mDataWindow.get(index);
         int renderRequestFlags = 0;
-        renderRequestFlags |= renderContent(canvas, entry, width, height);
+        renderRequestFlags |= renderContent(canvas, entry, width, height -mLabelSpec.labelBackgroundHeight);
         renderRequestFlags |= renderLabel(canvas, entry, width, height);
         renderRequestFlags |= renderOverlay(canvas, entry,index, width, height - mLabelSpec.labelBackgroundHeight);
         return renderRequestFlags;
