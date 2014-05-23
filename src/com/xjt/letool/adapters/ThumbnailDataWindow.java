@@ -290,7 +290,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
             prepareThumbnailContent(index);
             updateAllImageRequests();
             if (mDataListener != null && isActiveThumbnail(index)) {
-                //mDataListener.onContentChanged();
+                mDataListener.onContentChanged();
             }
         }
     }
@@ -341,7 +341,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
                 if (mActiveRequestCount == 0)
                     requestNonactiveImages();
                 if (mDataListener != null) {
-                    //mDataListener.onContentChanged();
+                    mDataListener.onContentChanged();
                 }
             } else {
                 mTileUploader.addTexture(entry.bitmapTexture);

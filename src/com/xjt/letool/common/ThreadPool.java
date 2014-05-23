@@ -71,11 +71,10 @@ public class ThreadPool {
         mExecutor = new ThreadPoolExecutor(
                 initPoolSize, maxPoolSize, KEEP_ALIVE_TIME,
                 TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>(),
-                new PriorityThreadFactory("thread-pool", android.os.Process.THREAD_PRIORITY_DEFAULT));
+                new PriorityThreadFactory("thread-pool", android.os.Process.THREAD_PRIORITY_FOREGROUND));
     }
 
-    // Submit a job to the thread pool. The listener will be called when the
-    // job is finished (or cancelled).
+
     public <T> Future<T> submit(Job<T> job, FutureListener<T> listener) {
         Worker<T> w = new Worker<T>(job, listener);
         mExecutor.execute(w);

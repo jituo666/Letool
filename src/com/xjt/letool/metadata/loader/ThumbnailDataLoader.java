@@ -30,8 +30,8 @@ public class ThumbnailDataLoader {
     private static final int MSG_LOAD_FINISH = 2;
     private static final int MSG_RUN_OBJECT = 3;
 
-    private static final int MIN_LOAD_COUNT = 16;
-    private static final int MAX_LOAD_COUNT = 32;
+    private static final int MIN_LOAD_COUNT = 32;
+    private static final int MAX_LOAD_COUNT = 64;
 
     private final MediaItem[] mData;
     private final long[] mItemVersion;
@@ -323,7 +323,7 @@ public class ThumbnailDataLoader {
 
         @Override
         public void run() {
-            Process.setThreadPriority(Process.THREAD_PRIORITY_DEFAULT);
+            Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
 
             boolean updateComplete = false;
             while (mActive) {

@@ -25,7 +25,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
     private MediaPath mHighlightItemPath = null;
     private ThumbnailFilter mThumbnailFilter;
 
-    private static final int CACHE_SIZE = 48;
+    private static final int CACHE_SIZE = 96;
 
     private final ColorTexture mWaitLoadingTexture;
     private final int mPlaceholderColor = Color.GRAY;
