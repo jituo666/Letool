@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.xjt.letool.activities.BaseActivity;
+import com.xjt.letool.activities.ThumbnailActivity;
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.metadata.DataManager;
@@ -129,12 +130,12 @@ public class SlidingMenuFragment extends Fragment {
     private void initFragmentData(Fragment f) {
         if (f instanceof PhotoFragment) {
             Bundle data = new Bundle();
-            data.putString(BaseActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-            data.putBoolean(BaseActivity.KEY_IS_CAMERA, true);
+            data.putString(ThumbnailActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+            data.putBoolean(ThumbnailActivity.KEY_IS_CAMERA, true);
             f.setArguments(data);
         } else if (f instanceof GalleryFragment) {
             Bundle data = new Bundle();
-            data.putString(BaseActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
+            data.putString(ThumbnailActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
             f.setArguments(data);
         }
     }

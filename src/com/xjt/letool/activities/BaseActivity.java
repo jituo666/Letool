@@ -41,10 +41,6 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
 
     private static final String TAG = BaseActivity.class.getSimpleName();
 
-    public static final String KEY_ALBUM_TITLE = "album_title";
-    public static final String KEY_MEDIA_PATH = "media-path";
-    public static final String KEY_ALBUM_ID = "album_id";
-    public static final String KEY_IS_CAMERA = "is_camera";
     public static final String KEY_GET_CONTENT = "get-content";
     public static final String KEY_TYPE_BITS = "type-bits";
 

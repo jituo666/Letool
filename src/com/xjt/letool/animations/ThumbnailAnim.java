@@ -10,7 +10,7 @@ public abstract class ThumbnailAnim extends Animation {
 
     public ThumbnailAnim() {
         setInterpolator(new DecelerateInterpolator(4));
-        setDuration(1500);
+        setDuration(1000);
     }
 
     @Override

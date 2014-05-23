@@ -4,8 +4,8 @@ import android.graphics.Rect;
 
 import com.xjt.letool.views.opengl.GLESCanvas;
 
-public  class ThumbnailRisingAnim extends ThumbnailAnim {
-    private static final int RISING_DISTANCE = 128;
+public class ThumbnailRisingAnim extends ThumbnailAnim {
+    private static final int RISING_DISTANCE = 1024;
 
     @Override
     public void apply(GLESCanvas canvas, int thumbnailIndex, Rect target) {

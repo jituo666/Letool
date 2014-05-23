@@ -1,6 +1,7 @@
 package com.xjt.letool.fragment;
 
 import com.xjt.letool.activities.BaseActivity;
+import com.xjt.letool.activities.ThumbnailActivity;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.metadata.DataManager;
 
@@ -41,7 +42,7 @@ public class LetoolFragmentAdpter extends FragmentPagerAdapter {
                     e.printStackTrace();
                 }
                 Bundle data = new Bundle();
-                data.putString(BaseActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+                data.putString(ThumbnailActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
                 fragment.setArguments(data);
                 return fragment;
             }
@@ -55,7 +56,7 @@ public class LetoolFragmentAdpter extends FragmentPagerAdapter {
                     e.printStackTrace();
                 }
                 Bundle data = new Bundle();
-                data.putString(BaseActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
+                data.putString(ThumbnailActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
                 LLog.i(TAG, "PictureFragment");
                 fragment.setArguments(data);
                 return fragment;

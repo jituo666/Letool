@@ -389,6 +389,18 @@ public class ThumbnailView extends GLBaseView {
         setScrollPosition(position);
     }
 
+    public Rect getThumbnailRect(int thumbnailIndex) {
+        return mLayout.getThumbnailRect(thumbnailIndex, mTempRect);
+    }
+
+    public int getScrollX() {
+        return mScrollX;
+    }
+
+    public int getScrollY() {
+        return mScrollY;
+    }
+
     public void setScrollPosition(int position) {
         position = Utils.clamp(position, 0, mLayout.getScrollLimit());
         mScroller.setPosition(position);

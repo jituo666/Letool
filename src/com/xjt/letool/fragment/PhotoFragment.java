@@ -1,10 +1,9 @@
-
 package com.xjt.letool.fragment;
 
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.R;
-import com.xjt.letool.activities.BaseActivity;
 import com.xjt.letool.activities.FullImageActivity;
+import com.xjt.letool.activities.ThumbnailActivity;
 import com.xjt.letool.common.EyePosition;
 import com.xjt.letool.common.Future;
 import com.xjt.letool.common.LLog;
@@ -68,6 +67,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
 
     private static final String TAG = PhotoFragment.class.getSimpleName();
 
+    public static final String KEY_SET_CENTER = "set-center";
     public static final String KEY_RESUME_ANIMATION = "resume_animation";
     private static final int BIT_LOADING_RELOAD = 1;
     private static final int BIT_LOADING_SYNC = 2;
@@ -279,17 +279,17 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
 
     private void initializeData() {
         Bundle data = getArguments();
-        mIsCamera = data.getBoolean(BaseActivity.KEY_IS_CAMERA);
+        mIsCamera = data.getBoolean(ThumbnailActivity.KEY_IS_CAMERA);
         if (!mIsCamera) {
-            mAlbumTitle = data.getString(BaseActivity.KEY_ALBUM_TITLE);
-            mDataSetPath = new MediaPath(data.getString(BaseActivity.KEY_MEDIA_PATH), data.getLong(BaseActivity.KEY_ALBUM_ID));
+            mAlbumTitle = data.getString(ThumbnailActivity.KEY_ALBUM_TITLE);
+            mDataSetPath = new MediaPath(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), data.getLong(ThumbnailActivity.KEY_ALBUM_ID));
             mDataSet = getDataManager().getMediaSet(mDataSetPath);
             if (mDataSet == null) {
                 Utils.fail("MediaSet is null. Path = %s", mDataSetPath);
             }
         } else {
             mAlbumTitle = getString(R.string.common_photo);
-            mDataSetPath = new MediaPath(data.getString(BaseActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]);
+            mDataSetPath = new MediaPath(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]);
             mDataSet = new PhotoAlbum(mDataSetPath, (LetoolApp) getActivity().getApplication()
                     , MediaSetUtils.MY_ALBUM_BUCKETS, true, getString(R.string.common_photo));
 
@@ -314,7 +314,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
             public void handleMessage(Message message) {
                 switch (message.what) {
                     case MSG_LAYOUT_CONFIRMED: {
-                        mLoadingInsie.setVisibility(View.GONE);
+                        //mLoadingInsie.setVisibility(View.GONE);
                         break;
                     }
                     case MSG_PICK_PHOTO: {
@@ -334,8 +334,18 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
             emptyView.setVisibility(View.VISIBLE);
             mGLRootView.setVisibility(View.GONE);
         } else {
-            mLoadingInsie = (CommonLoadingPanel) rootView.findViewById(R.id.loading);
-            mLoadingInsie.setVisibility(View.VISIBLE);
+            //mLoadingInsie = (CommonLoadingPanel) rootView.findViewById(R.id.loading);
+            //mLoadingInsie.setVisibility(View.VISIBLE);
+        }
+        Bundle data = getArguments();
+        if (data != null) {
+            int[] center = data.getIntArray(KEY_SET_CENTER);
+            if (center != null) {
+                mOpenCenter.setAbsolutePosition(center[0], center[1]);
+                mThumbnailView.startScatteringAnimation(mOpenCenter);
+            } else {
+                //mThumbnailView.startRisingAnimation();
+            }
         }
         return rootView;
     }
@@ -537,13 +547,13 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         Intent it = new Intent();
         it.setClass(getAndroidContext(), FullImageActivity.class);
         if (mIsCamera) {
-            it.putExtra(BaseActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-            it.putExtra(BaseActivity.KEY_IS_CAMERA, true);
+            it.putExtra(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+            it.putExtra(ThumbnailActivity.KEY_IS_CAMERA, true);
         } else {
-            it.putExtra(BaseActivity.KEY_ALBUM_ID, mDataSet.getPath().getIdentity());
-            it.putExtra(BaseActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-            it.putExtra(BaseActivity.KEY_IS_CAMERA, false);
-            it.putExtra(BaseActivity.KEY_ALBUM_TITLE, mDataSet.getName());
+            it.putExtra(ThumbnailActivity.KEY_ALBUM_ID, mDataSet.getPath().getIdentity());
+            it.putExtra(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+            it.putExtra(ThumbnailActivity.KEY_IS_CAMERA, false);
+            it.putExtra(ThumbnailActivity.KEY_ALBUM_TITLE, mDataSet.getName());
         }
         it.putExtra(FullImageFragment.KEY_INDEX_HINT, index);
         startActivity(it);

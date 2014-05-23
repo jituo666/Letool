@@ -27,7 +27,7 @@ import com.xjt.letool.views.opengl.TiledTextureUploader;
  */
 public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListener {
 
-    private static final String TAG = "AlbumDataWindow";
+    private static final String TAG = ThumbnailDataWindow.class.getSimpleName();
 
     private static final int MSG_UPDATE_ENTRY = 0;
     private static final int JOB_LIMIT = 2;
@@ -285,7 +285,6 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
 
     @Override
     public void onContentChanged(int index) {
-        LLog.i(TAG, "onContentChanged trigger when  database prepared:" + index + " :" + System.currentTimeMillis());
         if (index >= mContentStart && index < mContentEnd && mIsActive) {
             freeSlotContent(index);
             prepareSlotContent(index);

@@ -91,7 +91,7 @@ public class LocalAlbum extends MediaSet {
                 list.add(item);
             } while (++i < count && mAlbumCursor.moveToNext());
         }
-        LLog.w(TAG, "query getMediaItem count:" + count + " spend " + (System.currentTimeMillis() - time));
+        LLog.w(TAG, "query getMediaItem:" + count + " spend " + (System.currentTimeMillis() - time));
         return list;
     }
 

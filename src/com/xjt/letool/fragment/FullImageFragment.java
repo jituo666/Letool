@@ -38,6 +38,7 @@ import com.xjt.letool.view.DetailsHelper.DetailsSource;
 import com.xjt.letool.views.opengl.GLESCanvas;
 
 import com.xjt.letool.activities.BaseActivity;
+import com.xjt.letool.activities.ThumbnailActivity;
 import com.xjt.letool.adapters.PhotoDataAdapter;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.OrientationManager;
@@ -376,17 +377,17 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
 
     private void initDatas() {
         Bundle data = this.getArguments();
-        boolean isCamera = data.getBoolean(BaseActivity.KEY_IS_CAMERA);
+        boolean isCamera = data.getBoolean(ThumbnailActivity.KEY_IS_CAMERA);
 
         LLog.i(TAG, "============isCamera:" + isCamera);
         if (!isCamera) {
-            String albumTitle = data.getString(BaseActivity.KEY_ALBUM_TITLE);
-            long albumId = data.getLong(BaseActivity.KEY_ALBUM_ID, 0);
-            String albumMediaPath = data.getString(BaseActivity.KEY_MEDIA_PATH);
+            String albumTitle = data.getString(ThumbnailActivity.KEY_ALBUM_TITLE);
+            long albumId = data.getLong(ThumbnailActivity.KEY_ALBUM_ID, 0);
+            String albumMediaPath = data.getString(ThumbnailActivity.KEY_MEDIA_PATH);
             LLog.i(TAG, " photo fragment onCreateView id:" + albumId + " albumTitle:" + albumTitle + " albumMediaPath:" + albumMediaPath + " isCamera:");
             mMediaSet = getDataManager().getMediaSet(new MediaPath(albumMediaPath, albumId));
         } else {
-            mMediaSet = new PhotoAlbum(new MediaPath(data.getString(BaseActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0])
+            mMediaSet = new PhotoAlbum(new MediaPath(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0])
                     , (LetoolApp) getActivity().getApplication()
                     , MediaSetUtils.MY_ALBUM_BUCKETS, true, getString(R.string.common_photo));
         }

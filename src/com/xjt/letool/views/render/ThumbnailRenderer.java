@@ -18,14 +18,14 @@ import com.xjt.letool.views.opengl.TiledTexture;
 
 public class ThumbnailRenderer extends AbstractThumbnailRender {
 
-    private static final String TAG = "ThumbnailViewRender";
+    private static final String TAG = ThumbnailRenderer.class.getSimpleName();
 
     private ThumbnailDataWindow mDataWindow;
     private ThumbnailView mThumbnailView;
     private MediaPath mHighlightItemPath = null;
     private ThumbnailFilter mThumbnailFilter;
 
-    private static final int CACHE_SIZE = 96;
+    private static final int CACHE_SIZE = 48;
 
     private final ColorTexture mWaitLoadingTexture;
     private final int mPlaceholderColor = Color.GRAY;
@@ -118,20 +118,11 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
         ThumbnailDataWindow.AlbumEntry entry = mDataWindow.get(index);
 
         int renderRequestFlags = 0;
-
-        //        Texture content = checkTexture(entry.content);
-        //        if (content == null) {
-        //            content = mWaitLoadingTexture;
-        //            entry.isWaitDisplayed = true;
-        //        } else if (entry.isWaitDisplayed) {
-        //            LLog.i(TAG, " ------------ renderThumbnail:" + index + "   :" + System.currentTimeMillis());
-        //            entry.isWaitDisplayed = false;
-        //            content = new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
-        //            entry.content = content;
-        //        }
         Texture content = entry.bitmapTexture;
         if (content == null) {
             content = mWaitLoadingTexture;
+        } else {
+            LLog.i(TAG, " ------------ renderThumbnail:" + index + "   :" + System.currentTimeMillis());
         }
         drawContent(canvas, content, width, height, entry.rotation);
         if ((content instanceof FadeInTexture) && ((FadeInTexture) content).isAnimating()) {

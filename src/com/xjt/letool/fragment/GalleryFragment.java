@@ -1,4 +1,3 @@
-
 package com.xjt.letool.fragment;
 
 import java.lang.ref.WeakReference;
@@ -40,6 +39,7 @@ import com.xjt.letool.views.utils.ViewConfigs;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -277,7 +277,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     private void initializeData() {
         Bundle data = getArguments();
         mGetContent = data.getBoolean(BaseActivity.KEY_GET_CONTENT, false);
-        mMediaSet = getDataManager().getMediaSet(data.getString(BaseActivity.KEY_MEDIA_PATH), -1000);
+        mMediaSet = getDataManager().getMediaSet(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), -1000);
         mSelector.setSourceMediaSet(mMediaSet);
         mThumbnailSetAdapter = new ThumbnailSetDataLoader(this, mMediaSet);
         mThumbnailSetAdapter.setLoadingListener(new MyLoadingListener());
@@ -291,10 +291,19 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         actionBar.setTitleText(R.string.common_gallery);
     }
 
+    private void getThumbnailCenter(int thumbnailIndex, int center[]) {
+        Rect offset = new Rect();
+        mRootPane.getBoundsOf(mThumbnailView, offset);
+        Rect r = mThumbnailView.getThumbnailRect(thumbnailIndex);
+        int scrollX = mThumbnailView.getScrollX();
+        int scrollY = mThumbnailView.getScrollY();
+        center[0] = offset.left + (r.left + r.right) / 2 - scrollX;
+        center[1] = offset.top + (r.top + r.bottom) / 2 - scrollY;
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-
     }
 
     @Override
@@ -326,6 +335,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         initBrowseActionBar();
         initializeData();
         mEyePosition = new EyePosition(getAndroidContext(), this);
+        //mThumbnailView.startRisingAnimation();
         return rootView;
     }
 
@@ -528,10 +538,12 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         if (!mGetContent) {
             Intent it = new Intent();
             it.setClass(getActivity(), ThumbnailActivity.class);
-            it.putExtra(BaseActivity.KEY_ALBUM_ID, mediaPath.getIdentity());
-            it.putExtra(BaseActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-            it.putExtra(BaseActivity.KEY_IS_CAMERA, false);
-            it.putExtra(BaseActivity.KEY_ALBUM_TITLE, targetSet.getName());
+            it.putExtra(ThumbnailActivity.KEY_ALBUM_ID, mediaPath.getIdentity());
+            it.putExtra(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+            it.putExtra(ThumbnailActivity.KEY_ALBUM_TITLE, targetSet.getName());
+            int[] center = new int[2];
+            getThumbnailCenter(thumbnailIndex, center);
+            it.putExtra(PhotoFragment.KEY_SET_CENTER, center);
             startActivityForResult(it, ThumbnailActivity.REQUEST_FOR_PHOTO);
             return;
         }
