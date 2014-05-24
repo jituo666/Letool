@@ -26,7 +26,7 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
         mUnitCount = unitCount;
         int count = ((mThumbnailCount + mUnitCount - 1) / mUnitCount);
         mContentLength = count * majorUnitSize + (count - 1) * mThumbnailGap;
-        LLog.i(TAG, " initLayoutParameters rows:" + count + " column;" + unitCount);
+        LLog.i(TAG, " initLayoutParameters rows:" + count + " column:" + unitCount);
     }
 
     @Override

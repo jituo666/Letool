@@ -4,6 +4,7 @@ package com.xjt.letool.views.layout;
 import android.graphics.Rect;
 
 import com.xjt.letool.animations.IntegerAnim;
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.view.ThumbnailView.Renderer;
 
@@ -38,7 +39,7 @@ public abstract class ThumbnailLayout {
 
     public interface LayoutListener {
 
-        public void onLayoutBeing(int count);
+        public void onLayoutFinshed(int count);
     }
 
     public int getThumbnailCount() {
@@ -63,6 +64,7 @@ public abstract class ThumbnailLayout {
 
     public int getScrollLimit() {
         int limit = WIDE ? mContentLength - mWidth : mContentLength - mHeight;
+        LLog.i(TAG, "-----x-----mContentLength:" + mContentLength + " mWidth:" + mWidth + " mHeight:" + mHeight);
         return limit <= 0 ? 0 : limit;
     }
 
@@ -85,7 +87,7 @@ public abstract class ThumbnailLayout {
         mThumbnailCount = thumbnailCount;
         initThumbnailParameters();
         if (mLayoutListener != null) {
-            mLayoutListener.onLayoutBeing(thumbnailCount);
+            mLayoutListener.onLayoutFinshed(thumbnailCount);
         }
     }
 

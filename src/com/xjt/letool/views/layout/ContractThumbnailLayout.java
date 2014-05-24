@@ -2,9 +2,11 @@ package com.xjt.letool.views.layout;
 
 import android.graphics.Rect;
 
+import com.xjt.letool.common.LLog;
+
 public class ContractThumbnailLayout extends ThumbnailLayout {
 
-    private static final String TAG = "ContractThumbnailLayout";
+    private static final String TAG = ContractThumbnailLayout.class.getSimpleName();
 
     public ContractThumbnailLayout(ThumbnailLayoutSpec spec) {
         mSpec = spec;

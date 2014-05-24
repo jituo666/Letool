@@ -171,7 +171,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     }
 
     @Override
-    public void onLayoutBeing(int count) {
+    public void onLayoutFinshed(int count) {
         mHandler.obtainMessage(MSG_LAYOUT_CONFIRMED, count, 0).sendToTarget();
     }
 

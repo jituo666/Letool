@@ -1,10 +1,7 @@
 
 package com.xjt.letool.views.render;
 
-import android.graphics.Color;
-
 import com.xjt.letool.adapters.ThumbnailDataWindow;
-import com.xjt.letool.common.LLog;
 import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
@@ -28,7 +25,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
     private static final int CACHE_SIZE = 96;
 
     private final ColorTexture mWaitLoadingTexture;
-    private final int mPlaceholderColor = Color.GRAY;
+    private final int mPlaceholderColor = 0xFFE8E8E8;
 
     private int mPressedIndex = -1;
     private boolean mAnimatePressedUp;

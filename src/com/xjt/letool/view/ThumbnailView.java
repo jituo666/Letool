@@ -1,3 +1,4 @@
+
 package com.xjt.letool.view;
 
 import com.xjt.letool.animations.AnimationTime;
@@ -14,9 +15,11 @@ import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.utils.UIListener;
 import com.xjt.letool.views.utils.ViewScrollerHelper;
 
+import android.annotation.SuppressLint;
 import android.graphics.Rect;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 
 /**
  * @Author Jituo.Xuan
@@ -50,6 +53,8 @@ public class ThumbnailView extends GLBaseView {
     private ThumbnailLayout mLayout;
     private Renderer mRenderer;
 
+    private ScrollBarView mScrollBar;
+
     //////////////////////////////////////////////////////////////Animations////////////////////////////////////////////////////////////////////
 
     public void startScatteringAnimation(RelativePosition position) {
@@ -80,6 +85,7 @@ public class ThumbnailView extends GLBaseView {
 
     //////////////////////////////////////////////////////////////Event Handler//////////////////////////////////////////////////////////////
     public interface Listener {
+
         public void onDown(int index);
 
         public void onUp(boolean followedByLongPress);
@@ -92,6 +98,7 @@ public class ThumbnailView extends GLBaseView {
     }
 
     public static class SimpleListener implements Listener {
+
         @Override
         public void onDown(int index) {
         }
@@ -114,6 +121,7 @@ public class ThumbnailView extends GLBaseView {
     }
 
     private class MyGestureListener implements GestureDetector.OnGestureListener {
+
         private boolean isDown;
 
         @Override
@@ -273,7 +281,7 @@ public class ThumbnailView extends GLBaseView {
                 more = true;
         }
         canvas.translate(mScrollX, mScrollY);
-
+        renderChild(canvas, mScrollBar);
         if (more)
             invalidate();
     }
@@ -325,21 +333,38 @@ public class ThumbnailView extends GLBaseView {
         mScroller = new ViewScrollerHelper(activity.getAndroidContext());
         mHandler = new SynchronizedHandler(activity.getGLController());
         mLayout = layout;
+        if (ThumbnailLayout.WIDE) {
+            mScrollBar = new ScrollBarView(activity.getAndroidContext(), 128, 16);
+        } else {
+            mScrollBar = new ScrollBarView(activity.getAndroidContext(), 16, 128);
+        }
+        //mScrollBar.setBackgroundColor(LetoolUtils.intColorToFloatARGBArray(Color.RED));
+        addComponent(mScrollBar);
     }
 
     // Make sure we are still at a resonable scroll position after the size
     // is changed (like orientation change). We choose to keep the center
     // visible thumbnail still visible. This is arbitrary but reasonable.
+    @SuppressLint("WrongCall")
     @Override
     protected void onLayout(boolean changeSize, int l, int t, int r, int b) {
         if (!changeSize)
             return;
+        int w = r - l;
+        int h = b - t;
+        mScrollBar.layout(0, 0, w, h);
         int visibleCenterIndex = (mLayout.getVisibleStart() + mLayout.getVisibleEnd()) / 2;
         mLayout.setThumbnailViewSize(r - l, b - t);
         LLog.i(TAG, " onLayout visibleCenterIndex:" + visibleCenterIndex);
         resetVisibleRange(visibleCenterIndex);
         if (mOverscrollEffect == OVERSCROLL_3D) {
             mPaper.setSize(r - l, b - t);
+        }
+
+        if (mLayout.getThumbnailCount() > 0 && mLayout.getScrollLimit() <= 0) {
+            mScrollBar.setVisibility(View.INVISIBLE);
+        } else {
+            mScrollBar.setVisibility(View.VISIBLE);
         }
     }
 
@@ -354,6 +379,11 @@ public class ThumbnailView extends GLBaseView {
         if (mStartIndex != ThumbnailLayout.INDEX_NONE) {
             setCenterIndex(mStartIndex);
             mStartIndex = ThumbnailLayout.INDEX_NONE;
+        }
+        if (mLayout.getThumbnailCount() > 0 && mLayout.getScrollLimit() <= 0) {
+            mScrollBar.setVisibility(View.INVISIBLE);
+        } else {
+            mScrollBar.setVisibility(View.VISIBLE);
         }
         // Reset the scroll position to avoid scrolling over the updated limit.
         setScrollPosition(ThumbnailLayout.WIDE ? mScrollX : mScrollY);
@@ -416,8 +446,10 @@ public class ThumbnailView extends GLBaseView {
             mScrollY = position;
         }
         mLayout.setScrollPosition(position);
-        if (mListener != null)
+        if (mListener != null) {
             mListener.onScrollPositionChanged(position, mLayout.getScrollLimit());
+            mScrollBar.setContentPosition(position, mLayout.getScrollLimit());
+        }
     }
 
     public int getVisibleStart() {

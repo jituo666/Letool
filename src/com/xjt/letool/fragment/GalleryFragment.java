@@ -579,7 +579,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     }
 
     @Override
-    public void onLayoutBeing(int count) {
+    public void onLayoutFinshed(int count) {
         mHandler.obtainMessage(MSG_LAYOUT_CONFIRMED, count, 0).sendToTarget();
     }
 }
