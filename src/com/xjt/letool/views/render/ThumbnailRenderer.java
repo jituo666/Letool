@@ -118,8 +118,6 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
         Texture content = entry.bitmapTexture;
         if (content == null) {
             content = mWaitLoadingTexture;
-        } else {
-            //LLog.i(TAG, " ------------ renderThumbnail:" + index + "   :" + System.currentTimeMillis());
         }
         drawContent(canvas, content, width, height, entry.rotation);
         if ((content instanceof FadeInTexture) && ((FadeInTexture) content).isAnimating()) {
@@ -145,8 +143,12 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
             }
         } else if ((entry.path != null) && (mHighlightItemPath == entry.path)) {
             drawSelectedFrame(canvas, width, height);
-        } else if (mInSelectionMode && mMediaSelector.isItemSelected(entry.path)) {
-            drawSelectedFrame(canvas, width, height);
+        } else if (mInSelectionMode) {
+            if (mMediaSelector.isItemSelected(entry.path)) {
+                drawSelectedFrame(canvas, width, height);
+            } else {
+                drawPreSelectedFrame(canvas, width, height);
+            }
         }
         return renderRequestFlags;
     }

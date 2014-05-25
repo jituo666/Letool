@@ -129,24 +129,24 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
     public int renderThumbnail(GLESCanvas canvas, int index, int pass, int width, int height) {
         AlbumSetEntry entry = mDataWindow.get(index);
         int renderRequestFlags = 0;
-        renderRequestFlags |= renderContent(canvas, entry, width, height -mLabelSpec.labelBackgroundHeight);
+        renderRequestFlags |= renderContent(canvas, entry, width, height - mLabelSpec.labelBackgroundHeight);
         renderRequestFlags |= renderLabel(canvas, entry, width, height);
-        renderRequestFlags |= renderOverlay(canvas, entry,index, width, height - mLabelSpec.labelBackgroundHeight);
+        renderRequestFlags |= renderOverlay(canvas, entry, index, width, height - mLabelSpec.labelBackgroundHeight);
         return renderRequestFlags;
     }
 
     protected int renderContent(GLESCanvas canvas, AlbumSetEntry entry, int width, int height) {
         int renderRequestFlags = 0;
 
-//        Texture content = checkContentTexture(entry.content);
-//        if (content == null) {
-//            content = mWaitLoadingTexture;
-//            entry.isWaitLoadingDisplayed = true;
-//        } else if (entry.isWaitLoadingDisplayed) {
-//            entry.isWaitLoadingDisplayed = false;
-//            content = new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
-//            entry.content = content;
-//        }
+        //        Texture content = checkContentTexture(entry.content);
+        //        if (content == null) {
+        //            content = mWaitLoadingTexture;
+        //            entry.isWaitLoadingDisplayed = true;
+        //        } else if (entry.isWaitLoadingDisplayed) {
+        //            entry.isWaitLoadingDisplayed = false;
+        //            content = new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
+        //            entry.content = content;
+        //        }
         Texture content = entry.bitmapTexture;
         if (content == null) {
             content = mWaitLoadingTexture;
@@ -169,7 +169,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         return 0;
     }
 
-    protected int renderOverlay(GLESCanvas canvas, AlbumSetEntry entry,int index, int width, int height) {
+    protected int renderOverlay(GLESCanvas canvas, AlbumSetEntry entry, int index, int width, int height) {
         int renderRequestFlags = 0;
 
         if (mPressedIndex == index) {
@@ -185,8 +185,12 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
             }
         } else if ((mHighlightItemPath != null)) {
             drawSelectedFrame(canvas, width, height);
-        } else if (mInSelectionMode && mMediaSelector.isItemSelected(entry.setPath)) {
-            drawSelectedFrame(canvas, width, height);
+        } else if (mInSelectionMode) {
+            if (mMediaSelector.isItemSelected(entry.setPath)) {
+                drawSelectedFrame(canvas, width, height);
+            } else {
+                drawPreSelectedFrame(canvas, width, height);
+            }
         }
         return renderRequestFlags;
     }

@@ -9,17 +9,20 @@ import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.views.opengl.FadeOutTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.opengl.NinePatchTexture;
+import com.xjt.letool.views.opengl.ResourceTexture;
 import com.xjt.letool.views.opengl.Texture;
 
 public abstract class AbstractThumbnailRender implements ThumbnailView.Renderer {
 
     private FadeOutTexture mFramePressedUp;
     private final NinePatchTexture mFramePressed;
-    private final NinePatchTexture mFrameSelected;
+    private final ResourceTexture mFramePreSelected;
+    private final ResourceTexture mFrameSelected;
 
     protected AbstractThumbnailRender(Context context) {
         mFramePressed = new NinePatchTexture(context, R.drawable.grid_pressed);
-        mFrameSelected = new NinePatchTexture(context, R.drawable.grid_selected);
+        mFramePreSelected = new ResourceTexture(context, R.drawable.grid_preselected);
+        mFrameSelected = new ResourceTexture(context, R.drawable.grid_selected);
     }
 
     protected void drawContent(GLESCanvas canvas, Texture content, int width, int height, int rotation) {
@@ -61,8 +64,12 @@ public abstract class AbstractThumbnailRender implements ThumbnailView.Renderer 
         drawFrame(canvas, mFramePressed.getPaddings(), mFramePressed, 0, 0, width, height);
     }
 
+    protected void drawPreSelectedFrame(GLESCanvas canvas, int width, int height) {
+        drawFrame(canvas, new Rect(0, 0, 0, 0), mFramePreSelected, 0, 0, width, height);
+    }
+
     protected void drawSelectedFrame(GLESCanvas canvas, int width, int height) {
-        drawFrame(canvas, mFrameSelected.getPaddings(), mFrameSelected, 0, 0, width, height);
+        drawFrame(canvas, new Rect(0, 0, 0, 0), mFrameSelected, 0, 0, width, height);
     }
 
     protected static void drawFrame(GLESCanvas canvas, Rect padding, Texture frame,
