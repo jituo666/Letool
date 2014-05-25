@@ -1,3 +1,4 @@
+
 package com.xjt.letool.fragment;
 
 import com.xjt.letool.LetoolApp;
@@ -45,6 +46,7 @@ import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.render.ThumbnailRenderer;
 import com.xjt.letool.views.utils.ViewConfigs;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -269,6 +271,9 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
         if (mIsCamera) {
             actionBar.setTitleIcon(R.drawable.ic_drawer);
+            View tip = getActivity().findViewById(R.id.action_navi_tip);
+            int distance = Math.round(getResources().getDimension(R.dimen.letool_action_bar_height) / 12);
+            ObjectAnimator.ofFloat(tip, "x", tip.getX() - distance, tip.getX()).setDuration(300).start();
         } else {
             actionBar.setTitleIcon(R.drawable.ic_action_previous_item);
         }

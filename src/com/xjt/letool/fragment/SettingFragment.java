@@ -1,6 +1,7 @@
 
 package com.xjt.letool.fragment;
 
+import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -44,6 +45,10 @@ public class SettingFragment extends LetoolFragment {
         actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_SETTINGS, this);
         actionBar.setTitleIcon(R.drawable.ic_drawer);
         actionBar.setTitleText(R.string.common_settings);
+
+        View tip = getActivity().findViewById(R.id.action_navi_tip);
+        int distance = Math.round(getResources().getDimension(R.dimen.letool_action_bar_height) / 12);
+        ObjectAnimator.ofFloat(tip, "x", tip.getX() - distance, tip.getX()).setDuration(300).start();
     }
 
     private void initViews() {

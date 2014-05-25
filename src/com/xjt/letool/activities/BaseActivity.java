@@ -16,6 +16,7 @@ import com.xjt.letool.view.LetoolActionBar;
 import com.xjt.letool.view.LetoolBottomBar;
 import com.xjt.letool.view.LetoolSlidingMenu;
 
+import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -61,7 +62,7 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
         super.onCreate(savedInstanceState);
         mOrientationManager = new OrientationManager(this);
         mFragmentManager = getSupportFragmentManager();
-        mSlidingMenu = new LetoolSlidingMenu(mFragmentManager);
+        mSlidingMenu = new LetoolSlidingMenu(this,mFragmentManager, findViewById(R.id.action_bar));
         mActionBar = new LetoolActionBar(this, (ViewGroup) findViewById(R.id.action_bar));
         mBottomBar = new LetoolBottomBar(this, (ViewGroup) findViewById(R.id.bottom_bar));
     }
@@ -125,6 +126,10 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
             ft.setCustomAnimations(0, R.anim.slide_left_out);
             ft.remove(f);
             ft.commit();
+            View tip = findViewById(R.id.action_navi_tip);
+            int distance = Math.round(getResources().getDimension(R.dimen.letool_action_bar_height) / 12);
+            ObjectAnimator.ofFloat(tip, "x", tip.getX(), tip.getX() + distance).setDuration(300).start();
+            
         } else if (mIsMainActivity) {
             if (mWaitingForExit) {
                 finish();

@@ -36,6 +36,7 @@ import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.render.ThumbnailSetRenderer;
 import com.xjt.letool.views.utils.ViewConfigs;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -289,6 +290,9 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
         actionBar.setTitleIcon(R.drawable.ic_drawer);
         actionBar.setTitleText(R.string.common_gallery);
+        View tip = getActivity().findViewById(R.id.action_navi_tip);
+        int distance = Math.round(getResources().getDimension(R.dimen.letool_action_bar_height) / 12);
+        ObjectAnimator.ofFloat(tip, "x", tip.getX() - distance, tip.getX()).setDuration(300).start();
     }
 
     private void getThumbnailCenter(int thumbnailIndex, int center[]) {
