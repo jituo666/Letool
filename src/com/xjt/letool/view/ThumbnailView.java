@@ -1,6 +1,7 @@
 
 package com.xjt.letool.view;
 
+import com.xjt.letool.R;
 import com.xjt.letool.animations.AnimationTime;
 import com.xjt.letool.animations.ThumbnailAnim;
 import com.xjt.letool.animations.ThumbnailRisingAnim;
@@ -17,6 +18,7 @@ import com.xjt.letool.views.utils.ViewScrollerHelper;
 
 import android.annotation.SuppressLint;
 import android.graphics.Rect;
+import android.os.Handler;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -333,12 +335,14 @@ public class ThumbnailView extends GLBaseView {
         mScroller = new ViewScrollerHelper(activity.getAndroidContext());
         mHandler = new SynchronizedHandler(activity.getGLController());
         mLayout = layout;
+        int w = Math.round(activity.getResources().getDimension(R.dimen.common_scroll_bar_width));
+        int h = Math.round(activity.getResources().getDimension(R.dimen.common_scroll_bar_height));
         if (ThumbnailLayout.WIDE) {
-            mScrollBar = new ScrollBarView(activity.getAndroidContext(), 128, 16);
+            mScrollBar = new ScrollBarView(activity.getAndroidContext(), h, w);
         } else {
-            mScrollBar = new ScrollBarView(activity.getAndroidContext(), 16, 128);
+            mScrollBar = new ScrollBarView(activity.getAndroidContext(), w, h);
         }
-        //mScrollBar.setBackgroundColor(LetoolUtils.intColorToFloatARGBArray(Color.RED));
+        mScrollBar.setVisibility(View.INVISIBLE);
         addComponent(mScrollBar);
     }
 
@@ -360,10 +364,14 @@ public class ThumbnailView extends GLBaseView {
         if (mOverscrollEffect == OVERSCROLL_3D) {
             mPaper.setSize(r - l, b - t);
         }
+        showScrollBarView();
+    }
+
+    private void showScrollBarView() {
 
         if (mLayout.getThumbnailCount() > 0 && mLayout.getScrollLimit() <= 0) {
             mScrollBar.setVisibility(View.INVISIBLE);
-        } else {
+        } else if (mLayout.getVisibleEnd() > 0) {
             mScrollBar.setVisibility(View.VISIBLE);
         }
     }
@@ -380,13 +388,9 @@ public class ThumbnailView extends GLBaseView {
             setCenterIndex(mStartIndex);
             mStartIndex = ThumbnailLayout.INDEX_NONE;
         }
-        if (mLayout.getThumbnailCount() > 0 && mLayout.getScrollLimit() <= 0) {
-            mScrollBar.setVisibility(View.INVISIBLE);
-        } else {
-            mScrollBar.setVisibility(View.VISIBLE);
-        }
         // Reset the scroll position to avoid scrolling over the updated limit.
         setScrollPosition(ThumbnailLayout.WIDE ? mScrollX : mScrollY);
+        showScrollBarView();
         return;
     }
 

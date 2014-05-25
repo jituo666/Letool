@@ -13,6 +13,7 @@ import com.xjt.letool.imagedata.utils.LetoolBitmapPool;
 import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.view.LetoolActionBar;
+import com.xjt.letool.view.LetoolBottomBar;
 import com.xjt.letool.view.LetoolSlidingMenu;
 
 import android.app.AlertDialog;
@@ -47,12 +48,13 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
     public static final String KEY_TYPE_BITS = "type-bits";
 
     private LetoolActionBar mActionBar;
+    private LetoolBottomBar mBottomBar;
+
     private LetoolSlidingMenu mSlidingMenu;
     private OrientationManager mOrientationManager;
     protected FragmentManager mFragmentManager;
     protected boolean mIsMainActivity = false;
     private boolean mWaitingForExit = false;
-    private boolean mAlphaHodlerShowing = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,7 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
         mFragmentManager = getSupportFragmentManager();
         mSlidingMenu = new LetoolSlidingMenu(mFragmentManager);
         mActionBar = new LetoolActionBar(this, (ViewGroup) findViewById(R.id.action_bar));
+        mBottomBar = new LetoolBottomBar(this, (ViewGroup) findViewById(R.id.bottom_bar));
     }
 
     @Override
@@ -195,6 +198,10 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
 
     public LetoolActionBar getLetoolActionBar() {
         return mActionBar;
+    }
+
+    public LetoolBottomBar getLetoolBottomBar() {
+        return mBottomBar;
     }
 
     @Override

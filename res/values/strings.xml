@@ -17,7 +17,7 @@
     <!--
          Message shown on the progress dialog to indicate we're loading the
             account info [CHAR LIMIT=30]
-    -->
+    --> 
     <string name="loading_account">Loading account\u2026</string>
 
     <!-- Movie View Resume Playing dialog title -->
@@ -1178,6 +1178,8 @@ CHAR LIMIT = NONE]
     <string name="app_about_title">关于</string>
     <string name="app_about_desc">有关作者、技术合作、版权等一些信息的描述</string>
     <string name="dashi_new_function_tip" translatable="false">New</string>
+    <string name="common_share">分享</string>
+    <string name="common_detail">详情</string>
     <string name="common_delete">删除</string>
     <string name="common_delete_tip">确定删除所选内容?</string>
     <string name="common_delete_waiting">正在删除,请稍候...</string>
@@ -1188,10 +1190,9 @@ CHAR LIMIT = NONE]
     <string name="cancel">取消</string>
     <string name="ok">确定</string>
     <string name="common_error_nosdcard">没有检测到SD卡！</string>
-
     <!-- popup menu -->
     <string name="popup_menu_defaut_order">默认排序</string>
-    <string name="popup_menu_time_order">按时间排序</string>
+    <string name="popup_menu_time_order">时间排序</string>
     <string name="popup_menu_select_mode">选择模式</string>
 
 </resources>

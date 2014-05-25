@@ -108,7 +108,6 @@
     <dimen name="albumset_padding_bottom">4dp</dimen>
     <dimen name="albumset_padding_right">4dp</dimen>
     <dimen name="albumset_label_background_height">36dp</dimen>
-
     <dimen name="albumset_left_margin">2dp</dimen>
     <dimen name="albumset_title_right_margin">20dp</dimen>
     <dimen name="albumset_icon_size">25dp</dimen>
@@ -160,11 +159,14 @@
     <dimen name="letool_sliding_menu_logo_width">240dp</dimen>
     <dimen name="letool_sliding_menu_icon_size">32dp</dimen>
     <dimen name="letool_sliding_menu_text_size">18sp</dimen>
+    <dimen name="letool_bottom_bar_height">48dp</dimen>
     <dimen name="letool_settings_item_height">48dp</dimen>
     <dimen name="letool_settings_major_item_height">22dp</dimen>
     <dimen name="letool_settings_minor_item_height">16dp</dimen>
     <dimen name="common_text_size_middle">16dp</dimen>
     <dimen name="common_text_size_small">13dp</dimen>
     <dimen name="common_list_header_height">30dp</dimen>
+    <dimen name="common_scroll_bar_width">8dp</dimen>
+    <dimen name="common_scroll_bar_height">48dp</dimen>
 
 </resources>

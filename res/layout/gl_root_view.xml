@@ -8,10 +8,7 @@
     <com.xjt.letool.view.GLRootView
         android:id="@+id/gl_root_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbarSize="12dp"
-        android:scrollbarStyle="outsideInset"
-        android:scrollbars="vertical" />
+        android:layout_height="match_parent" />
 
     <com.xjt.letool.view.CommonLoadingPanel
         android:id="@+id/loading"

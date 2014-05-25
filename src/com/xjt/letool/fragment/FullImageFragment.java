@@ -35,6 +35,7 @@ import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.GLRootView;
 import com.xjt.letool.view.LetoolActionBar;
 import com.xjt.letool.view.DetailsHelper.DetailsSource;
+import com.xjt.letool.view.LetoolBottomBar;
 import com.xjt.letool.views.opengl.GLESCanvas;
 
 import com.xjt.letool.activities.BaseActivity;
@@ -100,7 +101,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     private MediaSet mMediaSet; // mMediaSet could be null if there is no KEY_MEDIA_SET_PATH supplied. E.g., viewing a photo in gmail attachment
 
     private int mCurrentIndex = 0;
-    private boolean mShowBars = true;
+    private boolean mShowBars = false;
     private MediaItem mCurrentPhoto = null;
     private boolean mIsActive;
     private OrientationManager mOrientationManager;
@@ -191,6 +192,8 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         mShowBars = true;
         mOrientationManager.unlockOrientation();
         getLetoolActionBar().setVisible(View.VISIBLE);
+        LetoolBottomBar bottomBar = getLetoolBottomBar();
+        bottomBar.setVisible(View.VISIBLE, true);
 
     }
 
@@ -199,6 +202,8 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             return;
         mShowBars = false;
         getLetoolActionBar().setVisible(View.GONE);
+        LetoolBottomBar bottomBar = getLetoolBottomBar();
+        bottomBar.setVisible(View.GONE, true);
         mHandler.removeMessages(MSG_HIDE_BARS);
     }
 
@@ -289,6 +294,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     @Override
     public void onResume() {
         super.onResume();
+        showBars();
         mGLRootView.onResume();
         mGLRootView.lockRenderThread();
         try {
@@ -356,6 +362,12 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     public void onClick(View v) {
         if (v.getId() == R.id.action_navi) {
             getActivity().finish();
+        } else if (v.getId() == R.id.action_share) {
+
+        } else if (v.getId() == R.id.action_detail) {
+
+        } else if (v.getId() == R.id.action_delete) {
+
         }
     }
 
@@ -401,6 +413,8 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         LetoolActionBar actionBar = getLetoolActionBar();
         actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_FULL_IMAGE, this);
         actionBar.setTitleIcon(R.drawable.ic_action_previous_item);
+        LetoolBottomBar bottomBar = getLetoolBottomBar();
+        bottomBar.setOnActionMode(LetoolBottomBar.BOTTOM_BAR_MODE_FULL_IMAGE, this);
     }
 
     @Override
@@ -423,6 +437,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         mFullImageView.setModel(mModel);
 
         pda.setDataListener(new PhotoDataAdapter.DataListener() {
+
             @Override
             public void onPhotoChanged(int index, MediaPath item) {
                 mCurrentIndex = index;
