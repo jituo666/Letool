@@ -6,7 +6,8 @@
     <FrameLayout
         android:id="@+id/root_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:background="@drawable/main_screen_bg" >
     </FrameLayout>
 
     <include layout="@layout/action_bar" />

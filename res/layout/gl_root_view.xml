@@ -17,7 +17,6 @@
         android:id="@+id/loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/main_screen_bg"
         android:visibility="gone" />
 
     <TextView

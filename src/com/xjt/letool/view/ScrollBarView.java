@@ -22,7 +22,6 @@ public class ScrollBarView extends GLBaseView {
     private int mContentPosition;
     private int mContentTotal;
 
-    private int mTrackPos;
     private int mTrackLength;
     //    private NinePatchTexture mGripTexture;
     private ColorTexture mGripTexture;

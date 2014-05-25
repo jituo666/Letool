@@ -1,3 +1,4 @@
+
 package com.xjt.letool.activities;
 
 import java.util.List;
@@ -29,6 +30,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -50,6 +52,7 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
     protected FragmentManager mFragmentManager;
     protected boolean mIsMainActivity = false;
     private boolean mWaitingForExit = false;
+    private boolean mAlphaHodlerShowing = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +114,11 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
         Fragment f = mFragmentManager.findFragmentByTag(LetoolFragment.FRAGMENT_TAG_SLIDING_MENU);
         if (f != null) {
             FragmentTransaction ft = mFragmentManager.beginTransaction();
+            Fragment holder = mFragmentManager.findFragmentByTag(LetoolFragment.FRAGMENT_TAG_SLIDING_MENU_ALPHA);
+            if (holder != null) {
+                ft.setCustomAnimations(0, R.anim.alpha_out);
+                ft.remove(holder);
+            }
             ft.setCustomAnimations(0, R.anim.slide_left_out);
             ft.remove(f);
             ft.commit();
@@ -128,14 +136,6 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
                     }
                 }, 3000);
             }
-            /* ExitListener l = new ExitListener();
-             new AlertDialog.Builder(this)
-                     .setTitle(R.string.common_exit)
-                     .setMessage(getString(R.string.common_exit_tip))
-                     .setOnCancelListener(l)
-                     .setPositiveButton(R.string.ok, l)
-                     .setNegativeButton(R.string.cancel, l)
-                     .create().show();*/
         } else {
             super.onBackPressed();
         }
@@ -209,5 +209,4 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
         }
         return super.onKeyDown(keyCode, event);
     }
-
 }

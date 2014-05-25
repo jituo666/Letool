@@ -104,6 +104,8 @@ public class SlidingMenuFragment extends Fragment {
                 try {
                     if (position < MenuFragmentClasses.length) {
                         FragmentTransaction ft = mFragmentManager.beginTransaction();
+                        ft.setCustomAnimations(R.anim.alpha_out, 0);
+                        ft.remove(mFragmentManager.findFragmentByTag(LetoolFragment.FRAGMENT_TAG_SLIDING_MENU_ALPHA));
                         ft.setCustomAnimations(0, R.anim.slide_left_out);
                         ft.remove(SlidingMenuFragment.this);
                         if (mFragmentManager.findFragmentByTag(MenuFragmentTags[position]) == null) {
@@ -193,5 +195,4 @@ public class SlidingMenuFragment extends Fragment {
             return v;
         }
     }
-
 }
