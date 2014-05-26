@@ -66,5 +66,6 @@
     <color name="common_white">#ffffff</color>
     <color name="common_grey">#8496a0</color>
     <color name="common_dark">#3d5562</color>
+    <color name="common_blue">#00d8ff</color>
 
 </resources>

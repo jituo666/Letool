@@ -2,18 +2,17 @@
 package com.xjt.letool.view;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.util.TypedValue;
 
+import com.xjt.letool.R;
 import com.xjt.letool.views.opengl.ColorTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
-import com.xjt.letool.views.opengl.NinePatchTexture;
 
 public class ScrollBarView extends GLBaseView {
 
     @SuppressWarnings("unused")
-    private static final String TAG = "ScrollBarView";
+    private static final String TAG = ScrollBarView.class.getSimpleName();
 
     private int mGripHeight;
     private int mGripWidth;
@@ -30,7 +29,7 @@ public class ScrollBarView extends GLBaseView {
     public ScrollBarView(Context context, int gripWidth, int gripHeight) {
         TypedValue outValue = new TypedValue();
         context.getTheme().resolveAttribute(android.R.attr.scrollbarThumbHorizontal, outValue, true);
-        mGripTexture = new ColorTexture(0xFF727373);
+        mGripTexture = new ColorTexture(context.getResources().getColor(R.color.common_blue));
         mTrackTexture = new ColorTexture(0xFFdddddd);
         mGripWidth = gripWidth;
         mGripHeight = gripHeight;
