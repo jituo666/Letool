@@ -16,6 +16,7 @@ import com.xjt.letool.metadata.DataNotifier;
 import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.MediaSet;
+import com.xjt.letool.metadata.image.LocalFullImage;
 import com.xjt.letool.metadata.image.LocalImage;
 import com.xjt.letool.metadata.image.LocalMediaItem;
 import com.xjt.letool.metadata.video.LocalVideo;
@@ -34,11 +35,12 @@ public class PhotoAlbum extends MediaSet {
     //
     private String mWhereClause;
     private final String mOrderClause;
-    private final String[] mProjection;
+    private String[] mProjection;
     private final String mName;
     private final boolean mIsImage;
     private final String mItemPath;
     private Cursor mAlbumCursor;
+    private boolean mFullInfo = false;
 
     public PhotoAlbum(MediaPath path, LetoolApp application, int[] bucketId, boolean isImage, String name) {
         super(path, nextVersionNumber());
@@ -95,11 +97,15 @@ public class PhotoAlbum extends MediaSet {
         return list;
     }
 
-    private static MediaItem loadOrUpdateItem(MediaPath path, Cursor cursor, DataManager dataManager, LetoolApp app, boolean isImage) {
+    private MediaItem loadOrUpdateItem(MediaPath path, Cursor cursor, DataManager dataManager, LetoolApp app, boolean isImage) {
         LocalMediaItem item = (LocalMediaItem) path.getObject();
         if (item == null) {
             if (isImage) {
-                item = new LocalImage(path, app, cursor);
+                if (mFullInfo) {
+                    item = new LocalFullImage(path, app, cursor);
+                } else {
+                    item = new LocalImage(path, app, cursor);
+                }
             } else {
                 item = new LocalVideo(path, app, cursor);
             }
@@ -110,9 +116,15 @@ public class PhotoAlbum extends MediaSet {
     }
 
     @Override
-    public int getMediaItemCount() {
+    public int getMediaItemCount(boolean withFullInfo) {
         long time = System.currentTimeMillis();
+        mFullInfo = withFullInfo;
         if (mAlbumCursor == null) {
+            if( mFullInfo ) {
+                mProjection = LocalFullImage.PROJECTION;
+            } else {
+                mProjection = LocalImage.PROJECTION;
+            }
             mAlbumCursor = mResolver.query(mBaseUri, mProjection, mWhereClause, null, mOrderClause);
             if (mAlbumCursor == null) {
                 LLog.w(TAG, " mAlbumCursor == null");

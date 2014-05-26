@@ -1018,7 +1018,7 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
                 long version = mSource.reload();
                 if (info.version != version) {
                     info.reloadContent = true;
-                    info.size = mSource.getMediaItemCount();
+                    info.size = mSource.getMediaItemCount(true);
                 }
                 if (!info.reloadContent) continue;
                 info.items = mSource.getMediaItem(

@@ -29,6 +29,7 @@ import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.UsageStatistics;
 import com.xjt.letool.view.DetailsHelper;
+import com.xjt.letool.view.DetailsHelper.CloseListener;
 import com.xjt.letool.view.FullImageView;
 import com.xjt.letool.view.GLBaseView;
 import com.xjt.letool.view.GLController;
@@ -220,6 +221,21 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         actionBar.setTitleText(message);
     }
 
+    private void showDetails() {
+        mShowDetails = true;
+        if (mDetailsHelper == null) {
+            mDetailsHelper = new DetailsHelper(mActivity, mRootPane, new MyDetailsSource());
+            mDetailsHelper.setCloseListener(new CloseListener() {
+
+                @Override
+                public void onClose() {
+                    hideDetails();
+                }
+            });
+        }
+        mDetailsHelper.show();
+    }
+
     private void hideDetails() {
         mShowDetails = false;
         mDetailsHelper.hide();
@@ -365,7 +381,11 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         } else if (v.getId() == R.id.action_share) {
 
         } else if (v.getId() == R.id.action_detail) {
-
+            if (mShowDetails) {
+                hideDetails();
+            } else {
+                showDetails();
+            }
         } else if (v.getId() == R.id.action_delete) {
 
         }
@@ -426,7 +446,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         initDatas();
         initBrowseActionBar();
         MediaPath itemPath = null;
-        final int mediaItemCount = mMediaSet.getMediaItemCount();
+        final int mediaItemCount = mMediaSet.getMediaItemCount(true);
         if (mediaItemCount > 0) {
             if (mCurrentIndex >= mediaItemCount)
                 mCurrentIndex = 0;
@@ -460,7 +480,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             }
 
         });
-        mFullImageView.setFilmMode(mStartInFilmstrip && mMediaSet.getMediaItemCount() > 1);
+        mFullImageView.setFilmMode(mStartInFilmstrip && mMediaSet.getMediaItemCount(true) > 1);
         mHandler = new SynchronizedHandler(mGLRootView) {
 
             @Override
@@ -538,7 +558,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
 
         @Override
         public int size() {
-            return mMediaSet != null ? mMediaSet.getMediaItemCount() : 1;
+            return mMediaSet != null ? mMediaSet.getMediaItemCount(true) : 1;
         }
 
         @Override

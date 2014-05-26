@@ -346,7 +346,7 @@ public class ThumbnailDataLoader {
                     continue;
                 synchronized (DataManager.LOCK) {
                     if (info.version != version) {
-                        info.size = mSource.getMediaItemCount(); 
+                        info.size = mSource.getMediaItemCount(false); 
                         info.version = version;
                     }
                     if (info.reloadCount > 0) {

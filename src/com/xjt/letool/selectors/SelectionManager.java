@@ -93,7 +93,7 @@ public class SelectionManager {
         if (mTotal < 0) {
             mTotal = mIsAlbumSet
                     ? mSourceMediaSet.getSubMediaSetCount()
-                    : mSourceMediaSet.getMediaItemCount();
+                    : mSourceMediaSet.getMediaItemCount(false);
         }
         return mTotal;
     }
@@ -133,7 +133,7 @@ public class SelectionManager {
                 return false;
             }
         }
-        int total = set.getMediaItemCount();
+        int total = set.getMediaItemCount(false);
         int batch = 50;
         int index = 0;
 

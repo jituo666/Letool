@@ -43,7 +43,7 @@ public abstract class MediaSet extends MediaObject {
         super(path, version);
     }
 
-    public int getMediaItemCount() {
+    public int getMediaItemCount(boolean withFull) {
         return 0;
     }
 
@@ -91,7 +91,7 @@ public abstract class MediaSet extends MediaObject {
     }
 
     public int getTotalMediaItemCount() {
-        int total = getMediaItemCount();
+        int total = getMediaItemCount(false);
         for (int i = 0, n = getSubMediaSetCount(); i < n; i++) {
             total += getSubMediaSet(i).getTotalMediaItemCount();
         }
@@ -193,7 +193,7 @@ public abstract class MediaSet extends MediaObject {
     // Subclasses may override this and use more efficient implementations.
     // Returns the number of items enumerated.
     protected int enumerateMediaItems(ItemConsumer consumer, int startIndex) {
-        int total = getMediaItemCount();
+        int total = getMediaItemCount(true);
         int start = 0;
         while (start < total) {
             int count = Math.min(MEDIAITEM_BATCH_FETCH_COUNT, total - start);

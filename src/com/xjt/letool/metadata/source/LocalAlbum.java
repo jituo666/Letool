@@ -110,7 +110,7 @@ public class LocalAlbum extends MediaSet {
     }
 
     @Override
-    public int getMediaItemCount() {
+    public int getMediaItemCount(boolean withFull) {
 
         long time = System.currentTimeMillis();
         if (mAlbumCursor == null) {
