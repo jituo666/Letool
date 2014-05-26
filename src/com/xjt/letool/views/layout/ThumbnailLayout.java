@@ -64,7 +64,7 @@ public abstract class ThumbnailLayout {
 
     public int getScrollLimit() {
         int limit = WIDE ? mContentLength - mWidth : mContentLength - mHeight;
-        LLog.i(TAG, "-----x-----mContentLength:" + mContentLength + " mWidth:" + mWidth + " mHeight:" + mHeight);
+        //LLog.i(TAG, "-----x-----mContentLength:" + mContentLength + " mWidth:" + mWidth + " mHeight:" + mHeight);
         return limit <= 0 ? 0 : limit;
     }
 

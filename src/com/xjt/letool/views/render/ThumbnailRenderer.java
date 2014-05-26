@@ -2,6 +2,7 @@
 package com.xjt.letool.views.render;
 
 import com.xjt.letool.adapters.ThumbnailDataWindow;
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
@@ -22,7 +23,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
     private MediaPath mHighlightItemPath = null;
     private ThumbnailFilter mThumbnailFilter;
 
-    private static final int CACHE_SIZE = 96;
+    private static final int CACHE_SIZE = 48;
 
     private final ColorTexture mWaitLoadingTexture;
     private final int mPlaceholderColor = 0xFFE8E8E8;
@@ -118,6 +119,9 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
         Texture content = entry.bitmapTexture;
         if (content == null) {
             content = mWaitLoadingTexture;
+            
+        } else {
+            LLog.i(TAG, "---------renderThumbnail- real-----:" + index + " time:" + System.currentTimeMillis());
         }
         drawContent(canvas, content, width, height, entry.rotation);
         if ((content instanceof FadeInTexture) && ((FadeInTexture) content).isAnimating()) {

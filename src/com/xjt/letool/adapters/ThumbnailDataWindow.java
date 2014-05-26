@@ -14,6 +14,7 @@ import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.utils.Utils;
+import com.xjt.letool.views.opengl.BitmapTexture;
 import com.xjt.letool.views.opengl.Texture;
 import com.xjt.letool.views.opengl.TiledTexture;
 import com.xjt.letool.views.opengl.TiledTextureUploader;
@@ -47,7 +48,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
     private int mActiveStart = 0;
     private int mActiveEnd = 0;
 
-    private final TiledTextureUploader mTileUploader;
+//    private final TiledTextureUploader mTileUploader;
 
     public static interface DataListener {
         public void onSizeChanged(int size);
@@ -61,7 +62,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
         public int rotation;
         public int mediaType;
         public boolean isWaitDisplayed;
-        public TiledTexture bitmapTexture;
+        public BitmapTexture bitmapTexture;
         public Texture content;
         private BitmapLoader contentLoader;
     }
@@ -79,7 +80,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
             }
         };
         mThreadPool = new JobLimiter(fragment.getThreadPool(), JOB_LIMIT);
-        mTileUploader = new TiledTextureUploader(fragment.getGLController());
+        //mTileUploader = new TiledTextureUploader(fragment.getGLController());
     }
 
     public void setListener(DataListener listener) {
@@ -149,32 +150,32 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
     private void updateTextureUploadQueue() {
         if (!mIsActive)
             return;
-        mTileUploader.clear();
+        //mTileUploader.clear();
 
         // add foreground textures
         for (int i = mActiveStart, n = mActiveEnd; i < n; ++i) {
             AlbumEntry entry = mImageData[i % mImageData.length];
             if (entry.bitmapTexture != null) {
-                mTileUploader.addTexture(entry.bitmapTexture);
+                //mTileUploader.addTexture(entry.bitmapTexture);
             }
         }
 
-        // add background textures
-        int range = Math.max((mContentEnd - mActiveEnd), (mActiveStart - mContentStart));
-        for (int i = 0; i < range; ++i) {
-            uploadBgTextureInThumbnail(mActiveEnd + i);
-            uploadBgTextureInThumbnail(mActiveStart - i - 1);
-        }
+//        // add background textures
+//        int range = Math.max((mContentEnd - mActiveEnd), (mActiveStart - mContentStart));
+//        for (int i = 0; i < range; ++i) {
+//            uploadBgTextureInThumbnail(mActiveEnd + i);
+//            uploadBgTextureInThumbnail(mActiveStart - i - 1);
+//        }
     }
 
-    private void uploadBgTextureInThumbnail(int index) {
-        if (index < mContentEnd && index >= mContentStart) {
-            AlbumEntry entry = mImageData[index % mImageData.length];
-            if (entry.bitmapTexture != null) {
-                mTileUploader.addTexture(entry.bitmapTexture);
-            }
-        }
-    }
+//    private void uploadBgTextureInThumbnail(int index) {
+//        if (index < mContentEnd && index >= mContentStart) {
+//            AlbumEntry entry = mImageData[index % mImageData.length];
+//            if (entry.bitmapTexture != null) {
+//                mTileUploader.addTexture(entry.bitmapTexture);
+//            }
+//        }
+//    }
 
     public AlbumEntry get(int slotIndex) {
         if (!isActiveThumbnail(slotIndex)) {
@@ -276,7 +277,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
 
     public void pause() {
         mIsActive = false;
-        mTileUploader.clear();
+        //mTileUploader.clear();
         TiledTexture.freeResources();
         for (int i = mContentStart, n = mContentEnd; i < n; ++i) {
             freeThumbnailContent(i);
@@ -333,10 +334,10 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
                 return; // error or recycled
             LLog.i(TAG, "-------------bitmap load ok!--------------:" + (mThumbnailIndex) + ":" + System.currentTimeMillis());
             AlbumEntry entry = mImageData[mThumbnailIndex % mImageData.length];
-            entry.bitmapTexture = new TiledTexture(bitmap);
+            entry.bitmapTexture = new BitmapTexture(bitmap);
             entry.content = entry.bitmapTexture;
             if (isActiveThumbnail(mThumbnailIndex)) {
-                mTileUploader.addTexture(entry.bitmapTexture);
+                //mTileUploader.addTexture(entry.bitmapTexture);
                 --mActiveRequestCount;
                 if (mActiveRequestCount == 0)
                     requestNonactiveImages();
@@ -344,7 +345,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
                     mDataListener.onContentChanged();
                 }
             } else {
-                mTileUploader.addTexture(entry.bitmapTexture);
+                //mTileUploader.addTexture(entry.bitmapTexture);
             }
         }
     }
