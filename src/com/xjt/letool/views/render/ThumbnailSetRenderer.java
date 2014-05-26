@@ -150,11 +150,10 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         Texture content = entry.bitmapTexture;
         if (content == null) {
             content = mWaitLoadingTexture;
-        }
+            entry.isWaitLoadingDisplayed = true;
+            //return renderRequestFlags;
+        } 
         drawContent(canvas, content, width, height, entry.rotation);
-        if ((content instanceof FadeInTexture) && ((FadeInTexture) content).isAnimating()) {
-            renderRequestFlags |= ThumbnailView.RENDER_MORE_FRAME;
-        }
         return renderRequestFlags;
     }
 

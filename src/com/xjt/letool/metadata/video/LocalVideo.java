@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapRegionDecoder;
 import android.net.Uri;
+import android.opengl.ETC1Util.ETC1Texture;
 import android.provider.MediaStore.Video;
 import android.provider.MediaStore.Video.VideoColumns;
 
@@ -218,5 +219,11 @@ public class LocalVideo extends LocalMediaItem {
     @Override
     public String getFilePath() {
         return filePath;
+    }
+
+    @Override
+    public Job<ETC1Texture> requestImage(int type, int extra) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

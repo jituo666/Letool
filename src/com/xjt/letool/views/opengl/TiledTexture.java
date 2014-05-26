@@ -168,7 +168,7 @@ public class TiledTexture implements Texture {
             return result;
         }
     }
-
+//
     public boolean uploadNextTile(GLESCanvas canvas) {
         if (mUploadIndex == mTiles.length)
             return true;
@@ -203,9 +203,7 @@ public class TiledTexture implements Texture {
                 tile.offsetX = x;
                 tile.offsetY = y;
                 tile.bitmap = bitmap;
-                tile.setSize(
-                        Math.min(CONTENT_SIZE, mWidth - x),
-                        Math.min(CONTENT_SIZE, mHeight - y));
+                tile.setSize(Math.min(CONTENT_SIZE, mWidth - x),Math.min(CONTENT_SIZE, mHeight - y));
                 list.add(tile);
 //                Log.i("--", "texture.mWidth:" + mWidth + " mHeight:" + mHeight + " Tile.bitmap:" + tile.bitmap
 //                         + "tile.mWidth:" + tile.mWidth + " tile.mHeight:" + tile.mHeight);
@@ -258,9 +256,7 @@ public class TiledTexture implements Texture {
     //    +----------+                     |               |
     //      Texture                        +---------------+
     //                                          Canvas
-    private static void mapRect(RectF output,
-            RectF src, float x0, float y0, float x, float y, float scaleX,
-            float scaleY) {
+    private static void mapRect(RectF output, RectF src, float x0, float y0, float x, float y, float scaleX, float scaleY) {
         output.set(x + (src.left - x0) * scaleX,
                 y + (src.top - y0) * scaleY,
                 x + (src.right - x0) * scaleX,
@@ -269,8 +265,7 @@ public class TiledTexture implements Texture {
 
     // Draws a mixed color of this texture and a specified color onto the
     // a rectangle. The used color is: from * (1 - ratio) + to * ratio.
-    public void drawMixed(GLESCanvas canvas, int color, float ratio,
-            int x, int y, int width, int height) {
+    public void drawMixed(GLESCanvas canvas, int color, float ratio, int x, int y, int width, int height) {
         RectF src = mSrcRect;
         RectF dest = mDestRect;
         float scaleX = (float) width / mWidth;

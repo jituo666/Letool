@@ -23,7 +23,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
     private MediaPath mHighlightItemPath = null;
     private ThumbnailFilter mThumbnailFilter;
 
-    private static final int CACHE_SIZE = 48;
+    private static final int CACHE_SIZE = 96;
 
     private final ColorTexture mWaitLoadingTexture;
     private final int mPlaceholderColor = 0xFFE8E8E8;
@@ -92,7 +92,6 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
 
     @Override
     public void onVisibleRangeChanged(int visibleStart, int visibleEnd) {
-
         //LLog.i(TAG, "onVisibleRangeChanged visibleStart:" + visibleStart + " visibleEnd:" + visibleEnd);
         if (mDataWindow != null) {
             mDataWindow.setActiveWindow(visibleStart, visibleEnd);
@@ -116,17 +115,16 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
         ThumbnailDataWindow.AlbumEntry entry = mDataWindow.get(index);
 
         int renderRequestFlags = 0;
-        Texture content = entry.bitmapTexture;
+
+
+        Texture content = entry.compressTexture;
         if (content == null) {
             content = mWaitLoadingTexture;
-            
-        } else {
-            LLog.i(TAG, "---------renderThumbnail- real-----:" + index + " time:" + System.currentTimeMillis());
+            entry.isWaitDisplayed = true;
+           // return renderRequestFlags;
         }
+
         drawContent(canvas, content, width, height, entry.rotation);
-        if ((content instanceof FadeInTexture) && ((FadeInTexture) content).isAnimating()) {
-            renderRequestFlags |= ThumbnailView.RENDER_MORE_FRAME;
-        }
         //
         renderRequestFlags |= renderOverlay(canvas, index, entry, width, height);
         return renderRequestFlags;

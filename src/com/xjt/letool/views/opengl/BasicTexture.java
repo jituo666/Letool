@@ -1,3 +1,4 @@
+
 package com.xjt.letool.views.opengl;
 
 import java.util.WeakHashMap;
@@ -68,7 +69,7 @@ public abstract class BasicTexture implements Texture {
     }
 
     public boolean isFlippedVertically() {
-      return false;
+        return false;
     }
 
     public int getId() {
@@ -113,7 +114,10 @@ public abstract class BasicTexture implements Texture {
 
     @Override
     public void draw(GLESCanvas canvas, int x, int y) {
+        long time = System.currentTimeMillis();
         canvas.drawTexture(this, x, y, getWidth(), getHeight());
+
+        LLog.i(TAG,getId() +  " ------------ draw:" + (System.currentTimeMillis() - time) + "   :" + System.currentTimeMillis());
     }
 
     @Override

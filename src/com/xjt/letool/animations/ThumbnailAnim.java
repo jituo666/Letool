@@ -1,6 +1,7 @@
 package com.xjt.letool.animations;
 
 import android.graphics.Rect;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
 import com.xjt.letool.views.opengl.GLESCanvas;

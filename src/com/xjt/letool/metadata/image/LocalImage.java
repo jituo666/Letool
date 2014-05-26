@@ -1,4 +1,3 @@
-
 package com.xjt.letool.metadata.image;
 
 import android.annotation.TargetApi;
@@ -8,16 +7,21 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapRegionDecoder;
 import android.net.Uri;
+import android.opengl.ETC1Util;
+import android.opengl.ETC1Util.ETC1Texture;
 import android.os.Build;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Images.ImageColumns;
 import android.provider.MediaStore.MediaColumns;
+import android.util.Log;
 
 import com.xjt.letool.LetoolApp;
+import com.xjt.letool.R;
 import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.ThreadPool.Job;
 import com.xjt.letool.common.ThreadPool.JobContext;
+import com.xjt.letool.imagedata.blobcache.LocalETCBlobRequest;
 import com.xjt.letool.imagedata.blobcache.LocalImageBlobRequest;
 import com.xjt.letool.imagedata.dbcache.DataBaseCache;
 import com.xjt.letool.imagedata.dbcache.LocalThumbRequest;
@@ -34,6 +38,7 @@ import com.xjt.letool.utils.LetoolUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 // LocalImage represents an image in the local storage.
 public class LocalImage extends LocalMediaItem {
@@ -82,19 +87,19 @@ public class LocalImage extends LocalMediaItem {
 
     public static final String[] PROJECTION = {
             ImageColumns._ID, // 0
-//            ImageColumns.TITLE, // 1
-//            ImageColumns.MIME_TYPE, // 2
-//            ImageColumns.LATITUDE, // 3
-//            ImageColumns.LONGITUDE, // 4
+            //            ImageColumns.TITLE, // 1
+            //            ImageColumns.MIME_TYPE, // 2
+            //            ImageColumns.LATITUDE, // 3
+            //            ImageColumns.LONGITUDE, // 4
             ImageColumns.DATE_TAKEN, // 5
-//            ImageColumns.DATE_ADDED, // 6
-//            ImageColumns.DATE_MODIFIED, // 7
+            //            ImageColumns.DATE_ADDED, // 6
+            //            ImageColumns.DATE_MODIFIED, // 7
             ImageColumns.DATA, // 8
             ImageColumns.ORIENTATION, // 9
             ImageColumns.BUCKET_ID, // 10
-//            ImageColumns.SIZE, // 11
-//            "0", // 12
-//            "0" // 13
+            //            ImageColumns.SIZE, // 11
+            //            "0", // 12
+            //            "0" // 13
     };
 
     static {
@@ -103,10 +108,10 @@ public class LocalImage extends LocalMediaItem {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private static void updateWidthAndHeightProjection() {
-//        if (ApiHelper.HAS_MEDIA_COLUMNS_WIDTH_AND_HEIGHT) {
-//            PROJECTION[INDEX_WIDTH] = MediaColumns.WIDTH;
-//            PROJECTION[INDEX_HEIGHT] = MediaColumns.HEIGHT;
-//        }
+        //        if (ApiHelper.HAS_MEDIA_COLUMNS_WIDTH_AND_HEIGHT) {
+        //            PROJECTION[INDEX_WIDTH] = MediaColumns.WIDTH;
+        //            PROJECTION[INDEX_HEIGHT] = MediaColumns.HEIGHT;
+        //        }
     }
 
     private final LetoolApp mApplication;
@@ -141,41 +146,41 @@ public class LocalImage extends LocalMediaItem {
 
     private void loadFromCursor(Cursor cursor) {
         id = cursor.getInt(INDEX_ID);
-//        caption = cursor.getString(INDEX_CAPTION);
-//        mimeType = cursor.getString(INDEX_MIME_TYPE);
-//        latitude = cursor.getDouble(INDEX_LATITUDE);
-//        longitude = cursor.getDouble(INDEX_LONGITUDE);
+        //        caption = cursor.getString(INDEX_CAPTION);
+        //        mimeType = cursor.getString(INDEX_MIME_TYPE);
+        //        latitude = cursor.getDouble(INDEX_LATITUDE);
+        //        longitude = cursor.getDouble(INDEX_LONGITUDE);
         dateTakenInMs = cursor.getLong(INDEX_DATE_TAKEN);
-//        dateAddedInSec = cursor.getLong(INDEX_DATE_ADDED);
-//        dateModifiedInSec = cursor.getLong(INDEX_DATE_MODIFIED);
+        //        dateAddedInSec = cursor.getLong(INDEX_DATE_ADDED);
+        //        dateModifiedInSec = cursor.getLong(INDEX_DATE_MODIFIED);
         filePath = cursor.getString(INDEX_DATA);
         rotation = cursor.getInt(INDEX_ORIENTATION);
         bucketId = cursor.getInt(INDEX_BUCKET_ID);
-//        fileSize = cursor.getLong(INDEX_SIZE);
-//        width = cursor.getInt(INDEX_WIDTH);
-//        height = cursor.getInt(INDEX_HEIGHT);
+        //        fileSize = cursor.getLong(INDEX_SIZE);
+        //        width = cursor.getInt(INDEX_WIDTH);
+        //        height = cursor.getInt(INDEX_HEIGHT);
     }
 
     @Override
     protected boolean updateFromCursor(Cursor cursor) {
         DBUpdateHelper uh = new DBUpdateHelper();
         id = uh.update(id, cursor.getInt(INDEX_ID));
-//        caption = uh.update(caption, cursor.getString(INDEX_CAPTION));
-//        mimeType = uh.update(mimeType, cursor.getString(INDEX_MIME_TYPE));
-//        latitude = uh.update(latitude, cursor.getDouble(INDEX_LATITUDE));
-//        longitude = uh.update(longitude, cursor.getDouble(INDEX_LONGITUDE));
+        //        caption = uh.update(caption, cursor.getString(INDEX_CAPTION));
+        //        mimeType = uh.update(mimeType, cursor.getString(INDEX_MIME_TYPE));
+        //        latitude = uh.update(latitude, cursor.getDouble(INDEX_LATITUDE));
+        //        longitude = uh.update(longitude, cursor.getDouble(INDEX_LONGITUDE));
         dateTakenInMs = uh.update(
                 dateTakenInMs, cursor.getLong(INDEX_DATE_TAKEN));
-//        dateAddedInSec = uh.update(
-//                dateAddedInSec, cursor.getLong(INDEX_DATE_ADDED));
-//        dateModifiedInSec = uh.update(
-//                dateModifiedInSec, cursor.getLong(INDEX_DATE_MODIFIED));
+        //        dateAddedInSec = uh.update(
+        //                dateAddedInSec, cursor.getLong(INDEX_DATE_ADDED));
+        //        dateModifiedInSec = uh.update(
+        //                dateModifiedInSec, cursor.getLong(INDEX_DATE_MODIFIED));
         filePath = uh.update(filePath, cursor.getString(INDEX_DATA));
         rotation = uh.update(rotation, cursor.getInt(INDEX_ORIENTATION));
         bucketId = uh.update(bucketId, cursor.getInt(INDEX_BUCKET_ID));
-//        fileSize = uh.update(fileSize, cursor.getLong(INDEX_SIZE));
-//        width = uh.update(width, cursor.getInt(INDEX_WIDTH));
-//        height = uh.update(height, cursor.getInt(INDEX_HEIGHT));
+        //        fileSize = uh.update(fileSize, cursor.getLong(INDEX_SIZE));
+        //        width = uh.update(width, cursor.getInt(INDEX_WIDTH));
+        //        height = uh.update(height, cursor.getInt(INDEX_HEIGHT));
         return uh.isUpdated();
     }
 
@@ -231,9 +236,11 @@ public class LocalImage extends LocalMediaItem {
         LetoolUtils.assertNotInRenderThread();
         Uri baseUri = Images.Media.EXTERNAL_CONTENT_URI;
         ContentResolver contentResolver = mApplication.getContentResolver();
+
         contentResolver.delete(baseUri, "_id=?", new String[] {
-            String.valueOf(id)
+                String.valueOf(id)
         });
+
     }
 
     @Override
@@ -267,7 +274,7 @@ public class LocalImage extends LocalMediaItem {
 
         values.put(Images.Media.ORIENTATION, rotation);
         mApplication.getContentResolver().update(baseUri, values, "_id=?", new String[] {
-            String.valueOf(id)
+                String.valueOf(id)
         });
     }
 
@@ -312,5 +319,33 @@ public class LocalImage extends LocalMediaItem {
     @Override
     public String getFilePath() {
         return filePath;
+    }
+
+    @Override
+    public Job<ETC1Texture> requestImage(int type, int extra) {
+        return new LocalETCBlobRequest(mApplication, mPath, dateTakenInMs, type, filePath);
+    }
+
+    public class TexureLoader implements Job<ETC1Texture> {
+
+        @Override
+        public ETC1Texture run(JobContext jc) {
+            long time = System.currentTimeMillis();
+            InputStream input = mApplication.getResources().openRawResource(R.raw.slid0);
+            try {
+                ETC1Util.ETC1Texture texture = ETC1Util.createTexture(input);
+                LLog.i(TAG, "------TexureLoader:" + (System.currentTimeMillis() - time));
+                return texture;
+            } catch (IOException e) {
+                Log.w(TAG, "Could not load texture: " + e);
+            } finally {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    // ignore exception thrown from close.
+                }
+            }
+            return null;
+        }
     }
 }

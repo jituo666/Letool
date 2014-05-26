@@ -88,6 +88,7 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
         } else {
             getHolder().setFormat(PixelFormat.RGB_565);
         }
+        this.setPreserveEGLContextOnPause(true);
     }
 
     @Override
