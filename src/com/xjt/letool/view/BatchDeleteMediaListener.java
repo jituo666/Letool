@@ -19,7 +19,7 @@ import com.xjt.letool.selectors.SelectionManager;
  * @Date 4:44:26 PM May 18, 2014
  * @Comments:null
  */
-public class DeleteMediaListener implements OnClickListener, OnCancelListener {
+public class BatchDeleteMediaListener implements OnClickListener, OnCancelListener {
 
     DeleteMediaProgressListener progressListener;
     SelectionManager selectionManager;
@@ -36,7 +36,7 @@ public class DeleteMediaListener implements OnClickListener, OnCancelListener {
         //        public void onProgressComplete(int result);
     }
 
-    public DeleteMediaListener(Activity c, SelectionManager s, DataManager m, DeleteMediaProgressListener l) {
+    public BatchDeleteMediaListener(Activity c, SelectionManager s, DataManager m, DeleteMediaProgressListener l) {
         progressListener = l;
         context = c;
         selectionManager = s;

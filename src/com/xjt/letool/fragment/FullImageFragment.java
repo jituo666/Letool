@@ -2,6 +2,7 @@
 package com.xjt.letool.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 
 import android.graphics.Color;
@@ -29,6 +30,7 @@ import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.UsageStatistics;
 import com.xjt.letool.view.DetailsHelper;
+import com.xjt.letool.view.SingleDeleteMediaListener.DeleteMediaProgressListener;
 import com.xjt.letool.view.DetailsHelper.CloseListener;
 import com.xjt.letool.view.FullImageView;
 import com.xjt.letool.view.GLBaseView;
@@ -37,6 +39,7 @@ import com.xjt.letool.view.GLRootView;
 import com.xjt.letool.view.LetoolActionBar;
 import com.xjt.letool.view.DetailsHelper.DetailsSource;
 import com.xjt.letool.view.LetoolBottomBar;
+import com.xjt.letool.view.SingleDeleteMediaListener;
 import com.xjt.letool.views.opengl.GLESCanvas;
 
 import com.xjt.letool.activities.BaseActivity;
@@ -387,7 +390,21 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
                 showDetails();
             }
         } else if (v.getId() == R.id.action_delete) {
+            SingleDeleteMediaListener cdl = new SingleDeleteMediaListener(getActivity(), mDeletePath, getDataManager(),
+                    new DeleteMediaProgressListener() {
 
+                        @Override
+                        public void onConfirmDialogDismissed(boolean confirmed) {
+
+                        }
+
+                    });
+            new AlertDialog.Builder(getActivity())
+                    .setMessage(getString(R.string.common_delete_tip))
+                    .setOnCancelListener(cdl)
+                    .setPositiveButton(R.string.ok, cdl)
+                    .setNegativeButton(R.string.cancel, cdl)
+                    .create().show();
         }
     }
 
@@ -445,14 +462,13 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         initViews();
         initDatas();
         initBrowseActionBar();
-        MediaPath itemPath = null;
         final int mediaItemCount = mMediaSet.getMediaItemCount(true);
         if (mediaItemCount > 0) {
             if (mCurrentIndex >= mediaItemCount)
                 mCurrentIndex = 0;
-            itemPath = mMediaSet.getMediaItem(mCurrentIndex, 1).get(0).getPath();
+            mDeletePath = mMediaSet.getMediaItem(mCurrentIndex, 1).get(0).getPath();
         }
-        PhotoDataAdapter pda = new PhotoDataAdapter(this, mFullImageView, mMediaSet, itemPath, mCurrentIndex, false, false);
+        PhotoDataAdapter pda = new PhotoDataAdapter(this, mFullImageView, mMediaSet, mDeletePath, mCurrentIndex, false, false);
         mModel = pda;
         mFullImageView.setModel(mModel);
 
@@ -460,6 +476,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
 
             @Override
             public void onPhotoChanged(int index, MediaPath item) {
+                mDeletePath = item;
                 mCurrentIndex = index;
                 updateActionBarMessage("大图浏览 (" + (mCurrentIndex + 1) + "/" + mediaItemCount + ")");
             }

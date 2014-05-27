@@ -1,4 +1,3 @@
-
 package com.xjt.letool.metadata.image;
 
 import android.annotation.TargetApi;
@@ -160,35 +159,6 @@ public class LocalFullImage extends LocalMediaItem {
     }
 
     @Override
-    public Job<Bitmap> requestImage(int type) {
-        return new LocalImageBlobRequest(mApplication, mPath, dateModifiedInSec, type, filePath);
-    }
-
-    @Override
-    public Job<Bitmap> requestImage(int type, int index, long dateTaken, DataBaseCache loader) {
-        return new LocalThumbRequest(loader, type, index, dateTaken, filePath);
-    }
-
-    @Override
-    public Job<BitmapRegionDecoder> requestLargeImage() {
-        return new LocalLargeImageRequest(filePath);
-    }
-
-    public static class LocalLargeImageRequest implements Job<BitmapRegionDecoder> {
-
-        String mLocalFilePath;
-
-        public LocalLargeImageRequest(String localFilePath) {
-            mLocalFilePath = localFilePath;
-        }
-
-        @Override
-        public BitmapRegionDecoder run(JobContext jc) {
-            return BitmapDecodeUtils.createBitmapRegionDecoder(jc, mLocalFilePath, false);
-        }
-    }
-
-    @Override
     public int getSupportedOperations() {
         int operation = SUPPORT_DELETE | SUPPORT_SHARE | SUPPORT_CROP
                 | SUPPORT_SETAS | SUPPORT_INFO;
@@ -301,6 +271,36 @@ public class LocalFullImage extends LocalMediaItem {
         return new LocalETCBlobRequest(mApplication, mPath, dateTakenInMs, type, filePath);
     }
 
+    @Override
+    public Job<Bitmap> requestImage(int type) {
+        return new LocalImageBlobRequest(mApplication, mPath, dateModifiedInSec, type, filePath);
+    }
+
+    @Override
+    public Job<Bitmap> requestImage(int type, int index, long dateTaken, DataBaseCache loader) {
+        return new LocalThumbRequest(loader, type, index, dateTaken, filePath);
+    }
+
+    @Override
+    public Job<BitmapRegionDecoder> requestLargeImage() {
+        return new LocalLargeImageRequest(filePath);
+    }
+
+    public static class LocalLargeImageRequest implements Job<BitmapRegionDecoder> {
+
+        String mLocalFilePath;
+
+        public LocalLargeImageRequest(String localFilePath) {
+            mLocalFilePath = localFilePath;
+        }
+
+        @Override
+        public BitmapRegionDecoder run(JobContext jc) {
+            return BitmapDecodeUtils.createBitmapRegionDecoder(jc, mLocalFilePath, false);
+        }
+    }
+
+    //for test
     public class TexureLoader implements Job<ETC1Texture> {
 
         @Override

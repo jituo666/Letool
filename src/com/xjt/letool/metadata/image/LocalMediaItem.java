@@ -21,7 +21,7 @@ public abstract class LocalMediaItem extends MediaItem {
 
     // database fields
     public int id;
-    public String caption;
+    public String caption = "s";
     public String mimeType;
     public long fileSize;
     public double latitude = INVALID_LATLNG;

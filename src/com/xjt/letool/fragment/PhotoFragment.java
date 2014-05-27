@@ -29,8 +29,8 @@ import com.xjt.letool.utils.RelativePosition;
 import com.xjt.letool.utils.StorageUtils;
 import com.xjt.letool.utils.Utils;
 import com.xjt.letool.view.CommonLoadingPanel;
-import com.xjt.letool.view.DeleteMediaListener;
-import com.xjt.letool.view.DeleteMediaListener.DeleteMediaProgressListener;
+import com.xjt.letool.view.BatchDeleteMediaListener;
+import com.xjt.letool.view.BatchDeleteMediaListener.DeleteMediaProgressListener;
 import com.xjt.letool.view.DetailsHelper;
 import com.xjt.letool.view.GLBaseView;
 import com.xjt.letool.view.GLController;
@@ -491,7 +491,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
                 t.show();
                 return;
             }
-            DeleteMediaListener cdl = new DeleteMediaListener(getActivity(), mSelector, getDataManager(),
+            BatchDeleteMediaListener cdl = new BatchDeleteMediaListener(getActivity(), mSelector, getDataManager(),
                     new DeleteMediaProgressListener() {
 
                         @Override
