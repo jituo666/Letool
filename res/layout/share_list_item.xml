@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/letool_action_bar_height"
+    android:orientation="horizontal" >
+
+    <ImageView
+        android:id="@+id/app_icon"
+        android:layout_width="@dimen/letool_sliding_menu_icon_size"
+        android:layout_height="@dimen/letool_sliding_menu_icon_size"
+        android:src="@drawable/common_item_bkg" />
+
+    <TextView
+        android:id="@+id/app_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="@color/minor_text_color"
+        android:textSize="@dimen/letool_sliding_menu_text_size" />
+
+</LinearLayout>

@@ -1,3 +1,4 @@
+
 package com.xjt.letool.share;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class QQShareManager {
     private int shareType = QQShare.SHARE_TO_QQ_TYPE_DEFAULT;
     private QQAuth mQQAuth;
     private Tencent mTencent;
-    private QQShare mQQShare = null;
+    //private QQShare mQQShare = null;
     private UserInfo mInfo;
 
     private int mExtarFlag = 0x00;
@@ -40,13 +41,15 @@ public class QQShareManager {
         return ready;
     }
 
+
     public void initShare(Context context, String appId) {
         mQQAuth = QQAuth.createInstance(appId, context);
         mTencent = Tencent.createInstance(appId, context);
-        mQQShare = new QQShare(context, mQQAuth.getQQToken());
+        mExtarFlag &= (0xFFFFFFFF - QQShare.SHARE_TO_QQ_FLAG_QZONE_ITEM_HIDE);
+        //mQQShare = new QQShare(context, mQQAuth.getQQToken());
     }
 
-    public void commitShareToQQ(Activity activity, String title, String summary, int shareType, Uri uri) {
+    public void commitShareToQQ(Activity activity, String title, String summary, int shareType, String uri) {
         final Bundle params = new Bundle();
         if (shareType != QQShare.SHARE_TO_QQ_TYPE_IMAGE) {
             params.putString(QQShare.SHARE_TO_QQ_TITLE, title);
@@ -84,7 +87,7 @@ public class QQShareManager {
             @Override
             public void run() {
                 // TODO Auto-generated method stub
-                mQQShare.shareToQQ(activity, params, new IUiListener() {
+                mTencent.shareToQQ(activity, params, new IUiListener() {
 
                     @Override
                     public void onCancel() {

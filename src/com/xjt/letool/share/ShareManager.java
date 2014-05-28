@@ -1,10 +1,13 @@
+
 package com.xjt.letool.share;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.tencent.connect.share.QQShare;
 import com.xjt.letool.R;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -14,7 +17,10 @@ import android.os.Bundle;
 
 public class ShareManager implements ShareListener {
 
+    private Context mContext;
+
     public static class ShareTo {
+
         int shareToType;
         String shareToTitle;
         Drawable shareToIcon;
@@ -26,25 +32,29 @@ public class ShareManager implements ShareListener {
         }
     }
 
-    public static List<ShareTo> getShareToList(Context context) {
+    public ShareManager(Context context) {
+        mContext = context;
+    }
+
+    public List<ShareTo> getShareToList() {
         ArrayList<ShareTo> list = new ArrayList<ShareTo>();
-        if (isQzoneInstalled(context)) {
-            list.add(new ShareTo(AppConstants.SHARE_TO_QQ, "QQ", context.getResources().getDrawable(R.drawable.ic_launcher)));
-            list.add(new ShareTo(AppConstants.SHARE_TO_QZONE, "QZone", context.getResources().getDrawable(R.drawable.ic_launcher)));
+        if (isQzoneInstalled()) {
+            list.add(new ShareTo(AppConstants.SHARE_TO_QQ, "QQ", mContext.getResources().getDrawable(R.drawable.ic_launcher)));
+            list.add(new ShareTo(AppConstants.SHARE_TO_QZONE, "QZone", mContext.getResources().getDrawable(R.drawable.ic_launcher)));
         }
-        if (isWeichatIstalled(context)) {
-            list.add(new ShareTo(AppConstants.SHARE_TO_WX, "微信", context.getResources().getDrawable(R.drawable.ic_launcher)));
-            list.add(new ShareTo(AppConstants.SHARE_TO_WX_F, "微信朋友圈", context.getResources().getDrawable(R.drawable.ic_launcher)));
+        if (isWeichatIstalled(mContext)) {
+            list.add(new ShareTo(AppConstants.SHARE_TO_WX, "微信", mContext.getResources().getDrawable(R.drawable.ic_launcher)));
+            list.add(new ShareTo(AppConstants.SHARE_TO_WX_F, "微信朋友圈", mContext.getResources().getDrawable(R.drawable.ic_launcher)));
         }
         return list;
     }
 
-    private static boolean isQzoneInstalled(Context context) {
+    private boolean isQzoneInstalled() {
         boolean ret = false;
         PackageInfo p = null;
         try {
             p = null;
-            p = context.getPackageManager().getPackageInfo("com.tencent.mobileqq", 0);
+            p = mContext.getPackageManager().getPackageInfo("com.tencent.mobileqq", 0);
             if (null != p) {
                 if (p.versionCode >= 50) {
                     ret = true;
@@ -58,7 +68,7 @@ public class ShareManager implements ShareListener {
         return ret;
     }
 
-    private static boolean isWeichatIstalled(Context context) {
+    private boolean isWeichatIstalled(Context context) {
         boolean ret = false;
         PackageInfo p = null;
         try {
@@ -78,9 +88,12 @@ public class ShareManager implements ShareListener {
     }
 
     @Override
-    public void onShareTo(int shareTo, Bundle shareData) {
+    public void onShareTo(Activity activity, int shareTo, Bundle shareData) {
         switch (shareTo) {
             case AppConstants.SHARE_TO_QQ: {
+                QQShareManager m = new QQShareManager();
+                m.initShare(activity, AppConstants.QQ_SHARE_APP_ID);
+                m.commitShareToQQ(activity, "ss", "fdfd", QQShare.SHARE_TO_QQ_TYPE_IMAGE, shareData.getString(ShareListFragment.SHARE_MEDIA_PATH));
                 break;
             }
             case AppConstants.SHARE_TO_QZONE: {

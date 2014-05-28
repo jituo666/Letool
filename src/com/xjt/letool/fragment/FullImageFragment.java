@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 
 import android.view.View;
@@ -27,6 +29,7 @@ import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.metadata.source.PhotoAlbum;
 import com.xjt.letool.selectors.SelectionManager;
+import com.xjt.letool.share.ShareListFragment;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.UsageStatistics;
 import com.xjt.letool.view.DetailsHelper;
@@ -107,6 +110,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     private int mCurrentIndex = 0;
     private boolean mShowBars = false;
     private MediaItem mCurrentPhoto = null;
+    private String mCurrentPathString = "";
     private boolean mIsActive;
     private OrientationManager mOrientationManager;
     private boolean mTreatBackAsUp;
@@ -382,7 +386,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         if (v.getId() == R.id.action_navi) {
             getActivity().finish();
         } else if (v.getId() == R.id.action_share) {
-
+            showDialog();
         } else if (v.getId() == R.id.action_detail) {
             if (mShowDetails) {
                 hideDetails();
@@ -466,7 +470,9 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         if (mediaItemCount > 0) {
             if (mCurrentIndex >= mediaItemCount)
                 mCurrentIndex = 0;
-            mDeletePath = mMediaSet.getMediaItem(mCurrentIndex, 1).get(0).getPath();
+            MediaItem it = mMediaSet.getMediaItem(mCurrentIndex, 1).get(0);
+            mDeletePath = it.getPath();
+            mCurrentPathString = it.getFilePath();
         }
         PhotoDataAdapter pda = new PhotoDataAdapter(this, mFullImageView, mMediaSet, mDeletePath, mCurrentIndex, false, false);
         mModel = pda;
@@ -479,6 +485,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
                 mDeletePath = item;
                 mCurrentIndex = index;
                 updateActionBarMessage("大图浏览 (" + (mCurrentIndex + 1) + "/" + mediaItemCount + ")");
+                mCurrentPathString = mMediaSet.getMediaItem(mCurrentIndex, 1).get(0).getFilePath();
             }
 
             @Override
@@ -589,4 +596,19 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         return mGLRootView;
     }
 
+    private void showDialog() {
+
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        // Create and show the dialog.
+        ShareListFragment newFragment = new ShareListFragment();
+        Bundle b = new Bundle();
+        b.putString(ShareListFragment.SHARE_MEDIA_PATH, mCurrentPathString);
+        newFragment.setArguments(b);
+        newFragment.show(ft, "sharelist");
+    }
 }
