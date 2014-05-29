@@ -2,8 +2,6 @@ package com.xjt.letool.share;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -12,8 +10,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.tencent.tauth.IUiListener;
-import com.tencent.tauth.UiError;
 import com.xjt.letool.R;
 import com.xjt.letool.share.ShareManager.ShareTo;
 
@@ -31,7 +27,7 @@ public class ShareListActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.share_list);
-        mMenusList = (ListView)findViewById(R.id.share_to_list);
+        mMenusList = (ListView) findViewById(R.id.share_to_list);
         mShareManager = new ShareManager(this);
         mData = mShareManager.getShareToList();
         mMenusList.setAdapter(new ShareAdapter());
@@ -39,47 +35,13 @@ public class ShareListActivity extends Activity {
 
             @Override
             public void onItemClick(AdapterView<?> arg0, View v, int postion, long id) {
-                mShareManager.onShareTo(ShareListActivity.this, mData.get(postion).shareToType, 
-                        getIntent().getStringArrayListExtra((SHARE_MEDIA_PATH_LIST)),l);
-                //finish();
+                mShareManager.onShareTo(ShareListActivity.this, mData.get(postion).shareToType,
+                        getIntent().getStringArrayListExtra((SHARE_MEDIA_PATH_LIST)));
             }
 
         });
     }
 
-    Handler h =  new Handler() {
-
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case 1: {
-                    finish();
-                }
-            }
-            super.handleMessage(msg);
-        }
-      
-    };
-    
-    IUiListener l =  new IUiListener() {
-
-        @Override
-        public void onCancel() {
-          h.obtainMessage(1).sendToTarget();
-
-        }
-
-        @Override
-        public void onError(UiError e) {
-            h.obtainMessage(1).sendToTarget();
-        }
-
-        @Override
-        public void onComplete(Object response) {
-            h.obtainMessage(1).sendToTarget();
-        }
-
-    };
     private class ShareAdapter extends BaseAdapter {
 
         @Override

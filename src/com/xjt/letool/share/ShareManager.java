@@ -90,17 +90,17 @@ public class ShareManager implements ShareListener {
 
     
     @Override
-    public void onShareTo(Activity activity, int shareTo, ArrayList<String> shareData,  IUiListener l) {
+    public void onShareTo(Activity activity, int shareTo, ArrayList<String> shareData) {
         switch (shareTo) {
             case AppConstants.SHARE_TO_QQ: {
                 QQShareManager m = new QQShareManager(activity.getApplicationContext(), AppConstants.QQ_SHARE_APP_ID);
-                m.shareImageToQQ(activity, "分享", "了图分享", shareData.get(0),l);
+                m.shareImageToQQ(activity, "分享", "了图分享", shareData.get(0));
 
                 break;
             }
             case AppConstants.SHARE_TO_QZONE: {
                 QQShareManager m = new QQShareManager(activity.getApplicationContext(), AppConstants.QQ_SHARE_APP_ID);
-                m.shareImageToQZone(activity, "分享", "了图分享", shareData, l);
+                m.shareImageToQZone(activity, "分享", "了图分享", shareData);
                 break;
             }
             case AppConstants.SHARE_TO_WX: {

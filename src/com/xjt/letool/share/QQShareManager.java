@@ -26,57 +26,101 @@ public class QQShareManager {
 
     public void initShare(Context context, String appId) {
         mTencent = Tencent.createInstance(appId, context);
-        mExtarFlag &= (0xFFFFFFFF - QQShare.SHARE_TO_QQ_FLAG_QZONE_ITEM_HIDE);
+        //mExtarFlag &= (0xFFFFFFFF - QQShare.SHARE_TO_QQ_FLAG_QZONE_ITEM_HIDE);
         //        mExtarFlag |= QQShare.SHARE_TO_QQ_FLAG_QZONE_ITEM_HIDE;
         //        mExtarFlag |= QQShare.SHARE_TO_QQ_FLAG_QZONE_AUTO_OPEN;
         //        mExtarFlag &= (0xFFFFFFFF - QQShare.SHARE_TO_QQ_FLAG_QZONE_AUTO_OPEN);
     }
 
-    public void shareImageToQQ(Activity activity, String title, String summary, String shareUri, IUiListener l) {
+    public void shareImageToQQ(Activity activity, String title, String summary, String shareUri) {
         final Bundle params = new Bundle();
         params.putString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL, shareUri);
         params.putString(QQShare.SHARE_TO_QQ_APP_NAME, activity.getString(R.string.app_name));
         params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_IMAGE);
         params.putInt(QQShare.SHARE_TO_QQ_EXT_INT, mExtarFlag);
-        doShareToQQ(activity, params, l);
+        doShareToQQ(activity, params);
     }
 
     /**
      * 用异步方式启动分享
      * @param params
      */
-    private void doShareToQQ(final Activity activity, final Bundle params, final IUiListener l) {
+    private void doShareToQQ(Activity a, final Bundle params) {
+        final Activity activity = a;
         new Thread(new Runnable() {
 
             @Override
             public void run() {
                 // TODO Auto-generated method stub
-                mTencent.shareToQQ(activity, params, l);
+                mTencent.shareToQQ(activity, params, new IUiListener() {
+
+                    @Override
+                    public void onCancel() {
+                        if (shareType != QQShare.SHARE_TO_QQ_TYPE_IMAGE) {
+                            LLog.i(TAG, "onCancel: ");
+                        }
+                    }
+
+                    @Override
+                    public void onComplete(Object response) {
+                        // TODO Auto-generated method stub
+                        LLog.i(TAG, "onComplete: " + response.toString());
+                    }
+
+                    @Override
+                    public void onError(UiError e) {
+                        // TODO Auto-generated method stub
+                        LLog.i(TAG, "onError: " + e.errorMessage);
+                    }
+
+                });
             }
         }).start();
     }
 
-    public void shareImageToQZone(Activity activity, String title, String summary, ArrayList<String> imageUrls, final  IUiListener l) {
+    public void shareImageToQZone(Activity activity, String title, String summary, ArrayList<String> imageUrls) {
         final Bundle params = new Bundle();
         params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_IMAGE_TEXT);
         params.putString(QzoneShare.SHARE_TO_QQ_TITLE, title);
         params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, summary);
         params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, "http://www.baidu.com/");
         params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, imageUrls);
-        doShareToQzone(activity, params,l);
+        doShareToQzone(activity, params);
     }
 
     /**
      * 用异步方式启动分享
      * @param params
      */
-    private void doShareToQzone(final Activity activity, final Bundle params, final IUiListener l) {
+    private void doShareToQzone(final Activity a, final Bundle params) {
+        final Activity activity = a;
         new Thread(new Runnable() {
 
             @Override
             public void run() {
                 // TODO Auto-generated method stub
-                mTencent.shareToQzone(activity, params, l);
+                mTencent.shareToQzone(activity, params, new IUiListener() {
+
+                    @Override
+                    public void onCancel() {
+                        if (shareType != QQShare.SHARE_TO_QQ_TYPE_IMAGE) {
+                            LLog.i(TAG, "onCancel: ");
+                        }
+                    }
+
+                    @Override
+                    public void onComplete(Object response) {
+                        // TODO Auto-generated method stub
+                        LLog.i(TAG, "onComplete: " + response.toString());
+                    }
+
+                    @Override
+                    public void onError(UiError e) {
+                        // TODO Auto-generated method stub
+                        LLog.i(TAG, "onError: " + e.errorMessage);
+                    }
+
+                });
             }
         }).start();
     }

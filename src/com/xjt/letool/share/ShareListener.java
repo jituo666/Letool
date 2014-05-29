@@ -9,5 +9,5 @@ import android.os.Bundle;
 
 public interface ShareListener {
 
-    public void onShareTo(Activity activity, int shareTo, ArrayList<String> data, IUiListener l);
+    public void onShareTo(Activity activity, int shareTo, ArrayList<String> data);
 }
