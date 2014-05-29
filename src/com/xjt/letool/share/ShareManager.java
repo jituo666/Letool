@@ -1,11 +1,12 @@
-
 package com.xjt.letool.share;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tencent.connect.share.QQShare;
+import com.tencent.tauth.IUiListener;
+import com.tencent.tauth.UiError;
 import com.xjt.letool.R;
+import com.xjt.letool.common.LLog;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,7 +14,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 
 public class ShareManager implements ShareListener {
 
@@ -40,7 +40,7 @@ public class ShareManager implements ShareListener {
         ArrayList<ShareTo> list = new ArrayList<ShareTo>();
         if (isQzoneInstalled()) {
             list.add(new ShareTo(AppConstants.SHARE_TO_QQ, "QQ", mContext.getResources().getDrawable(R.drawable.ic_launcher)));
-            list.add(new ShareTo(AppConstants.SHARE_TO_QZONE, "QZone", mContext.getResources().getDrawable(R.drawable.ic_launcher)));
+            list.add(new ShareTo(AppConstants.SHARE_TO_QZONE, "QQ空间", mContext.getResources().getDrawable(R.drawable.ic_launcher)));
         }
         if (isWeichatIstalled(mContext)) {
             list.add(new ShareTo(AppConstants.SHARE_TO_WX, "微信", mContext.getResources().getDrawable(R.drawable.ic_launcher)));
@@ -87,16 +87,20 @@ public class ShareManager implements ShareListener {
         return ret;
     }
 
+
+    
     @Override
-    public void onShareTo(Activity activity, int shareTo, Bundle shareData) {
+    public void onShareTo(Activity activity, int shareTo, ArrayList<String> shareData,  IUiListener l) {
         switch (shareTo) {
             case AppConstants.SHARE_TO_QQ: {
-                QQShareManager m = new QQShareManager();
-                m.initShare(activity, AppConstants.QQ_SHARE_APP_ID);
-                m.commitShareToQQ(activity, "ss", "fdfd", QQShare.SHARE_TO_QQ_TYPE_IMAGE, shareData.getString(ShareListFragment.SHARE_MEDIA_PATH));
+                QQShareManager m = new QQShareManager(activity.getApplicationContext(), AppConstants.QQ_SHARE_APP_ID);
+                m.shareImageToQQ(activity, "分享", "了图分享", shareData.get(0),l);
+
                 break;
             }
             case AppConstants.SHARE_TO_QZONE: {
+                QQShareManager m = new QQShareManager(activity.getApplicationContext(), AppConstants.QQ_SHARE_APP_ID);
+                m.shareImageToQZone(activity, "分享", "了图分享", shareData, l);
                 break;
             }
             case AppConstants.SHARE_TO_WX: {

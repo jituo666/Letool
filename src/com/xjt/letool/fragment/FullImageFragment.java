@@ -1,9 +1,11 @@
-
 package com.xjt.letool.fragment;
+
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Intent;
 
 import android.graphics.Color;
 
@@ -29,7 +31,7 @@ import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.metadata.source.PhotoAlbum;
 import com.xjt.letool.selectors.SelectionManager;
-import com.xjt.letool.share.ShareListFragment;
+import com.xjt.letool.share.ShareListActivity;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.UsageStatistics;
 import com.xjt.letool.view.DetailsHelper;
@@ -121,7 +123,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     private long mDeferUpdateUntil = Long.MAX_VALUE;
 
     private MediaPath mDeletePath;// The item that is deleted (but it can still be undeleted before commiting)
-    private boolean mDeleteIsFocus;  // whether the deleted item was in focus
+    private boolean mDeleteIsFocus; // whether the deleted item was in focus
     private BaseActivity mActivity;
 
     private Handler mHandler;
@@ -282,7 +284,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     // the deletion, we then actually delete the media item.
     @Override
     public void onDeleteImage(MediaPath path, int offset) {
-        onCommitDeleteImage();  // commit the previous deletion
+        onCommitDeleteImage(); // commit the previous deletion
         mDeletePath = path;
         mDeleteIsFocus = (offset == 0);
     }
@@ -403,6 +405,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
                         }
 
                     });
+
             new AlertDialog.Builder(getActivity())
                     .setMessage(getString(R.string.common_delete_tip))
                     .setOnCancelListener(cdl)
@@ -597,18 +600,26 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     }
 
     private void showDialog() {
-
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
-        if (prev != null) {
-            ft.remove(prev);
-        }
-        ft.addToBackStack(null);
-        // Create and show the dialog.
-        ShareListFragment newFragment = new ShareListFragment();
-        Bundle b = new Bundle();
-        b.putString(ShareListFragment.SHARE_MEDIA_PATH, mCurrentPathString);
-        newFragment.setArguments(b);
-        newFragment.show(ft, "sharelist");
+        ArrayList<String> l = new ArrayList<String>();
+        l.add(mCurrentPathString);
+        Intent it = new Intent();
+        it.setClass(mActivity, ShareListActivity.class);
+        it.putExtra(ShareListActivity.SHARE_MEDIA_PATH_LIST, l);
+        startActivity(it);
+        //        
+        //        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        //        Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+        //        if (prev != null) {
+        //            ft.remove(prev);
+        //        }
+        //        ft.addToBackStack(null);
+        //        // Create and show the dialog.
+        //        ShareListActivity newFragment = new ShareListActivity();
+        //        Bundle b = new Bundle();
+        //        ArrayList<String> l = new ArrayList<String>();
+        //       l.add(mCurrentPathString);
+        //        b.putStringArrayList(ShareListActivity.SHARE_MEDIA_PATH_LIST, l);
+        //        newFragment.setArguments(b);
+        //        newFragment.show(ft, "sharelist");
     }
 }

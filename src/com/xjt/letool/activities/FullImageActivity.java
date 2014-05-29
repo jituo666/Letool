@@ -1,5 +1,6 @@
 package com.xjt.letool.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import com.xjt.letool.R;
@@ -36,4 +37,12 @@ public class FullImageActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+ 
 }
