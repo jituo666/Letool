@@ -273,7 +273,6 @@ public class GLBaseView {
     protected void renderBackground(GLESCanvas view) {
         if (mBackgroundColor != null) {
             view.clearBuffer(mBackgroundColor);
-            LLog.i(TAG, Color.BLACK + "........................................" + mBackgroundColor);
         }
         if (mTransition != null && mTransition.isActive()) {
             mTransition.applyBackground(this, view);

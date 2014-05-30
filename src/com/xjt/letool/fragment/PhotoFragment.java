@@ -1,4 +1,3 @@
-
 package com.xjt.letool.fragment;
 
 import com.xjt.letool.LetoolApp;
@@ -240,7 +239,6 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         layout.setLayoutListener(this);
         mThumbnailView.setThumbnailRenderer(mRender);
         mThumbnailView.setOverscrollEffect(ThumbnailView.OVERSCROLL_SYSTEM);
-        mRender.setModel(mAlbumDataSetLoader);
         mRootPane.addComponent(mThumbnailView);
         mThumbnailView.setListener(new ThumbnailView.SimpleListener() {
 
@@ -309,7 +307,6 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         LLog.i(TAG, "onCreateView" + System.currentTimeMillis());
         View rootView = inflater.inflate(R.layout.gl_root_view, container, false);
         mHasSDCard = StorageUtils.externalStorageAvailable();
-
         mGLRootView = (GLRootView) rootView.findViewById(R.id.gl_root_view);
         initializeViews();
         initializeData();

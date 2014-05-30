@@ -66,8 +66,6 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
 
     private final IdleRunner mIdleRunner = new IdleRunner();
 
-    private LetoolEGLChooser mLetoolEGLChooser = new LetoolEGLChooser();
-
     public GLRootView(Context context) {
         this(context, null);
     }
@@ -81,14 +79,12 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
         } else {
             setEGLConfigChooser(5, 6, 5, 0, 0, 0);
         }
-        // setEGLConfigChooser(mLetoolEGLChooser);
         setRenderer(this);
         if (ApiHelper.USE_888_PIXEL_FORMAT) {
             getHolder().setFormat(PixelFormat.RGB_888);
         } else {
             getHolder().setFormat(PixelFormat.RGB_565);
         }
-        this.setPreserveEGLContextOnPause(true);
     }
 
     @Override
@@ -327,7 +323,7 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
             w = h;
             h = tmp;
         }
-        LLog.i(TAG, "layout content pane " + w + "x" + h + " (compensation " + mCompensation + ")");
+        LLog.i(TAG, "layout content pane w:" + w + "h" + h + ":" + System.currentTimeMillis());
         if (mContentView != null && w != 0 && h != 0) {
             mContentView.layout(0, 0, w, h);
         }

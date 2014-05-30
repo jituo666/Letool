@@ -314,10 +314,6 @@ public class ThumbnailDataLoader {
             if (mIsLoading == loading)
                 return;
             mIsLoading = loading;
-            if (loading)
-                LLog.i(TAG, "MSG_LOAD_START" + System.currentTimeMillis());
-            else
-                LLog.i(TAG, "MSG_LOAD_FINISH" + System.currentTimeMillis());
             mMainHandler.sendEmptyMessage(loading ? MSG_LOAD_START : MSG_LOAD_FINISH);
         }
 

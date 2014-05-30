@@ -1,4 +1,3 @@
-
 package com.xjt.letool.views.render;
 
 import android.graphics.Color;
@@ -72,7 +71,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         super(activity.getAndroidContext());
         mActivity = activity;
         mThumbnailView = thumbnailView;
-        mPlaceholderColor = Color.TRANSPARENT;
+        mPlaceholderColor = 0xFFE8E8E8;
         mMediaSelector = selector;
         mLabelSpec = ViewConfigs.AlbumSetPage.get(activity.getAndroidContext()).labelSpec;
 
@@ -140,7 +139,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         if (content == null) {
             content = mWaitLoadingTexture;
             entry.isWaitLoadingDisplayed = true;
-        } 
+        }
         drawContent(canvas, content, width, height, entry.rotation);
         return renderRequestFlags;
     }

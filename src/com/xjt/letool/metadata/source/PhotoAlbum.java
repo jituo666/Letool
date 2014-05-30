@@ -1,4 +1,3 @@
-
 package com.xjt.letool.metadata.source;
 
 import android.content.ContentResolver;
@@ -87,13 +86,13 @@ public class PhotoAlbum extends MediaSet {
         if (mAlbumCursor.moveToPosition(start)) {
             int i = 0;
             do {
-                int id = mAlbumCursor.getInt(0);  // _id must be in the first column
+                int id = mAlbumCursor.getInt(0); // _id must be in the first column
                 MediaPath childPath = new MediaPath(mItemPath, id);
                 MediaItem item = loadOrUpdateItem(childPath, mAlbumCursor, mApplication.getDataManager(), mApplication, mIsImage);
                 list.add(item);
             } while ((++i < count) && mAlbumCursor.moveToNext());
         }
-        LLog.w(TAG, "query getMediaItem count:" + count + " spend " + (System.currentTimeMillis() - time));
+        LLog.w(TAG, "query getMediaItem count:" + count + " spend " + (System.currentTimeMillis() - time) + ":" + System.currentTimeMillis());
         return list;
     }
 
@@ -120,7 +119,7 @@ public class PhotoAlbum extends MediaSet {
         long time = System.currentTimeMillis();
         mFullInfo = withFullInfo;
         if (mAlbumCursor == null) {
-            if( mFullInfo ) {
+            if (mFullInfo) {
                 mProjection = LocalFullImage.PROJECTION;
             } else {
                 mProjection = LocalImage.PROJECTION;
@@ -131,7 +130,8 @@ public class PhotoAlbum extends MediaSet {
                 return 0;
             }
         }
-        LLog.i(TAG, "----------------getMediaItemCount:" + mAlbumCursor.getCount() + " spend " + (System.currentTimeMillis() - time));
+        LLog.i(TAG, "----------------getMediaItemCount:" + mAlbumCursor.getCount() + " spend " + (System.currentTimeMillis() - time)
+                + ":" + System.currentTimeMillis());
         return mAlbumCursor.getCount();
     }
 
