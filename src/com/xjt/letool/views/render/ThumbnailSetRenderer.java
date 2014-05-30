@@ -11,7 +11,6 @@ import com.xjt.letool.metadata.loader.ThumbnailSetDataLoader;
 import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.views.opengl.ColorTexture;
-import com.xjt.letool.views.opengl.FadeInTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.opengl.Texture;
 import com.xjt.letool.views.opengl.TiledTexture;
@@ -137,21 +136,10 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
 
     protected int renderContent(GLESCanvas canvas, AlbumSetEntry entry, int width, int height) {
         int renderRequestFlags = 0;
-
-        //        Texture content = checkContentTexture(entry.content);
-        //        if (content == null) {
-        //            content = mWaitLoadingTexture;
-        //            entry.isWaitLoadingDisplayed = true;
-        //        } else if (entry.isWaitLoadingDisplayed) {
-        //            entry.isWaitLoadingDisplayed = false;
-        //            content = new FadeInTexture(mPlaceholderColor, entry.bitmapTexture);
-        //            entry.content = content;
-        //        }
         Texture content = entry.bitmapTexture;
         if (content == null) {
             content = mWaitLoadingTexture;
             entry.isWaitLoadingDisplayed = true;
-            //return renderRequestFlags;
         } 
         drawContent(canvas, content, width, height, entry.rotation);
         return renderRequestFlags;
