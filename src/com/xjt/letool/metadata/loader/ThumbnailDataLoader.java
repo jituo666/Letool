@@ -289,7 +289,7 @@ public class ThumbnailDataLoader {
                     mItemVersion[index] = itemVersion;
                     mData[index] = updateItem;
                     if (mDataChangedListener != null && i >= mActiveStart && i < mActiveEnd) {
-                        LLog.i(TAG, "UpdateContent:" + index + " :" + System.currentTimeMillis());
+                        //LLog.i(TAG, "UpdateContent:" + index + " :" + System.currentTimeMillis());
                         mDataChangedListener.onContentChanged(i);
                     }
                 }

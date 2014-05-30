@@ -5,11 +5,11 @@ import android.opengl.ETC1Util.ETC1Texture;
 // BitmapTexture is a texture whose content is specified by a fixed Bitmap.
 // The texture does not own the Bitmap. The user should make sure the Bitmap
 // is valid during the texture's lifetime. When the texture is recycled, it  does not free the Bitmap.
-public class MyTexture extends CompressTexture {
+public class ETC1CompressedTexture extends UploadETC1Texture {
 
     protected ETC1Texture mContentTexture;
     
-    public MyTexture(ETC1Texture texture) {
+    public ETC1CompressedTexture(ETC1Texture texture) {
         super(texture);
         mContentTexture = texture;
     }

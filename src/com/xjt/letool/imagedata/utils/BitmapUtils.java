@@ -1,4 +1,3 @@
-
 package com.xjt.letool.imagedata.utils;
 
 import android.annotation.SuppressLint;
@@ -63,7 +62,7 @@ public class BitmapUtils {
     }
 
     // This computes a sample size which makes the longer side at least minSideLength long. If that's not possible, return 1.
-    public static int computeSampleSizeLarger(int w, int h,int minSideLength) {
+    public static int computeSampleSizeLarger(int w, int h, int minSideLength) {
         int initialSize = Math.max(w / minSideLength, h / minSideLength);
         if (initialSize <= 1)
             return 1;

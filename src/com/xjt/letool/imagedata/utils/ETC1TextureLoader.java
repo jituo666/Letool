@@ -6,16 +6,10 @@ import com.xjt.letool.common.Future;
 import com.xjt.letool.common.FutureListener;
 
 
-public abstract class ETC1DataLoader implements FutureListener<ETC1Texture> {
+public abstract class ETC1TextureLoader implements FutureListener<ETC1Texture> {
 
     @SuppressWarnings("unused")
-    private static final String TAG = ETC1DataLoader.class.getSimpleName();
-
-    /* Transition Map:
-     *   INIT -> REQUESTED, RECYCLED
-     *   REQUESTED -> INIT (cancel), LOADED, ERROR, RECYCLED
-     *   LOADED, ERROR -> RECYCLED
-     */
+    private static final String TAG = ETC1TextureLoader.class.getSimpleName();
     private static final int STATE_INIT = 0;
     private static final int STATE_REQUESTED = 1;
     private static final int STATE_LOADED = 2;
@@ -61,7 +55,7 @@ public abstract class ETC1DataLoader implements FutureListener<ETC1Texture> {
         }
     }
 
-    // Recycle the loader and the bitmap
+    // Recycle the loader and the etc1texture
     public synchronized void recycle() {
         mState = STATE_RECYCLED;
         if (mETC1Texture != null) {

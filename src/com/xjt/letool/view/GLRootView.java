@@ -19,7 +19,7 @@ import com.xjt.letool.views.opengl.GLES11Canvas;
 import com.xjt.letool.views.opengl.GLES20Canvas;
 import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.opengl.LetoolEGLChooser;
-import com.xjt.letool.views.opengl.UploadedTexture;
+import com.xjt.letool.views.opengl.UploadedBitmapTexture;
 import com.xjt.letool.views.utils.MotionEventHelper;
 
 import android.annotation.SuppressLint;
@@ -196,7 +196,7 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
 
         mCanvas.deleteRecycledResources();// release the unbound textures and deleted buffers.
 
-        UploadedTexture.resetUploadLimit();// reset texture upload limit
+        UploadedBitmapTexture.resetUploadLimit();// reset texture upload limit
 
         mRenderRequested = false;
 
@@ -223,7 +223,7 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
             mAnimations.clear();
         }
 
-        if (UploadedTexture.uploadLimitReached()) {
+        if (UploadedBitmapTexture.uploadLimitReached()) {
             requestRender();
         }
         synchronized (mIdleListeners) {

@@ -95,7 +95,7 @@ public class TiledTexture implements Texture {
         }
     }
 
-    private static class Tile extends UploadedTexture {
+    private static class Tile extends UploadedBitmapTexture {
         public int offsetX;
         public int offsetY;
         public Bitmap bitmap;

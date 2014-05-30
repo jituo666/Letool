@@ -10,10 +10,10 @@ public class TextureUploader implements OnGLIdleListener {
     private static final int INIT_CAPACITY = 64;
     private static final int QUOTA_PER_FRAME = 1;
 
-    private final ArrayDeque<UploadedTexture> mFgTextures =
-            new ArrayDeque<UploadedTexture>(INIT_CAPACITY);
-    private final ArrayDeque<UploadedTexture> mBgTextures =
-            new ArrayDeque<UploadedTexture>(INIT_CAPACITY);
+    private final ArrayDeque<UploadedBitmapTexture> mFgTextures =
+            new ArrayDeque<UploadedBitmapTexture>(INIT_CAPACITY);
+    private final ArrayDeque<UploadedBitmapTexture> mBgTextures =
+            new ArrayDeque<UploadedBitmapTexture>(INIT_CAPACITY);
     private final GLController mGLRoot;
     private volatile boolean mIsQueued = false;
 
@@ -37,24 +37,24 @@ public class TextureUploader implements OnGLIdleListener {
         mGLRoot.addOnGLIdleListener(this);
     }
 
-    public synchronized void addBgTexture(UploadedTexture t) {
+    public synchronized void addBgTexture(UploadedBitmapTexture t) {
         if (t.isContentValid()) return;
         mBgTextures.addLast(t);
         t.setIsUploading(true);
         queueSelfIfNeed();
     }
 
-    public synchronized void addFgTexture(UploadedTexture t) {
+    public synchronized void addFgTexture(UploadedBitmapTexture t) {
         if (t.isContentValid()) return;
         mFgTextures.addLast(t);
         t.setIsUploading(true);
         queueSelfIfNeed();
     }
 
-    private int upload(GLESCanvas canvas, ArrayDeque<UploadedTexture> deque,
+    private int upload(GLESCanvas canvas, ArrayDeque<UploadedBitmapTexture> deque,
             int uploadQuota, boolean isBackground) {
         while (uploadQuota > 0) {
-            UploadedTexture t;
+            UploadedBitmapTexture t;
             synchronized (this) {
                 if (deque.isEmpty()) break;
                 t = deque.removeFirst();

@@ -22,7 +22,7 @@ import com.xjt.letool.utils.Utils;
 import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.opengl.ScreenNail;
 import com.xjt.letool.views.opengl.TiledScreenNail;
-import com.xjt.letool.views.opengl.UploadedTexture;
+import com.xjt.letool.views.opengl.UploadedBitmapTexture;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -635,7 +635,7 @@ public class TileImageView extends GLBaseView {
         }
     }
 
-    private class Tile extends UploadedTexture {
+    private class Tile extends UploadedBitmapTexture {
         public int mX;
         public int mY;
         public int mTileLevel;

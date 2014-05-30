@@ -1,4 +1,3 @@
-
 package com.xjt.letool.imagedata.utils;
 
 import android.annotation.TargetApi;

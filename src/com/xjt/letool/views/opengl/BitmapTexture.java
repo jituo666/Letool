@@ -7,7 +7,7 @@ import junit.framework.Assert;
 // BitmapTexture is a texture whose content is specified by a fixed Bitmap.
 // The texture does not own the Bitmap. The user should make sure the Bitmap
 // is valid during the texture's lifetime. When the texture is recycled, it  does not free the Bitmap.
-public class BitmapTexture extends UploadedTexture {
+public class BitmapTexture extends UploadedBitmapTexture {
     protected Bitmap mContentBitmap;
 
     public BitmapTexture(Bitmap bitmap) {

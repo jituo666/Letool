@@ -8,9 +8,9 @@ public class FadeInTexture extends FadeTexture implements Texture {
     private static final String TAG = "FadeInTexture";
 
     private final int mColor;
-    private final CompressTexture mTexture;
+    private final UploadETC1Texture mTexture;
 
-    public FadeInTexture(int color, CompressTexture texture) {
+    public FadeInTexture(int color, UploadETC1Texture texture) {
         super(texture.getWidth(), texture.getHeight(), texture.isOpaque());
         mColor = color;
         mTexture = texture;

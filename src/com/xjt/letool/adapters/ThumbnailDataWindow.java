@@ -10,12 +10,12 @@ import com.xjt.letool.common.JobLimiter;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
 import com.xjt.letool.fragment.LetoolFragment;
-import com.xjt.letool.imagedata.utils.ETC1DataLoader;
+import com.xjt.letool.imagedata.utils.ETC1TextureLoader;
 import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.utils.Utils;
-import com.xjt.letool.views.opengl.MyTexture;
+import com.xjt.letool.views.opengl.ETC1CompressedTexture;
 import com.xjt.letool.views.opengl.Texture;
 import com.xjt.letool.views.opengl.TiledTexture;
 
@@ -62,13 +62,8 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
         public int rotation;
         public int mediaType;
         public boolean isWaitDisplayed;
-
-        //public BitmapTexture bitmapTexture;
-
-        public MyTexture compressTexture;
-
-        public Texture content;
-        private ETC1DataLoader contentLoader;
+        public ETC1CompressedTexture compressTexture;
+        private ETC1TextureLoader contentLoader;
     }
 
     public ThumbnailDataWindow(LetoolFragment fragment, ThumbnailDataLoader source, int cacheSize) {
@@ -189,7 +184,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
         if (slotIndex < mContentStart || slotIndex >= mContentEnd)
             return false;
         AlbumEntry entry = mImageData[slotIndex % mImageData.length];
-        if (entry.content != null || entry.item == null)
+        if (entry.compressTexture != null || entry.item == null)
             return false;
         entry.contentLoader.startLoad();
         return entry.contentLoader.isRequestInProgress();
@@ -283,7 +278,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
     }
 
 
-    private class ThumbnailLoader extends ETC1DataLoader {
+    private class ThumbnailLoader extends ETC1TextureLoader {
 
         private final int mThumbnailIndex;
 
@@ -310,8 +305,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
                 return; // error or recycled
 
             AlbumEntry entry = mImageData[mThumbnailIndex % mImageData.length];
-            entry.compressTexture = new MyTexture(texture);
-            entry.content = entry.compressTexture;
+            entry.compressTexture = new ETC1CompressedTexture(texture);
             if (isActiveThumbnail(mThumbnailIndex)) {
 
                 --mActiveRequestCount;
@@ -319,8 +313,6 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
                     requestNonactiveImages();
                 if (mDataListener != null) {
                     mDataListener.onContentChanged();
-
-                    LLog.i(TAG, " ------ prepared:" + mThumbnailIndex + "   :" + System.currentTimeMillis()  + " compressTexture = null ? :" + (entry.compressTexture  == null));
                 }
             } else {
 

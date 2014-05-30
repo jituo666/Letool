@@ -13,9 +13,9 @@ import junit.framework.Assert;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
-public abstract class CompressTexture extends BasicTexture {
+public abstract class UploadETC1Texture extends BasicTexture {
 
-    private static final String TAG = CompressTexture.class.getSimpleName();
+    private static final String TAG = UploadETC1Texture.class.getSimpleName();
 
     @SuppressWarnings("unused")
     private boolean mContentValid = true;
@@ -27,11 +27,11 @@ public abstract class CompressTexture extends BasicTexture {
 
     protected ETC1Texture mETC1Texture;
 
-    protected CompressTexture() {
+    protected UploadETC1Texture() {
         this(null);
     }
     
-    protected CompressTexture(ETC1Texture texture) {
+    protected UploadETC1Texture(ETC1Texture texture) {
         super(null, 0, STATE_UNLOADED);
     }
 
@@ -104,7 +104,6 @@ public abstract class CompressTexture extends BasicTexture {
      * @param canvas
      */
     public void updateContent(GLESCanvas canvas) {
-        LLog.i(TAG, "------updateContent:" + isLoaded());
         if (!isLoaded()) {
             if (mThrottled && ++sUploadedCount > UPLOAD_LIMIT) {
                 return;
@@ -133,13 +132,9 @@ public abstract class CompressTexture extends BasicTexture {
             try {
                 int bWidth = texture.getWidth();
                 int bHeight = texture.getHeight();
-                int width = bWidth;
-                int height = bHeight;
                 int texWidth = getTextureWidth();
                 int texHeight = getTextureHeight();
-
                 Assert.assertTrue(bWidth <= texWidth && bHeight <= texHeight);
-
                 // Upload the etc1Texture to a new texture.
                 mId = canvas.getGLId().generateTexture();
                 canvas.setTextureParameters(this);

@@ -14,7 +14,7 @@ import com.xjt.letool.views.opengl.ColorTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.opengl.Texture;
 import com.xjt.letool.views.opengl.TiledTexture;
-import com.xjt.letool.views.opengl.UploadedTexture;
+import com.xjt.letool.views.opengl.UploadedBitmapTexture;
 import com.xjt.letool.views.utils.AlbumLabelMaker;
 import com.xjt.letool.views.utils.ViewConfigs;
 
@@ -117,7 +117,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
     //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private static Texture checkLabelTexture(Texture texture) {
-        return ((texture instanceof UploadedTexture) && ((UploadedTexture) texture).isUploading()) ? null : texture;
+        return ((texture instanceof UploadedBitmapTexture) && ((UploadedBitmapTexture) texture).isUploading()) ? null : texture;
     }
 
     private static Texture checkContentTexture(Texture texture) {
@@ -136,7 +136,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
 
     protected int renderContent(GLESCanvas canvas, AlbumSetEntry entry, int width, int height) {
         int renderRequestFlags = 0;
-        Texture content = entry.bitmapTexture;
+        Texture content = entry.compressTexture;
         if (content == null) {
             content = mWaitLoadingTexture;
             entry.isWaitLoadingDisplayed = true;

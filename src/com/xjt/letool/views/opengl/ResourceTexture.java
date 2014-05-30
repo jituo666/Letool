@@ -8,7 +8,7 @@ import junit.framework.Assert;
 
 // ResourceTexture is a texture whose Bitmap is decoded from a resource.
 // By default ResourceTexture is not opaque.
-public class ResourceTexture extends UploadedTexture {
+public class ResourceTexture extends UploadedBitmapTexture {
 
     protected final Context mContext;
     protected final int mResId;

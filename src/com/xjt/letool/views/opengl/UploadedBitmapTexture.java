@@ -19,9 +19,9 @@ import javax.microedition.khronos.opengles.GL11;
 // The user of this class should call recycle() when the texture is not needed anymore.
 // By default an UploadedTexture is opaque (so it can be drawn faster without
 // blending). The user or subclass can override it using setOpaque().
-public abstract class UploadedTexture extends BasicTexture {
+public abstract class UploadedBitmapTexture extends BasicTexture {
 
-    private static final String TAG = UploadedTexture.class.getSimpleName();
+    private static final String TAG = UploadedBitmapTexture.class.getSimpleName();
     // To prevent keeping allocation the borders, we store those used borders here.
     // Since the length will be power of two, it won't use too much memory.
     private static HashMap<BorderKey, Bitmap> sBorderLines = new HashMap<BorderKey, Bitmap>();
@@ -68,11 +68,11 @@ public abstract class UploadedTexture extends BasicTexture {
         }
     }
 
-    protected UploadedTexture() {
+    protected UploadedBitmapTexture() {
         this(false);
     }
 
-    protected UploadedTexture(boolean hasBorder) {
+    protected UploadedBitmapTexture(boolean hasBorder) {
         super(null, 0, STATE_UNLOADED);
         if (hasBorder) {
             setBorder(true);

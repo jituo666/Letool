@@ -349,9 +349,6 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
                 mOpenCenter.setAbsolutePosition(center[0], center[1]);
                 mThumbnailView.startScatteringAnimation(mOpenCenter);
             } else {
-                //mThumbnailView.startRisingAnimation();
-//                mOpenCenter.setAbsolutePosition(360, 480);
-//                mThumbnailView.startScatteringAnimation(mOpenCenter);
             }
         }
         return rootView;
