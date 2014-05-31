@@ -1,3 +1,4 @@
+
 package com.xjt.letool.view;
 
 import java.util.ArrayDeque;
@@ -30,6 +31,7 @@ import android.opengl.GLSurfaceView;
 import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
 
 /**
  * @Author Jituo.Xuan
@@ -399,6 +401,34 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
     @Override
     public void setLightsOutMode(boolean enabled) {
 
+    }
+
+    // We need to unfreeze in the following methods and in onPause().
+    // These methods will wait on GLThread. If we have freezed the GLRootView,
+    // the GLThread will wait on main thread to call unfreeze and cause dead
+    // lock.
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
+        unfreeze();
+        super.surfaceChanged(holder, format, w, h);
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        unfreeze();
+        super.surfaceCreated(holder);
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        unfreeze();
+        super.surfaceDestroyed(holder);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        unfreeze();
+        super.onDetachedFromWindow();
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -21,20 +21,13 @@ public class QQShareManager {
     private int mExtarFlag = 0x00;
 
     public QQShareManager(Context context, String appId) {
-        initShare(context, appId);
-    }
-
-    public void initShare(Context context, String appId) {
         mTencent = Tencent.createInstance(appId, context);
-        //mExtarFlag &= (0xFFFFFFFF - QQShare.SHARE_TO_QQ_FLAG_QZONE_ITEM_HIDE);
-        //        mExtarFlag |= QQShare.SHARE_TO_QQ_FLAG_QZONE_ITEM_HIDE;
-        //        mExtarFlag |= QQShare.SHARE_TO_QQ_FLAG_QZONE_AUTO_OPEN;
-        //        mExtarFlag &= (0xFFFFFFFF - QQShare.SHARE_TO_QQ_FLAG_QZONE_AUTO_OPEN);
     }
 
     public void shareImageToQQ(Activity activity, String title, String summary, String shareUri) {
         final Bundle params = new Bundle();
         params.putString(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL, shareUri);
+        params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, "www.baidu.com");
         params.putString(QQShare.SHARE_TO_QQ_APP_NAME, activity.getString(R.string.app_name));
         params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_IMAGE);
         params.putInt(QQShare.SHARE_TO_QQ_EXT_INT, mExtarFlag);
@@ -51,7 +44,6 @@ public class QQShareManager {
 
             @Override
             public void run() {
-                // TODO Auto-generated method stub
                 mTencent.shareToQQ(activity, params, new IUiListener() {
 
                     @Override

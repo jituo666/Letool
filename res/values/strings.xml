@@ -17,7 +17,7 @@
     <!--
          Message shown on the progress dialog to indicate we're loading the
             account info [CHAR LIMIT=30]
-    --> 
+    -->
     <string name="loading_account">Loading account\u2026</string>
 
     <!-- Movie View Resume Playing dialog title -->
@@ -126,9 +126,6 @@
     <string name="select_all">Select all</string>
     <string name="deselect_all">Deselect all</string>
     <string name="slideshow">Slideshow</string>
-    <string name="details">Details</string>
-    <string name="details_title">%1$d of %2$d items:</string>
-    <string name="close">Close</string>
 
     <!-- Title of a menu item to switch from Gallery to Camera app [CHAR LIMIT=30] -->
     <string name="switch_to_camera">Switch to Camera</string>
@@ -311,55 +308,6 @@
             media set eg. 3 of 5 items [CHAR LIMIT=30]
     -->
     <string name="sequence_in_set">%1$d of %2$d items:</string>
-    <!-- Text indicating the title of a media item in details window [CHAR LIMIT=14] -->
-    <string name="title">Title</string>
-    <!-- Text indicating the description of a media item in details window [CHAR LIMIT=14] -->
-    <string name="description">Description</string>
-    <!-- Text indicating the creation time of a media item in details window [CHAR LIMIT=14] -->
-    <string name="time">Time</string>
-    <!-- Text indicating the location of a media item in details window [CHAR LIMIT=14] -->
-    <string name="location">Location</string>
-    <!-- Text indicating the path of a media item in details window [CHAR LIMIT=14] -->
-    <string name="path">Path</string>
-    <!-- Text indicating the width of a media item in details window [CHAR LIMIT=14] -->
-    <string name="width">Width</string>
-    <!-- Text indicating the height of a media item in details window [CHAR LIMIT=14] -->
-    <string name="height">Height</string>
-    <!-- Text indicating the orientation of a media item in details window [CHAR LIMIT=14] -->
-    <string name="orientation">Orientation</string>
-    <!-- Text indicating the duration of a video item in details window [CHAR LIMIT=14] -->
-    <string name="duration">Duration</string>
-    <!-- Text indicating the mime type of a media item in details window [CHAR LIMIT=14] -->
-    <string name="mimetype">MIME type</string>
-    <!-- Text indicating the file size of a media item in details window [CHAR LIMIT=14] -->
-    <string name="file_size">File size</string>
-    <!-- Text indicating the maker of a media item in details window [CHAR LIMIT=14] -->
-    <string name="maker">Maker</string>
-    <!-- Text indicating the model of a media item in details window [CHAR LIMIT=14] -->
-    <string name="model">Model</string>
-    <!-- Text indicating flash info of a media item in details window [CHAR LIMIT=14] -->
-    <string name="flash">Flash</string>
-    <!-- Text indicating aperture of a media item in details window [CHAR LIMIT=14] -->
-    <string name="aperture">Aperture</string>
-    <!-- Text indicating the focal length of a media item in details window [CHAR LIMIT=14] -->
-    <string name="focal_length">Focal Length</string>
-    <!-- Text indicating the white balance of a media item in details window [CHAR LIMIT=14] -->
-    <string name="white_balance">White balance</string>
-    <!-- Text indicating the exposure time of a media item in details window [CHAR LIMIT=14] -->
-    <string name="exposure_time">Exposure time</string>
-    <!-- Text indicating the ISO speed rating of a media item in details window [CHAR LIMIT=14] -->
-    <string name="iso">ISO</string>
-    <!-- String indicating the time units in seconds. [CHAR LIMIT=8] -->
-    <!-- String indicating the length units in milli-meters. [CHAR LIMIT=8] -->
-    <string name="unit_mm">mm</string>
-    <!-- String indicating how camera shooting feature is used. [CHAR LIMIT=8] -->
-    <string name="manual">Manual</string>
-    <!-- String indicating how camera shooting feature is used. [CHAR LIMIT=8] -->
-    <string name="auto">Auto</string>
-    <!-- String indicating camera flash is fired. [CHAR LIMIT=14] -->
-    <string name="flash_on">Flash fired</string>
-    <!-- String indicating camera flash is not used. [CHAR LIMIT=14] -->
-    <string name="flash_off">No flash</string>
 
     <!-- String indicating image width or height is unknown. [CHAR LIMIT=14] -->
     <string name="unknown">Unknown</string>
@@ -1187,12 +1135,64 @@ CHAR LIMIT = NONE]
     <string name="common_clear_cache">清理缓存</string>
     <string name="common_clear_cache_waitting">正在清理缓存,请稍候...</string>
     <string name="common_exit_tip">再按一次退出软件？</string>
-    <string name="cancel">取消</string>
-    <string name="ok">确定</string>
+    <string name="common_cancel">取消</string>
+    <string name="common_ok">确定</string>
     <string name="common_error_nosdcard">没有检测到SD卡！</string>
     <!-- popup menu -->
     <string name="popup_menu_defaut_order">默认排序</string>
     <string name="popup_menu_time_order">时间排序</string>
     <string name="popup_menu_select_mode">选择模式</string>
 
+    <!-- Text indicating the title of a media item in details window [CHAR LIMIT=14] -->
+    <string name="title">标题</string>
+    <!-- Text indicating the description of a media item in details window [CHAR LIMIT=14] -->
+    <string name="description">描述</string>
+    <!-- Text indicating the creation time of a media item in details window [CHAR LIMIT=14] -->
+    <string name="time">时间</string>
+    <!-- Text indicating the location of a media item in details window [CHAR LIMIT=14] -->
+    <string name="location">位置</string>
+    <!-- Text indicating the path of a media item in details window [CHAR LIMIT=14] -->
+    <string name="path">路径</string>
+    <!-- Text indicating the width of a media item in details window [CHAR LIMIT=14] -->
+    <string name="width">宽度</string>
+    <!-- Text indicating the height of a media item in details window [CHAR LIMIT=14] -->
+    <string name="height">高度</string>
+    <!-- Text indicating the orientation of a media item in details window [CHAR LIMIT=14] -->
+    <string name="orientation">方向</string>
+    <!-- Text indicating the duration of a video item in details window [CHAR LIMIT=14] -->
+    <string name="duration">时长</string>
+    <!-- Text indicating the mime type of a media item in details window [CHAR LIMIT=14] -->
+    <string name="mimetype">MIME type</string>
+    <!-- Text indicating the file size of a media item in details window [CHAR LIMIT=14] -->
+    <string name="file_size">文件大小</string>
+    <!-- Text indicating the maker of a media item in details window [CHAR LIMIT=14] -->
+    <string name="maker">制造者</string>
+    <!-- Text indicating the model of a media item in details window [CHAR LIMIT=14] -->
+    <string name="model">模式</string>
+    <!-- Text indicating flash info of a media item in details window [CHAR LIMIT=14] -->
+    <string name="flash">闪光灯</string>
+    <!-- Text indicating aperture of a media item in details window [CHAR LIMIT=14] -->
+    <string name="aperture">光圈</string>
+    <!-- Text indicating the focal length of a media item in details window [CHAR LIMIT=14] -->
+    <string name="focal_length">焦距</string>
+    <!-- Text indicating the white balance of a media item in details window [CHAR LIMIT=14] -->
+    <string name="white_balance">白平衡</string>
+    <!-- Text indicating the exposure time of a media item in details window [CHAR LIMIT=14] -->
+    <string name="exposure_time">曝光时间</string>
+    <!-- Text indicating the ISO speed rating of a media item in details window [CHAR LIMIT=14] -->
+    <string name="iso">感光度</string>
+    <!-- String indicating the time units in seconds. [CHAR LIMIT=8] -->
+    <!-- String indicating the length units in milli-meters. [CHAR LIMIT=8] -->
+    <string name="unit_mm">mm</string>
+    <!-- String indicating how camera shooting feature is used. [CHAR LIMIT=8] -->
+    <string name="manual">手动</string>
+    <!-- String indicating how camera shooting feature is used. [CHAR LIMIT=8] -->
+    <string name="auto">自动</string>
+    <!-- String indicating camera flash is fired. [CHAR LIMIT=14] -->
+    <string name="flash_on">打开</string>
+    <!-- String indicating camera flash is not used. [CHAR LIMIT=14] -->
+    <string name="flash_off">关闭</string>
+    <string name="details">详情</string>
+    <string name="details_title">%1$d of %2$d 项:</string>
+    <string name="close">关闭</string>
 </resources>

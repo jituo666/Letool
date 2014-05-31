@@ -521,8 +521,8 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
             new AlertDialog.Builder(getActivity())
                     .setMessage(getString(R.string.common_delete_tip))
                     .setOnCancelListener(cdl)
-                    .setPositiveButton(R.string.ok, cdl)
-                    .setNegativeButton(R.string.cancel, cdl)
+                    .setPositiveButton(R.string.common_ok, cdl)
+                    .setNegativeButton(R.string.common_cancel, cdl)
                     .create().show();
         }
     }

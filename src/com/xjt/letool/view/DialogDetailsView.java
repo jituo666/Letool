@@ -1,3 +1,4 @@
+
 package com.xjt.letool.view;
 
 import android.app.AlertDialog;
@@ -10,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.xjt.letool.LetoolContext;
@@ -29,6 +29,7 @@ import java.util.Locale;
 import java.util.Map.Entry;
 
 public class DialogDetailsView implements DetailsViewContainer {
+
     @SuppressWarnings("unused")
     private static final String TAG = "DialogDetailsView";
 
@@ -37,7 +38,7 @@ public class DialogDetailsView implements DetailsViewContainer {
     private MediaDetails mDetails;
     private final DetailsSource mSource;
     private int mIndex;
-    private Dialog mDialog;
+    private CommonDialog mDialog;
     private CloseListener mListener;
 
     public DialogDetailsView(LetoolContext activity, DetailsSource source) {
@@ -59,10 +60,12 @@ public class DialogDetailsView implements DetailsViewContainer {
     @Override
     public void reloadDetails() {
         int index = mSource.setIndex();
-        if (index == -1) return;
+        if (index == -1)
+            return;
         MediaDetails details = mSource.getDetails();
         if (details != null) {
-            if (mIndex == index && mDetails == details) return;
+            if (mIndex == index && mDetails == details)
+                return;
             mIndex = index;
             mDetails = details;
             setDetails(details);
@@ -73,32 +76,20 @@ public class DialogDetailsView implements DetailsViewContainer {
         mAdapter = new DetailsAdapter(details);
         String title = String.format(mActivity.getAndroidContext().getString(R.string.details_title),
                 mIndex + 1, mSource.size());
-        ListView detailsList = (ListView) LayoutInflater.from(mActivity.getAndroidContext()).inflate(
-                R.layout.details_list, null, false);
-        detailsList.setAdapter(mAdapter);
-        mDialog = new AlertDialog.Builder(mActivity.getAndroidContext())
-            .setView(detailsList)
-            .setTitle(title)
-            .setPositiveButton(R.string.close, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    mDialog.dismiss();
-                }
-            })
-            .create();
 
-        mDialog.setOnDismissListener(new OnDismissListener() {
+        mDialog = new CommonDialog(mActivity.getAndroidContext());
+        mDialog.setListAdapter(mAdapter);
+        mDialog.setTitle(title);
+        mDialog.setOkBtn(new View.OnClickListener() {
             @Override
-            public void onDismiss(DialogInterface dialog) {
-                if (mListener != null) {
-                    mListener.onClose();
-                }
+            public void onClick(View v) {
+                mListener.onClose();
             }
         });
     }
 
-
     private class DetailsAdapter extends BaseAdapter implements AddressResolvingListener, ResolutionResolvingListener {
+
         private final ArrayList<String> mItems;
         private int mLocationIndex;
         private final Locale mDefaultLocale = Locale.getDefault();
@@ -207,7 +198,7 @@ public class DialogDetailsView implements DetailsViewContainer {
                         Object valueObj = detail.getValue();
                         // This shouldn't happen, log its key to help us diagnose the problem.
                         if (valueObj == null) {
-                            Utils.fail("%s's value is Null",DetailsHelper.getDetailsName(context, detail.getKey()));
+                            Utils.fail("%s's value is Null", DetailsHelper.getDetailsName(context, detail.getKey()));
                         }
                         value = valueObj.toString();
                     }
@@ -273,7 +264,8 @@ public class DialogDetailsView implements DetailsViewContainer {
 
         @Override
         public void onResolutionAvailable(int width, int height) {
-            if (width == 0 || height == 0) return;
+            if (width == 0 || height == 0)
+                return;
             // Update the resolution with the new width and height
             Context context = mActivity.getAndroidContext();
             String widthString = String.format(mDefaultLocale, "%s: %d",

@@ -497,8 +497,8 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
             new AlertDialog.Builder(getActivity())
                     .setMessage(getString(R.string.common_delete_tip))
                     .setOnCancelListener(cdl)
-                    .setPositiveButton(R.string.ok, cdl)
-                    .setNegativeButton(R.string.cancel, cdl)
+                    .setPositiveButton(R.string.common_ok, cdl)
+                    .setNegativeButton(R.string.common_cancel, cdl)
                     .create().show();
         } else if (v.getId() == R.id.action_more) {
             showPopupMenu();

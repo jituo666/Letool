@@ -3,8 +3,6 @@ package com.xjt.letool.share;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.tencent.tauth.IUiListener;
-import com.tencent.tauth.UiError;
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 
@@ -21,9 +19,9 @@ public class ShareManager implements ShareListener {
 
     public static class ShareTo {
 
-        int shareToType;
-        String shareToTitle;
-        Drawable shareToIcon;
+        public int shareToType;
+        public String shareToTitle;
+        public Drawable shareToIcon;
 
         public ShareTo(int type, String title, Drawable icon) {
             shareToType = type;
@@ -95,7 +93,6 @@ public class ShareManager implements ShareListener {
             case AppConstants.SHARE_TO_QQ: {
                 QQShareManager m = new QQShareManager(activity.getApplicationContext(), AppConstants.QQ_SHARE_APP_ID);
                 m.shareImageToQQ(activity, "分享", "了图分享", shareData.get(0));
-
                 break;
             }
             case AppConstants.SHARE_TO_QZONE: {
