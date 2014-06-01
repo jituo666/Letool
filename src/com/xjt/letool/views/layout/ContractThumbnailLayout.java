@@ -13,21 +13,21 @@ public class ContractThumbnailLayout extends ThumbnailLayout {
     }
 
     @Override
-    protected void initThumbnailParameters() {
+    protected void initThumbnailLayoutParameters() {
         // Initialize mThumbnailWidth and mThumbnailHeight from mSpec
         int colums = (mWidth > mHeight) ? mSpec.rowsLand : mSpec.rowsPort;
         mThumbnailGap = mSpec.thumbnailGap;
         mThumbnailWidth = Math.max(1, (mWidth - (colums - 1) * mThumbnailGap) / colums);
         mThumbnailHeight = mThumbnailWidth + mSpec.labelHeight;
-        mUnitCount = colums;
+        mColumnInMinorDirection = colums;
         if (mRenderer != null) {
             mRenderer.onThumbnailSizeChanged(mThumbnailWidth, mThumbnailHeight);
         }
-        int count = ((mThumbnailCount + mUnitCount - 1) / mUnitCount);
+        int count = ((mThumbnailCount + mColumnInMinorDirection - 1) / mColumnInMinorDirection);
         if (WIDE) {
-            mContentLength = count * mThumbnailWidth + (count - 1) * mThumbnailGap;
+            mContentLengthInMajorDirection = count * mThumbnailWidth + (count - 1) * mThumbnailGap;
         } else {
-            mContentLength = count * mThumbnailHeight + (count - 1) * mThumbnailGap;
+            mContentLengthInMajorDirection = count * mThumbnailHeight + (count - 1) * mThumbnailGap;
         }
         updateVisibleThumbnailRange();
     }
@@ -37,17 +37,17 @@ public class ContractThumbnailLayout extends ThumbnailLayout {
         int position = mScrollPosition;
         if (WIDE) {
             int startCol = position / (mThumbnailWidth + mThumbnailGap);
-            int start = Math.max(0, mUnitCount * startCol);
+            int start = Math.max(0, mColumnInMinorDirection * startCol);
             int endCol = (position + mWidth + mThumbnailWidth + mThumbnailGap - 1) / (mThumbnailWidth + mThumbnailGap);
-            int end = Math.min(mThumbnailCount, mUnitCount * endCol);
-            setVisibleRange(start, end);
+            int end = Math.min(mThumbnailCount, mColumnInMinorDirection * endCol);
+            setVisibleThumbnailRange(start, end);
         } else {
             int startRow = position / (mThumbnailHeight + mThumbnailGap);
-            int start = Math.max(0, mUnitCount * startRow);
+            int start = Math.max(0, mColumnInMinorDirection * startRow);
             int endRow = (position + mHeight + mThumbnailHeight + mThumbnailGap - 1)
                     / (mThumbnailHeight + mThumbnailGap);
-            int end = Math.min(mThumbnailCount, mUnitCount * endRow);
-            setVisibleRange(start, end);
+            int end = Math.min(mThumbnailCount, mColumnInMinorDirection * endRow);
+            setVisibleThumbnailRange(start, end);
         }
     }
 
@@ -60,10 +60,10 @@ public class ContractThumbnailLayout extends ThumbnailLayout {
         }
         int columnIdx = absoluteX / (mThumbnailWidth + mThumbnailGap);
         int rowIdx = absoluteY / (mThumbnailHeight + mThumbnailGap);
-        if (!WIDE && columnIdx >= mUnitCount) {
+        if (!WIDE && columnIdx >= mColumnInMinorDirection) {
             return INDEX_NONE;
         }
-        if (WIDE && rowIdx >= mUnitCount) {
+        if (WIDE && rowIdx >= mColumnInMinorDirection) {
             return INDEX_NONE;
         }
         if (absoluteX % (mThumbnailWidth + mThumbnailGap) >= mThumbnailWidth) {
@@ -72,8 +72,8 @@ public class ContractThumbnailLayout extends ThumbnailLayout {
         if (absoluteY % (mThumbnailHeight + mThumbnailGap) >= mThumbnailHeight) {
             return INDEX_NONE;
         }
-        int index = WIDE ? (columnIdx * mUnitCount + rowIdx) : (rowIdx
-                * mUnitCount + columnIdx);
+        int index = WIDE ? (columnIdx * mColumnInMinorDirection + rowIdx) : (rowIdx
+                * mColumnInMinorDirection + columnIdx);
         return index >= mThumbnailCount ? INDEX_NONE : index;
     }
 
@@ -81,16 +81,22 @@ public class ContractThumbnailLayout extends ThumbnailLayout {
     public Rect getThumbnailRect(int index, Rect rect) {
         int col, row;
         if (WIDE) {
-            col = index / mUnitCount;
-            row = index - col * mUnitCount;
+            col = index / mColumnInMinorDirection;
+            row = index - col * mColumnInMinorDirection;
         } else {
-            row = index / mUnitCount;
-            col = index - row * mUnitCount;
+            row = index / mColumnInMinorDirection;
+            col = index - row * mColumnInMinorDirection;
         }
         int x = col * (mThumbnailWidth + mThumbnailGap);
         int y = row * (mThumbnailHeight + mThumbnailGap);
         rect.set(x, y, x + mThumbnailWidth, y + mThumbnailHeight);
         return rect;
+    }
+
+    @Override
+    protected void updateVisibleTagRange() {
+        // TODO Auto-generated method stub
+        
     }
 
 }

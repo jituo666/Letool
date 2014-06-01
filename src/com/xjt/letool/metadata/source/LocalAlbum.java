@@ -23,7 +23,9 @@ import com.xjt.letool.metadata.image.LocalImage;
 import com.xjt.letool.metadata.image.LocalMediaItem;
 import com.xjt.letool.metadata.video.LocalVideo;
 import com.xjt.letool.utils.LetoolUtils;
+import com.xjt.letool.views.layout.ThumbnailExpandLayout.SortTag;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class LocalAlbum extends MediaSet {
@@ -123,6 +125,47 @@ public class LocalAlbum extends MediaSet {
         }
         LLog.i(TAG, "----------------getMediaItemCount:" + mAlbumCursor.getCount() + " spend " + (System.currentTimeMillis() - time));
         return mAlbumCursor.getCount();
+    }
+
+    @Override
+    public ArrayList<SortTag> analysisSortTags() {
+        long starttime = System.currentTimeMillis();
+        ArrayList<SortTag> ret = new ArrayList<SortTag>();
+        Cursor cursor = mResolver.query(mBaseUri, new String[] {
+                ImageColumns.DATE_TAKEN, ImageColumns.BUCKET_ID,
+                "count(" + ImageColumns.BUCKET_ID + ")"
+        },
+                mWhereClause + ") group by ("
+                        + ImageColumns.DATE_TAKEN + "/86400000",
+                new String[] {
+                    String.valueOf(mBucketId)
+                },
+                ImageColumns.DATE_TAKEN + " DESC ");
+        if (cursor == null) {
+            LLog.w(TAG, "query fail: " + mBaseUri);
+            return ret;
+        }
+        try {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd E");
+            int lastCount = 0;
+            while (cursor.moveToNext()) {
+                SortTag tag = new SortTag();
+                tag.name = formatter.format(cursor.getLong(0));
+                if (ret.size() > 0) {
+                    tag.index = lastCount;
+                } else {
+                    tag.index = 0;
+                }
+                // Log.i(TAG, "xxxx:" + tag.name + ":::" + tag.index + ":" +
+                // cursor.getInt(2));
+                lastCount += cursor.getInt(2);
+                ret.add(tag);
+            }
+        } finally {
+            cursor.close();
+        }
+        LLog.i(TAG, "-------------get tags used time:" + (System.currentTimeMillis() - starttime) + ":" + ret.size());
+        return ret;
     }
 
     @Override

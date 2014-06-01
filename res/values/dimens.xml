@@ -124,7 +124,13 @@
     <dimen name="album_padding_right">4dp</dimen>
 
     <integer name="album_rows_land">3</integer>
-    <integer name="album_rows_port">5</integer>
+    <integer name="album_rows_port">3</integer>
+
+    <dimen name="album_label_height">40dp</dimen>
+    <dimen name="album_label_width">320dp</dimen>
+    <dimen name="album_tag_font_size">12sp</dimen>
+    <dimen name="album_count_font_size">28sp</dimen>
+    <dimen name="album_icon_size">20dp</dimen>
 
     <!-- configuration for manage page -->
     <dimen name="cache_pin_size">24dp</dimen>

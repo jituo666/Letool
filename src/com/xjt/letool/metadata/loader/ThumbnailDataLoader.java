@@ -14,6 +14,7 @@ import com.xjt.letool.metadata.MediaObject;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.utils.Utils;
+import com.xjt.letool.views.layout.ThumbnailExpandLayout.SortTag;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,7 +54,7 @@ public class ThumbnailDataLoader {
 
     public static interface DataChangedListener {
 
-        public void onSizeChanged(int size);
+        public void onSizeChanged(int size, ArrayList<SortTag> tags);
 
         public void onContentChanged(int index);
     }
@@ -223,6 +224,7 @@ public class ThumbnailDataLoader {
         public int reloadCount;
         public int size;
         public ArrayList<MediaItem> items;
+        public ArrayList<SortTag> allSortTag;
     }
 
     private class GetUpdateInfo implements Callable<UpdateInfo> {
@@ -255,6 +257,8 @@ public class ThumbnailDataLoader {
 
         private UpdateInfo mUpdateInfo;
 
+        private ArrayList<SortTag> mSortTags;
+        
         public UpdateContent(UpdateInfo info) {
             mUpdateInfo = info;
         }
@@ -265,8 +269,10 @@ public class ThumbnailDataLoader {
             mSourceVersion = info.version;
             if (mSize != info.size) {
                 mSize = info.size;
-                if (mDataChangedListener != null)
-                    mDataChangedListener.onSizeChanged(mSize);
+                mSortTags = info.allSortTag;
+                if (mDataChangedListener != null) {
+                    mDataChangedListener.onSizeChanged(mSize, mSortTags);
+                }
                 if (mContentEnd > mSize)
                     mContentEnd = mSize;
                 if (mActiveEnd > mSize)
@@ -343,6 +349,7 @@ public class ThumbnailDataLoader {
                 synchronized (DataManager.LOCK) {
                     if (info.version != version) {
                         info.size = mSource.getMediaItemCount(false); 
+                        info.allSortTag = mSource.analysisSortTags(); 
                         info.version = version;
                     }
                     if (info.reloadCount > 0) {

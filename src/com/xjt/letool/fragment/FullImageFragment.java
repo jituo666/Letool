@@ -34,7 +34,7 @@ import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.metadata.MediaSetUtils;
-import com.xjt.letool.metadata.source.PhotoAlbum;
+import com.xjt.letool.metadata.source.LocalAlbumMerged;
 import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.share.ShareListActivity;
 import com.xjt.letool.share.ShareManager;
@@ -431,7 +431,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             LLog.i(TAG, " photo fragment onCreateView id:" + albumId + " albumTitle:" + albumTitle + " albumMediaPath:" + albumMediaPath + " isCamera:");
             mMediaSet = getDataManager().getMediaSet(new MediaPath(albumMediaPath, albumId));
         } else {
-            mMediaSet = new PhotoAlbum(new MediaPath(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0])
+            mMediaSet = new LocalAlbumMerged(new MediaPath(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0])
                     , (LetoolApp) getActivity().getApplication()
                     , MediaSetUtils.MY_ALBUM_BUCKETS, true, getString(R.string.common_photo));
         }

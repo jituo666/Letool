@@ -14,10 +14,10 @@ import com.xjt.letool.views.opengl.Texture;
 
 public abstract class AbstractThumbnailRender implements ThumbnailView.Renderer {
 
-    private FadeOutTexture mFramePressedUp;
-    private final NinePatchTexture mFramePressed;
-    private final ResourceTexture mFramePreSelected;
-    private final ResourceTexture mFrameSelected;
+    protected FadeOutTexture mFramePressedUp;
+    protected final NinePatchTexture mFramePressed;
+    protected final ResourceTexture mFramePreSelected;
+    protected final ResourceTexture mFrameSelected;
 
     protected AbstractThumbnailRender(Context context) {
         mFramePressed = new NinePatchTexture(context, R.drawable.grid_pressed);

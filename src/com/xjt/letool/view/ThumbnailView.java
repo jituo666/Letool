@@ -11,14 +11,18 @@ import com.xjt.letool.common.SynchronizedHandler;
 import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.utils.RelativePosition;
 import com.xjt.letool.utils.Utils;
+import com.xjt.letool.views.layout.ThumbnailExpandLayout;
+import com.xjt.letool.views.layout.ThumbnailExpandLayout.SortTag;
+import com.xjt.letool.views.layout.ThumbnailExpandLayout.ThumbnailPos;
 import com.xjt.letool.views.layout.ThumbnailLayout;
 import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.utils.UIListener;
 import com.xjt.letool.views.utils.ViewScrollerHelper;
 
+import java.util.ArrayList;
+
 import android.annotation.SuppressLint;
 import android.graphics.Rect;
-import android.os.Handler;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,7 +35,7 @@ import android.view.View;
 
 public class ThumbnailView extends GLBaseView {
 
-    private static final String TAG = "ThumbnailView";
+    private static final String TAG = ThumbnailView.class.getSimpleName();
 
     public static final int OVERSCROLL_3D = 0;
     public static final int OVERSCROLL_SYSTEM = 1;
@@ -94,6 +98,8 @@ public class ThumbnailView extends GLBaseView {
 
         public void onSingleTapUp(int index);
 
+        public void onSingleTagTapUp(int index);
+
         public void onLongTap(int index);
 
         public void onScrollPositionChanged(int position, int total);
@@ -119,6 +125,11 @@ public class ThumbnailView extends GLBaseView {
 
         @Override
         public void onScrollPositionChanged(int position, int total) {
+        }
+
+        @Override
+        public void onSingleTagTapUp(int index) {
+
         }
     }
 
@@ -161,6 +172,12 @@ public class ThumbnailView extends GLBaseView {
             int index = mLayout.getThumbnailIndexByPosition(e.getX(), e.getY());
             if (index != ThumbnailLayout.INDEX_NONE && mListener != null)
                 mListener.onSingleTapUp(index);
+            else if (mLayout instanceof ThumbnailExpandLayout) {
+                index = ((ThumbnailExpandLayout) mLayout).getTagIndexByPosition(
+                        e.getX(), e.getY());
+                if (index != ThumbnailLayout.INDEX_NONE)
+                    mListener.onSingleTagTapUp(index);
+            }
             return true;
         }
 
@@ -251,13 +268,27 @@ public class ThumbnailView extends GLBaseView {
         public void onThumbnailSizeChanged(int width, int height);
 
         public int renderThumbnail(GLESCanvas canvas, int index, int pass, int width, int height);
+
+        // for tags
+        public void initSortTagMetrics(int width, int height);
+
+        public void onVisibleTagRangeChanged(int visibleStart, int visibleEnd);
+
+        public int renderSortTag(GLESCanvas canvas, int index, int width, int height);
     }
 
     public void setThumbnailRenderer(Renderer render) {
         mRenderer = render;
-        if (mRenderer != null) {
-            mRenderer.onThumbnailSizeChanged(mLayout.getThumbnailWidth(), mLayout.getThumbnailHeight());
-            mRenderer.onVisibleRangeChanged(getVisibleStart(), getVisibleEnd());
+        if (mLayout instanceof ThumbnailExpandLayout) {
+            ThumbnailExpandLayout expandSlotLayout = (ThumbnailExpandLayout) mLayout;
+            mRenderer.onVisibleTagRangeChanged(
+                    expandSlotLayout.getVisibleTagStart(),
+                    expandSlotLayout.getVisibleTagEnd());
+        } else {
+            if (mRenderer != null) {
+                mRenderer.onThumbnailSizeChanged(mLayout.getThumbnailWidth(), mLayout.getThumbnailHeight());
+                mRenderer.onVisibleRangeChanged(getVisibleThumbnailStart(), getVisibleThumbnailEnd());
+            }
         }
     }
 
@@ -269,7 +300,6 @@ public class ThumbnailView extends GLBaseView {
         mRenderer.prepareDrawing();
         long animTime = AnimationTime.get();
         boolean more = mScroller.advanceAnimation(animTime);
-        more |= mLayout.advanceAnimation(animTime);
         updateScrollPosition(mScroller.getPosition(), false);
         boolean paperActive = isPaperAcitivated();
         more |= paperActive;
@@ -278,10 +308,24 @@ public class ThumbnailView extends GLBaseView {
             more |= mAnimation.calculate(animTime);
         }
         canvas.translate(-mScrollX, -mScrollY);
-        for (int i = mLayout.getVisibleEnd() - 1; i >= mLayout.getVisibleStart(); --i) {
-            if ((renderItem(canvas, i, 0, paperActive) & RENDER_MORE_FRAME) != 0)
-                more = true;
+        if (mLayout instanceof ThumbnailExpandLayout) {
+            // 绘制展开分类标签
+            ThumbnailExpandLayout expandLayout = (ThumbnailExpandLayout) mLayout;
+            ArrayList<SortTag> tags = expandLayout.getSortTags();
+            if (tags != null && tags.size() > 0) {
+                LLog.i(TAG, "------------------render tag start:" + expandLayout.getVisibleTagStart() + " end:" + expandLayout.getVisibleTagEnd());
+                for (int i = expandLayout.getVisibleTagStart(); i < expandLayout.getVisibleTagEnd(); i++) {
+                    renderSortTag(canvas, i, tags.get(i).pos);
+                }
+            }
         }
+        LLog.i(TAG, "----------render item start:" + mLayout.getVisibleThumbnailStart() + " end:" + mLayout.getVisibleThumbnailEnd());
+        for (int i = mLayout.getVisibleThumbnailEnd() - 1; i >= mLayout.getVisibleThumbnailStart(); --i) {
+            if ((renderItem(canvas, i, 0, paperActive) & RENDER_MORE_FRAME) != 0) {
+                more = true;
+            }
+        }
+
         canvas.translate(mScrollX, mScrollY);
         renderChild(canvas, mScrollBar);
         if (more)
@@ -357,7 +401,7 @@ public class ThumbnailView extends GLBaseView {
         int w = r - l;
         int h = b - t;
         mScrollBar.layout(0, 0, w, h);
-        int visibleCenterIndex = (mLayout.getVisibleStart() + mLayout.getVisibleEnd()) / 2;
+        int visibleCenterIndex = (mLayout.getVisibleThumbnailStart() + mLayout.getVisibleThumbnailEnd()) / 2;
         mLayout.setThumbnailViewSize(r - l, b - t);
         LLog.i(TAG, " onLayout visibleCenterIndex:" + visibleCenterIndex);
         resetVisibleRange(visibleCenterIndex);
@@ -371,7 +415,7 @@ public class ThumbnailView extends GLBaseView {
 
         if (mLayout.getThumbnailCount() > 0 && mLayout.getScrollLimit() <= 0) {
             mScrollBar.setVisibility(View.INVISIBLE);
-        } else if (mLayout.getVisibleEnd() > 0) {
+        } else if (mLayout.getVisibleThumbnailEnd() > 0) {
             mScrollBar.setVisibility(View.VISIBLE);
         }
     }
@@ -382,7 +426,16 @@ public class ThumbnailView extends GLBaseView {
      * @return
      */
     public void setThumbnailCount(int thumbnailCount) {
-        mLayout.setThumbnailCount(thumbnailCount);
+        setThumbnailCount(thumbnailCount, null);
+    }
+
+    /**
+     * Return true if the layout parameters have been changed
+     * @param thumbnailCount
+     * @return
+     */
+    public void setThumbnailCount(int thumbnailCount, ArrayList<SortTag> tags) {
+        mLayout.setThumbnailCount(thumbnailCount, tags);
         // mStartIndex is applied the first time setSlotCount is called.
         if (mStartIndex != ThumbnailLayout.INDEX_NONE) {
             setCenterIndex(mStartIndex);
@@ -391,7 +444,6 @@ public class ThumbnailView extends GLBaseView {
         // Reset the scroll position to avoid scrolling over the updated limit.
         setScrollPosition(ThumbnailLayout.WIDE ? mScrollX : mScrollY);
         showScrollBarView();
-        return;
     }
 
     public void setCenterIndex(int index) {
@@ -456,12 +508,42 @@ public class ThumbnailView extends GLBaseView {
         }
     }
 
-    public int getVisibleStart() {
-        return mLayout.getVisibleStart();
+    public int getVisibleThumbnailStart() {
+        return mLayout.getVisibleThumbnailStart();
     }
 
-    public int getVisibleEnd() {
-        return mLayout.getVisibleEnd();
+    public int getVisibleThumbnailEnd() {
+        return mLayout.getVisibleThumbnailEnd();
     }
 
+    //------------------------------------------------------------------------------------------------------------
+
+    public ArrayList<SortTag> getSortTags() {
+        if (mLayout instanceof ThumbnailExpandLayout) {
+            return ((ThumbnailExpandLayout) mLayout).getSortTags();
+        }
+        return null;
+    }
+
+    public ArrayList<ThumbnailPos> getSlotPos() {
+        if (mLayout instanceof ThumbnailExpandLayout) {
+            return ((ThumbnailExpandLayout) mLayout).getThumbnailPos();
+        }
+        return null;
+    }
+
+    public int getVisibleTagStart() {
+        return ((ThumbnailExpandLayout) mLayout).getVisibleTagStart();
+    }
+
+    public int getVisibleTagEnd() {
+        return ((ThumbnailExpandLayout) mLayout).getVisibleTagEnd();
+    }
+
+    private void renderSortTag(GLESCanvas canvas, int index, Rect rect) {
+        canvas.save(GLESCanvas.SAVE_FLAG_ALPHA | GLESCanvas.SAVE_FLAG_MATRIX);
+        canvas.translate(rect.left, rect.top, 0);
+        mRenderer.renderSortTag(canvas, index, rect.right - rect.left, rect.bottom - rect.top);
+        canvas.restore();
+    }
 }

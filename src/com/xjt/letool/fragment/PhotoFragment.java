@@ -18,7 +18,7 @@ import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.metadata.loader.DataLoadingListener;
 import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
-import com.xjt.letool.metadata.source.PhotoAlbum;
+import com.xjt.letool.metadata.source.LocalAlbumMerged;
 import com.xjt.letool.selectors.SelectionListener;
 import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.surpport.MenuItem;
@@ -40,6 +40,7 @@ import com.xjt.letool.view.LetoolDialog;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.view.DetailsHelper.CloseListener;
 import com.xjt.letool.views.layout.ThumbnailContractLayout;
+import com.xjt.letool.views.layout.ThumbnailExpandLayout;
 import com.xjt.letool.views.layout.ThumbnailLayout;
 import com.xjt.letool.views.layout.ThumbnailLayout.LayoutListener;
 import com.xjt.letool.views.opengl.FadeTexture;
@@ -49,7 +50,6 @@ import com.xjt.letool.views.utils.ViewConfigs;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
@@ -102,6 +102,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     private String mAlbumTitle;
     private boolean mIsCamera = false;
     private boolean mHasSDCard = false;
+    private boolean mWithTag = true;
     private boolean mGetContent;
     private SynchronizedHandler mHandler;
     protected SelectionManager mSelector;
@@ -233,10 +234,15 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         mSelector = new SelectionManager(this, false);
         mSelector.setSelectionListener(this);
         mConfig = ViewConfigs.AlbumPage.get(getAndroidContext());
-        ThumbnailLayout layout = new ThumbnailContractLayout(mConfig.albumSpec);
+        ThumbnailLayout layout;
+        if (mWithTag) {
+            layout = new ThumbnailExpandLayout(mConfig.albumSpec);
+        } else {
+            layout = new ThumbnailContractLayout(mConfig.albumSpec);
+        }
         mThumbnailView = new ThumbnailView(this, layout);
         mThumbnailView.setBackgroundColor(LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.default_background_thumbnail)));
-        mRender = new ThumbnailRenderer(this, mThumbnailView, mSelector);
+        mRender = new ThumbnailRenderer(this, mThumbnailView, mSelector, mConfig.sortTagSpec);
         layout.setRenderer(mRender);
         layout.setLayoutListener(this);
         mThumbnailView.setThumbnailRenderer(mRender);
@@ -295,7 +301,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         } else {
             mAlbumTitle = getString(R.string.common_photo);
             mDataSetPath = new MediaPath(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]);
-            mDataSet = new PhotoAlbum(mDataSetPath, (LetoolApp) getActivity().getApplication()
+            mDataSet = new LocalAlbumMerged(mDataSetPath, (LetoolApp) getActivity().getApplication()
                     , MediaSetUtils.MY_ALBUM_BUCKETS, true, getString(R.string.common_photo));
 
         }
@@ -348,6 +354,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
                 mOpenCenter.setAbsolutePosition(center[0], center[1]);
                 mThumbnailView.startScatteringAnimation(mOpenCenter);
             } else {
+
             }
         }
         return rootView;

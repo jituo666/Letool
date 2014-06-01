@@ -1,9 +1,9 @@
+
 package com.xjt.letool.views.layout;
 
 import com.xjt.letool.common.LLog;
 
 import android.graphics.Rect;
-import android.view.animation.DecelerateInterpolator;
 
 public class ThumbnailContractLayout extends ThumbnailLayout {
 
@@ -13,24 +13,17 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
         mSpec = spec;
     }
 
-    // Calculate
-    // (1) mUnitCount: the number of thumbnails we can fit into one column (or row).
-    // (2) mContentLength: the width (or height) we need to display all the columns (rows).
-    // (3) padding[]: the vertical and horizontal padding we need in order to put the thumbnails towards to the center of the display.
-    // The "major" direction is the direction the user can scroll. The other direction is the "minor" direction.
-    // The comments inside this method are the description when the major direction is horizontal (X), and the minor direction is vertical (Y).
     private void initThumbnailLayoutParameters(int majorLength, int minorLength, int majorUnitSize, int minorUnitSize) {
         int unitCount = (minorLength + mThumbnailGap) / (minorUnitSize + mThumbnailGap);
         if (unitCount == 0)
             unitCount = 1;
-        mUnitCount = unitCount;
-        int count = ((mThumbnailCount + mUnitCount - 1) / mUnitCount);
-        mContentLength = count * majorUnitSize + (count - 1) * mThumbnailGap;
+        mColumnInMinorDirection = unitCount;
+        int count = ((mThumbnailCount + mColumnInMinorDirection - 1) / mColumnInMinorDirection);
+        mContentLengthInMajorDirection = count * majorUnitSize + (count - 1) * mThumbnailGap;
     }
 
     @Override
-    protected void initThumbnailParameters() {
-        // Initialize mThumbnailWidth and mThumbnailHeight from mSpec
+    protected void initThumbnailLayoutParameters() {
         mThumbnailGap = mSpec.thumbnailGap;
         if (!WIDE) {
             int rows = (mWidth < mHeight) ? mSpec.rowsLand : mSpec.rowsPort;
@@ -49,24 +42,14 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
 
         if (WIDE) {
             initThumbnailLayoutParameters(mWidth, mHeight, mThumbnailWidth, mThumbnailHeight);
-            if (mHorizontalPadding.isEnabled()) {
-                mHorizontalPadding.setInterpolator(new DecelerateInterpolator());
-                mHorizontalPadding.startAnimateTo(mWidth + mThumbnailGap);
-            }
         } else {
             initThumbnailLayoutParameters(mHeight, mWidth, mThumbnailHeight, mThumbnailWidth);
-            if (mVerticalPadding.isEnabled()) {
-                mVerticalPadding.setInterpolator(new DecelerateInterpolator());
-                mVerticalPadding.startAnimateTo(mHeight + mThumbnailGap);
-            }
         }
         if (mThumbnailCount > 0) {
             updateVisibleThumbnailRange();
-
-            LLog.i(TAG, "1 initLayoutParameters mContentLength:" + mContentLength + " column:" + mUnitCount);
+            LLog.i(TAG, "1 initLayoutParameters mContentLengthInMajorDirection:" + mContentLengthInMajorDirection + " column:" + mColumnInMinorDirection);
         } else {
-
-            LLog.i(TAG, "0 initLayoutParameters mContentLength:" + mContentLength + " column:" + mUnitCount);
+            LLog.i(TAG, "0 initLayoutParameters mContentLengthInMajorDirection:" + mContentLengthInMajorDirection + " column:" + mColumnInMinorDirection);
         }
     }
 
@@ -77,32 +60,37 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
 
         if (WIDE) {
             int startCol = position / (mThumbnailWidth + mThumbnailGap);
-            int start = Math.max(0, mUnitCount * startCol);
+            int start = Math.max(0, mColumnInMinorDirection * startCol);
             int endCol = (position + mWidth + mThumbnailWidth + mThumbnailGap - 1) / (mThumbnailWidth + mThumbnailGap);
-            int end = Math.min(mThumbnailCount, mUnitCount * endCol);
-            setVisibleRange(start, end);
+            int end = Math.min(mThumbnailCount, mColumnInMinorDirection * endCol);
+            setVisibleThumbnailRange(start, end);
         } else {
             int startRow = position / (mThumbnailHeight + mThumbnailGap);
-            int start = Math.max(0, mUnitCount * startRow);
+            int start = Math.max(0, mColumnInMinorDirection * startRow);
             int endRow = (position + mHeight + mThumbnailHeight + mThumbnailGap - 1) / (mThumbnailHeight + mThumbnailGap);
-            int end = Math.min(mThumbnailCount, mUnitCount * endRow);
-            setVisibleRange(start, end);
+            int end = Math.min(mThumbnailCount, mColumnInMinorDirection * endRow);
+            setVisibleThumbnailRange(start, end);
         }
+    }
+
+    @Override
+    protected void updateVisibleTagRange() {
+
     }
 
     @Override
     public Rect getThumbnailRect(int index, Rect rect) {
         int col, row;
         if (WIDE) {
-            col = index / mUnitCount;
-            row = index - col * mUnitCount;
+            col = index / mColumnInMinorDirection;
+            row = index - col * mColumnInMinorDirection;
         } else {
-            row = index / mUnitCount;
-            col = index - row * mUnitCount;
+            row = index / mColumnInMinorDirection;
+            col = index - row * mColumnInMinorDirection;
         }
 
-        int x = mHorizontalPadding.get() + col * (mThumbnailWidth + mThumbnailGap);
-        int y = mVerticalPadding.get() + row * (mThumbnailHeight + mThumbnailGap);
+        int x = col * (mThumbnailWidth + mThumbnailGap);
+        int y =row * (mThumbnailHeight + mThumbnailGap);
         rect.set(x, y, x + mThumbnailWidth, y + mThumbnailHeight);
         return rect;
     }
@@ -112,9 +100,6 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
         int absoluteX = Math.round(x) + (WIDE ? mScrollPosition : 0);
         int absoluteY = Math.round(y) + (WIDE ? 0 : mScrollPosition);
 
-        absoluteX -= mHorizontalPadding.get();
-        absoluteY -= mVerticalPadding.get();
-
         if (absoluteX < 0 || absoluteY < 0) {
             return INDEX_NONE;
         }
@@ -122,11 +107,11 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
         int columnIdx = absoluteX / (mThumbnailWidth + mThumbnailGap);
         int rowIdx = absoluteY / (mThumbnailHeight + mThumbnailGap);
 
-        if (!WIDE && columnIdx >= mUnitCount) {
+        if (!WIDE && columnIdx >= mColumnInMinorDirection) {
             return INDEX_NONE;
         }
 
-        if (WIDE && rowIdx >= mUnitCount) {
+        if (WIDE && rowIdx >= mColumnInMinorDirection) {
             return INDEX_NONE;
         }
 
@@ -138,7 +123,7 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
             return INDEX_NONE;
         }
 
-        int index = WIDE ? (columnIdx * mUnitCount + rowIdx) : (rowIdx * mUnitCount + columnIdx);
+        int index = WIDE ? (columnIdx * mColumnInMinorDirection + rowIdx) : (rowIdx * mColumnInMinorDirection + columnIdx);
 
         return index >= mThumbnailCount ? INDEX_NONE : index;
     }

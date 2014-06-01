@@ -4,6 +4,7 @@ package com.xjt.letool.metadata;
 import com.xjt.letool.common.Future;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.utils.Utils;
+import com.xjt.letool.views.layout.ThumbnailExpandLayout.SortTag;
 
 import java.util.ArrayList;
 import java.util.WeakHashMap;
@@ -45,6 +46,10 @@ public abstract class MediaSet extends MediaObject {
 
     public int getMediaItemCount(boolean withFull) {
         return 0;
+    }
+
+    public ArrayList<SortTag> analysisSortTags() {
+        return null;
     }
 
     // Returns the media items in the range [start, start + count).

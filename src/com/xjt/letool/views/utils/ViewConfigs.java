@@ -6,10 +6,13 @@ import android.content.res.Resources;
 
 import com.xjt.letool.R;
 import com.xjt.letool.views.layout.ThumbnailLayoutSpec;
+import com.xjt.letool.views.render.ThumbnailRenderer;
 import com.xjt.letool.views.render.ThumbnailSetRenderer;
 
 public final class ViewConfigs {
+
     public static class AlbumSetPage {
+
         private static AlbumSetPage sInstance;
 
         public ThumbnailLayoutSpec albumSetSpec;
@@ -56,6 +59,7 @@ public final class ViewConfigs {
     }
 
     public static class AlbumPage {
+
         private static AlbumPage sInstance;
 
         public ThumbnailLayoutSpec albumSpec;
@@ -64,6 +68,8 @@ public final class ViewConfigs {
         public int paddingTop;
         public int paddingRight;
         public int paddingBottom;
+
+        public ThumbnailRenderer.SortTagSpec sortTagSpec;
 
         public static synchronized AlbumPage get(Context context) {
             if (sInstance == null) {
@@ -81,11 +87,18 @@ public final class ViewConfigs {
             albumSpec.rowsLand = r.getInteger(R.integer.album_rows_land);
             albumSpec.rowsPort = r.getInteger(R.integer.album_rows_port);
             albumSpec.thumbnailGap = r.getDimensionPixelSize(R.dimen.album_thumbnail_gap);
+            albumSpec.tagHeight = r.getDimensionPixelSize(R.dimen.album_label_height);
+            albumSpec.tagWidth = r.getDimensionPixelSize(R.dimen.album_label_width);
             //
             paddingLeft = r.getDimensionPixelSize(R.dimen.album_padding_left);
             paddingTop = r.getDimensionPixelSize(R.dimen.album_padding_top);
             paddingRight = r.getDimensionPixelSize(R.dimen.album_padding_right);
             paddingBottom = r.getDimensionPixelSize(R.dimen.album_padding_bottom);
+
+            sortTagSpec = new ThumbnailRenderer.SortTagSpec(); //分类标签布局定义
+            sortTagSpec.titleFontSize = r.getDimensionPixelSize(R.dimen.album_tag_font_size);
+            sortTagSpec.countFontSize = r.getDimensionPixelSize(R.dimen.album_count_font_size);
+            sortTagSpec.iconSize = r.getDimensionPixelSize(R.dimen.album_icon_size);
         }
     }
 }

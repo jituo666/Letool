@@ -1,6 +1,6 @@
+
 package com.xjt.letool.views.render;
 
-import android.graphics.Color;
 
 import com.xjt.letool.adapters.ThumbnailSetDataWindow;
 import com.xjt.letool.adapters.ThumbnailSetDataWindow.AlbumSetEntry;
@@ -208,6 +208,22 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         if (mDataWindow != null) {
             mDataWindow.onThumbnailSizeChanged(width, height);
         }
+    }
+
+    @Override
+    public void initSortTagMetrics(int width, int height) {
+        // do nothing
+    }
+
+    @Override
+    public void onVisibleTagRangeChanged(int visibleStart, int visibleEnd) {
+        // do nothing
+    }
+
+    @Override
+    public int renderSortTag(GLESCanvas canvas, int index, int width, int height) {
+        // do nothing
+        return 0;
     }
 
 }

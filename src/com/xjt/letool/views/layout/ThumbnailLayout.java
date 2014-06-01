@@ -3,10 +3,12 @@ package com.xjt.letool.views.layout;
 
 import android.graphics.Rect;
 
-import com.xjt.letool.animations.IntegerAnim;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.view.ThumbnailView.Renderer;
+import com.xjt.letool.views.layout.ThumbnailExpandLayout.SortTag;
+
+import java.util.ArrayList;
 
 public abstract class ThumbnailLayout {
 
@@ -15,8 +17,8 @@ public abstract class ThumbnailLayout {
     public static final boolean WIDE = false;
     public static final int INDEX_NONE = -1;
 
-    protected int mVisibleStart;
-    protected int mVisibleEnd;
+    protected int mVisibleThumbnailStart;
+    protected int mVisibleThumbnailEnd;
 
     protected int mThumbnailCount;
     protected int mThumbnailWidth;
@@ -29,13 +31,13 @@ public abstract class ThumbnailLayout {
     protected int mWidth;
     protected int mHeight;
 
-    protected int mUnitCount;
-    protected int mContentLength;
+    protected int mColumnInMinorDirection; // treat it as columns
+    protected int mContentLengthInMajorDirection;
     protected int mScrollPosition;
-    protected IntegerAnim mVerticalPadding = new IntegerAnim();
-    protected IntegerAnim mHorizontalPadding = new IntegerAnim();
 
     private LayoutListener mLayoutListener;
+
+    protected ArrayList<SortTag> mSortTags;
 
     public interface LayoutListener {
 
@@ -54,80 +56,81 @@ public abstract class ThumbnailLayout {
         return mThumbnailHeight;
     }
 
-    public int getVisibleStart() {
-        return mVisibleStart;
+    public int getVisibleThumbnailStart() {
+        return mVisibleThumbnailStart;
     }
 
-    public int getVisibleEnd() {
-        return mVisibleEnd;
+    public int getVisibleThumbnailEnd() {
+        return mVisibleThumbnailEnd;
     }
 
     public int getScrollLimit() {
-        int limit = WIDE ? mContentLength - mWidth : mContentLength - mHeight;
-        //LLog.i(TAG, "-----x-----mContentLength:" + mContentLength + " mWidth:" + mWidth + " mHeight:" + mHeight);
+        int limit = WIDE ? mContentLengthInMajorDirection - mWidth : mContentLengthInMajorDirection - mHeight;
         return limit <= 0 ? 0 : limit;
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public void setRenderer(ThumbnailView.Renderer render) {
-        mRenderer = render;
-    }
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void setLayoutListener(LayoutListener l) {
         mLayoutListener = l;
     }
 
-    public void setThumbnailCount(int thumbnailCount) {
-        if (thumbnailCount == mThumbnailCount)
-            return;
-        if (thumbnailCount > 0) {
-            //            mVerticalPadding.setEnabled(true);
-            //            mHorizontalPadding.setEnabled(true);
-        }
-        mThumbnailCount = thumbnailCount;
-        initThumbnailParameters();
-        if (mLayoutListener != null) {
-            mLayoutListener.onLayoutFinshed(thumbnailCount);
-        }
-    }
-
     public void setThumbnailViewSize(int width, int height) {
         mWidth = width;
         mHeight = height;
-        initThumbnailParameters();
+        initThumbnailLayoutParameters();
+    }
+
+    public void setRenderer(ThumbnailView.Renderer render) {
+        mRenderer = render;
+    }
+
+    public void setThumbnailCount(int thumbnailCount) {
+        setThumbnailCount(thumbnailCount, null);
+    }
+
+    public void setThumbnailCount(int thumbnailCount, ArrayList<SortTag> tags) {
+        if (thumbnailCount == mThumbnailCount)
+            return;
+        mSortTags = tags;
+        mThumbnailCount = thumbnailCount;
+        initThumbnailLayoutParameters();
+        if (mLayoutListener != null) {
+            mLayoutListener.onLayoutFinshed(thumbnailCount);
+        }
     }
 
     public void setScrollPosition(int position) {
         if (mScrollPosition == position)
             return;
         mScrollPosition = position;
+        updateVisibleTagRange();
         updateVisibleThumbnailRange();
     }
 
-    protected void setVisibleRange(int start, int end) {
-        if (start == mVisibleStart && end == mVisibleEnd)
+    protected void setVisibleThumbnailRange(int start, int end) {
+        if (start == mVisibleThumbnailStart && end == mVisibleThumbnailEnd)
             return;
         if (start < end) {
-            mVisibleStart = start;
-            mVisibleEnd = end;
+            mVisibleThumbnailStart = start;
+            mVisibleThumbnailEnd = end;
         } else {
-            mVisibleStart = mVisibleEnd = 0;
+            mVisibleThumbnailStart = mVisibleThumbnailEnd = 0;
         }
         if (mRenderer != null) {
-            mRenderer.onVisibleRangeChanged(mVisibleStart, mVisibleEnd);
+            mRenderer.onVisibleRangeChanged(mVisibleThumbnailStart, mVisibleThumbnailEnd);
         }
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public abstract Rect getThumbnailRect(int index, Rect rect);
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public abstract Rect getThumbnailRect(int thumbnailIndex, Rect rect);
 
     public abstract int getThumbnailIndexByPosition(float x, float y);
 
-    protected abstract void initThumbnailParameters();
+    protected abstract void initThumbnailLayoutParameters();
 
     protected abstract void updateVisibleThumbnailRange();
 
-    public boolean advanceAnimation(long animTime) {
-        return mVerticalPadding.calculate(animTime) | mHorizontalPadding.calculate(animTime);
-    }
+    protected abstract void updateVisibleTagRange();
+
 }
