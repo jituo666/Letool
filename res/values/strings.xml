@@ -1137,11 +1137,14 @@ CHAR LIMIT = NONE]
     <string name="common_exit_tip">再按一次退出软件？</string>
     <string name="common_cancel">取消</string>
     <string name="common_ok">确定</string>
+    <string name="common_close">关闭</string>
+    <string name="common_recommend">提示</string>
     <string name="common_error_nosdcard">没有检测到SD卡！</string>
     <!-- popup menu -->
     <string name="popup_menu_defaut_order">默认排序</string>
     <string name="popup_menu_time_order">时间排序</string>
     <string name="popup_menu_select_mode">选择模式</string>
+    <string name="share_app_install_tip">请选择安装QQ或者QQ空间的手机客户端！</string>
 
     <!-- Text indicating the title of a media item in details window [CHAR LIMIT=14] -->
     <string name="title">标题</string>
@@ -1193,6 +1196,7 @@ CHAR LIMIT = NONE]
     <!-- String indicating camera flash is not used. [CHAR LIMIT=14] -->
     <string name="flash_off">关闭</string>
     <string name="details">详情</string>
-    <string name="details_title">%1$d of %2$d 项:</string>
+    <string name="details_title">第%1$d项,共%2$d项</string>
     <string name="close">关闭</string>
+
 </resources>

@@ -1,3 +1,4 @@
+
 package com.xjt.letool.fragment;
 
 import com.xjt.letool.LetoolApp;
@@ -35,6 +36,7 @@ import com.xjt.letool.view.GLBaseView;
 import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.GLRootView;
 import com.xjt.letool.view.LetoolActionBar;
+import com.xjt.letool.view.LetoolDialog;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.view.DetailsHelper.CloseListener;
 import com.xjt.letool.views.layout.ThumbnailContractLayout;
@@ -494,12 +496,15 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
                         }
 
                     });
-            new AlertDialog.Builder(getActivity())
-                    .setMessage(getString(R.string.common_delete_tip))
-                    .setOnCancelListener(cdl)
-                    .setPositiveButton(R.string.common_ok, cdl)
-                    .setNegativeButton(R.string.common_cancel, cdl)
-                    .create().show();
+            final LetoolDialog dlg = new LetoolDialog(getActivity());
+            dlg.setTitle(R.string.common_recommend);
+            dlg.setOkBtn(R.string.common_ok, cdl);
+            dlg.setCancelBtn(R.string.common_cancel, cdl);
+            dlg.setDividerVisible(true);
+            dlg.setMessage(R.string.common_delete_tip);
+            dlg.setDividerVisible(true);
+            dlg.show();
+
         } else if (v.getId() == R.id.action_more) {
             showPopupMenu();
         } else if (v.getId() == R.id.enter_selection_indicate) {

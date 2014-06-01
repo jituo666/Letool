@@ -4,28 +4,43 @@
     android:layout_height="match_parent"
     android:orientation="horizontal" >
 
-    <ImageView
+    <TextView
         android:id="@+id/action_share"
         style="@style/MyWidget.ActionBarIconStyle"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:src="@drawable/ic_action_share" />
+        android:drawablePadding="-3dp"
+        android:drawableTop="@drawable/ic_action_share"
+        android:gravity="center_horizontal"
+        android:text="@string/common_share"
+        android:textColor="@android:color/black"
+        android:textSize="12sp" />
 
-    <ImageView
+    <TextView
         android:id="@+id/action_detail"
         style="@style/MyWidget.ActionBarIconStyle"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:src="@drawable/ic_action_info" />
+        android:layout_weight="2"
+        android:drawablePadding="-3dp"
+        android:drawableTop="@drawable/ic_action_info"
+        android:gravity="center_horizontal"
+        android:text="@string/common_detail"
+        android:textColor="@android:color/black"
+        android:textSize="12sp" />
 
-    <ImageView
+    <TextView
         android:id="@+id/action_delete"
         style="@style/MyWidget.ActionBarIconStyle"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:src="@drawable/ic_action_delete" />
+        android:drawablePadding="-3dp"
+        android:drawableTop="@drawable/ic_action_delete"
+        android:gravity="center_horizontal"
+        android:text="@string/common_delete"
+        android:textColor="@android:color/black"
+        android:textSize="12sp" />
 
 </LinearLayout>

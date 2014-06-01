@@ -57,12 +57,14 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
     protected boolean mIsMainActivity = false;
     private boolean mWaitingForExit = false;
 
+    private Toast mExitToast;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mOrientationManager = new OrientationManager(this);
         mFragmentManager = getSupportFragmentManager();
-        mSlidingMenu = new LetoolSlidingMenu(this,mFragmentManager, findViewById(R.id.action_bar));
+        mSlidingMenu = new LetoolSlidingMenu(this, mFragmentManager, findViewById(R.id.action_bar));
         mActionBar = new LetoolActionBar(this, (ViewGroup) findViewById(R.id.action_bar));
         mBottomBar = new LetoolBottomBar(this, (ViewGroup) findViewById(R.id.bottom_bar));
     }
@@ -129,13 +131,17 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
             View tip = findViewById(R.id.action_navi_tip);
             int distance = Math.round(getResources().getDimension(R.dimen.letool_action_bar_height) / 12);
             ObjectAnimator.ofFloat(tip, "x", tip.getX(), tip.getX() + distance).setDuration(300).start();
-            
+
         } else if (mIsMainActivity) {
             if (mWaitingForExit) {
+                if (mExitToast != null) {
+                    mExitToast.cancel();
+                }
                 finish();
             } else {
                 mWaitingForExit = true;
-                Toast.makeText(this, R.string.common_exit_tip, Toast.LENGTH_SHORT).show();
+                mExitToast = Toast.makeText(this, R.string.common_exit_tip, Toast.LENGTH_SHORT);
+                mExitToast.show();
                 new Handler().postDelayed(new Runnable() {
 
                     @Override

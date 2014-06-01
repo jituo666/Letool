@@ -4,36 +4,54 @@ package com.xjt.letool.view;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.xjt.letool.R;
 
-public class CommonDialog extends Dialog {
+public class LetoolDialog extends Dialog {
 
-    private static final String TAG = CommonDialog.class.getSimpleName();
+    private static final String TAG = LetoolDialog.class.getSimpleName();
 
     public static final int DEFAULT_BTN_LEFT = 1;
     public static final int DEFAULT_BTN_MID = 2;
     public static final int DEFAULT_BTN_RIGHT = 3;
 
     TextView mTitleView;
+    TextView mMessage;
 
-    public CommonDialog(Context context) {
+    public LetoolDialog(Context context) {
         super(context, R.style.MyDialog);
         setContentView(R.layout.common_dialog);
         mTitleView = (TextView) findViewById(R.id.title);
+        setCanceledOnTouchOutside(false);
 
-    }
-
-    public void setTitle(int resId) {
-        mTitleView.setText(resId);
     }
 
     public void setTitle(String title) {
         mTitleView.setText(title);
+    }
+
+    public void setTitle(int titleResId) {
+        mTitleView.setText(titleResId);
+    }
+
+    public void setMessage(int msgResId) {
+        mMessage = (TextView) findViewById(R.id.message);
+        mMessage.setText(msgResId);
+        mMessage.setVisibility(View.VISIBLE);
+    }
+
+    public void setMessage(String message) {
+        mMessage = (TextView) findViewById(R.id.message);
+        mMessage.setText(message);
+        mMessage.setVisibility(View.VISIBLE);
+    }
+
+    public void setDividerVisible(boolean visible) {
+        View v = findViewById(R.id.btn_divider);
+        v.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     public ListView setListAdapter(ListAdapter adapter) {
@@ -43,20 +61,21 @@ public class CommonDialog extends Dialog {
         return listView;
     }
 
-    public void setOkBtn(View.OnClickListener clickListener) {
-        Button okBtn =(Button) findViewById(R.id.ok_btn);
+    public void setOkBtn(int title, View.OnClickListener clickListener) {
+        TextView okBtn = (TextView) findViewById(R.id.ok_btn);
         okBtn.setVisibility(View.VISIBLE);
         if (clickListener != null) {
             okBtn.setOnClickListener(new ExternalListener(clickListener));
         } else {
             okBtn.setOnClickListener(new CloseListener());
         }
+        okBtn.setText(title);
     }
 
-    public void setCancelBtn(View.OnClickListener clickListener) {
-        Button cancelBtn = (Button) findViewById(R.id.cancel_btn);
+    public void setCancelBtn(int title, View.OnClickListener clickListener) {
+        TextView cancelBtn = (TextView) findViewById(R.id.cancel_btn);
         cancelBtn.setVisibility(View.VISIBLE);
-
+        cancelBtn.setText(title);
         if (clickListener != null) {
             cancelBtn.setOnClickListener(new ExternalListener(clickListener));
         } else {
@@ -82,7 +101,7 @@ public class CommonDialog extends Dialog {
 
         @Override
         public void onClick(View v) {
-            CommonDialog.this.dismiss();
+            dismiss();
             mListener.onClick(v);
         }
     }

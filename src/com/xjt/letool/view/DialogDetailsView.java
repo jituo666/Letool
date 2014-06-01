@@ -1,8 +1,6 @@
 
 package com.xjt.letool.view;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
@@ -31,14 +29,14 @@ import java.util.Map.Entry;
 public class DialogDetailsView implements DetailsViewContainer {
 
     @SuppressWarnings("unused")
-    private static final String TAG = "DialogDetailsView";
+    private static final String TAG = DialogDetailsView.class.getSimpleName();
 
     private final LetoolContext mActivity;
     private DetailsAdapter mAdapter;
     private MediaDetails mDetails;
     private final DetailsSource mSource;
     private int mIndex;
-    private CommonDialog mDialog;
+    private LetoolDialog mDialog;
     private CloseListener mListener;
 
     public DialogDetailsView(LetoolContext activity, DetailsSource source) {
@@ -74,23 +72,37 @@ public class DialogDetailsView implements DetailsViewContainer {
 
     private void setDetails(MediaDetails details) {
         mAdapter = new DetailsAdapter(details);
-        String title = String.format(mActivity.getAndroidContext().getString(R.string.details_title),
-                mIndex + 1, mSource.size());
+        String title = String.format(mActivity.getAndroidContext().getString(R.string.details_title), mIndex + 1, mSource.size());
 
-        mDialog = new CommonDialog(mActivity.getAndroidContext());
+        mDialog = new LetoolDialog(mActivity.getAndroidContext());
         mDialog.setListAdapter(mAdapter);
         mDialog.setTitle(title);
-        mDialog.setOkBtn(new View.OnClickListener() {
+        mDialog.setOkBtn(R.string.common_close, new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 mListener.onClose();
             }
         });
+        mDialog.setOnDismissListener(new OnDismissListener() {
+
+            @Override
+            public void onDismiss(DialogInterface arg0) {
+                mListener.onClose();
+            }
+
+        });
+    }
+
+    private class PropertyData {
+
+        String title;
+        String content;
     }
 
     private class DetailsAdapter extends BaseAdapter implements AddressResolvingListener, ResolutionResolvingListener {
 
-        private final ArrayList<String> mItems;
+        private final ArrayList<PropertyData> mItems;
         private int mLocationIndex;
         private final Locale mDefaultLocale = Locale.getDefault();
         private final DecimalFormat mDecimalFormat = new DecimalFormat(".####");
@@ -99,7 +111,7 @@ public class DialogDetailsView implements DetailsViewContainer {
 
         public DetailsAdapter(MediaDetails details) {
             Context context = mActivity.getAndroidContext();
-            mItems = new ArrayList<String>(details.size());
+            mItems = new ArrayList<PropertyData>(details.size());
             mLocationIndex = -1;
             setDetails(context, details);
         }
@@ -128,8 +140,7 @@ public class DialogDetailsView implements DetailsViewContainer {
                         break;
                     }
                     case MediaDetails.INDEX_FLASH: {
-                        MediaDetails.FlashState flash =
-                                (MediaDetails.FlashState) detail.getValue();
+                        MediaDetails.FlashState flash = (MediaDetails.FlashState) detail.getValue();
                         // TODO: camera doesn't fill in the complete values, show more information
                         // when it is fixed.
                         if (flash.isFlashFired()) {
@@ -181,7 +192,7 @@ public class DialogDetailsView implements DetailsViewContainer {
                         // as a separate section and interpret it for what it
                         // is, rather than trying to make it RTL (which messes
                         // up the path).
-                        value = "\n" + detail.getValue().toString();
+                        value = detail.getValue().toString();
                         path = detail.getValue().toString();
                         break;
                     case MediaDetails.INDEX_ISO:
@@ -204,14 +215,14 @@ public class DialogDetailsView implements DetailsViewContainer {
                     }
                 }
                 int key = detail.getKey();
+                PropertyData p = new PropertyData();
+                p.title = DetailsHelper.getDetailsName(context, key) + ":";
                 if (details.hasUnit(key)) {
-                    value = String.format("%s: %s %s", DetailsHelper.getDetailsName(
-                            context, key), value, context.getString(details.getUnit(key)));
+                    p.content = String.format(" %s %s", value, context.getString(details.getUnit(key)));
                 } else {
-                    value = String.format("%s: %s", DetailsHelper.getDetailsName(
-                            context, key), value);
+                    p.content = String.format(" %s", value);
                 }
-                mItems.add(value);
+                mItems.add(p);
             }
             if (!resolutionIsValid) {
                 DetailsHelper.resolveResolution(path, this);
@@ -245,20 +256,23 @@ public class DialogDetailsView implements DetailsViewContainer {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            TextView tv;
+            final View v;
             if (convertView == null) {
-                tv = (TextView) LayoutInflater.from(mActivity.getAndroidContext()).inflate(
-                        R.layout.details, parent, false);
+                v = LayoutInflater.from(mActivity.getAndroidContext()).inflate(R.layout.details_list_item, parent, false);
             } else {
-                tv = (TextView) convertView;
+                v = convertView;
             }
-            tv.setText(mItems.get(position));
-            return tv;
+            TextView title = (TextView) v.findViewById(R.id.property_title);
+            title.setText(mItems.get(position).title);
+            TextView imageView = (TextView) v.findViewById(R.id.property_content);
+            imageView.setText(mItems.get(position).content);
+
+            return v;
         }
 
         @Override
         public void onAddressAvailable(String address) {
-            mItems.set(mLocationIndex, address);
+            mItems.get(mLocationIndex).content = address;
             notifyDataSetChanged();
         }
 
@@ -274,8 +288,8 @@ public class DialogDetailsView implements DetailsViewContainer {
             String heightString = String.format(mDefaultLocale, "%s: %d",
                     DetailsHelper.getDetailsName(
                             context, MediaDetails.INDEX_HEIGHT), height);
-            mItems.set(mWidthIndex, String.valueOf(widthString));
-            mItems.set(mHeightIndex, String.valueOf(heightString));
+            mItems.get(mWidthIndex).content = String.valueOf(widthString);
+            mItems.get(mHeightIndex).content = String.valueOf(heightString);
             notifyDataSetChanged();
         }
 

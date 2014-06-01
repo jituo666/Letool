@@ -4,21 +4,37 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/main_sliding_menu_bg"
-    android:minWidth="300dp"
+    android:minWidth="280dp"
     android:orientation="vertical" >
 
     <TextView
         android:id="@+id/title"
         style="@style/MyWidget.TitleBarText"
         android:layout_width="match_parent"
-        android:textSize="20sp"
         android:layout_height="42dp"
         android:background="@drawable/main_action_bar_bg"
-        android:drawableLeft="@drawable/ic_launcher"
         android:drawablePadding="8dp"
         android:gravity="center_vertical"
         android:paddingLeft="8dp"
-        android:text="@string/app_name" />
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/black" />
+
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="16dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="16dp"
+        android:textColor="@color/common_black"
+        android:textSize="18sp"
+        android:visibility="gone" />
 
     <ListView
         android:id="@+id/list"
@@ -27,37 +43,47 @@
         android:layout_weight="1"
         android:visibility="gone" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/black" />
+
     <LinearLayout
         android:id="@+id/btn_panel"
         android:layout_width="match_parent"
         android:layout_height="42dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:background="@drawable/main_action_bar_bg"
         android:orientation="horizontal" >
 
-        <Button
+        <TextView
             android:id="@+id/ok_btn"
             android:layout_width="0dp"
             android:layout_height="42dp"
-            android:layout_marginRight="8dp"
             android:layout_weight="1"
             android:background="@drawable/common_item_bkg"
+            android:gravity="center"
             android:singleLine="true"
             android:text="@string/common_ok"
-            android:textColor="@color/common_black" />
+            android:textColor="@color/common_black"
+            android:textSize="18sp" />
 
-        <Button
+        <View
+            android:id="@+id/btn_divider"
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/black"
+            android:visibility="gone" />
+
+        <TextView
             android:id="@+id/cancel_btn"
             android:layout_width="0dp"
             android:layout_height="42dp"
-            android:layout_marginRight="8dp"
             android:layout_weight="1"
             android:background="@drawable/common_item_bkg"
+            android:gravity="center"
             android:singleLine="true"
-            android:textSize="18sp"
             android:text="@string/common_cancel"
             android:textColor="@color/common_black"
+            android:textSize="18sp"
             android:visibility="gone" />
     </LinearLayout>
 

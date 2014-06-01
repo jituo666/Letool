@@ -84,8 +84,6 @@ public class DetailsHelper {
 
     public static String getDetailsName(Context context, int key) {
         switch (key) {
-            case MediaDetails.INDEX_TITLE:
-                return context.getString(R.string.title);
             case MediaDetails.INDEX_DESCRIPTION:
                 return context.getString(R.string.description);
             case MediaDetails.INDEX_DATETIME:

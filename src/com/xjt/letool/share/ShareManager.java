@@ -1,3 +1,4 @@
+
 package com.xjt.letool.share;
 
 import java.util.ArrayList;
@@ -37,13 +38,13 @@ public class ShareManager implements ShareListener {
     public List<ShareTo> getShareToList() {
         ArrayList<ShareTo> list = new ArrayList<ShareTo>();
         if (isQzoneInstalled()) {
-            list.add(new ShareTo(AppConstants.SHARE_TO_QQ, "QQ", mContext.getResources().getDrawable(R.drawable.ic_launcher)));
-            list.add(new ShareTo(AppConstants.SHARE_TO_QZONE, "QQ空间", mContext.getResources().getDrawable(R.drawable.ic_launcher)));
+            list.add(new ShareTo(AppConstants.SHARE_TO_QQ, "QQ", mContext.getResources().getDrawable(R.drawable.ic_share_to_qq)));
+            list.add(new ShareTo(AppConstants.SHARE_TO_QZONE, "QQ空间", mContext.getResources().getDrawable(R.drawable.ic_share_to_qzone)));
         }
-        if (isWeichatIstalled(mContext)) {
-            list.add(new ShareTo(AppConstants.SHARE_TO_WX, "微信", mContext.getResources().getDrawable(R.drawable.ic_launcher)));
-            list.add(new ShareTo(AppConstants.SHARE_TO_WX_F, "微信朋友圈", mContext.getResources().getDrawable(R.drawable.ic_launcher)));
-        }
+//        if (isWeichatIstalled(mContext)) {
+//            list.add(new ShareTo(AppConstants.SHARE_TO_WX, "微信", mContext.getResources().getDrawable(R.drawable.ic_launcher)));
+//            list.add(new ShareTo(AppConstants.SHARE_TO_WX_F, "微信朋友圈", mContext.getResources().getDrawable(R.drawable.ic_launcher)));
+//        }
         return list;
     }
 
@@ -85,8 +86,6 @@ public class ShareManager implements ShareListener {
         return ret;
     }
 
-
-    
     @Override
     public void onShareTo(Activity activity, int shareTo, ArrayList<String> shareData) {
         switch (shareTo) {

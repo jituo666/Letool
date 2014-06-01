@@ -1,6 +1,8 @@
+
 package com.xjt.letool.selectors;
 
 import com.xjt.letool.LetoolContext;
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaPath;
@@ -11,6 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class SelectionManager {
+
     @SuppressWarnings("unused")
     private static final String TAG = "SelectionManager";
 
@@ -50,7 +53,8 @@ public class SelectionManager {
         mClickedSet.clear();
         mTotal = -1;
         enterSelectionMode();
-        if (mListener != null) mListener.onSelectionModeChange(SELECT_ALL_MODE);
+        if (mListener != null)
+            mListener.onSelectionModeChange(SELECT_ALL_MODE);
     }
 
     public void deSelectAll() {
@@ -68,19 +72,23 @@ public class SelectionManager {
     }
 
     public void enterSelectionMode() {
-        if (mInSelectionMode) return;
+        if (mInSelectionMode)
+            return;
 
         mInSelectionMode = true;
-        if (mListener != null) mListener.onSelectionModeChange(ENTER_SELECTION_MODE);
+        if (mListener != null)
+            mListener.onSelectionModeChange(ENTER_SELECTION_MODE);
     }
 
     public void leaveSelectionMode() {
-        if (!mInSelectionMode) return;
+        if (!mInSelectionMode)
+            return;
 
         mInSelectionMode = false;
         mInverseSelection = false;
         mClickedSet.clear();
-        if (mListener != null) mListener.onSelectionModeChange(LEAVE_SELECTION_MODE);
+        if (mListener != null)
+            mListener.onSelectionModeChange(LEAVE_SELECTION_MODE);
     }
 
     public boolean isItemSelected(MediaPath itemId) {
@@ -88,7 +96,8 @@ public class SelectionManager {
     }
 
     private int getTotalCount() {
-        if (mSourceMediaSet == null) return -1;
+        if (mSourceMediaSet == null)
+            return -1;
 
         if (mTotal < 0) {
             mTotal = mIsAlbumSet
@@ -120,7 +129,8 @@ public class SelectionManager {
             selectAll();
         }
 
-        if (mListener != null) mListener.onSelectionChange(path, isItemSelected(path));
+        if (mListener != null)
+            mListener.onSelectionChange(path, isItemSelected(path));
         if (count == 0 && mAutoLeave) {
             leaveSelectionMode();
         }
@@ -213,6 +223,7 @@ public class SelectionManager {
                     index += count;
                 }
             } else {
+
                 for (MediaPath id : mClickedSet) {
                     selected.add(id);
                     if (selected.size() > maxSelection) {

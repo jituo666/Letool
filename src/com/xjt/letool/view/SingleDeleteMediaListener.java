@@ -1,12 +1,13 @@
+
 package com.xjt.letool.view;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnClickListener;
 import android.os.AsyncTask;
+import android.view.View;
+import android.view.View.OnClickListener;
 
 import com.xjt.letool.R;
 import com.xjt.letool.metadata.DataManager;
@@ -17,7 +18,7 @@ import com.xjt.letool.metadata.MediaPath;
  * @Date 4:44:26 PM May 18, 2014
  * @Comments:null
  */
-public class SingleDeleteMediaListener implements OnClickListener, OnCancelListener {
+public class SingleDeleteMediaListener implements OnClickListener, DialogInterface.OnDismissListener{
 
     DeleteMediaProgressListener progressListener;
     DataManager manager;
@@ -37,23 +38,15 @@ public class SingleDeleteMediaListener implements OnClickListener, OnCancelListe
     }
 
     @Override
-    public void onClick(DialogInterface dialog, int which) {
-        if (which == DialogInterface.BUTTON_POSITIVE) {
+    public void onClick(View v) {
+        if (v.getId() == R.id.ok_btn) {
             if (mPath != null) {
                 new DeleteMeidaTask().execute();
-                dialog.dismiss();
             }
-        } else {
+        } else if (v.getId() == R.id.cancel_btn) {
             if (progressListener != null) {
                 progressListener.onConfirmDialogDismissed(false);
             }
-        }
-    }
-
-    @Override
-    public void onCancel(DialogInterface dialog) {
-        if (progressListener != null) {
-            progressListener.onConfirmDialogDismissed(false);
         }
     }
 
@@ -89,5 +82,13 @@ public class SingleDeleteMediaListener implements OnClickListener, OnCancelListe
             }
         }
 
+    }
+
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        if (progressListener != null) {
+            progressListener.onConfirmDialogDismissed(false);
+        }
     }
 }

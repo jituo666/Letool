@@ -21,7 +21,7 @@ public abstract class LocalMediaItem extends MediaItem {
 
     // database fields
     public int id;
-    public String caption = "s";
+    public String caption = "UnKnown";
     public String mimeType;
     public long fileSize;
     public double latitude = INVALID_LATLNG;
@@ -70,7 +70,6 @@ public abstract class LocalMediaItem extends MediaItem {
     public MediaDetails getDetails() {
         MediaDetails details = super.getDetails();
         details.addDetail(MediaDetails.INDEX_PATH, filePath);
-        details.addDetail(MediaDetails.INDEX_TITLE, caption);
         DateFormat formater = DateFormat.getDateTimeInstance();
         details.addDetail(MediaDetails.INDEX_DATETIME, formater.format(new Date(dateTakenInMs)));
 

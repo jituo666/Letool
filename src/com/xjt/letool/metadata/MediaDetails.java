@@ -18,7 +18,7 @@ public class MediaDetails implements Iterable<Entry<Integer, Object>> {
     private TreeMap<Integer, Object> mDetails = new TreeMap<Integer, Object>();
     private HashMap<Integer, Integer> mUnits = new HashMap<Integer, Integer>();
 
-    public static final int INDEX_TITLE = 1;
+//    public static final int INDEX_TITLE = 1;
     public static final int INDEX_DESCRIPTION = 2;
     public static final int INDEX_DATETIME = 3;
     public static final int INDEX_LOCATION = 4;

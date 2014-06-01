@@ -4,9 +4,9 @@ package com.xjt.letool.view;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnClickListener;
+
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.os.AsyncTask;
 
 import com.xjt.letool.R;
@@ -19,8 +19,9 @@ import com.xjt.letool.selectors.SelectionManager;
  * @Date 4:44:26 PM May 18, 2014
  * @Comments:null
  */
-public class BatchDeleteMediaListener implements OnClickListener, OnCancelListener {
+public class BatchDeleteMediaListener implements OnClickListener {
 
+    private static final String TAG = BatchDeleteMediaListener.class.getSimpleName();
     DeleteMediaProgressListener progressListener;
     SelectionManager selectionManager;
     DataManager manager;
@@ -28,7 +29,7 @@ public class BatchDeleteMediaListener implements OnClickListener, OnCancelListen
 
     public interface DeleteMediaProgressListener {
 
-//        public void onConfirmDialogShown();
+        //        public void onConfirmDialogShown();
 
         public void onConfirmDialogDismissed(boolean confirmed);
         //        public void onProgressStart();
@@ -44,23 +45,15 @@ public class BatchDeleteMediaListener implements OnClickListener, OnCancelListen
     }
 
     @Override
-    public void onClick(DialogInterface dialog, int which) {
-        if (which == DialogInterface.BUTTON_POSITIVE) {
+    public void onClick(View v) {
+        if (v.getId() == R.id.ok_btn) {
             if (selectionManager != null && selectionManager.getSelectedCount() > 0) {
                 new DeleteMeidaTask().execute();
-                dialog.dismiss();
             }
-        } else {
+        } else if (v.getId() == R.id.cancel_btn) {
             if (progressListener != null) {
                 progressListener.onConfirmDialogDismissed(false);
             }
-        }
-    }
-
-    @Override
-    public void onCancel(DialogInterface dialog) {
-        if (progressListener != null) {
-            progressListener.onConfirmDialogDismissed(false);
         }
     }
 

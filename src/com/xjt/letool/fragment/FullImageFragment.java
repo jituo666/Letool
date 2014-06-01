@@ -41,7 +41,7 @@ import com.xjt.letool.share.ShareManager;
 import com.xjt.letool.share.ShareManager.ShareTo;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.UsageStatistics;
-import com.xjt.letool.view.CommonDialog;
+import com.xjt.letool.view.LetoolDialog;
 import com.xjt.letool.view.DetailsHelper;
 import com.xjt.letool.view.SingleDeleteMediaListener.DeleteMediaProgressListener;
 import com.xjt.letool.view.DetailsHelper.CloseListener;
@@ -123,7 +123,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     private String mCurrentPathString = "";
     private boolean mIsActive;
     private OrientationManager mOrientationManager;
-    private boolean mTreatBackAsUp;
     private boolean mStartInFilmstrip;
 
     private static final long DEFERRED_UPDATE_MS = 250;
@@ -394,12 +393,15 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
 
                     });
 
-            new AlertDialog.Builder(getActivity())
-                    .setMessage(getString(R.string.common_delete_tip))
-                    .setOnCancelListener(cdl)
-                    .setPositiveButton(R.string.common_ok, cdl)
-                    .setNegativeButton(R.string.common_cancel, cdl)
-                    .create().show();
+            final LetoolDialog dlg = new LetoolDialog(getActivity());
+            dlg.setTitle(R.string.common_recommend);
+            dlg.setOkBtn(R.string.common_ok, cdl);
+            dlg.setCancelBtn(R.string.common_cancel, cdl);
+            dlg.setOnDismissListener(cdl);
+            dlg.setMessage(R.string.common_delete_tip);
+            dlg.setDividerVisible(true);
+            dlg.show();
+
         }
     }
 
@@ -422,8 +424,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     private void initDatas() {
         Bundle data = this.getArguments();
         boolean isCamera = data.getBoolean(ThumbnailActivity.KEY_IS_CAMERA);
-
-        LLog.i(TAG, "============isCamera:" + isCamera);
         if (!isCamera) {
             String albumTitle = data.getString(ThumbnailActivity.KEY_ALBUM_TITLE);
             long albumId = data.getLong(ThumbnailActivity.KEY_ALBUM_ID, 0);
@@ -435,7 +435,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
                     , (LetoolApp) getActivity().getApplication()
                     , MediaSetUtils.MY_ALBUM_BUCKETS, true, getString(R.string.common_photo));
         }
-        mTreatBackAsUp = data.getBoolean(KEY_TREAT_BACK_AS_UP, false);
         mStartInFilmstrip = data.getBoolean(KEY_START_IN_FILMSTRIP, false);
         mCurrentIndex = data.getInt(KEY_INDEX_HINT, 0);
         mSelectionManager.setSourceMediaSet(mMediaSet);
@@ -611,18 +610,25 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     //////////////////////////////////////////////////////////[share]/////////////////////////////////////////////////////////////////
 
     private void showShareDialog() {
-        final ArrayList<String> ll = new ArrayList<String>();
-        ll.add(mCurrentPathString);
+
         final ShareManager shareManager = new ShareManager(getAndroidContext());
-        final CommonDialog dlg = new CommonDialog(getActivity());
-        dlg.setOkBtn(null);
-        final List<ShareTo> data = shareManager.getShareToList();
-        ListView l = dlg.setListAdapter(new ShareAdapter(data));
+        final List<ShareTo> shareToList = shareManager.getShareToList();
+        if (shareToList.size() <= 0) {
+            Toast.makeText(mActivity, R.string.share_app_install_tip, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        final ArrayList<String> shareData = new ArrayList<String>();
+        shareData.add(mCurrentPathString);
+        final LetoolDialog dlg = new LetoolDialog(getActivity());
+        dlg.setTitle(R.string.common_share);
+        dlg.setOkBtn(R.string.common_cancel, null);
+
+        ListView l = dlg.setListAdapter(new ShareToAdapter(shareToList));
         l.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> arg0, View v, int postion, long id) {
-                shareManager.onShareTo(getActivity(), data.get(postion).shareToType, ll);
+            public void onItemClick(AdapterView<?> parent, View v, int postion, long id) {
+                shareManager.onShareTo(getActivity(), shareToList.get(postion).shareToType, shareData);
                 dlg.dismiss();
             }
 
@@ -630,22 +636,22 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         dlg.show();
     }
 
-    private class ShareAdapter extends BaseAdapter {
+    private class ShareToAdapter extends BaseAdapter {
 
-        final List<ShareTo> mData;
+        final List<ShareTo> mShareToList;
 
-        public ShareAdapter(List<ShareTo> data) {
-            mData = data;
+        public ShareToAdapter(List<ShareTo> data) {
+            mShareToList = data;
         }
 
         @Override
         public int getCount() {
-            return mData.size();
+            return mShareToList.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return mData.get(position);
+            return mShareToList.get(position);
         }
 
         @Override
@@ -662,9 +668,9 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
                 v = convertView;
             }
             TextView textView = (TextView) v.findViewById(R.id.app_name);
-            textView.setText(mData.get(position).shareToTitle);
+            textView.setText(mShareToList.get(position).shareToTitle);
             ImageView imageView = (ImageView) v.findViewById(R.id.app_icon);
-            imageView.setImageDrawable(mData.get(position).shareToIcon);
+            imageView.setImageDrawable(mShareToList.get(position).shareToIcon);
             return v;
         }
     }

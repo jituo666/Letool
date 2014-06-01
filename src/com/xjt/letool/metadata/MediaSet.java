@@ -169,7 +169,6 @@ public abstract class MediaSet extends MediaObject {
     @Override
     public MediaDetails getDetails() {
         MediaDetails details = super.getDetails();
-        details.addDetail(MediaDetails.INDEX_TITLE, getName());
         return details;
     }
 
