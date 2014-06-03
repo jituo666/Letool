@@ -35,7 +35,7 @@ import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.metadata.source.LocalAlbumMerged;
-import com.xjt.letool.selectors.SelectionManager;
+import com.xjt.letool.selectors.ContractSelector;
 import com.xjt.letool.share.ShareListActivity;
 import com.xjt.letool.share.ShareManager;
 import com.xjt.letool.share.ShareManager.ShareTo;
@@ -108,7 +108,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
 
     private GLRootView mGLRootView;
 
-    private SelectionManager mSelectionManager;
+    private ContractSelector mSelectionManager;
 
     private FullImageView mFullImageView;
     private FullImageFragment.Model mModel;
@@ -412,7 +412,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     }
 
     private void initViews() {
-        mSelectionManager = new SelectionManager(mActivity, false);
+        mSelectionManager = new ContractSelector(mActivity, false);
         mFullImageView = new FullImageView(this);
         mFullImageView.setListener(this);
         mFullImageView.setBackgroundColor(LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.default_background_thumbnail)));
@@ -423,7 +423,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
 
     private void initDatas() {
         Bundle data = this.getArguments();
-        boolean isCamera = data.getBoolean(ThumbnailActivity.KEY_IS_CAMERA);
+        boolean isCamera = data.getBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM);
         if (!isCamera) {
             String albumTitle = data.getString(ThumbnailActivity.KEY_ALBUM_TITLE);
             long albumId = data.getLong(ThumbnailActivity.KEY_ALBUM_ID, 0);
@@ -456,7 +456,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         initViews();
         initDatas();
         initBrowseActionBar();
-        final int mediaItemCount = mMediaSet.getMediaItemCount(true);
+        final int mediaItemCount = mMediaSet.getMediaItemCount();
         if (mediaItemCount > 0) {
             if (mCurrentIndex >= mediaItemCount)
                 mCurrentIndex = 0;
@@ -494,7 +494,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             }
 
         });
-        mFullImageView.setFilmMode(mStartInFilmstrip && mMediaSet.getMediaItemCount(true) > 1);
+        mFullImageView.setFilmMode(mStartInFilmstrip && mMediaSet.getMediaItemCount() > 1);
         mHandler = new SynchronizedHandler(mGLRootView) {
 
             @Override
@@ -593,7 +593,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
 
         @Override
         public int size() {
-            return mMediaSet != null ? mMediaSet.getMediaItemCount(true) : 1;
+            return mMediaSet != null ? mMediaSet.getMediaItemCount() : 1;
         }
 
         @Override

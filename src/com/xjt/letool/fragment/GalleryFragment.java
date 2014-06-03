@@ -2,6 +2,7 @@
 package com.xjt.letool.fragment;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 import com.xjt.letool.R;
 import com.xjt.letool.activities.BaseActivity;
@@ -15,8 +16,8 @@ import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.metadata.loader.DataLoadingListener;
 import com.xjt.letool.metadata.loader.ThumbnailSetDataLoader;
-import com.xjt.letool.selectors.SelectionListener;
-import com.xjt.letool.selectors.SelectionManager;
+import com.xjt.letool.selectors.ContractSelectListener;
+import com.xjt.letool.selectors.ContractSelector;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.view.CommonLoadingPanel;
 import com.xjt.letool.view.BatchDeleteMediaListener;
@@ -29,7 +30,7 @@ import com.xjt.letool.view.LetoolActionBar;
 import com.xjt.letool.view.LetoolDialog;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.view.DetailsHelper.CloseListener;
-import com.xjt.letool.views.layout.ContractThumbnailLayout;
+import com.xjt.letool.views.layout.ThumbnailSetContractLayout;
 import com.xjt.letool.views.layout.ThumbnailContractLayout;
 import com.xjt.letool.views.layout.ThumbnailLayout;
 import com.xjt.letool.views.layout.ThumbnailLayout.LayoutListener;
@@ -60,7 +61,7 @@ import android.widget.Toast;
  * @Date 9:40:26 PM Apr 20, 2014
  * @Comments:null
  */
-public class GalleryFragment extends LetoolFragment implements EyePosition.EyePositionListener, SelectionListener, LayoutListener {
+public class GalleryFragment extends LetoolFragment implements EyePosition.EyePositionListener, ContractSelectListener, LayoutListener {
 
     private static final String TAG = GalleryFragment.class.getSimpleName();
 
@@ -80,7 +81,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     private ViewConfigs.AlbumSetPage mConfig;
     private ThumbnailSetRenderer mThumbnailViewRenderer;
 
-    private SelectionManager mSelector;
+    private ContractSelector mSelector;
     private ThumbnailSetDataLoader mThumbnailSetAdapter;
     private MediaSet mMediaSet;
 
@@ -240,10 +241,10 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     }
 
     private void initializeViews() {
-        mSelector = new SelectionManager(this, true);
+        mSelector = new ContractSelector(this, true);
         mSelector.setSelectionListener(this);
         mConfig = ViewConfigs.AlbumSetPage.get(getAndroidContext());
-        ThumbnailLayout layout = new ContractThumbnailLayout(mConfig.albumSetSpec);
+        ThumbnailLayout layout = new ThumbnailSetContractLayout(mConfig.albumSetSpec);
         mThumbnailView = new ThumbnailView(this, layout);
         mThumbnailView.setBackgroundColor(
                 LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.default_background_thumbnail))
@@ -511,12 +512,18 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
                 t.show();
                 return;
             }
-            BatchDeleteMediaListener cdl = new BatchDeleteMediaListener(getActivity(), mSelector, getDataManager(),
+            BatchDeleteMediaListener cdl = new BatchDeleteMediaListener(getActivity(), getDataManager(),
                     new DeleteMediaProgressListener() {
 
                         @Override
                         public void onConfirmDialogDismissed(boolean confirmed) {
                             mSelector.leaveSelectionMode();
+                        }
+
+                        @Override
+                        public ArrayList<MediaPath> onGetDeleteItem() {
+                            // TODO Auto-generated method stub
+                            return mSelector.getSelected(false);
                         }
 
                     });
@@ -560,19 +567,19 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     @Override
     public void onSelectionModeChange(int mode) {
         switch (mode) {
-            case SelectionManager.ENTER_SELECTION_MODE: {
+            case ContractSelector.ENTER_SELECTION_MODE: {
                 getLetoolActionBar().setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_SELECTION, this);
-                getLetoolActionBar().setSelectionManager(mSelector);
+                getLetoolActionBar().setContractSelectionManager(mSelector);
                 mRootPane.invalidate();
                 break;
             }
-            case SelectionManager.LEAVE_SELECTION_MODE: {
+            case ContractSelector.LEAVE_SELECTION_MODE: {
                 getLetoolActionBar().setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
                 mRootPane.invalidate();
                 initBrowseActionBar();
                 break;
             }
-            case SelectionManager.SELECT_ALL_MODE: {
+            case ContractSelector.SELECT_ALL_MODE: {
                 mRootPane.invalidate();
                 break;
             }
@@ -590,4 +597,5 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     public void onLayoutFinshed(int count) {
         mHandler.obtainMessage(MSG_LAYOUT_CONFIRMED, count, 0).sendToTarget();
     }
+
 }

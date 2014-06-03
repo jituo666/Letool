@@ -24,6 +24,7 @@ import com.xjt.letool.views.opengl.Texture;
 import com.xjt.letool.views.opengl.TextureUploader;
 import com.xjt.letool.views.opengl.TiledTexture;
 import com.xjt.letool.views.render.ThumbnailRenderer;
+import com.xjt.letool.views.render.ThumbnailRendererWithTag;
 import com.xjt.letool.views.utils.AlbumSortTagMaker;
 
 import java.util.ArrayList;
@@ -75,12 +76,16 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
         private ETC1TextureLoader contentLoader;
     }
 
+    public ThumbnailDataWindow(LetoolFragment fragment, ThumbnailDataLoader source, int cacheSize) {
+        this(fragment, source, cacheSize, null);
+    }
+
     public ThumbnailDataWindow(LetoolFragment fragment, ThumbnailDataLoader source, int cacheSize,
-           ThumbnailRenderer.SortTagSpec sortTagSpec) {
+            ThumbnailRendererWithTag.SortTagSpec sortTagSpec) {
         source.setDataChangedListener(this);
         mDataSource = source;
         mImageData = new AlbumEntry[cacheSize];
-        mSortTagEntry = new SortTagEntry[cacheSize/2];
+        mSortTagEntry = new SortTagEntry[cacheSize / 2];
         mSize = source.size();
         mHandler = new SynchronizedHandler(fragment.getGLController()) {
 
@@ -95,7 +100,8 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
         };
         mThreadPool = new JobLimiter(fragment.getThreadPool(), JOB_LIMIT);
         mTextureUploader = new TextureUploader(fragment.getGLController());
-        mSortTagMaker = new AlbumSortTagMaker(sortTagSpec);
+        if (sortTagSpec != null)
+            mSortTagMaker = new AlbumSortTagMaker(sortTagSpec);
 
     }
 
@@ -281,12 +287,12 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
     }
 
     @Override
-    public void onSizeChanged(int size,ArrayList<SortTag> tags) {
+    public void onSizeChanged(int size, ArrayList<SortTag> tags) {
         if (mSize != size) {
             mSize = size;
             mSortTags = tags;
             if (mDataListener != null) {
-                LLog.i(TAG, "--------------tags-tags--------mSize:" + mSize +" tag null?:" + (tags == null));
+                LLog.i(TAG, "--------------tags-tags--------mSize:" + mSize + " tag null?:" + (tags == null));
                 mDataListener.onSizeChanged(mSize, tags);
             }
             if (mContentEnd > mSize)
@@ -371,7 +377,8 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
     }
 
     public void setSortTagMetrics(int width, int height) {
-        mSortTagMaker.setSortTagMetrics(width, height);
+        if (mSortTagMaker != null)
+            mSortTagMaker.setSortTagMetrics(width, height);
     }
 
     public boolean isActiveTag(int tagIndex) {

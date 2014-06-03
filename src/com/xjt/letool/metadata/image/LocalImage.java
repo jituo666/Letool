@@ -45,61 +45,38 @@ public class LocalImage extends LocalMediaItem {
 
     private static final String TAG = LocalImage.class.getSimpleName();
 
-    public static final String ITEM_PATH = "/local/image/item";
+    public static final String ITEM_PATH = "/local/image/item/*";
     // Must preserve order between these indices and the order of the terms in the following PROJECTION array.
-    //    private static final int INDEX_ID = 0;
-    //    private static final int INDEX_CAPTION = 1;
-    //    private static final int INDEX_MIME_TYPE = 2;
-    //    private static final int INDEX_LATITUDE = 3;
-    //    private static final int INDEX_LONGITUDE = 4;
-    //    private static final int INDEX_DATE_TAKEN = 5;
-    //    private static final int INDEX_DATE_ADDED = 6;
-    //    private static final int INDEX_DATE_MODIFIED = 7;
-    //    private static final int INDEX_DATA = 8;
-    //    private static final int INDEX_ORIENTATION = 9;
-    //    private static final int INDEX_BUCKET_ID = 10;
-    //    private static final int INDEX_SIZE = 11;
-    //    private static final int INDEX_WIDTH = 12;
-    //    private static final int INDEX_HEIGHT = 13;
-    //
-    //    public static final String[] PROJECTION = {
-    //            ImageColumns._ID, // 0
-    //            ImageColumns.TITLE, // 1
-    //            ImageColumns.MIME_TYPE, // 2
-    //            ImageColumns.LATITUDE, // 3
-    //            ImageColumns.LONGITUDE, // 4
-    //            ImageColumns.DATE_TAKEN, // 5
-    //            ImageColumns.DATE_ADDED, // 6
-    //            ImageColumns.DATE_MODIFIED, // 7
-    //            ImageColumns.DATA, // 8
-    //            ImageColumns.ORIENTATION, // 9
-    //            ImageColumns.BUCKET_ID, // 10
-    //            ImageColumns.SIZE, // 11
-    //            "0", // 12
-    //            "0" // 13
-    //    };
-
-    private static final int INDEX_ID = 0;
-    private static final int INDEX_DATE_TAKEN = 1;
-    private static final int INDEX_DATA = 2;
-    private static final int INDEX_ORIENTATION = 3;
-    private static final int INDEX_BUCKET_ID = 4;
+    public static final int INDEX_ID = 0;
+    private static final int INDEX_CAPTION = 1;
+    private static final int INDEX_MIME_TYPE = 2;
+    private static final int INDEX_LATITUDE = 3;
+    private static final int INDEX_LONGITUDE = 4;
+    private static final int INDEX_DATE_TAKEN = 5;
+    private static final int INDEX_DATE_ADDED = 6;
+    private static final int INDEX_DATE_MODIFIED = 7;
+    private static final int INDEX_DATA = 8;
+    private static final int INDEX_ORIENTATION = 9;
+    private static final int INDEX_BUCKET_ID = 10;
+    private static final int INDEX_SIZE = 11;
+    private static final int INDEX_WIDTH = 12;
+    private static final int INDEX_HEIGHT = 13;
 
     public static final String[] PROJECTION = {
             ImageColumns._ID, // 0
-            //            ImageColumns.TITLE, // 1
-            //            ImageColumns.MIME_TYPE, // 2
-            //            ImageColumns.LATITUDE, // 3
-            //            ImageColumns.LONGITUDE, // 4
+            ImageColumns.TITLE, // 1
+            ImageColumns.MIME_TYPE, // 2
+            ImageColumns.LATITUDE, // 3
+            ImageColumns.LONGITUDE, // 4
             ImageColumns.DATE_TAKEN, // 5
-            //            ImageColumns.DATE_ADDED, // 6
-            //            ImageColumns.DATE_MODIFIED, // 7
+            ImageColumns.DATE_ADDED, // 6
+            ImageColumns.DATE_MODIFIED, // 7
             ImageColumns.DATA, // 8
             ImageColumns.ORIENTATION, // 9
             ImageColumns.BUCKET_ID, // 10
-            //            ImageColumns.SIZE, // 11
-            //            "0", // 12
-            //            "0" // 13
+            ImageColumns.SIZE, // 11
+            "0", // 12
+            "0" // 13
     };
 
     static {
@@ -108,10 +85,10 @@ public class LocalImage extends LocalMediaItem {
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private static void updateWidthAndHeightProjection() {
-        //        if (ApiHelper.HAS_MEDIA_COLUMNS_WIDTH_AND_HEIGHT) {
-        //            PROJECTION[INDEX_WIDTH] = MediaColumns.WIDTH;
-        //            PROJECTION[INDEX_HEIGHT] = MediaColumns.HEIGHT;
-        //        }
+        if (ApiHelper.HAS_MEDIA_COLUMNS_WIDTH_AND_HEIGHT) {
+            PROJECTION[INDEX_WIDTH] = MediaColumns.WIDTH;
+            PROJECTION[INDEX_HEIGHT] = MediaColumns.HEIGHT;
+        }
     }
 
     private final LetoolApp mApplication;
@@ -146,71 +123,39 @@ public class LocalImage extends LocalMediaItem {
 
     private void loadFromCursor(Cursor cursor) {
         id = cursor.getInt(INDEX_ID);
-        //        caption = cursor.getString(INDEX_CAPTION);
-        //        mimeType = cursor.getString(INDEX_MIME_TYPE);
-        //        latitude = cursor.getDouble(INDEX_LATITUDE);
-        //        longitude = cursor.getDouble(INDEX_LONGITUDE);
+        caption = cursor.getString(INDEX_CAPTION);
+        mimeType = cursor.getString(INDEX_MIME_TYPE);
+        latitude = cursor.getDouble(INDEX_LATITUDE);
+        longitude = cursor.getDouble(INDEX_LONGITUDE);
         dateTakenInMs = cursor.getLong(INDEX_DATE_TAKEN);
-        //        dateAddedInSec = cursor.getLong(INDEX_DATE_ADDED);
-        //        dateModifiedInSec = cursor.getLong(INDEX_DATE_MODIFIED);
+        dateAddedInSec = cursor.getLong(INDEX_DATE_ADDED);
+        dateModifiedInSec = cursor.getLong(INDEX_DATE_MODIFIED);
         filePath = cursor.getString(INDEX_DATA);
         rotation = cursor.getInt(INDEX_ORIENTATION);
         bucketId = cursor.getInt(INDEX_BUCKET_ID);
-        //        fileSize = cursor.getLong(INDEX_SIZE);
-        //        width = cursor.getInt(INDEX_WIDTH);
-        //        height = cursor.getInt(INDEX_HEIGHT);
+        fileSize = cursor.getLong(INDEX_SIZE);
+        width = cursor.getInt(INDEX_WIDTH);
+        height = cursor.getInt(INDEX_HEIGHT);
     }
 
     @Override
     protected boolean updateFromCursor(Cursor cursor) {
         DBUpdateHelper uh = new DBUpdateHelper();
         id = uh.update(id, cursor.getInt(INDEX_ID));
-        //        caption = uh.update(caption, cursor.getString(INDEX_CAPTION));
-        //        mimeType = uh.update(mimeType, cursor.getString(INDEX_MIME_TYPE));
-        //        latitude = uh.update(latitude, cursor.getDouble(INDEX_LATITUDE));
-        //        longitude = uh.update(longitude, cursor.getDouble(INDEX_LONGITUDE));
-        dateTakenInMs = uh.update(
-                dateTakenInMs, cursor.getLong(INDEX_DATE_TAKEN));
-        //        dateAddedInSec = uh.update(
-        //                dateAddedInSec, cursor.getLong(INDEX_DATE_ADDED));
-        //        dateModifiedInSec = uh.update(
-        //                dateModifiedInSec, cursor.getLong(INDEX_DATE_MODIFIED));
+        caption = uh.update(caption, cursor.getString(INDEX_CAPTION));
+        mimeType = uh.update(mimeType, cursor.getString(INDEX_MIME_TYPE));
+        latitude = uh.update(latitude, cursor.getDouble(INDEX_LATITUDE));
+        longitude = uh.update(longitude, cursor.getDouble(INDEX_LONGITUDE));
+        dateTakenInMs = uh.update(dateTakenInMs, cursor.getLong(INDEX_DATE_TAKEN));
+        dateAddedInSec = uh.update(dateAddedInSec, cursor.getLong(INDEX_DATE_ADDED));
+        dateModifiedInSec = uh.update(dateModifiedInSec, cursor.getLong(INDEX_DATE_MODIFIED));
         filePath = uh.update(filePath, cursor.getString(INDEX_DATA));
         rotation = uh.update(rotation, cursor.getInt(INDEX_ORIENTATION));
         bucketId = uh.update(bucketId, cursor.getInt(INDEX_BUCKET_ID));
-        //        fileSize = uh.update(fileSize, cursor.getLong(INDEX_SIZE));
-        //        width = uh.update(width, cursor.getInt(INDEX_WIDTH));
-        //        height = uh.update(height, cursor.getInt(INDEX_HEIGHT));
+        fileSize = uh.update(fileSize, cursor.getLong(INDEX_SIZE));
+        width = uh.update(width, cursor.getInt(INDEX_WIDTH));
+        height = uh.update(height, cursor.getInt(INDEX_HEIGHT));
         return uh.isUpdated();
-    }
-
-    @Override
-    public Job<Bitmap> requestImage(int type) {
-        return new LocalImageBlobRequest(mApplication, mPath, dateModifiedInSec, type, filePath);
-    }
-
-    @Override
-    public Job<Bitmap> requestImage(int type, int index, long dateTaken, DataBaseCache loader) {
-        return new LocalThumbRequest(loader, type, index, dateTaken, filePath);
-    }
-
-    @Override
-    public Job<BitmapRegionDecoder> requestLargeImage() {
-        return new LocalLargeImageRequest(filePath);
-    }
-
-    public static class LocalLargeImageRequest implements Job<BitmapRegionDecoder> {
-
-        String mLocalFilePath;
-
-        public LocalLargeImageRequest(String localFilePath) {
-            mLocalFilePath = localFilePath;
-        }
-
-        @Override
-        public BitmapRegionDecoder run(JobContext jc) {
-            return BitmapDecodeUtils.createBitmapRegionDecoder(jc, mLocalFilePath, false);
-        }
     }
 
     @Override
@@ -326,6 +271,36 @@ public class LocalImage extends LocalMediaItem {
         return new LocalETCBlobRequest(mApplication, mPath, dateTakenInMs, type, filePath);
     }
 
+    @Override
+    public Job<Bitmap> requestImage(int type) {
+        return new LocalImageBlobRequest(mApplication, mPath, dateModifiedInSec, type, filePath);
+    }
+
+    @Override
+    public Job<Bitmap> requestImage(int type, int index, long dateTaken, DataBaseCache loader) {
+        return new LocalThumbRequest(loader, type, index, dateTaken, filePath);
+    }
+
+    @Override
+    public Job<BitmapRegionDecoder> requestLargeImage() {
+        return new LocalLargeImageRequest(filePath);
+    }
+
+    public static class LocalLargeImageRequest implements Job<BitmapRegionDecoder> {
+
+        String mLocalFilePath;
+
+        public LocalLargeImageRequest(String localFilePath) {
+            mLocalFilePath = localFilePath;
+        }
+
+        @Override
+        public BitmapRegionDecoder run(JobContext jc) {
+            return BitmapDecodeUtils.createBitmapRegionDecoder(jc, mLocalFilePath, false);
+        }
+    }
+
+    //for test
     public class TexureLoader implements Job<ETC1Texture> {
 
         @Override

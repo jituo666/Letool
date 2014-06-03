@@ -4,6 +4,7 @@ import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.fragment.PhotoFragment;
+import com.xjt.letool.fragment.PhotoFragmentWithTag;
 import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.Utils;
@@ -57,10 +58,10 @@ public class MainActivity extends BaseActivity {
     }
 
     public void startDefaultAction() {
-        Fragment fragment = new PhotoFragment();
+        Fragment fragment = new PhotoFragmentWithTag();
         Bundle data = new Bundle();
         data.putString(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-        data.putBoolean(ThumbnailActivity.KEY_IS_CAMERA, true);
+        data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
         fragment.setArguments(data);
         getSupportFragmentManager().beginTransaction().add(R.id.root_container, fragment, LetoolFragment.FRAGMENT_TAG_THUMBNAIL).commit();
     }
@@ -74,7 +75,7 @@ public class MainActivity extends BaseActivity {
         //
         Fragment fragment = new PhotoFragment();
         data.putString(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-        data.putBoolean(ThumbnailActivity.KEY_IS_CAMERA, true);
+        data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
         fragment.setArguments(data);
         getSupportFragmentManager().beginTransaction().add(R.id.root_container, fragment, LetoolFragment.FRAGMENT_TAG_THUMBNAIL).commit();
     }
@@ -100,7 +101,7 @@ public class MainActivity extends BaseActivity {
         //
         Fragment fragment = new PhotoFragment();
         data.putString(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-        data.putBoolean(ThumbnailActivity.KEY_IS_CAMERA, true);
+        data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
         fragment.setArguments(data);
         getSupportFragmentManager().beginTransaction().add(R.id.root_container, fragment, LetoolFragment.FRAGMENT_TAG_THUMBNAIL).commit();
     }

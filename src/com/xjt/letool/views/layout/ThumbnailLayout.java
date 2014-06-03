@@ -118,7 +118,7 @@ public abstract class ThumbnailLayout {
             mVisibleThumbnailStart = mVisibleThumbnailEnd = 0;
         }
         if (mRenderer != null) {
-            mRenderer.onVisibleRangeChanged(mVisibleThumbnailStart, mVisibleThumbnailEnd);
+            mRenderer.onVisibleThumbnailRangeChanged(mVisibleThumbnailStart, mVisibleThumbnailEnd);
         }
     }
 

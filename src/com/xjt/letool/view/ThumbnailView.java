@@ -49,7 +49,6 @@ public class ThumbnailView extends GLBaseView {
     private ThumbnailAnim mAnimation = null;
     private final Rect mTempRect = new Rect(); // to prevent allocating memory
     private boolean mDownInScrolling;
-    private int mOverscrollEffect = OVERSCROLL_SYSTEM;
     private ViewScrollerHelper mScroller;
     private final ViewPaper mPaper = new ViewPaper();
     private GestureDetector mGestureDetector;
@@ -82,11 +81,6 @@ public class ThumbnailView extends GLBaseView {
             return mAnimation.calculate(animTime);
         }
         return false;
-    }
-
-    public void setOverscrollEffect(int kind) {
-        mOverscrollEffect = kind;
-        mScroller.setOverfling(kind == OVERSCROLL_SYSTEM);
     }
 
     //////////////////////////////////////////////////////////////Event Handler//////////////////////////////////////////////////////////////
@@ -156,9 +150,6 @@ public class ThumbnailView extends GLBaseView {
             cancelDown(false);
             float distance = ThumbnailLayout.WIDE ? distanceX : distanceY;
             int overDistance = mScroller.startScroll(Math.round(distance), 0, mLayout.getScrollLimit());
-            if (mOverscrollEffect == OVERSCROLL_3D && overDistance != 0) {
-                mPaper.overScroll(overDistance);
-            }
             invalidate();
             return true;
         }
@@ -263,7 +254,7 @@ public class ThumbnailView extends GLBaseView {
 
         public void prepareDrawing();
 
-        public void onVisibleRangeChanged(int visibleStart, int visibleEnd);
+        public void onVisibleThumbnailRangeChanged(int visibleStart, int visibleEnd);
 
         public void onThumbnailSizeChanged(int width, int height);
 
@@ -280,14 +271,12 @@ public class ThumbnailView extends GLBaseView {
     public void setThumbnailRenderer(Renderer render) {
         mRenderer = render;
         if (mLayout instanceof ThumbnailExpandLayout) {
-            ThumbnailExpandLayout expandSlotLayout = (ThumbnailExpandLayout) mLayout;
-            mRenderer.onVisibleTagRangeChanged(
-                    expandSlotLayout.getVisibleTagStart(),
-                    expandSlotLayout.getVisibleTagEnd());
+            ThumbnailExpandLayout expandLayout = (ThumbnailExpandLayout) mLayout;
+            mRenderer.onThumbnailSizeChanged(mLayout.getThumbnailWidth(), mLayout.getThumbnailHeight());
+            mRenderer.onVisibleTagRangeChanged(expandLayout.getVisibleTagStart(), expandLayout.getVisibleTagEnd());
         } else {
             if (mRenderer != null) {
                 mRenderer.onThumbnailSizeChanged(mLayout.getThumbnailWidth(), mLayout.getThumbnailHeight());
-                mRenderer.onVisibleRangeChanged(getVisibleThumbnailStart(), getVisibleThumbnailEnd());
             }
         }
     }
@@ -301,27 +290,24 @@ public class ThumbnailView extends GLBaseView {
         long animTime = AnimationTime.get();
         boolean more = mScroller.advanceAnimation(animTime);
         updateScrollPosition(mScroller.getPosition(), false);
-        boolean paperActive = isPaperAcitivated();
-        more |= paperActive;
         more |= advanceAnimation(animTime);
         if (mAnimation != null) {
             more |= mAnimation.calculate(animTime);
         }
         canvas.translate(-mScrollX, -mScrollY);
         if (mLayout instanceof ThumbnailExpandLayout) {
-            // 绘制展开分类标签
             ThumbnailExpandLayout expandLayout = (ThumbnailExpandLayout) mLayout;
             ArrayList<SortTag> tags = expandLayout.getSortTags();
             if (tags != null && tags.size() > 0) {
-                LLog.i(TAG, "------------------render tag start:" + expandLayout.getVisibleTagStart() + " end:" + expandLayout.getVisibleTagEnd());
+                //LLog.i(TAG, "render tag start:" + expandLayout.getVisibleTagStart() + " end:" + expandLayout.getVisibleTagEnd());
                 for (int i = expandLayout.getVisibleTagStart(); i < expandLayout.getVisibleTagEnd(); i++) {
                     renderSortTag(canvas, i, tags.get(i).pos);
                 }
             }
         }
-        LLog.i(TAG, "----------render item start:" + mLayout.getVisibleThumbnailStart() + " end:" + mLayout.getVisibleThumbnailEnd());
+        //LLog.i(TAG, "render item start:" + mLayout.getVisibleThumbnailStart() + " end:" + mLayout.getVisibleThumbnailEnd());
         for (int i = mLayout.getVisibleThumbnailEnd() - 1; i >= mLayout.getVisibleThumbnailStart(); --i) {
-            if ((renderItem(canvas, i, 0, paperActive) & RENDER_MORE_FRAME) != 0) {
+            if ((renderItem(canvas, i, 0) & RENDER_MORE_FRAME) != 0) {
                 more = true;
             }
         }
@@ -332,44 +318,18 @@ public class ThumbnailView extends GLBaseView {
             invalidate();
     }
 
-    private int renderItem(GLESCanvas canvas, int index, int pass, boolean paperActive) {
+    private int renderItem(GLESCanvas canvas, int index, int pass) {
         canvas.save(GLESCanvas.SAVE_FLAG_ALPHA | GLESCanvas.SAVE_FLAG_MATRIX);
         Rect rect = mLayout.getThumbnailRect(index, mTempRect);
-        if (paperActive) {
-            if (ThumbnailLayout.WIDE) {
-                canvas.multiplyMatrix(mPaper.getTransform(rect, mScrollX), 0);
-            } else {
-                canvas.multiplyMatrix(mPaper.getTransform(rect, mScrollY), 0);
-            }
-        } else {
-            canvas.translate(rect.left, rect.top, 0);
-        }
+
+        canvas.translate(rect.left, rect.top, 0);
+
         if (mAnimation != null && mAnimation.isActive()) {
             mAnimation.apply(canvas, index, rect);
         }
         int result = mRenderer.renderThumbnail(canvas, index, pass, rect.right - rect.left, rect.bottom - rect.top);
         canvas.restore();
         return result;
-    }
-
-    private boolean isPaperAcitivated() {
-        int oldX = mScrollX;
-        if (mOverscrollEffect == OVERSCROLL_3D) {
-            // Check if an edge is reached and notify mPaper if so.
-            int newX = mScrollX;
-            int limit = mLayout.getScrollLimit();
-            if (oldX > 0 && newX == 0 || oldX < limit && newX == limit) {
-                float v = mScroller.getCurrVelocity();
-                if (newX == limit)
-                    v = -v;
-                // I don't know why, but getCurrVelocity() can return NaN.
-                if (!Float.isNaN(v)) {
-                    mPaper.edgeReached(v);
-                }
-            }
-            return mPaper.advanceAnimation();
-        }
-        return false;
     }
 
     ////////////////////////////////////////////////////////////Layout////////////////////////////////////////////////////////////////////
@@ -405,9 +365,6 @@ public class ThumbnailView extends GLBaseView {
         mLayout.setThumbnailViewSize(r - l, b - t);
         LLog.i(TAG, " onLayout visibleCenterIndex:" + visibleCenterIndex);
         resetVisibleRange(visibleCenterIndex);
-        if (mOverscrollEffect == OVERSCROLL_3D) {
-            mPaper.setSize(r - l, b - t);
-        }
         showScrollBarView();
     }
 
@@ -420,20 +377,10 @@ public class ThumbnailView extends GLBaseView {
         }
     }
 
-    /**
-     * Return true if the layout parameters have been changed
-     * @param thumbnailCount
-     * @return
-     */
     public void setThumbnailCount(int thumbnailCount) {
         setThumbnailCount(thumbnailCount, null);
     }
 
-    /**
-     * Return true if the layout parameters have been changed
-     * @param thumbnailCount
-     * @return
-     */
     public void setThumbnailCount(int thumbnailCount, ArrayList<SortTag> tags) {
         mLayout.setThumbnailCount(thumbnailCount, tags);
         // mStartIndex is applied the first time setSlotCount is called.
@@ -516,7 +463,7 @@ public class ThumbnailView extends GLBaseView {
         return mLayout.getVisibleThumbnailEnd();
     }
 
-    //------------------------------------------------------------------------------------------------------------
+    //----------------------------------------------------For Tags------------------------------------------------------------------------------------------
 
     public ArrayList<SortTag> getSortTags() {
         if (mLayout instanceof ThumbnailExpandLayout) {
@@ -533,11 +480,19 @@ public class ThumbnailView extends GLBaseView {
     }
 
     public int getVisibleTagStart() {
-        return ((ThumbnailExpandLayout) mLayout).getVisibleTagStart();
+        if (mLayout instanceof ThumbnailExpandLayout) {
+            return ((ThumbnailExpandLayout) mLayout).getVisibleTagStart();
+        } else {
+            return 0;
+        }
     }
 
     public int getVisibleTagEnd() {
-        return ((ThumbnailExpandLayout) mLayout).getVisibleTagEnd();
+        if (mLayout instanceof ThumbnailExpandLayout) {
+            return ((ThumbnailExpandLayout) mLayout).getVisibleTagEnd();
+        } else {
+            return 0;
+        }
     }
 
     private void renderSortTag(GLESCanvas canvas, int index, Rect rect) {

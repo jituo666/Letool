@@ -2,7 +2,6 @@
 package com.xjt.letool.selectors;
 
 import com.xjt.letool.LetoolContext;
-import com.xjt.letool.common.LLog;
 import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaPath;
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SelectionManager {
+public class ContractSelector {
 
     @SuppressWarnings("unused")
     private static final String TAG = "SelectionManager";
@@ -23,7 +22,7 @@ public class SelectionManager {
 
     private Set<MediaPath> mClickedSet;
     private MediaSet mSourceMediaSet;
-    private SelectionListener mListener;
+    private ContractSelectListener mListener;
     private DataManager mDataManager;
     private boolean mInverseSelection;
     private boolean mIsAlbumSet;
@@ -31,7 +30,7 @@ public class SelectionManager {
     private boolean mAutoLeave = false;
     private int mTotal;
 
-    public SelectionManager(LetoolContext activity, boolean isAlbumSet) {
+    public ContractSelector(LetoolContext activity, boolean isAlbumSet) {
         mDataManager = activity.getDataManager();
         mClickedSet = new HashSet<MediaPath>();
         mIsAlbumSet = isAlbumSet;
@@ -44,7 +43,7 @@ public class SelectionManager {
         mAutoLeave = enable;
     }
 
-    public void setSelectionListener(SelectionListener listener) {
+    public void setSelectionListener(ContractSelectListener listener) {
         mListener = listener;
     }
 
@@ -102,7 +101,7 @@ public class SelectionManager {
         if (mTotal < 0) {
             mTotal = mIsAlbumSet
                     ? mSourceMediaSet.getSubMediaSetCount()
-                    : mSourceMediaSet.getMediaItemCount(false);
+                    : mSourceMediaSet.getMediaItemCount();
         }
         return mTotal;
     }
@@ -143,7 +142,7 @@ public class SelectionManager {
                 return false;
             }
         }
-        int total = set.getMediaItemCount(false);
+        int total = set.getMediaItemCount();
         int batch = 50;
         int index = 0;
 

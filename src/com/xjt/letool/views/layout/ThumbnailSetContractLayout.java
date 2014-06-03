@@ -1,35 +1,48 @@
+
 package com.xjt.letool.views.layout;
 
 import android.graphics.Rect;
 
 import com.xjt.letool.common.LLog;
 
-public class ContractThumbnailLayout extends ThumbnailLayout {
+public class ThumbnailSetContractLayout extends ThumbnailLayout {
 
-    private static final String TAG = ContractThumbnailLayout.class.getSimpleName();
+    private static final String TAG = ThumbnailSetContractLayout.class.getSimpleName();
 
-    public ContractThumbnailLayout(ThumbnailLayoutSpec spec) {
+    public ThumbnailSetContractLayout(ThumbnailLayoutSpec spec) {
         mSpec = spec;
+    }
+
+    private void initThumbnailLayoutParameters(int majorUnitSize) {
+        int count = ((mThumbnailCount + mColumnInMinorDirection - 1) / mColumnInMinorDirection);
+        mContentLengthInMajorDirection = count * majorUnitSize + (count - 1) * mThumbnailGap;
     }
 
     @Override
     protected void initThumbnailLayoutParameters() {
         // Initialize mThumbnailWidth and mThumbnailHeight from mSpec
-        int colums = (mWidth > mHeight) ? mSpec.rowsLand : mSpec.rowsPort;
         mThumbnailGap = mSpec.thumbnailGap;
-        mThumbnailWidth = Math.max(1, (mWidth - (colums - 1) * mThumbnailGap) / colums);
-        mThumbnailHeight = mThumbnailWidth + mSpec.labelHeight;
-        mColumnInMinorDirection = colums;
+        if (!WIDE) {
+            mColumnInMinorDirection = (mWidth < mHeight) ? mSpec.rowsLand : mSpec.rowsPort;
+            mThumbnailWidth = Math.max(1, (mWidth - (mColumnInMinorDirection - 1) * mThumbnailGap) / mColumnInMinorDirection);
+            mThumbnailHeight = mThumbnailWidth + mSpec.labelHeight;
+        } else {
+            mColumnInMinorDirection = (mWidth > mHeight) ? mSpec.rowsLand : mSpec.rowsPort;
+            mThumbnailHeight = Math.max(1, (mHeight - (mColumnInMinorDirection - 1) * mThumbnailGap) / mColumnInMinorDirection);
+            mThumbnailWidth = mThumbnailHeight - mSpec.labelHeight;
+        }
+
         if (mRenderer != null) {
             mRenderer.onThumbnailSizeChanged(mThumbnailWidth, mThumbnailHeight);
         }
-        int count = ((mThumbnailCount + mColumnInMinorDirection - 1) / mColumnInMinorDirection);
         if (WIDE) {
-            mContentLengthInMajorDirection = count * mThumbnailWidth + (count - 1) * mThumbnailGap;
+            initThumbnailLayoutParameters(mThumbnailWidth);
         } else {
-            mContentLengthInMajorDirection = count * mThumbnailHeight + (count - 1) * mThumbnailGap;
+            initThumbnailLayoutParameters(mThumbnailHeight);
         }
-        updateVisibleThumbnailRange();
+        if (mThumbnailCount > 0) {
+            updateVisibleThumbnailRange();
+        }
     }
 
     @Override
@@ -96,7 +109,7 @@ public class ContractThumbnailLayout extends ThumbnailLayout {
     @Override
     protected void updateVisibleTagRange() {
         // TODO Auto-generated method stub
-        
+
     }
 
 }

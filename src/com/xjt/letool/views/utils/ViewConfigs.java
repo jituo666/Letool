@@ -6,7 +6,7 @@ import android.content.res.Resources;
 
 import com.xjt.letool.R;
 import com.xjt.letool.views.layout.ThumbnailLayoutSpec;
-import com.xjt.letool.views.render.ThumbnailRenderer;
+import com.xjt.letool.views.render.ThumbnailRendererWithTag;
 import com.xjt.letool.views.render.ThumbnailSetRenderer;
 
 public final class ViewConfigs {
@@ -32,7 +32,6 @@ public final class ViewConfigs {
         private AlbumSetPage(Context context) {
             Resources r = context.getResources();
             albumSetSpec = new ThumbnailLayoutSpec();
-            albumSetSpec.placeholderColor = r.getColor(R.color.albumset_placeholder);
             albumSetSpec.rowsLand = r.getInteger(R.integer.albumset_rows_land);
             albumSetSpec.rowsPort = r.getInteger(R.integer.albumset_rows_port);
             albumSetSpec.thumbnailGap = r.getDimensionPixelSize(R.dimen.albumset_thumbnail_gap);
@@ -69,7 +68,7 @@ public final class ViewConfigs {
         public int paddingRight;
         public int paddingBottom;
 
-        public ThumbnailRenderer.SortTagSpec sortTagSpec;
+        public ThumbnailRendererWithTag.SortTagSpec sortTagSpec;
 
         public static synchronized AlbumPage get(Context context) {
             if (sInstance == null) {
@@ -95,7 +94,7 @@ public final class ViewConfigs {
             paddingRight = r.getDimensionPixelSize(R.dimen.album_padding_right);
             paddingBottom = r.getDimensionPixelSize(R.dimen.album_padding_bottom);
 
-            sortTagSpec = new ThumbnailRenderer.SortTagSpec(); //分类标签布局定义
+            sortTagSpec = new ThumbnailRendererWithTag.SortTagSpec(); //分类标签布局定义
             sortTagSpec.titleFontSize = r.getDimensionPixelSize(R.dimen.album_tag_font_size);
             sortTagSpec.countFontSize = r.getDimensionPixelSize(R.dimen.album_count_font_size);
             sortTagSpec.iconSize = r.getDimensionPixelSize(R.dimen.album_icon_size);

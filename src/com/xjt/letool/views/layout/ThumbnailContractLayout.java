@@ -13,11 +13,7 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
         mSpec = spec;
     }
 
-    private void initThumbnailLayoutParameters(int majorLength, int minorLength, int majorUnitSize, int minorUnitSize) {
-        int unitCount = (minorLength + mThumbnailGap) / (minorUnitSize + mThumbnailGap);
-        if (unitCount == 0)
-            unitCount = 1;
-        mColumnInMinorDirection = unitCount;
+    private void initThumbnailLayoutParameters(int majorUnitSize) {
         int count = ((mThumbnailCount + mColumnInMinorDirection - 1) / mColumnInMinorDirection);
         mContentLengthInMajorDirection = count * majorUnitSize + (count - 1) * mThumbnailGap;
     }
@@ -26,13 +22,12 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
     protected void initThumbnailLayoutParameters() {
         mThumbnailGap = mSpec.thumbnailGap;
         if (!WIDE) {
-            int rows = (mWidth < mHeight) ? mSpec.rowsLand : mSpec.rowsPort;
-            mThumbnailWidth = Math.max(1, (mWidth - (rows - 1) * mThumbnailGap) / rows);
+            mColumnInMinorDirection = (mWidth < mHeight) ? mSpec.rowsLand : mSpec.rowsPort;
+            mThumbnailWidth = Math.max(1, (mWidth - (mColumnInMinorDirection - 1) * mThumbnailGap) / mColumnInMinorDirection);
             mThumbnailHeight = mThumbnailWidth + mSpec.labelHeight;
         } else {
-
-            int rows = (mWidth > mHeight) ? mSpec.rowsLand : mSpec.rowsPort;
-            mThumbnailHeight = Math.max(1, (mHeight - (rows - 1) * mThumbnailGap) / rows);
+            mColumnInMinorDirection = (mWidth > mHeight) ? mSpec.rowsLand : mSpec.rowsPort;
+            mThumbnailHeight = Math.max(1, (mHeight - (mColumnInMinorDirection - 1) * mThumbnailGap) / mColumnInMinorDirection);
             mThumbnailWidth = mThumbnailHeight - mSpec.labelHeight;
         }
 
@@ -41,9 +36,9 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
         }
 
         if (WIDE) {
-            initThumbnailLayoutParameters(mWidth, mHeight, mThumbnailWidth, mThumbnailHeight);
+            initThumbnailLayoutParameters(mThumbnailWidth);
         } else {
-            initThumbnailLayoutParameters(mHeight, mWidth, mThumbnailHeight, mThumbnailWidth);
+            initThumbnailLayoutParameters(mThumbnailHeight);
         }
         if (mThumbnailCount > 0) {
             updateVisibleThumbnailRange();
@@ -90,7 +85,7 @@ public class ThumbnailContractLayout extends ThumbnailLayout {
         }
 
         int x = col * (mThumbnailWidth + mThumbnailGap);
-        int y =row * (mThumbnailHeight + mThumbnailGap);
+        int y = row * (mThumbnailHeight + mThumbnailGap);
         rect.set(x, y, x + mThumbnailWidth, y + mThumbnailHeight);
         return rect;
     }

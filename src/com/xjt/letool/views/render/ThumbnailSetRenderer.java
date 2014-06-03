@@ -7,7 +7,7 @@ import com.xjt.letool.adapters.ThumbnailSetDataWindow.AlbumSetEntry;
 import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.loader.ThumbnailSetDataLoader;
-import com.xjt.letool.selectors.SelectionManager;
+import com.xjt.letool.selectors.ContractSelector;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.views.opengl.ColorTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
@@ -34,7 +34,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
     private boolean mAnimatePressedUp;
     private MediaPath mHighlightItemPath = null;
     private boolean mInSelectionMode;
-    private SelectionManager mMediaSelector;
+    private ContractSelector mMediaSelector;
 
     private LabelSpec mLabelSpec;
 
@@ -67,7 +67,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         }
     }
 
-    public ThumbnailSetRenderer(LetoolFragment activity, ThumbnailView thumbnailView, SelectionManager selector) {
+    public ThumbnailSetRenderer(LetoolFragment activity, ThumbnailView thumbnailView, ContractSelector selector) {
         super(activity.getAndroidContext());
         mActivity = activity;
         mThumbnailView = thumbnailView;
@@ -197,7 +197,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
     }
 
     @Override
-    public void onVisibleRangeChanged(int visibleStart, int visibleEnd) {
+    public void onVisibleThumbnailRangeChanged(int visibleStart, int visibleEnd) {
         if (mDataWindow != null) {
             mDataWindow.setActiveWindow(visibleStart, visibleEnd);
         }

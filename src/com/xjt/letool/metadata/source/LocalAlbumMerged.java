@@ -16,12 +16,13 @@ import com.xjt.letool.metadata.DataNotifier;
 import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.MediaSet;
-import com.xjt.letool.metadata.image.LocalFullImage;
+import com.xjt.letool.metadata.image.LocalImage;
 import com.xjt.letool.metadata.image.LocalImage;
 import com.xjt.letool.metadata.image.LocalMediaItem;
 import com.xjt.letool.metadata.video.LocalVideo;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.views.layout.ThumbnailExpandLayout.SortTag;
+import com.xjt.letool.views.layout.ThumbnailExpandLayout.ThumbnailPos;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,7 +43,6 @@ public class LocalAlbumMerged extends MediaSet {
     private final boolean mIsImage;
     private final String mItemPath;
     private Cursor mAlbumCursor;
-    private boolean mFullInfo = false;
 
     public LocalAlbumMerged(MediaPath path, LetoolApp application, int[] bucketId, boolean isImage, String name) {
         super(path, nextVersionNumber());
@@ -142,11 +142,7 @@ public class LocalAlbumMerged extends MediaSet {
         LocalMediaItem item = (LocalMediaItem) path.getObject();
         if (item == null) {
             if (isImage) {
-                if (mFullInfo) {
-                    item = new LocalFullImage(path, app, cursor);
-                } else {
-                    item = new LocalImage(path, app, cursor);
-                }
+                item = new LocalImage(path, app, cursor);
             } else {
                 item = new LocalVideo(path, app, cursor);
             }
@@ -157,15 +153,11 @@ public class LocalAlbumMerged extends MediaSet {
     }
 
     @Override
-    public int getMediaItemCount(boolean withFullInfo) {
+    public int getMediaItemCount() {
         long time = System.currentTimeMillis();
-        mFullInfo = withFullInfo;
         if (mAlbumCursor == null) {
-            if (mFullInfo) {
-                mProjection = LocalFullImage.PROJECTION;
-            } else {
-                mProjection = LocalImage.PROJECTION;
-            }
+
+            mProjection = LocalImage.PROJECTION;
             mAlbumCursor = mResolver.query(mBaseUri, mProjection, mWhereClause, null, mOrderClause);
             if (mAlbumCursor == null) {
                 LLog.w(TAG, " mAlbumCursor == null");
@@ -217,5 +209,27 @@ public class LocalAlbumMerged extends MediaSet {
                 mAlbumCursor = null;
             }
         }
+    }
+
+    @Override
+    public ArrayList<MediaPath> getMediaItem(ArrayList<ThumbnailPos> slotPos, int checkedCount) {
+        ArrayList<MediaPath> list = new ArrayList<MediaPath>();
+        LetoolUtils.assertNotInRenderThread();
+        Cursor cursor = mResolver.query(mBaseUri, mProjection, mWhereClause, null, mOrderClause);
+        if (cursor == null || cursor.getCount() != slotPos.size()) {
+            return list;
+        }
+        try {
+            int index = 0;
+            while (cursor.moveToNext() && list.size() < checkedCount) {
+                if (slotPos.get(index).isChecked) {
+                    list.add(new MediaPath(mItemPath, cursor.getInt(0)));
+                }
+                index++;
+            }
+        } finally {
+            cursor.close();
+        }
+        return list;
     }
 }

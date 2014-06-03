@@ -13,8 +13,6 @@ import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaObject;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.MediaSet;
-import com.xjt.letool.metadata.MediaSetUtils;
-import com.xjt.letool.metadata.image.LocalMediaItem;
 import com.xjt.letool.metadata.loader.DataLoadingListener;
 import com.xjt.letool.utils.Utils;
 import com.xjt.letool.view.FullImageView;
@@ -1018,7 +1016,7 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
                 long version = mSource.reload();
                 if (info.version != version) {
                     info.reloadContent = true;
-                    info.size = mSource.getMediaItemCount(true);
+                    info.size = mSource.getMediaItemCount();
                 }
                 if (!info.reloadContent) continue;
                 info.items = mSource.getMediaItem(

@@ -134,7 +134,7 @@ public class SlidingMenuFragment extends Fragment {
         if (f instanceof PhotoFragment) {
             Bundle data = new Bundle();
             data.putString(ThumbnailActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-            data.putBoolean(ThumbnailActivity.KEY_IS_CAMERA, true);
+            data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
             f.setArguments(data);
         } else if (f instanceof GalleryFragment) {
             Bundle data = new Bundle();

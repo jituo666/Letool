@@ -10,9 +10,11 @@ import android.view.View.OnClickListener;
 import android.os.AsyncTask;
 
 import com.xjt.letool.R;
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.metadata.MediaPath;
-import com.xjt.letool.selectors.SelectionManager;
+
+import java.util.ArrayList;
 
 /**
  * @Author Jituo.Xuan
@@ -23,31 +25,29 @@ public class BatchDeleteMediaListener implements OnClickListener {
 
     private static final String TAG = BatchDeleteMediaListener.class.getSimpleName();
     DeleteMediaProgressListener progressListener;
-    SelectionManager selectionManager;
     DataManager manager;
     Context context;
+    ArrayList<MediaPath> deleteItems;
 
     public interface DeleteMediaProgressListener {
 
-        //        public void onConfirmDialogShown();
-
         public void onConfirmDialogDismissed(boolean confirmed);
-        //        public void onProgressStart();
-        //        public void onProgressUpdate(int index);
-        //        public void onProgressComplete(int result);
+
+        public ArrayList<MediaPath> onGetDeleteItem();
+
     }
 
-    public BatchDeleteMediaListener(Activity c, SelectionManager s, DataManager m, DeleteMediaProgressListener l) {
+    public BatchDeleteMediaListener(Activity c, DataManager m, DeleteMediaProgressListener l) {
         progressListener = l;
         context = c;
-        selectionManager = s;
         manager = m;
     }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.ok_btn) {
-            if (selectionManager != null && selectionManager.getSelectedCount() > 0) {
+            deleteItems = progressListener.onGetDeleteItem();
+            if (deleteItems != null && deleteItems.size() > 0) {
                 new DeleteMeidaTask().execute();
             }
         } else if (v.getId() == R.id.cancel_btn) {
@@ -74,7 +74,8 @@ public class BatchDeleteMediaListener implements OnClickListener {
 
         @Override
         protected Void doInBackground(Void... arg0) {
-            for (MediaPath p : selectionManager.getSelected(false)) {
+            for (MediaPath p : deleteItems) {
+                LLog.i(TAG, "------------deleteItems:" + p);
                 manager.delete(p);
             }
             return null;

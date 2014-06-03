@@ -5,6 +5,7 @@ import com.xjt.letool.common.Future;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.utils.Utils;
 import com.xjt.letool.views.layout.ThumbnailExpandLayout.SortTag;
+import com.xjt.letool.views.layout.ThumbnailExpandLayout.ThumbnailPos;
 
 import java.util.ArrayList;
 import java.util.WeakHashMap;
@@ -44,7 +45,7 @@ public abstract class MediaSet extends MediaObject {
         super(path, version);
     }
 
-    public int getMediaItemCount(boolean withFull) {
+    public int getMediaItemCount() {
         return 0;
     }
 
@@ -61,6 +62,10 @@ public abstract class MediaSet extends MediaObject {
     // changed.
     public ArrayList<MediaItem> getMediaItem(int start, int count) {
         return new ArrayList<MediaItem>();
+    }
+
+    public ArrayList<MediaPath> getMediaItem(ArrayList<ThumbnailPos> slotPos, int checkedCount) {
+        return new ArrayList<MediaPath>();
     }
 
     public MediaItem getCoverMediaItem() {
@@ -96,7 +101,7 @@ public abstract class MediaSet extends MediaObject {
     }
 
     public int getTotalMediaItemCount() {
-        int total = getMediaItemCount(false);
+        int total = getMediaItemCount();
         for (int i = 0, n = getSubMediaSetCount(); i < n; i++) {
             total += getSubMediaSet(i).getTotalMediaItemCount();
         }
@@ -197,7 +202,7 @@ public abstract class MediaSet extends MediaObject {
     // Subclasses may override this and use more efficient implementations.
     // Returns the number of items enumerated.
     protected int enumerateMediaItems(ItemConsumer consumer, int startIndex) {
-        int total = getMediaItemCount(true);
+        int total = getMediaItemCount();
         int start = 0;
         while (start < total) {
             int count = Math.min(MEDIAITEM_BATCH_FETCH_COUNT, total - start);

@@ -11,6 +11,7 @@ import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.selectors.ContractSelector;
+import com.xjt.letool.selectors.ExpandSelector;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.views.layout.ThumbnailExpandLayout.SortTag;
 import com.xjt.letool.views.opengl.BitmapTexture;
@@ -22,9 +23,9 @@ import com.xjt.letool.views.utils.AlbumSortTagMaker;
 
 import java.util.ArrayList;
 
-public class ThumbnailRenderer extends AbstractThumbnailRender {
+public class ThumbnailRendererWithTag extends AbstractThumbnailRender {
 
-    private static final String TAG = ThumbnailRenderer.class.getSimpleName();
+    private static final String TAG = ThumbnailRendererWithTag.class.getSimpleName();
 
     private ThumbnailDataWindow mDataWindow;
     private ThumbnailView mThumbnailView;
@@ -38,16 +39,25 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
 
     private int mPressedIndex = -1;
     private boolean mAnimatePressedUp;
-    private ContractSelector mMediaSelector;
+    private ExpandSelector mMediaSelector;
     private boolean mInSelectionMode;
     private LetoolFragment mFragment;
 
     private final BitmapTexture mTagChecked;
     private final BitmapTexture mTagUnChecked;
 
+    protected SortTagSpec mSortTagSpec;
+
     public interface ThumbnailFilter {
 
         public boolean acceptThumbnail(int index);
+    }
+
+    public static class SortTagSpec {
+
+        public int titleFontSize;
+        public int countFontSize;
+        public int iconSize;
     }
 
     private class MyDataListener implements ThumbnailDataWindow.DataListener {
@@ -63,7 +73,11 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
         }
     }
 
-    public ThumbnailRenderer(LetoolFragment fragment, ThumbnailView slotView, ContractSelector selector) {
+    public ThumbnailRendererWithTag(LetoolFragment fragment, ThumbnailView slotView, ExpandSelector selector) {
+        this(fragment, slotView, selector, null);
+    }
+
+    public ThumbnailRendererWithTag(LetoolFragment fragment, ThumbnailView slotView, ExpandSelector selector, SortTagSpec sortTagSpec) {
         super(fragment.getActivity());
         mFragment = fragment;
         mThumbnailView = slotView;
@@ -71,6 +85,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
         mWaitLoadingTexture = new ColorTexture(mPlaceholderColor);
         mWaitLoadingTexture.setSize(1, 1);
 
+        mSortTagSpec = sortTagSpec;
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
         mTagChecked = new BitmapTexture(BitmapFactory.decodeResource(fragment.getResources(),
@@ -87,7 +102,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
             mDataWindow = null;
         }
         if (model != null) {
-            mDataWindow = new ThumbnailDataWindow(mFragment, model, CACHE_SIZE);
+            mDataWindow = new ThumbnailDataWindow(mFragment, model, CACHE_SIZE, mSortTagSpec);
             mDataWindow.setListener(new MyDataListener());
             mThumbnailView.setThumbnailCount(model.size());
         }
@@ -162,7 +177,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
         } else if ((entry.path != null) && (mHighlightItemPath == entry.path)) {
             drawSelectedFrame(canvas, width, height);
         } else if (mInSelectionMode) {
-            if (mMediaSelector.isItemSelected(entry.path)) {
+            if (mMediaSelector.isItemSelected(entry.path, index)) {
                 drawSelectedFrame(canvas, width, height);
             } else {
                 drawPreSelectedFrame(canvas, width, height);

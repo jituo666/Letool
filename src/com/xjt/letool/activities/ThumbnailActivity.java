@@ -19,7 +19,7 @@ public class ThumbnailActivity extends BaseActivity {
     public static final String KEY_ALBUM_TITLE = "album_title";
     public static final String KEY_MEDIA_PATH = "media-path";
     public static final String KEY_ALBUM_ID = "album_id";
-    public static final String KEY_IS_CAMERA = "is_camera";
+    public static final String KEY_IS_PHOTO_ALBUM = "is_photo_album";
 
     public static final int REQUEST_FOR_PHOTO = 100;
 
@@ -35,7 +35,7 @@ public class ThumbnailActivity extends BaseActivity {
         data.putString(KEY_ALBUM_TITLE, albumTitle);
         data.putLong(KEY_ALBUM_ID, albumId);
         data.putString(KEY_MEDIA_PATH, albumMediaPath);
-        data.putBoolean(KEY_IS_CAMERA, false);
+        data.putBoolean(KEY_IS_PHOTO_ALBUM, false);
         data.putIntArray(PhotoFragment.KEY_SET_CENTER, getIntent().getIntArrayExtra(PhotoFragment.KEY_SET_CENTER));
         fragment.setArguments(data);
         LLog.i(TAG, " start album id:" + albumId + " albumTitle:" + albumTitle + " albumMediaPath:" + albumMediaPath);

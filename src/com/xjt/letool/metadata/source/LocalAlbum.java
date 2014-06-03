@@ -24,6 +24,7 @@ import com.xjt.letool.metadata.image.LocalMediaItem;
 import com.xjt.letool.metadata.video.LocalVideo;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.views.layout.ThumbnailExpandLayout.SortTag;
+import com.xjt.letool.views.layout.ThumbnailExpandLayout.ThumbnailPos;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -112,7 +113,7 @@ public class LocalAlbum extends MediaSet {
     }
 
     @Override
-    public int getMediaItemCount(boolean withFull) {
+    public int getMediaItemCount() {
 
         long time = System.currentTimeMillis();
         if (mAlbumCursor == null) {
@@ -224,6 +225,32 @@ public class LocalAlbum extends MediaSet {
                 mAlbumCursor = null;
             }
         }
+    }
+
+    @Override
+    public ArrayList<MediaPath> getMediaItem(ArrayList<ThumbnailPos> slotPos,int checkedCount) {
+        ArrayList<MediaPath> list = new ArrayList<MediaPath>();
+        LetoolUtils.assertNotInRenderThread();
+        Cursor cursor = mResolver.query(mBaseUri, mProjection, mWhereClause,
+                new String[] {
+                    String.valueOf(mPath.getIdentity())
+                },
+                mOrderClause);
+        if (cursor == null || cursor.getCount() != slotPos.size()) {
+            return list;
+        }
+        try {
+            int index = 0;
+            while (cursor.moveToNext() && list.size() < checkedCount) {
+                if (slotPos.get(index).isChecked) {
+                    list.add(new MediaPath(mItemPath, cursor.getLong(LocalImage.INDEX_ID)));
+                }
+                index++;
+            }
+        } finally {
+            cursor.close();
+        }
+        return list;
     }
 
     public static Cursor getItemCursor(ContentResolver resolver, Uri uri, String[] projection, long id) {

@@ -3,8 +3,6 @@ package com.xjt.letool.views.layout;
 
 public class ThumbnailLayoutSpec {
 
-    public int placeholderColor = 0xff000000;
-    public boolean labelOverLay = false;
     public int labelHeight = 0;
 
     public int rowsLand = -1;

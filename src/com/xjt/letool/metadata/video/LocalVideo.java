@@ -12,15 +12,11 @@ import android.provider.MediaStore.Video.VideoColumns;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.ThreadPool.Job;
-import com.xjt.letool.common.ThreadPool.JobContext;
-import com.xjt.letool.imagedata.blobcache.BlobCacheRequest;
 import com.xjt.letool.imagedata.blobcache.LocalVideoBlobRequest;
 import com.xjt.letool.imagedata.dbcache.DataBaseCache;
 import com.xjt.letool.imagedata.dbcache.LocalThumbRequest;
-import com.xjt.letool.imagedata.utils.BitmapUtils;
 import com.xjt.letool.metadata.DBUpdateHelper;
 import com.xjt.letool.metadata.MediaDetails;
-import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.image.LocalMediaItem;
 import com.xjt.letool.metadata.source.LocalAlbum;
@@ -29,7 +25,7 @@ import com.xjt.letool.utils.LetoolUtils;
 // LocalVideo represents a video in the local storage.
 public class LocalVideo extends LocalMediaItem {
     private static final String TAG = "LocalVideo";
-    public static final String ITEM_PATH = "/local/video/item";
+    public static final String ITEM_PATH = "/local/video/item/*";
 
     // Must preserve order between these indices and the order of the terms in
     // the following PROJECTION array.

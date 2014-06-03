@@ -111,7 +111,7 @@ public class ThumbnailExpandLayout extends ThumbnailLayout {
         }
         for (SortTag tag : mSortTags) {
             Rect rect = mThumbnailPositions.get(tag.index).rect;
-            tag.pos = new Rect(rect.left, rect.top - mSpec.tagHeight, rect.left + mSpec.tagWidth, rect.top); 
+            tag.pos = new Rect(rect.left, rect.top - mSpec.tagHeight, rect.left + mSpec.tagWidth, rect.top);
         }
         if (mThumbnailPositions.size() > 0) {
             mContentLengthInMajorDirection = mThumbnailPositions.get(mThumbnailPositions.size() - 1).rect.bottom;
@@ -121,15 +121,18 @@ public class ThumbnailExpandLayout extends ThumbnailLayout {
 
     @Override
     protected void initThumbnailLayoutParameters() {
-        int colums = (mWidth > mHeight) ? mSpec.rowsLand : mSpec.rowsPort;
+
         mThumbnailGap = mSpec.thumbnailGap;
-        mThumbnailWidth = Math.max(1, (mWidth - (colums - 1) * mThumbnailGap) / colums);
-        if (mSortTags == null) {
-            mThumbnailHeight = mThumbnailWidth + mSpec.tagHeight;
+        if (!WIDE) {
+            mColumnInMinorDirection = (mWidth < mHeight) ? mSpec.rowsLand : mSpec.rowsPort;
+            mThumbnailWidth = Math.max(1, (mWidth - (mColumnInMinorDirection - 1) * mThumbnailGap) / mColumnInMinorDirection);
+            mThumbnailHeight = mThumbnailWidth + mSpec.labelHeight;
         } else {
-            mThumbnailHeight = mThumbnailWidth;
+            mColumnInMinorDirection = (mWidth > mHeight) ? mSpec.rowsLand : mSpec.rowsPort;
+            mThumbnailHeight = Math.max(1, (mHeight - (mColumnInMinorDirection - 1) * mThumbnailGap) / mColumnInMinorDirection);
+            mThumbnailWidth = mThumbnailHeight - mSpec.labelHeight;
         }
-        mColumnInMinorDirection = colums;
+
         if (mRenderer != null) {
             mRenderer.onThumbnailSizeChanged(mThumbnailWidth, mThumbnailHeight);
         }

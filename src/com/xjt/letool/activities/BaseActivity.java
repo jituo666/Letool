@@ -74,11 +74,6 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
 
     }
 
-    @Override
-    public void onConfigurationChanged(Configuration config) {
-        super.onConfigurationChanged(config);
-        invalidateOptionsMenu();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

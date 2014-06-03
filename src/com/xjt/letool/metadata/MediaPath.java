@@ -59,8 +59,8 @@ public class MediaPath {
     public String toString() {
         synchronized (MediaPath.class) {
             StringBuilder sb = new StringBuilder();
-            sb.append("Path Prefix:").append(mPrefix);
-            sb.append("Path Identity:").append(mIdentity);
+            sb.append(" Path Prefix:").append(mPrefix);
+            sb.append(" Path Identity:").append(mIdentity);
             return sb.toString();
         }
     }

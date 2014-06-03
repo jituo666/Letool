@@ -16,6 +16,7 @@ import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.common.ThreadPool.JobContext;
 import com.xjt.letool.imagedata.utils.LetoolBitmapPool;
 import com.xjt.letool.views.render.ThumbnailRenderer;
+import com.xjt.letool.views.render.ThumbnailRendererWithTag;
 
 public class AlbumSortTagMaker {
 
@@ -25,13 +26,13 @@ public class AlbumSortTagMaker {
     // We keep a border around the album sort tag to prevent aliasing
     private static final int BORDER_SIZE = 1;
     private static final int BACKGROUND_COLOR = Color.WHITE;
-    private final ThumbnailRenderer.SortTagSpec mSpec;
+    private final ThumbnailRendererWithTag.SortTagSpec mSpec;
     private final TextPaint mTagNamePaint; // 标签名字
     private final TextPaint mCountPaint; // 非类下的数量
     private int mSortTagWidth;
     private int mSortTagHeight;
 
-    public AlbumSortTagMaker(ThumbnailRenderer.SortTagSpec spec) {
+    public AlbumSortTagMaker(ThumbnailRendererWithTag.SortTagSpec spec) {
         mSpec = spec;
         mTagNamePaint = getTextPaint(spec.titleFontSize, FONT_COLOR_TITLE, false);
         mCountPaint = getTextPaint(spec.countFontSize, FONT_COLOR_COUNT, false);
@@ -88,7 +89,7 @@ public class AlbumSortTagMaker {
 
         @Override
         public Bitmap run(JobContext jc) {
-            ThumbnailRenderer.SortTagSpec s = mSpec;
+            ThumbnailRendererWithTag.SortTagSpec s = mSpec;
             String name = mTagName;
             String count = mCount;
             //            Bitmap icon = getOverlayAlbumIcon();
