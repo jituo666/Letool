@@ -117,7 +117,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
             int thumbnailViewRight = right - left - mConfig.paddingRight;
             int thumbnailViewTop = top + mConfig.paddingTop + actionBar.getHeight();
             int thumbnailViewBottom = bottom - top - mConfig.paddingBottom;
-             mRender.setHighlightItemPath(null);
+            mRender.setHighlightItemPath(null);
             // Set the mThumbnailView as a reference point to the open animation
             mOpenCenter.setReferencePosition(0, thumbnailViewTop);
             mThumbnailView.layout(thumbnailViewLeft, thumbnailViewTop, thumbnailViewRight, thumbnailViewBottom);
@@ -222,7 +222,8 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         if (mIsPhotoAlbum) {
             mAlbumTitle = getString(R.string.common_photo);
             mDataSetPath = new MediaPath(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]);
-            mDataSet = new LocalAlbum(mDataSetPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.MY_ALBUM_BUCKETS, true, getString(R.string.common_photo));
+            mDataSet = new LocalAlbum(mDataSetPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.MY_ALBUM_BUCKETS, true,
+                    getString(R.string.common_photo));
         } else {
             mAlbumTitle = data.getString(ThumbnailActivity.KEY_ALBUM_TITLE);
             mDataSetPath = new MediaPath(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), data.getInt(ThumbnailActivity.KEY_ALBUM_ID));
@@ -231,7 +232,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
                 Utils.fail("MediaSet is null. Path = %s", mDataSetPath);
             }
         }
-        mAlbumDataSetLoader = new ThumbnailDataLoader(this, mDataSet,false);
+        mAlbumDataSetLoader = new ThumbnailDataLoader(this, mDataSet, false);
         mAlbumDataSetLoader.setLoadingListener(new MetaDataLoadingListener());
     }
 
@@ -482,7 +483,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
 
                         @Override
                         public ArrayList<MediaPath> onGetDeleteItem() {
-                           return  mSelector.getSelected(false);
+                            return mSelector.getSelected(false);
                         }
 
                     });

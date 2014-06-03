@@ -95,43 +95,6 @@
     <dimen name="stack_photo_width">160dp</dimen>
     <dimen name="stack_photo_height">120dp</dimen>
 
-    <!-- configuration for legacy album set page -->
-    <integer name="albumset_rows_land">3</integer>
-    <integer name="albumset_rows_port">5</integer>
-
-    <bool name="albumset_label_overLay">false</bool>
-
-    <dimen name="albumset_thumbnail_label_height">36dp</dimen>
-    <dimen name="albumset_thumbnail_gap">4dp</dimen>
-    <dimen name="albumset_padding_left">4dp</dimen>
-    <dimen name="albumset_padding_top">4dp</dimen>
-    <dimen name="albumset_padding_bottom">4dp</dimen>
-    <dimen name="albumset_padding_right">4dp</dimen>
-    <dimen name="albumset_label_background_height">36dp</dimen>
-    <dimen name="albumset_left_margin">2dp</dimen>
-    <dimen name="albumset_title_right_margin">20dp</dimen>
-    <dimen name="albumset_icon_size">25dp</dimen>
-    <dimen name="albumset_title_offset">4dp</dimen>
-    <dimen name="albumset_count_offset">12dp</dimen>
-    <dimen name="albumset_title_font_size">14sp</dimen>
-    <dimen name="albumset_count_font_size">16sp</dimen>
-
-    <!-- configuration for album page -->
-    <dimen name="album_thumbnail_gap">4dp</dimen>
-    <dimen name="album_padding_left">4dp</dimen>
-    <dimen name="album_padding_top">4dp</dimen>
-    <dimen name="album_padding_bottom">4dp</dimen>
-    <dimen name="album_padding_right">4dp</dimen>
-
-    <integer name="album_rows_land">3</integer>
-    <integer name="album_rows_port">5</integer>
-
-    <dimen name="album_label_height">40dp</dimen>
-    <dimen name="album_label_width">320dp</dimen>
-    <dimen name="album_tag_font_size">12sp</dimen>
-    <dimen name="album_count_font_size">28sp</dimen>
-    <dimen name="album_icon_size">20dp</dimen>
-
     <!-- configuration for manage page -->
     <dimen name="cache_pin_size">24dp</dimen>
     <dimen name="cache_pin_margin">8dp</dimen>
@@ -155,6 +118,45 @@
     <dimen name="photoeditor_original_text_size">18dp</dimen>
     <dimen name="photoeditor_original_text_margin">4dp</dimen>
     <!-- ========================================================================================== -->
+
+
+    <!-- configuration for legacy album set page -->
+    <integer name="albumset_rows_land">3</integer>
+    <integer name="albumset_rows_port">5</integer>
+
+    <dimen name="albumset_thumbnail_label_height">36dp</dimen>
+    <dimen name="albumset_thumbnail_gap">4dp</dimen>
+    <dimen name="albumset_padding_left">4dp</dimen>
+    <dimen name="albumset_padding_top">4dp</dimen>
+    <dimen name="albumset_padding_bottom">4dp</dimen>
+    <dimen name="albumset_padding_right">4dp</dimen>
+    <dimen name="albumset_label_background_height">36dp</dimen>
+    <dimen name="albumset_left_margin">2dp</dimen>
+    <dimen name="albumset_title_right_margin">20dp</dimen>
+    <dimen name="albumset_icon_size">25dp</dimen>
+    <dimen name="albumset_title_offset">4dp</dimen>
+    <dimen name="albumset_count_offset">12dp</dimen>
+    <dimen name="albumset_title_font_size">14sp</dimen>
+    <dimen name="albumset_count_font_size">16sp</dimen>
+
+    <!-- configuration for album page -->
+
+    <integer name="album_rows_land">4</integer>
+    <integer name="album_rows_port">7</integer>
+
+    <dimen name="album_thumbnail_gap">4dp</dimen>
+    <dimen name="album_padding_left">4dp</dimen>
+    <dimen name="album_padding_top">4dp</dimen>
+    <dimen name="album_padding_bottom">4dp</dimen>
+    <dimen name="album_padding_right">4dp</dimen>
+    <dimen name="album_label_height">40dp</dimen>
+    <dimen name="album_label_width">320dp</dimen>
+    <dimen name="album_tag_font_size">12sp</dimen>
+    <dimen name="album_count_font_size">28sp</dimen>
+    <dimen name="album_icon_size">20dp</dimen>
+
+    <!-- configuration common UI -->
+
     <dimen name="letool_action_bar_height">48dp</dimen>
     <dimen name="letool_action_bar_icon_size">32dp</dimen>
     <dimen name="letool_action_bar_text_size">20sp</dimen>

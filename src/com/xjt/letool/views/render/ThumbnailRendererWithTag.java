@@ -32,8 +32,6 @@ public class ThumbnailRendererWithTag extends AbstractThumbnailRender {
     private MediaPath mHighlightItemPath = null;
     private ThumbnailFilter mThumbnailFilter;
 
-    private static final int CACHE_SIZE = 96;
-
     private final ColorTexture mWaitLoadingTexture;
     private final int mPlaceholderColor = 0xFFE8E8E8;
 
@@ -102,7 +100,7 @@ public class ThumbnailRendererWithTag extends AbstractThumbnailRender {
             mDataWindow = null;
         }
         if (model != null) {
-            mDataWindow = new ThumbnailDataWindow(mFragment, model, CACHE_SIZE, mSortTagSpec);
+            mDataWindow = new ThumbnailDataWindow(mFragment, model, mSortTagSpec);
             mDataWindow.setListener(new MyDataListener());
             mThumbnailView.setThumbnailCount(model.size());
         }

@@ -23,7 +23,6 @@ import com.xjt.letool.views.opengl.ETC1CompressedTexture;
 import com.xjt.letool.views.opengl.Texture;
 import com.xjt.letool.views.opengl.TextureUploader;
 import com.xjt.letool.views.opengl.TiledTexture;
-import com.xjt.letool.views.render.ThumbnailRenderer;
 import com.xjt.letool.views.render.ThumbnailRendererWithTag;
 import com.xjt.letool.views.utils.AlbumSortTagMaker;
 
@@ -42,6 +41,8 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
 
     private static final int MSG_UPDATE_ENTRY = 0;
     private static final int JOB_LIMIT = 2;
+    private static final int CACHE_SIZE = 96;
+
     private int mActiveRequestCount = 0;
     private boolean mIsActive = false;
 
@@ -76,16 +77,16 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
         private ETC1TextureLoader contentLoader;
     }
 
-    public ThumbnailDataWindow(LetoolFragment fragment, ThumbnailDataLoader source, int cacheSize) {
-        this(fragment, source, cacheSize, null);
+    public ThumbnailDataWindow(LetoolFragment fragment, ThumbnailDataLoader source) {
+        this(fragment, source, null);
     }
 
-    public ThumbnailDataWindow(LetoolFragment fragment, ThumbnailDataLoader source, int cacheSize,
+    public ThumbnailDataWindow(LetoolFragment fragment, ThumbnailDataLoader source,
             ThumbnailRendererWithTag.SortTagSpec sortTagSpec) {
         source.setDataChangedListener(this);
         mDataSource = source;
-        mImageData = new AlbumEntry[cacheSize];
-        mSortTagEntry = new SortTagEntry[cacheSize / 2];
+        mImageData = new AlbumEntry[CACHE_SIZE];
+        mSortTagEntry = new SortTagEntry[CACHE_SIZE / 2];
         mSize = source.size();
         mHandler = new SynchronizedHandler(fragment.getGLController()) {
 
@@ -292,7 +293,6 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
             mSize = size;
             mSortTags = tags;
             if (mDataListener != null) {
-                LLog.i(TAG, "--------------tags-tags--------mSize:" + mSize + " tag null?:" + (tags == null));
                 mDataListener.onSizeChanged(mSize, tags);
             }
             if (mContentEnd > mSize)

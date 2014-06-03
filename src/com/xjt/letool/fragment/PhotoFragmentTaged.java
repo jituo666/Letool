@@ -257,8 +257,6 @@ public class PhotoFragmentTaged extends LetoolFragment implements EyePosition.Ey
         mSelector.setSelectionListener(this);
         mSelector.setSourceMediaSet(mMediaSet);
         mConfig = ViewConfigs.AlbumPage.get(getAndroidContext());
-        mConfig.albumSpec.rowsLand = 4;
-        mConfig.albumSpec.rowsPort = 7;
         ThumbnailLayout layout = new ThumbnailExpandLayout(mConfig.albumSpec);
         mThumbnailView = new ThumbnailView(this, layout);
         mThumbnailView.setBackgroundColor(LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.default_background_thumbnail)));

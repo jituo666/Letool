@@ -58,7 +58,7 @@ public class MainActivity extends BaseActivity {
     }
 
     public void startDefaultAction() {
-        Fragment fragment = new PhotoFragmentTaged();
+        Fragment fragment = new PhotoFragment();
         Bundle data = new Bundle();
         data.putString(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
         data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
