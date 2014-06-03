@@ -17,7 +17,7 @@ import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.utils.Utils;
-import com.xjt.letool.views.layout.ThumbnailExpandLayout.SortTag;
+import com.xjt.letool.views.layout.ThumbnailExpandLayout.TimelineTag;
 import com.xjt.letool.views.opengl.BitmapTexture;
 import com.xjt.letool.views.opengl.ETC1CompressedTexture;
 import com.xjt.letool.views.opengl.Texture;
@@ -60,7 +60,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
 
     public static interface DataListener {
 
-        public void onSizeChanged(int size, ArrayList<SortTag> tags);
+        public void onSizeChanged(int size, ArrayList<TimelineTag> tags);
 
         public void onContentChanged();
     }
@@ -287,7 +287,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
     }
 
     @Override
-    public void onSizeChanged(int size, ArrayList<SortTag> tags) {
+    public void onSizeChanged(int size, ArrayList<TimelineTag> tags) {
         if (mSize != size) {
             mSize = size;
             mSortTags = tags;
@@ -347,7 +347,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
     // ----------------------------------------------------------tag--------------------------------------------------------
     private SortTagEntry mSortTagEntry[];
     private AlbumSortTagMaker mSortTagMaker;
-    private ArrayList<SortTag> mSortTags;
+    private ArrayList<TimelineTag> mSortTags;
     private int mTagStart = 0;
     private int mTagEnd = 0;
     private int mActiveTagStart = 0;
@@ -372,7 +372,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
         return mSortTagEntry[tagIndex % mSortTagEntry.length];
     }
 
-    public SortTag getSortTag(int tagIndex) {
+    public TimelineTag getSortTag(int tagIndex) {
         return mSortTags.get(tagIndex);
     }
 

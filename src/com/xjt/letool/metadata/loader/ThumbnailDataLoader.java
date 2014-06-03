@@ -14,7 +14,7 @@ import com.xjt.letool.metadata.MediaObject;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.utils.Utils;
-import com.xjt.letool.views.layout.ThumbnailExpandLayout.SortTag;
+import com.xjt.letool.views.layout.ThumbnailExpandLayout.TimelineTag;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,22 +51,23 @@ public class ThumbnailDataLoader {
     private DataChangedListener mDataChangedListener;
     private ReloadTask mReloadTask;
     private long mFailedVersion = MediaObject.INVALID_DATA_VERSION; // the data version on which last loading failed
+    private final boolean mLoadTag;
 
     public static interface DataChangedListener {
 
-        public void onSizeChanged(int size, ArrayList<SortTag> tags);
+        public void onSizeChanged(int size, ArrayList<TimelineTag> tags);
 
         public void onContentChanged(int index);
     }
 
-    public ThumbnailDataLoader(LetoolFragment context, MediaSet mediaSet) {
+    public ThumbnailDataLoader(LetoolFragment context, MediaSet mediaSet, boolean loadTag) {
         mSource = mediaSet;
         mData = new MediaItem[DATA_CACHE_SIZE];
         mItemVersion = new long[DATA_CACHE_SIZE];
         mSetVersion = new long[DATA_CACHE_SIZE];
         Arrays.fill(mItemVersion, MediaObject.INVALID_DATA_VERSION);
         Arrays.fill(mSetVersion, MediaObject.INVALID_DATA_VERSION);
-
+        mLoadTag = loadTag;
         mMainHandler = new SynchronizedHandler(context.getGLController()) {
 
             @Override
@@ -224,7 +225,7 @@ public class ThumbnailDataLoader {
         public int reloadCount;
         public int size;
         public ArrayList<MediaItem> items;
-        public ArrayList<SortTag> allSortTag;
+        public ArrayList<TimelineTag> allSortTag;
     }
 
     private class GetUpdateInfo implements Callable<UpdateInfo> {
@@ -257,8 +258,6 @@ public class ThumbnailDataLoader {
 
         private UpdateInfo mUpdateInfo;
 
-        private ArrayList<SortTag> mSortTags;
-        
         public UpdateContent(UpdateInfo info) {
             mUpdateInfo = info;
         }
@@ -269,9 +268,9 @@ public class ThumbnailDataLoader {
             mSourceVersion = info.version;
             if (mSize != info.size) {
                 mSize = info.size;
-                mSortTags = info.allSortTag;
                 if (mDataChangedListener != null) {
-                    mDataChangedListener.onSizeChanged(mSize, mSortTags);
+                    //LLog.i(TAG, "------2-------tag0 count:" + info.allSortTag.get(0).count);
+                    mDataChangedListener.onSizeChanged(mSize, mLoadTag ? info.allSortTag : null);
                 }
                 if (mContentEnd > mSize)
                     mContentEnd = mSize;
@@ -348,8 +347,13 @@ public class ThumbnailDataLoader {
                     continue;
                 synchronized (DataManager.LOCK) {
                     if (info.version != version) {
-                        info.size = mSource.getMediaItemCount(); 
-                        info.allSortTag = mSource.analysisSortTags(); 
+                        if (mLoadTag) {
+                            info.size = mSource.getAllMediaItems();
+                            info.allSortTag = mSource.getTimelineTags();
+                            LLog.i(TAG, "-------------tag0 count:" + info.allSortTag.get(0).count);
+                        } else {
+                            info.size = mSource.getAllMediaItems();
+                        }
                         info.version = version;
                     }
                     if (info.reloadCount > 0) {

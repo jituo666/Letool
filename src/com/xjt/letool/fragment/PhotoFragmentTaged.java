@@ -16,7 +16,7 @@ import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.metadata.loader.DataLoadingListener;
 import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
-import com.xjt.letool.metadata.source.LocalAlbumMerged;
+import com.xjt.letool.metadata.source.LocalAlbum;
 import com.xjt.letool.selectors.ExpandSelectListener;
 import com.xjt.letool.selectors.ExpandSelector;
 import com.xjt.letool.surpport.MenuItem;
@@ -37,7 +37,7 @@ import com.xjt.letool.view.LetoolActionBar;
 import com.xjt.letool.view.LetoolDialog;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.views.layout.ThumbnailExpandLayout;
-import com.xjt.letool.views.layout.ThumbnailExpandLayout.SortTag;
+import com.xjt.letool.views.layout.ThumbnailExpandLayout.TimelineTag;
 import com.xjt.letool.views.layout.ThumbnailLayout;
 import com.xjt.letool.views.layout.ThumbnailLayout.LayoutListener;
 import com.xjt.letool.views.opengl.FadeTexture;
@@ -64,10 +64,10 @@ import android.widget.Toast;
  * @Date 9:48:35 AM Apr 19, 2014
  * @Comments:null
  */
-public class PhotoFragmentWithTag extends LetoolFragment implements EyePosition.EyePositionListener, ExpandSelectListener,
+public class PhotoFragmentTaged extends LetoolFragment implements EyePosition.EyePositionListener, ExpandSelectListener,
         LayoutListener, OnMenuItemClickListener {
 
-    private static final String TAG = PhotoFragmentWithTag.class.getSimpleName();
+    private static final String TAG = PhotoFragmentTaged.class.getSimpleName();
 
     public static final String KEY_SET_CENTER = "set-center";
     public static final String KEY_RESUME_ANIMATION = "resume_animation";
@@ -201,7 +201,7 @@ public class PhotoFragmentWithTag extends LetoolFragment implements EyePosition.
     private void onSingleTagTapUp(int tagIndex) {
         if (!mIsActive || !mSelector.inSelectionMode())
             return;
-        SortTag tag = mThumbnailView.getSortTags().get(tagIndex);
+        TimelineTag tag = mThumbnailView.getTimelineTags().get(tagIndex);
         boolean checked = !tag.checked;
         tag.checked = checked;
         mSelector.toggleTag(tagIndex, checked);
@@ -214,7 +214,7 @@ public class PhotoFragmentWithTag extends LetoolFragment implements EyePosition.
         MediaItem item = mAlbumDataSetLoader.get(thumbnailIndex);
         if (item == null)
             return;
-        mSelector.setTagsAndSlotPos(mThumbnailView.getSortTags(), mThumbnailView.getSlotPos());
+        mSelector.setTagsAndSlotPos(mThumbnailView.getTimelineTags(), mThumbnailView.getSlotPos());
         mSelector.toggle(thumbnailIndex);
         mThumbnailView.invalidate();
     }
@@ -236,7 +236,7 @@ public class PhotoFragmentWithTag extends LetoolFragment implements EyePosition.
         mIsCamera = data.getBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM);
         if (!mIsCamera) {
             mAlbumTitle = data.getString(ThumbnailActivity.KEY_ALBUM_TITLE);
-            mDataSetPath = new MediaPath(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), data.getLong(ThumbnailActivity.KEY_ALBUM_ID));
+            mDataSetPath = new MediaPath(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), data.getInt(ThumbnailActivity.KEY_ALBUM_ID));
             mMediaSet = getDataManager().getMediaSet(mDataSetPath);
             if (mMediaSet == null) {
                 Utils.fail("MediaSet is null. Path = %s", mDataSetPath);
@@ -244,11 +244,11 @@ public class PhotoFragmentWithTag extends LetoolFragment implements EyePosition.
         } else {
             mAlbumTitle = getString(R.string.common_photo);
             mDataSetPath = new MediaPath(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]);
-            mMediaSet = new LocalAlbumMerged(mDataSetPath, (LetoolApp) getActivity().getApplication()
+            mMediaSet = new LocalAlbum(mDataSetPath, (LetoolApp) getActivity().getApplication()
                     , MediaSetUtils.MY_ALBUM_BUCKETS, true, getString(R.string.common_photo));
 
         }
-        mAlbumDataSetLoader = new ThumbnailDataLoader(this, mMediaSet);
+        mAlbumDataSetLoader = new ThumbnailDataLoader(this, mMediaSet, true);
         mAlbumDataSetLoader.setLoadingListener(new MetaDataLoadingListener());
     }
 
@@ -266,27 +266,27 @@ public class PhotoFragmentWithTag extends LetoolFragment implements EyePosition.
 
             @Override
             public void onDown(int index) {
-                PhotoFragmentWithTag.this.onDown(index);
+                PhotoFragmentTaged.this.onDown(index);
             }
 
             @Override
             public void onUp(boolean followedByLongPress) {
-                PhotoFragmentWithTag.this.onUp(followedByLongPress);
+                PhotoFragmentTaged.this.onUp(followedByLongPress);
             }
 
             @Override
             public void onSingleTapUp(int thumbnailIndex) {
-                PhotoFragmentWithTag.this.onSingleTapUp(thumbnailIndex);
+                PhotoFragmentTaged.this.onSingleTapUp(thumbnailIndex);
             }
 
             @Override
             public void onSingleTagTapUp(int tagIndex) {
-                PhotoFragmentWithTag.this.onSingleTagTapUp(tagIndex);
+                PhotoFragmentTaged.this.onSingleTagTapUp(tagIndex);
             }
 
             @Override
             public void onLongTap(int thumbnailIndex) {
-                PhotoFragmentWithTag.this.onLongTap(thumbnailIndex);
+                PhotoFragmentTaged.this.onLongTap(thumbnailIndex);
             }
         });
         mRender = new ThumbnailRendererWithTag(this, mThumbnailView, mSelector, mConfig.sortTagSpec);
@@ -506,7 +506,7 @@ public class PhotoFragmentWithTag extends LetoolFragment implements EyePosition.
 
                         @Override
                         public ArrayList<MediaPath> onGetDeleteItem() {
-                            return mSelector.getSelectedPaths();
+                            return mSelector.getSelectedPathByPosition();
                         }
 
                     });

@@ -15,7 +15,7 @@ public class ThumbnailExpandLayout extends ThumbnailLayout {
     protected int mVisibleTagStart;
     protected int mVisibleTagEnd;
 
-    public static class SortTag {
+    public static class TimelineTag {
 
         public String name = "";
         public int index = 0;
@@ -48,14 +48,14 @@ public class ThumbnailExpandLayout extends ThumbnailLayout {
     // 计算每个标签产生的Thumbnail位移
     public void computeSortTagOffsets() {
         int size = mSortTags.size();
-        SortTag divider0 = mSortTags.get(0);
+        TimelineTag divider0 = mSortTags.get(0);
         divider0.offset = 0;
         if (size == 1) {
             divider0.count = mThumbnailCount;
         } else {
             for (int i = 1; i < size; i++) {
-                SortTag dividerCur = mSortTags.get(i);
-                SortTag dividerPre = mSortTags.get(i - 1);
+                TimelineTag dividerCur = mSortTags.get(i);
+                TimelineTag dividerPre = mSortTags.get(i - 1);
                 int mode = (dividerCur.index + dividerPre.offset) % mColumnInMinorDirection;
                 dividerCur.offset = (mColumnInMinorDirection - mode) % mColumnInMinorDirection
                         + dividerPre.offset;
@@ -109,7 +109,7 @@ public class ThumbnailExpandLayout extends ThumbnailLayout {
             rect.set(x, y, x + mThumbnailWidth, y + mThumbnailHeight);
             mThumbnailPositions.add(new ThumbnailPos(false, rect));
         }
-        for (SortTag tag : mSortTags) {
+        for (TimelineTag tag : mSortTags) {
             Rect rect = mThumbnailPositions.get(tag.index).rect;
             tag.pos = new Rect(rect.left, rect.top - mSpec.tagHeight, rect.left + mSpec.tagWidth, rect.top);
         }
@@ -208,7 +208,7 @@ public class ThumbnailExpandLayout extends ThumbnailLayout {
         setVisibleThumbnailRange(start, end);
     }
 
-    public ArrayList<SortTag> getSortTags() {
+    public ArrayList<TimelineTag> getTimelineTags() {
         return mSortTags;
     }
 

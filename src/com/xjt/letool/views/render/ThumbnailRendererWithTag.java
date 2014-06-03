@@ -13,7 +13,7 @@ import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.selectors.ContractSelector;
 import com.xjt.letool.selectors.ExpandSelector;
 import com.xjt.letool.view.ThumbnailView;
-import com.xjt.letool.views.layout.ThumbnailExpandLayout.SortTag;
+import com.xjt.letool.views.layout.ThumbnailExpandLayout.TimelineTag;
 import com.xjt.letool.views.opengl.BitmapTexture;
 import com.xjt.letool.views.opengl.ColorTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
@@ -68,7 +68,7 @@ public class ThumbnailRendererWithTag extends AbstractThumbnailRender {
         }
 
         @Override
-        public void onSizeChanged(int size, ArrayList<SortTag> tags) {
+        public void onSizeChanged(int size, ArrayList<TimelineTag> tags) {
             mThumbnailView.setThumbnailCount(size, tags);
         }
     }
@@ -231,10 +231,9 @@ public class ThumbnailRendererWithTag extends AbstractThumbnailRender {
             int b = AlbumSortTagMaker.getBorderSize();
             int h = content.getHeight();
             content.draw(canvas, -b, height - h + b, width + b + b, h);
-            LLog.i(TAG, (t == null) + "----------xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx--------render  tagIndex:" + tagIndex + " width:" + width + " height" + height);
         }
         if (mInSelectionMode) {
-            SortTag tag = mDataWindow.getSortTag(tagIndex);
+            TimelineTag tag = mDataWindow.getSortTag(tagIndex);
             canvas.translate(tag.pos.right - height, 0);
             if (tag.checked) {
                 drawCheckedBox(canvas, height / 2, height / 2);

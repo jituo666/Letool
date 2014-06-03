@@ -101,7 +101,7 @@ public class ContractSelector {
         if (mTotal < 0) {
             mTotal = mIsAlbumSet
                     ? mSourceMediaSet.getSubMediaSetCount()
-                    : mSourceMediaSet.getMediaItemCount();
+                    : mSourceMediaSet.getAllMediaItems();
         }
         return mTotal;
     }
@@ -142,7 +142,7 @@ public class ContractSelector {
                 return false;
             }
         }
-        int total = set.getMediaItemCount();
+        int total = set.getAllMediaItems();
         int batch = 50;
         int index = 0;
 

@@ -20,11 +20,11 @@ public class FullImageActivity extends BaseActivity {
         Fragment fragment = new FullImageFragment();
         Bundle data = new Bundle();
         String albumTitle = getIntent().getStringExtra(ThumbnailActivity.KEY_ALBUM_TITLE);
-        long albumId = getIntent().getLongExtra(ThumbnailActivity.KEY_ALBUM_ID, 0);
+        int albumId = getIntent().getIntExtra(ThumbnailActivity.KEY_ALBUM_ID, 0);
         String albumMediaPath = getIntent().getStringExtra(ThumbnailActivity.KEY_MEDIA_PATH);
         int currentIndex = getIntent().getIntExtra(FullImageFragment.KEY_INDEX_HINT, 0);
         data.putString(ThumbnailActivity.KEY_ALBUM_TITLE, albumTitle);
-        data.putLong(ThumbnailActivity.KEY_ALBUM_ID, albumId);
+        data.putInt(ThumbnailActivity.KEY_ALBUM_ID, albumId);
         data.putString(ThumbnailActivity.KEY_MEDIA_PATH, albumMediaPath);
         data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, getIntent().getBooleanExtra(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, false));
         data.putInt(FullImageFragment.KEY_INDEX_HINT, currentIndex);

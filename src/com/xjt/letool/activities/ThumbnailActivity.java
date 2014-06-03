@@ -30,10 +30,10 @@ public class ThumbnailActivity extends BaseActivity {
         Fragment fragment = new PhotoFragment();
         Bundle data = new Bundle();
         String albumTitle = getIntent().getStringExtra(KEY_ALBUM_TITLE);
-        long albumId = getIntent().getLongExtra(KEY_ALBUM_ID, 0);
+        int albumId = getIntent().getIntExtra(KEY_ALBUM_ID, 0);
         String albumMediaPath = getIntent().getStringExtra(KEY_MEDIA_PATH);
         data.putString(KEY_ALBUM_TITLE, albumTitle);
-        data.putLong(KEY_ALBUM_ID, albumId);
+        data.putInt(KEY_ALBUM_ID, albumId);
         data.putString(KEY_MEDIA_PATH, albumMediaPath);
         data.putBoolean(KEY_IS_PHOTO_ALBUM, false);
         data.putIntArray(PhotoFragment.KEY_SET_CENTER, getIntent().getIntArrayExtra(PhotoFragment.KEY_SET_CENTER));

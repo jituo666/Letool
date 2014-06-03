@@ -15,12 +15,11 @@ import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.common.ThreadPool.JobContext;
 import com.xjt.letool.imagedata.utils.LetoolBitmapPool;
-import com.xjt.letool.views.render.ThumbnailRenderer;
 import com.xjt.letool.views.render.ThumbnailRendererWithTag;
 
 public class AlbumSortTagMaker {
 
-    private static final String TAG = "AlbumSortTagMaker";
+    private static final String TAG = AlbumSortTagMaker.class.getSimpleName();
     private static final int FONT_COLOR_TITLE = Color.BLACK;
     private static final int FONT_COLOR_COUNT = Color.BLACK;
     // We keep a border around the album sort tag to prevent aliasing
@@ -58,14 +57,11 @@ public class AlbumSortTagMaker {
     public synchronized void setSortTagMetrics(int width, int height) {
         if (mSortTagWidth == width)
             return;
-        LLog.i(TAG, "-------1------setSortTagMetrics w:" + width + " h:" + height);
         mSortTagWidth = width;
         mSortTagHeight = height;
     }
 
     public ThreadPool.Job<Bitmap> requestTag(String name, String count) {
-
-        LLog.i(TAG, "-------2------setSortTagMetrics w:" + mSortTagWidth + " h:" + mSortTagHeight);
         return new AlbumSortTagJob(name, count);
     }
 
@@ -99,7 +95,6 @@ public class AlbumSortTagMaker {
             synchronized (this) {
                 sortTagWidth = mSortTagWidth;
                 sortTagHeight = mSortTagHeight;
-                LLog.i(TAG, "------------mSortTagWidth:" + mSortTagWidth + " sortTagHeight:" + sortTagHeight);
                 bitmap = LetoolBitmapPool.getInstance().get(mSortTagWidth, mSortTagHeight);
             }
             if (bitmap == null) {
@@ -134,16 +129,6 @@ public class AlbumSortTagMaker {
             y += (mSortTagHeight / 2) - 12;
             drawText(canvas, x, y, name.substring(11), sortTagWidth - Math.round(mCountPaint.measureText(count)),
                     mTagNamePaint);
-            //            // draw the icon
-            //            if (icon != null) {
-            //                if (jc.isCancelled())
-            //                    return null;
-            //                x = sortTagWidth - icon.getWidth();
-            //                float scale = (float) s.iconSize / icon.getWidth();
-            //                canvas.translate(0, (bitmap.getHeight() - Math.round(scale * icon.getHeight())) / 2);
-            //                canvas.scale(scale, scale);
-            //                canvas.drawBitmap(icon, x, 0, null); // 绘制icon
-            //            }
             return bitmap;
         }
     }

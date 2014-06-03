@@ -13,10 +13,10 @@ public class MediaPath {
      */
     private static final String TAG = "Path";
     private final String mPrefix;
-    private final long mIdentity;
+    private final int mIdentity;
     private WeakReference<MediaObject> mObject;
 
-    public MediaPath(String prefix, long identity) {
+    public MediaPath(String prefix, int identity) {
         mPrefix = prefix;
         mIdentity = identity;
     }
@@ -69,7 +69,7 @@ public class MediaPath {
         return mPrefix;
     }
 
-    public long getIdentity() {
+    public int getIdentity() {
         return mIdentity;
     }
 }

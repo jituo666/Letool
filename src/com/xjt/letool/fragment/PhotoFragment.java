@@ -16,7 +16,7 @@ import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.metadata.loader.DataLoadingListener;
 import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
-import com.xjt.letool.metadata.source.LocalAlbumMerged;
+import com.xjt.letool.metadata.source.LocalAlbum;
 import com.xjt.letool.selectors.ContractSelectListener;
 import com.xjt.letool.selectors.ContractSelector;
 import com.xjt.letool.surpport.MenuItem;
@@ -222,17 +222,16 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         if (mIsPhotoAlbum) {
             mAlbumTitle = getString(R.string.common_photo);
             mDataSetPath = new MediaPath(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]);
-            mDataSet = new LocalAlbumMerged(mDataSetPath, (LetoolApp) getActivity().getApplication()
-                    , MediaSetUtils.MY_ALBUM_BUCKETS, true, getString(R.string.common_photo));
+            mDataSet = new LocalAlbum(mDataSetPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.MY_ALBUM_BUCKETS, true, getString(R.string.common_photo));
         } else {
             mAlbumTitle = data.getString(ThumbnailActivity.KEY_ALBUM_TITLE);
-            mDataSetPath = new MediaPath(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), data.getLong(ThumbnailActivity.KEY_ALBUM_ID));
+            mDataSetPath = new MediaPath(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), data.getInt(ThumbnailActivity.KEY_ALBUM_ID));
             mDataSet = getDataManager().getMediaSet(mDataSetPath);
             if (mDataSet == null) {
                 Utils.fail("MediaSet is null. Path = %s", mDataSetPath);
             }
         }
-        mAlbumDataSetLoader = new ThumbnailDataLoader(this, mDataSet);
+        mAlbumDataSetLoader = new ThumbnailDataLoader(this, mDataSet,false);
         mAlbumDataSetLoader.setLoadingListener(new MetaDataLoadingListener());
     }
 

@@ -119,12 +119,12 @@ public class LocalSource extends MediaSource {
         }
     }
 
-    @Override
+/*    @Override
     public MediaPath findPathByUri(Uri uri, String type) {
         try {
             switch (mUriMatcher.match(uri)) {
                 case LOCAL_IMAGE_ITEM: {
-                    long id = ContentUris.parseId(uri);
+                    int id = ContentUris.parseId(uri);
                     return id >= 0 ? new MediaPath(LocalImage.ITEM_PATH, id) : null;
                 }
                 case LOCAL_VIDEO_ITEM: {
@@ -145,7 +145,7 @@ public class LocalSource extends MediaSource {
             LLog.w(TAG, "uri: " + uri.toString(), e);
         }
         return null;
-    }
+    }*/
 
     @Override
     public void resume() {

@@ -12,8 +12,8 @@ import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.utils.RelativePosition;
 import com.xjt.letool.utils.Utils;
 import com.xjt.letool.views.layout.ThumbnailExpandLayout;
-import com.xjt.letool.views.layout.ThumbnailExpandLayout.SortTag;
 import com.xjt.letool.views.layout.ThumbnailExpandLayout.ThumbnailPos;
+import com.xjt.letool.views.layout.ThumbnailExpandLayout.TimelineTag;
 import com.xjt.letool.views.layout.ThumbnailLayout;
 import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.utils.UIListener;
@@ -297,7 +297,7 @@ public class ThumbnailView extends GLBaseView {
         canvas.translate(-mScrollX, -mScrollY);
         if (mLayout instanceof ThumbnailExpandLayout) {
             ThumbnailExpandLayout expandLayout = (ThumbnailExpandLayout) mLayout;
-            ArrayList<SortTag> tags = expandLayout.getSortTags();
+            ArrayList<TimelineTag> tags = expandLayout.getTimelineTags();
             if (tags != null && tags.size() > 0) {
                 //LLog.i(TAG, "render tag start:" + expandLayout.getVisibleTagStart() + " end:" + expandLayout.getVisibleTagEnd());
                 for (int i = expandLayout.getVisibleTagStart(); i < expandLayout.getVisibleTagEnd(); i++) {
@@ -381,7 +381,7 @@ public class ThumbnailView extends GLBaseView {
         setThumbnailCount(thumbnailCount, null);
     }
 
-    public void setThumbnailCount(int thumbnailCount, ArrayList<SortTag> tags) {
+    public void setThumbnailCount(int thumbnailCount, ArrayList<TimelineTag> tags) {
         mLayout.setThumbnailCount(thumbnailCount, tags);
         // mStartIndex is applied the first time setSlotCount is called.
         if (mStartIndex != ThumbnailLayout.INDEX_NONE) {
@@ -465,9 +465,9 @@ public class ThumbnailView extends GLBaseView {
 
     //----------------------------------------------------For Tags------------------------------------------------------------------------------------------
 
-    public ArrayList<SortTag> getSortTags() {
+    public ArrayList<TimelineTag> getTimelineTags() {
         if (mLayout instanceof ThumbnailExpandLayout) {
-            return ((ThumbnailExpandLayout) mLayout).getSortTags();
+            return ((ThumbnailExpandLayout) mLayout).getTimelineTags();
         }
         return null;
     }

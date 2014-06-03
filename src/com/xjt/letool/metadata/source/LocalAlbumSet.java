@@ -198,13 +198,17 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
         }
     }
 
-    private MediaSet getLocalAlbum(DataManager manager, int type, long id, String name) {
+    private MediaSet getLocalAlbum(DataManager manager, int type, int id, String name) {
         synchronized (DataManager.LOCK) {
             switch (type) {
                 case MEDIA_TYPE_IMAGE:
-                    return new LocalAlbum(new MediaPath(PATH_IMAGE, id), mApplication, id, true, name);
+                    return new LocalAlbum(new MediaPath(PATH_IMAGE, id), mApplication, new int[] {
+                        id
+                    }, true, name);
                 case MEDIA_TYPE_VIDEO:
-                    return new LocalAlbum(new MediaPath(PATH_VIDEO, id), mApplication, id, false, name);
+                    return new LocalAlbum(new MediaPath(PATH_VIDEO, id), mApplication, new int[] {
+                        id
+                    }, false, name);
             }
             throw new IllegalArgumentException(String.valueOf(type));
         }
