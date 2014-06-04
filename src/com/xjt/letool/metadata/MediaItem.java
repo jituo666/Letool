@@ -106,7 +106,8 @@ public abstract class MediaItem extends MediaObject {
     public static void setThumbnailSizes(int size, int microSize) {
         sThumbnailTargetSize = size;
         if (sMicrothumbnailTargetSize != microSize) {
-            sMicrothumbnailTargetSize = Math.abs(microSize - 128) > Math.abs(microSize - 256) ? 256 : 128;
+            sMicrothumbnailTargetSize = microSize;
+            //sMicrothumbnailTargetSize = Math.abs(microSize - 128) > Math.abs(microSize - 256) ? 256 : 128;
         }
         LLog.i(TAG, " MediaItem.sThumbnailTargetSize:" + sThumbnailTargetSize + " MediaItem.sMicrothumbnailTargetSize:" + sMicrothumbnailTargetSize);
     }

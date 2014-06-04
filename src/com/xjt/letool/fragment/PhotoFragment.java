@@ -232,7 +232,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
                 Utils.fail("MediaSet is null. Path = %s", mDataSetPath);
             }
         }
-        mAlbumDataSetLoader = new ThumbnailDataLoader(this, mDataSet, false);
+        mAlbumDataSetLoader = new ThumbnailDataLoader(this, mDataSet);
         mAlbumDataSetLoader.setLoadingListener(new MetaDataLoadingListener());
     }
 

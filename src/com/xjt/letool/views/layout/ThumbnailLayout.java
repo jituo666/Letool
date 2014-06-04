@@ -6,9 +6,7 @@ import android.graphics.Rect;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.view.ThumbnailView.Renderer;
-import com.xjt.letool.views.layout.ThumbnailExpandLayout.TimelineTag;
 
-import java.util.ArrayList;
 
 public abstract class ThumbnailLayout {
 
@@ -36,8 +34,6 @@ public abstract class ThumbnailLayout {
     protected int mScrollPosition;
 
     private LayoutListener mLayoutListener;
-
-    protected ArrayList<TimelineTag> mSortTags;
 
     public interface LayoutListener {
 
@@ -85,14 +81,10 @@ public abstract class ThumbnailLayout {
         mRenderer = render;
     }
 
-    public void setThumbnailCount(int thumbnailCount) {
-        setThumbnailCount(thumbnailCount, null);
-    }
 
-    public void setThumbnailCount(int thumbnailCount, ArrayList<TimelineTag> tags) {
+    public void setThumbnailCount(int thumbnailCount) {
         if (thumbnailCount == mThumbnailCount)
             return;
-        mSortTags = tags;
         mThumbnailCount = thumbnailCount;
         initThumbnailLayoutParameters();
         if (mLayoutListener != null) {

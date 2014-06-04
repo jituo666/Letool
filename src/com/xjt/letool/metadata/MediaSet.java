@@ -4,8 +4,6 @@ package com.xjt.letool.metadata;
 import com.xjt.letool.common.Future;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.utils.Utils;
-import com.xjt.letool.views.layout.ThumbnailExpandLayout.ThumbnailPos;
-import com.xjt.letool.views.layout.ThumbnailExpandLayout.TimelineTag;
 
 import java.util.ArrayList;
 import java.util.WeakHashMap;
@@ -49,9 +47,6 @@ public abstract class MediaSet extends MediaObject {
         return 0;
     }
 
-    public ArrayList<TimelineTag> getTimelineTags() {
-        return new ArrayList<TimelineTag>();
-    }
 
     // Returns the media items in the range [start, start + count).
     //
@@ -64,9 +59,6 @@ public abstract class MediaSet extends MediaObject {
         return new ArrayList<MediaItem>();
     }
 
-    public ArrayList<MediaPath> getMediaPathByPosition(ArrayList<ThumbnailPos> slotPos, int checkedCount) {
-        return new ArrayList<MediaPath>();
-    }
 
     public MediaItem getCoverMediaItem() {
         ArrayList<MediaItem> items = getMediaItem(0, 1);

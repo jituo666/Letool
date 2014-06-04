@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.xjt.letool.R;
 import com.xjt.letool.activities.BaseActivity;
 import com.xjt.letool.selectors.ContractSelector;
-import com.xjt.letool.selectors.ExpandSelector;
 
 public class LetoolActionBar {
 
@@ -63,7 +62,6 @@ public class LetoolActionBar {
     private int mCurActionBarMode;
     private boolean mIsExpand = false;
     private ContractSelector mConractSelectionManager;
-    private ExpandSelector mExpandSelectionManager;
 
     public LetoolActionBar(BaseActivity activity, ViewGroup barContainer) {
         mActivity = activity;
@@ -113,27 +111,15 @@ public class LetoolActionBar {
             actionBarNaviText.setText(titleId);
     }
 
-    public void setExpandSelectionManager(ExpandSelector selector) {
-        mExpandSelectionManager = selector;
-        mIsExpand = true;
-    }
-
     public void setContractSelectionManager(ContractSelector selector) {
         mConractSelectionManager = selector;
         mIsExpand = false;
     }
 
     public void exitSelection() {
-        if (mIsExpand) {
-            if (mCurActionBarMode == ACTION_BAR_MODE_SELECTION && mExpandSelectionManager != null
-                    && mExpandSelectionManager.inSelectionMode()) {
-                mExpandSelectionManager.leaveSelectionMode();
-            }
-        } else {
-            if (mCurActionBarMode == ACTION_BAR_MODE_SELECTION && mConractSelectionManager != null
-                    && mConractSelectionManager.inSelectionMode()) {
-                mConractSelectionManager.leaveSelectionMode();
-            }
+        if (mCurActionBarMode == ACTION_BAR_MODE_SELECTION && mConractSelectionManager != null
+                && mConractSelectionManager.inSelectionMode()) {
+            mConractSelectionManager.leaveSelectionMode();
         }
     }
 

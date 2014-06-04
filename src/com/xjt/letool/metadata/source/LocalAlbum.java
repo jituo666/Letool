@@ -23,8 +23,6 @@ import com.xjt.letool.metadata.image.LocalImage;
 import com.xjt.letool.metadata.image.LocalMediaItem;
 import com.xjt.letool.metadata.video.LocalVideo;
 import com.xjt.letool.utils.LetoolUtils;
-import com.xjt.letool.views.layout.ThumbnailExpandLayout.TimelineTag;
-import com.xjt.letool.views.layout.ThumbnailExpandLayout.ThumbnailPos;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -149,57 +147,6 @@ public class LocalAlbum extends MediaSet {
     }
 
     @Override
-    public ArrayList<TimelineTag> getTimelineTags() {
-        long starttime = System.currentTimeMillis();
-        ArrayList<TimelineTag> ret = new ArrayList<TimelineTag>();
-        Cursor cursor = null;
-        if (mBucketId.length == 1) {
-            cursor = mResolver.query(mBaseUri, new String[] {
-                    ImageColumns.DATE_TAKEN, ImageColumns.BUCKET_ID,
-                    "count(" + ImageColumns.BUCKET_ID + ")"
-            },
-                    mWhereClause + ") group by ("
-                            + ImageColumns.DATE_TAKEN + "/86400000",
-                    new String[] {
-                        String.valueOf(mBucketId[0])
-                    },
-                    ImageColumns.DATE_TAKEN + " DESC ");
-        } else {
-            cursor = mResolver.query(mBaseUri, new String[] {
-                    ImageColumns.DATE_TAKEN, ImageColumns.BUCKET_ID,
-                    "count(" + ImageColumns.BUCKET_ID + ")"
-            },
-                    mWhereClause + ") group by ("
-                            + ImageColumns.DATE_TAKEN + "/86400000",
-                    null,
-                    ImageColumns.DATE_TAKEN + " DESC ");
-        }
-        if (cursor == null) {
-            LLog.w(TAG, "query fail: " + mBaseUri);
-            return ret;
-        }
-        try {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd E");
-            int lastCount = 0;
-            while (cursor.moveToNext()) {
-                TimelineTag tag = new TimelineTag();
-                tag.name = formatter.format(cursor.getLong(0));
-                if (ret.size() > 0) {
-                    tag.index = lastCount;
-                } else {
-                    tag.index = 0;
-                }
-                lastCount += cursor.getInt(2);
-                ret.add(tag);
-            }
-        } finally {
-            cursor.close();
-        }
-        LLog.i(TAG, "-------------get tags used time:" + (System.currentTimeMillis() - starttime) + ":" + ret.size());
-        return ret;
-    }
-
-    @Override
     public String getName() {
         return mName;
     }
@@ -233,18 +180,6 @@ public class LocalAlbum extends MediaSet {
         return true;
     }
 
-    private static String getLocalizedName(Resources res, long bucketId,
-            String name) {
-        if (bucketId == MediaSetUtils.DOWNLOAD_BUCKET_ID) {
-            return res.getString(R.string.folder_download);
-        } else if (bucketId == MediaSetUtils.IMPORTED_BUCKET_ID) {
-            return res.getString(R.string.folder_imported);
-        } else if (bucketId == MediaSetUtils.SNAPSHOT_BUCKET_ID) {
-            return res.getString(R.string.folder_screenshot);
-        } else {
-            return name;
-        }
-    }
 
     @Override
     public void closeCursor() {
@@ -255,32 +190,6 @@ public class LocalAlbum extends MediaSet {
                 mAlbumCursor = null;
             }
         }
-    }
-
-    @Override
-    public ArrayList<MediaPath> getMediaPathByPosition(ArrayList<ThumbnailPos> slotPos, int checkedCount) {
-        ArrayList<MediaPath> list = new ArrayList<MediaPath>();
-        LetoolUtils.assertNotInRenderThread();
-        Cursor cursor = mResolver.query(mBaseUri, mProjection, mWhereClause,
-                new String[] {
-                    String.valueOf(mPath.getIdentity())
-                },
-                mOrderClause);
-        if (cursor == null || cursor.getCount() != slotPos.size()) {
-            return list;
-        }
-        try {
-            int index = 0;
-            while (cursor.moveToNext() && list.size() < checkedCount) {
-                if (slotPos.get(index).isChecked) {
-                    list.add(new MediaPath(mItemPath, cursor.getInt(LocalImage.INDEX_ID)));
-                }
-                index++;
-            }
-        } finally {
-            cursor.close();
-        }
-        return list;
     }
 
     public static Cursor getItemCursor(ContentResolver resolver, Uri uri, String[] projection, long id) {

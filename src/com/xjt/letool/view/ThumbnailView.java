@@ -11,9 +11,6 @@ import com.xjt.letool.common.SynchronizedHandler;
 import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.utils.RelativePosition;
 import com.xjt.letool.utils.Utils;
-import com.xjt.letool.views.layout.ThumbnailExpandLayout;
-import com.xjt.letool.views.layout.ThumbnailExpandLayout.ThumbnailPos;
-import com.xjt.letool.views.layout.ThumbnailExpandLayout.TimelineTag;
 import com.xjt.letool.views.layout.ThumbnailLayout;
 import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.utils.UIListener;
@@ -148,8 +145,6 @@ public class ThumbnailView extends GLBaseView {
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             cancelDown(false);
-            float distance = ThumbnailLayout.WIDE ? distanceX : distanceY;
-            int overDistance = mScroller.startScroll(Math.round(distance), 0, mLayout.getScrollLimit());
             invalidate();
             return true;
         }
@@ -163,12 +158,6 @@ public class ThumbnailView extends GLBaseView {
             int index = mLayout.getThumbnailIndexByPosition(e.getX(), e.getY());
             if (index != ThumbnailLayout.INDEX_NONE && mListener != null)
                 mListener.onSingleTapUp(index);
-            else if (mLayout instanceof ThumbnailExpandLayout) {
-                index = ((ThumbnailExpandLayout) mLayout).getTagIndexByPosition(
-                        e.getX(), e.getY());
-                if (index != ThumbnailLayout.INDEX_NONE)
-                    mListener.onSingleTagTapUp(index);
-            }
             return true;
         }
 
@@ -270,15 +259,10 @@ public class ThumbnailView extends GLBaseView {
 
     public void setThumbnailRenderer(Renderer render) {
         mRenderer = render;
-        if (mLayout instanceof ThumbnailExpandLayout) {
-            ThumbnailExpandLayout expandLayout = (ThumbnailExpandLayout) mLayout;
-            mRenderer.onThumbnailSizeChanged(mLayout.getThumbnailWidth(), mLayout.getThumbnailHeight());
-            mRenderer.onVisibleTagRangeChanged(expandLayout.getVisibleTagStart(), expandLayout.getVisibleTagEnd());
-        } else {
+
             if (mRenderer != null) {
                 mRenderer.onThumbnailSizeChanged(mLayout.getThumbnailWidth(), mLayout.getThumbnailHeight());
             }
-        }
     }
 
     @Override
@@ -295,16 +279,6 @@ public class ThumbnailView extends GLBaseView {
             more |= mAnimation.calculate(animTime);
         }
         canvas.translate(-mScrollX, -mScrollY);
-        if (mLayout instanceof ThumbnailExpandLayout) {
-            ThumbnailExpandLayout expandLayout = (ThumbnailExpandLayout) mLayout;
-            ArrayList<TimelineTag> tags = expandLayout.getTimelineTags();
-            if (tags != null && tags.size() > 0) {
-                //LLog.i(TAG, "render tag start:" + expandLayout.getVisibleTagStart() + " end:" + expandLayout.getVisibleTagEnd());
-                for (int i = expandLayout.getVisibleTagStart(); i < expandLayout.getVisibleTagEnd(); i++) {
-                    renderSortTag(canvas, i, tags.get(i).pos);
-                }
-            }
-        }
         //LLog.i(TAG, "render item start:" + mLayout.getVisibleThumbnailStart() + " end:" + mLayout.getVisibleThumbnailEnd());
         for (int i = mLayout.getVisibleThumbnailEnd() - 1; i >= mLayout.getVisibleThumbnailStart(); --i) {
             if ((renderItem(canvas, i, 0) & RENDER_MORE_FRAME) != 0) {
@@ -377,12 +351,9 @@ public class ThumbnailView extends GLBaseView {
         }
     }
 
-    public void setThumbnailCount(int thumbnailCount) {
-        setThumbnailCount(thumbnailCount, null);
-    }
 
-    public void setThumbnailCount(int thumbnailCount, ArrayList<TimelineTag> tags) {
-        mLayout.setThumbnailCount(thumbnailCount, tags);
+    public void setThumbnailCount(int thumbnailCount) {
+        mLayout.setThumbnailCount(thumbnailCount);
         // mStartIndex is applied the first time setSlotCount is called.
         if (mStartIndex != ThumbnailLayout.INDEX_NONE) {
             setCenterIndex(mStartIndex);
@@ -461,44 +432,5 @@ public class ThumbnailView extends GLBaseView {
 
     public int getVisibleThumbnailEnd() {
         return mLayout.getVisibleThumbnailEnd();
-    }
-
-    //----------------------------------------------------For Tags------------------------------------------------------------------------------------------
-
-    public ArrayList<TimelineTag> getTimelineTags() {
-        if (mLayout instanceof ThumbnailExpandLayout) {
-            return ((ThumbnailExpandLayout) mLayout).getTimelineTags();
-        }
-        return null;
-    }
-
-    public ArrayList<ThumbnailPos> getSlotPos() {
-        if (mLayout instanceof ThumbnailExpandLayout) {
-            return ((ThumbnailExpandLayout) mLayout).getThumbnailPos();
-        }
-        return null;
-    }
-
-    public int getVisibleTagStart() {
-        if (mLayout instanceof ThumbnailExpandLayout) {
-            return ((ThumbnailExpandLayout) mLayout).getVisibleTagStart();
-        } else {
-            return 0;
-        }
-    }
-
-    public int getVisibleTagEnd() {
-        if (mLayout instanceof ThumbnailExpandLayout) {
-            return ((ThumbnailExpandLayout) mLayout).getVisibleTagEnd();
-        } else {
-            return 0;
-        }
-    }
-
-    private void renderSortTag(GLESCanvas canvas, int index, Rect rect) {
-        canvas.save(GLESCanvas.SAVE_FLAG_ALPHA | GLESCanvas.SAVE_FLAG_MATRIX);
-        canvas.translate(rect.left, rect.top, 0);
-        mRenderer.renderSortTag(canvas, index, rect.right - rect.left, rect.bottom - rect.top);
-        canvas.restore();
     }
 }

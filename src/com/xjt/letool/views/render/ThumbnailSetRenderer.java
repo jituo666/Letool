@@ -135,7 +135,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
 
     protected int renderContent(GLESCanvas canvas, AlbumSetEntry entry, int width, int height) {
         int renderRequestFlags = 0;
-        Texture content = entry.compressTexture;
+        Texture content = entry.bitmapTexture;
         if (content == null) {
             content = mWaitLoadingTexture;
             entry.isWaitLoadingDisplayed = true;

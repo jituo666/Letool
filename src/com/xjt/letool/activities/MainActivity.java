@@ -4,7 +4,6 @@ import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.fragment.PhotoFragment;
-import com.xjt.letool.fragment.PhotoFragmentTaged;
 import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.Utils;

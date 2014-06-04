@@ -17,14 +17,11 @@ import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.utils.Utils;
-import com.xjt.letool.views.layout.ThumbnailExpandLayout.TimelineTag;
 import com.xjt.letool.views.opengl.BitmapTexture;
 import com.xjt.letool.views.opengl.ETC1CompressedTexture;
 import com.xjt.letool.views.opengl.Texture;
 import com.xjt.letool.views.opengl.TextureUploader;
 import com.xjt.letool.views.opengl.TiledTexture;
-import com.xjt.letool.views.render.ThumbnailRendererWithTag;
-import com.xjt.letool.views.utils.AlbumSortTagMaker;
 
 import java.util.ArrayList;
 
@@ -61,7 +58,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
 
     public static interface DataListener {
 
-        public void onSizeChanged(int size, ArrayList<TimelineTag> tags);
+        public void onSizeChanged(int size);
 
         public void onContentChanged();
     }
@@ -73,20 +70,14 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
         public int rotation;
         public int mediaType;
         public boolean isWaitDisplayed;
-        public ETC1CompressedTexture compressTexture;
-        private ETC1TextureLoader contentLoader;
+        public BitmapTexture bitmapTexture;
+        private BitmapLoader contentLoader;
     }
 
     public ThumbnailDataWindow(LetoolFragment fragment, ThumbnailDataLoader source) {
-        this(fragment, source, null);
-    }
-
-    public ThumbnailDataWindow(LetoolFragment fragment, ThumbnailDataLoader source,
-            ThumbnailRendererWithTag.SortTagSpec sortTagSpec) {
         source.setDataChangedListener(this);
         mDataSource = source;
         mImageData = new AlbumEntry[CACHE_SIZE];
-        mSortTagEntry = new SortTagEntry[CACHE_SIZE / 2];
         mSize = source.size();
         mHandler = new SynchronizedHandler(fragment.getGLController()) {
 
@@ -94,15 +85,10 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
             public void handleMessage(Message message) {
                 if (message.what == MSG_UPDATE_ENTRY) {
                     ((ThumbnailLoader) message.obj).updateEntry();
-                } else if (message.what == MSG_UPDATE_ALBUM_ENTRY) {
-                    ((SortTagLoader) message.obj).updateEntry();
                 }
             }
         };
         mThreadPool = new JobLimiter(fragment.getThreadPool(), JOB_LIMIT);
-        mTextureUploader = new TextureUploader(fragment.getGLController());
-        if (sortTagSpec != null)
-            mSortTagMaker = new AlbumSortTagMaker(sortTagSpec);
 
     }
 
@@ -207,7 +193,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
         if (slotIndex < mContentStart || slotIndex >= mContentEnd)
             return false;
         AlbumEntry entry = mImageData[slotIndex % mImageData.length];
-        if (entry.compressTexture != null || entry.item == null)
+        if (entry.bitmapTexture != null || entry.item == null)
             return false;
         entry.contentLoader.startLoad();
         return entry.contentLoader.isRequestInProgress();
@@ -238,8 +224,8 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
         AlbumEntry entry = data[index];
         if (entry.contentLoader != null)
             entry.contentLoader.recycle();
-        if (entry.compressTexture != null)
-            entry.compressTexture.recycle();
+        if (entry.bitmapTexture != null)
+            entry.bitmapTexture.recycle();
         data[index] = null;
     }
 
@@ -288,12 +274,11 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
     }
 
     @Override
-    public void onSizeChanged(int size, ArrayList<TimelineTag> tags) {
+    public void onSizeChanged(int size) {
         if (mSize != size) {
             mSize = size;
-            mSortTags = tags;
             if (mDataListener != null) {
-                mDataListener.onSizeChanged(mSize, tags);
+                mDataListener.onSizeChanged(mSize);
             }
             if (mContentEnd > mSize)
                 mContentEnd = mSize;
@@ -302,7 +287,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
         }
     }
 
-    private class ThumbnailLoader extends ETC1TextureLoader {
+    private class ThumbnailLoader extends BitmapLoader {
 
         private final int mThumbnailIndex;
 
@@ -314,22 +299,22 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
         }
 
         @Override
-        protected Future<ETC1Texture> submitETC1TextureTask(FutureListener<ETC1Texture> l) {
-            return mThreadPool.submit(mItem.requestImage(MediaItem.TYPE_MICROTHUMBNAIL, 0), this);
+        protected Future<Bitmap> submitBitmapTask(FutureListener<Bitmap> l) {
+            return mThreadPool.submit(mItem.requestImage(MediaItem.TYPE_MICROTHUMBNAIL), this);
         }
 
         @Override
-        protected void onLoadComplete(ETC1Texture bitmap) {
+        protected void onLoadComplete(Bitmap bitmap) {
             mHandler.obtainMessage(MSG_UPDATE_ENTRY, this).sendToTarget();
         }
 
         public void updateEntry() {
-            ETC1Texture texture = getETC1Texture();
-            if (texture == null)
+            Bitmap bitmap = getBitmap();
+            if (bitmap == null)
                 return; // error or recycled
 
             AlbumEntry entry = mImageData[mThumbnailIndex % mImageData.length];
-            entry.compressTexture = new ETC1CompressedTexture(texture);
+            entry.bitmapTexture = new BitmapTexture(bitmap);
             if (isActiveThumbnail(mThumbnailIndex)) {
 
                 --mActiveRequestCount;
@@ -340,246 +325,6 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
                 }
             } else {
 
-            }
-        }
-    }
-
-    // ----------------------------------------------------------tag--------------------------------------------------------
-    private SortTagEntry mSortTagEntry[];
-    private AlbumSortTagMaker mSortTagMaker;
-    private ArrayList<TimelineTag> mSortTags;
-    private int mTagStart = 0;
-    private int mTagEnd = 0;
-    private int mActiveTagStart = 0;
-    private int mActiveTagEnd = 0;
-    private int mActiveRequestTagCount = 0;
-    private final TextureUploader mTextureUploader;
-
-    private static final int MSG_UPDATE_ALBUM_ENTRY = 1;
-
-    public static class SortTagEntry {
-
-        // public Path path;
-        public BitmapTexture bitmapTexture;
-        public Texture content;
-        public BitmapLoader tagLoader;
-    }
-
-    public SortTagEntry getSortTagEntry(int tagIndex) {
-        if (!isActiveTag(tagIndex)) {
-            Utils.fail("invalid tag: %s outsides (%s, %s)", tagIndex, mActiveTagStart, mActiveTagEnd);
-        }
-        return mSortTagEntry[tagIndex % mSortTagEntry.length];
-    }
-
-    public TimelineTag getSortTag(int tagIndex) {
-        return mSortTags.get(tagIndex);
-    }
-
-    public void setSortTagMetrics(int width, int height) {
-        if (mSortTagMaker != null)
-            mSortTagMaker.setSortTagMetrics(width, height);
-    }
-
-    public boolean isActiveTag(int tagIndex) {
-        return tagIndex >= mActiveTagStart && tagIndex < mActiveTagEnd;
-    }
-
-    private void setTagWindow(int tagStart, int tagEnd) {
-        if (tagStart == mTagStart && tagEnd == mTagEnd)
-            return;
-        if (!mIsActive) {
-            mTagStart = tagStart;
-            mTagEnd = tagEnd;
-            return;
-        }
-        if (tagStart >= mTagEnd || mTagStart >= tagEnd) {
-            for (int i = mTagStart, n = mTagEnd; i < n; ++i) {
-                freeTagContent(i);
-            }
-            for (int i = tagStart; i < tagEnd; ++i) {
-                prepareTagContent(i);
-            }
-            //Log.i(TAG, "-----1------" + mTagStart + ":" + mTagEnd + ":" + tagStart + ":" + tagEnd);
-        } else {
-            for (int i = mTagStart; i < tagStart; ++i) {
-                freeTagContent(i);
-            }
-            for (int i = tagEnd, n = mTagEnd; i < n; ++i) {
-                freeTagContent(i);
-            }
-            for (int i = tagStart, n = mTagStart; i < n; ++i) {
-                prepareTagContent(i);
-            }
-            for (int i = mTagEnd; i < tagEnd; ++i) {
-                prepareTagContent(i);
-            }
-        }
-        mTagStart = tagStart;
-        mTagEnd = tagEnd;
-    }
-
-    public void setActiveTagWindow(int start, int end) {
-        if (!(start <= end && end - start <= mSortTagEntry.length && end <= mSortTags.size())) {
-            Utils.fail("%s, %s, %s, %s", start, end, mSortTagEntry.length, mSortTags.size());
-        }
-        SortTagEntry data[] = mSortTagEntry;
-        mActiveTagStart = start;
-        mActiveTagEnd = end;
-        int contentStart = Utils.clamp((start + end) / 2 - data.length / 2, 0, Math.max(0, mSortTags.size() - data.length));
-        int contentEnd = Math.min(contentStart + data.length, mSortTags.size());
-        setTagWindow(contentStart, contentEnd);
-        updateTextureUploadQueueTag();
-        if (mIsActive)
-            updateAllImageRequestsTag();
-    }
-
-    private void uploadBgTextureInTag(int index) {
-        if (index < mTagEnd && index >= mTagStart) {
-            SortTagEntry entry = mSortTagEntry[index % mSortTagEntry.length];
-            if (entry.bitmapTexture != null) {
-                mTextureUploader.addBgTexture(entry.bitmapTexture);
-            }
-        }
-    }
-
-    private void updateTextureUploadQueueTag() {
-        if (!mIsActive)
-            return;
-        mTextureUploader.clear();
-        // add foreground textures
-        for (int i = mActiveTagStart, n = mActiveTagEnd; i < n; ++i) {
-            SortTagEntry entry = mSortTagEntry[i % mSortTagEntry.length];
-            if (entry.bitmapTexture != null) {
-                mTextureUploader.addFgTexture(entry.bitmapTexture);
-            }
-        }
-        // add background textures
-        int range = Math.max((mTagEnd - mActiveTagEnd), (mActiveTagStart - mTagStart));
-        for (int i = 0; i < range; ++i) {
-            uploadBgTextureInTag(mActiveTagEnd + i);
-            uploadBgTextureInTag(mActiveTagStart - i - 1);
-        }
-    }
-
-    // We would like to request non active slots in the following order:
-    // Order: 8 6 4 2 1 3 5 7
-    // |---------|---------------|---------|
-    // |<- active ->|
-    // |<-------- cached range ----------->|
-    private void requestNonactiveImagesTag() {
-        int range = Math.max((mTagEnd - mActiveTagEnd), (mActiveTagStart - mTagStart));
-        for (int i = 0; i < range; ++i) {
-            requestTagImage(mActiveTagEnd + i);
-            requestTagImage(mActiveTagStart - 1 - i);
-        }
-    }
-
-    private void cancelNonactiveImagesTag() {
-        int range = Math.max((mTagEnd - mActiveTagEnd), (mActiveTagStart - mTagStart));
-        for (int i = 0; i < range; ++i) {
-            cancelTagImage(mActiveTagEnd + i);
-            cancelTagImage(mActiveTagStart - 1 - i);
-        }
-    }
-
-    private void cancelTagImage(int slotIndex) {
-        if (slotIndex < mTagStart || slotIndex >= mTagEnd)
-            return;
-        SortTagEntry item = mSortTagEntry[slotIndex % mSortTagEntry.length];
-        if (item.tagLoader != null)
-            item.tagLoader.cancelLoad();
-    }
-
-    // return whether the request is in progress or not
-    private boolean requestTagImage(int tagIndex) {
-        if (tagIndex < mTagStart || tagIndex >= mTagEnd)
-            return false;
-        SortTagEntry entry = mSortTagEntry[tagIndex % mSortTagEntry.length];
-        if (entry.content != null)
-            return false;
-        entry.tagLoader.startLoad();
-        return entry.tagLoader.isRequestInProgress();
-    }
-
-    private void freeTagContent(int tagIndex) {
-        SortTagEntry data[] = mSortTagEntry;
-        int index = tagIndex % data.length;
-        SortTagEntry entry = data[index];
-        if (entry.tagLoader != null)
-            entry.tagLoader.recycle();
-        if (entry.bitmapTexture != null)
-            entry.bitmapTexture.recycle();
-        data[index] = null;
-    }
-
-    private void prepareTagContent(int tagIndex) {
-        SortTagEntry entry = new SortTagEntry();
-        entry.tagLoader = new SortTagLoader(tagIndex, mSortTags.get(tagIndex).name, String.format("%d",
-                mSortTags.get(tagIndex).count));
-        mSortTagEntry[tagIndex % mSortTagEntry.length] = entry;
-    }
-
-    private void updateAllImageRequestsTag() {
-        mActiveRequestTagCount = 0;
-        for (int i = mActiveTagStart, n = mActiveTagEnd; i < n; ++i) {
-            if (requestTagImage(i))
-                ++mActiveRequestTagCount;
-        }
-        if (mActiveRequestTagCount == 0) {
-            requestNonactiveImagesTag();
-        } else {
-            cancelNonactiveImagesTag();
-        }
-    }
-
-    private static interface EntryUpdater {
-
-        public void updateEntry();
-    }
-
-    private class SortTagLoader extends BitmapLoader implements EntryUpdater {
-
-        private final int mSortTagIndex;
-        private final String mTagName;
-        private final String mCount;
-
-        public SortTagLoader(int index, String title, String count) {
-            mSortTagIndex = index;
-            mTagName = title;
-            mCount = count;
-        }
-
-        @Override
-        protected Future<Bitmap> submitBitmapTask(FutureListener<Bitmap> l) {
-            return mThreadPool.submit(mSortTagMaker.requestTag(mTagName, mCount), l);
-        }
-
-        @Override
-        protected void onLoadComplete(Bitmap bitmap) {
-            mHandler.obtainMessage(MSG_UPDATE_ALBUM_ENTRY, this).sendToTarget();
-        }
-
-        @Override
-        public void updateEntry() {
-            Bitmap bitmap = getBitmap();
-            if (bitmap == null)
-                return; // Error or recycled
-            SortTagEntry entry = mSortTagEntry[mSortTagIndex % mSortTagEntry.length];
-            BitmapTexture texture = new BitmapTexture(bitmap);
-            texture.setOpaque(false);
-            entry.bitmapTexture = texture;
-            entry.content = entry.bitmapTexture;
-            mTextureUploader.addFgTexture(texture);
-            if (isActiveTag(mSortTagIndex)) {
-                mTextureUploader.addFgTexture(entry.bitmapTexture);
-                --mActiveRequestTagCount;
-                if (mActiveRequestTagCount == 0)
-                    requestNonactiveImagesTag();
-                if (mDataListener != null)
-                    mDataListener.onContentChanged();
-            } else {
-                mTextureUploader.addBgTexture(entry.bitmapTexture);
             }
         }
     }

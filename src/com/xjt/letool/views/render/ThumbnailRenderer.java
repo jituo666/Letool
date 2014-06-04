@@ -8,7 +8,6 @@ import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.selectors.ContractSelector;
 import com.xjt.letool.view.ThumbnailView;
-import com.xjt.letool.views.layout.ThumbnailExpandLayout.TimelineTag;
 import com.xjt.letool.views.opengl.ColorTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.opengl.Texture;
@@ -46,8 +45,8 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
         }
 
         @Override
-        public void onSizeChanged(int size, ArrayList<TimelineTag> tags) {
-            mThumbnailView.setThumbnailCount(size, tags);
+        public void onSizeChanged(int size) {
+            mThumbnailView.setThumbnailCount(size);
         }
     }
 
@@ -110,7 +109,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
 
         int renderRequestFlags = 0;
 
-        Texture content = entry.compressTexture;
+        Texture content = entry.bitmapTexture;
         if (content == null) {
             content = mWaitLoadingTexture;
             entry.isWaitDisplayed = true;
