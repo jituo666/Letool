@@ -1,4 +1,3 @@
-
 package com.xjt.letool.imagedata.blobcache;
 
 import java.io.ByteArrayInputStream;
@@ -72,9 +71,10 @@ public abstract class ETCCacheRequest implements Job<ETC1Texture> {
         } else {
             bitmap = BitmapUtils.resizeDownBySideLength(bitmap, mTargetSize, true);
         }
-        bitmap =  bitmap.copy(Bitmap.Config.RGB_565, true);
+        bitmap = bitmap.copy(Bitmap.Config.RGB_565, false);
         if (jc.isCancelled())
             return null;
+
         ByteBuffer bb = ByteBuffer.allocateDirect(bitmap.getRowBytes() * bitmap.getHeight()); // size is good
         bb.order(ByteOrder.nativeOrder());
         bitmap.copyPixelsToBuffer(bb);

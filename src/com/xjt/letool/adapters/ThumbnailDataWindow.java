@@ -40,7 +40,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
     private static final String TAG = ThumbnailDataWindow.class.getSimpleName();
 
     private static final int MSG_UPDATE_ENTRY = 0;
-    private static final int JOB_LIMIT = 2;
+    private static final int JOB_LIMIT = 1;
     private static final int CACHE_SIZE = 96;
 
     private int mActiveRequestCount = 0;

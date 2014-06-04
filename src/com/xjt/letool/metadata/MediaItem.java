@@ -1,4 +1,3 @@
-
 package com.xjt.letool.metadata;
 
 import android.graphics.Bitmap;
@@ -38,7 +37,7 @@ public abstract class MediaItem extends MediaObject {
 
     public abstract Job<Bitmap> requestImage(int type, int index, long dateTaken, DataBaseCache loader);
 
-    public abstract Job<ETC1Texture> requestImage(int type,int extra);
+    public abstract Job<ETC1Texture> requestImage(int type, int extra);
 
     public abstract Job<BitmapRegionDecoder> requestLargeImage();
 
@@ -107,7 +106,7 @@ public abstract class MediaItem extends MediaObject {
     public static void setThumbnailSizes(int size, int microSize) {
         sThumbnailTargetSize = size;
         if (sMicrothumbnailTargetSize != microSize) {
-            sMicrothumbnailTargetSize = microSize;
+            sMicrothumbnailTargetSize = 128;
         }
         LLog.i(TAG, " MediaItem.sThumbnailTargetSize:" + sThumbnailTargetSize + " MediaItem.sMicrothumbnailTargetSize:" + sMicrothumbnailTargetSize);
     }

@@ -6,6 +6,7 @@ import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.BitmapRegionDecoder;
+import android.graphics.Rect;
 import android.os.Build;
 import android.util.FloatMath;
 
@@ -101,7 +102,6 @@ public class BitmapDecodeUtils {
         if (options == null)
             options = new Options();
         jc.setCancelListener(new DecodeCanceller(options));
-
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFileDescriptor(fd, null, options);
         if (jc.isCancelled())
@@ -136,9 +136,10 @@ public class BitmapDecodeUtils {
                 ? Math.min(result.getWidth(), result.getHeight())
                 : Math.max(result.getWidth(), result.getHeight()));
 
-        if (scale <= 0.5)
+        if (scale <= 0.5) {
             result = BitmapUtils.resizeBitmapByScale(result, scale, true);
-        return ensureGLCompatibleBitmap(result);
+        }
+        return result;
     }
 
     /**

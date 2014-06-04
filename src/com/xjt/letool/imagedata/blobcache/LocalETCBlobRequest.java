@@ -29,7 +29,7 @@ public class LocalETCBlobRequest extends ETCCacheRequest {
     @Override
     public Bitmap onDecodeOriginal(JobContext jc, final int type) {
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
         int targetSize = MediaItem.getTargetSize(type);
 
         // try to decode from JPEG EXIF
@@ -46,8 +46,9 @@ public class LocalETCBlobRequest extends ETCCacheRequest {
             }
             if (thumbData != null) {
                 Bitmap bitmap = BitmapDecodeUtils.decodeIfBigEnough(jc, thumbData, options, targetSize);
-                if (bitmap != null)
+                if (bitmap != null) {
                     return bitmap;
+                }
             }
         }
 
