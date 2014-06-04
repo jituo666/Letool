@@ -51,6 +51,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,6 +75,9 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     private static final int BIT_LOADING_SYNC = 2;
     private static final int MSG_LAYOUT_CONFIRMED = 0;
     private static final int MSG_PICK_PHOTO = 1;
+
+    private static final int POP_UP_MENU_ITEM_SELECT = 0;
+    private static final int POP_UP_MENU_ITEM_CAMERA = 1;
 
     //photo data
     private MediaPath mDataSetPath;
@@ -506,9 +510,8 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     public void showPopupMenu() {
         PopupMenu popup = new PopupMenu(this.getActivity());
         popup.setOnItemSelectedListener(this);
-        popup.add(0, R.string.popup_menu_defaut_order);
-        popup.add(1, R.string.popup_menu_time_order);
-        popup.add(2, R.string.popup_menu_select_mode);
+        popup.add(POP_UP_MENU_ITEM_SELECT, R.string.popup_menu_select_mode);
+        popup.add(POP_UP_MENU_ITEM_CAMERA, R.string.popup_menu_take_picture);
         popup.show(mMore);
 
     }
@@ -561,16 +564,16 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     @Override
     public void onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
-            case 0:
-                break;
-
-            case 1:
-                break;
-
-            case 2:
+            case POP_UP_MENU_ITEM_SELECT:
                 if (mSelector != null) {
                     mSelector.enterSelectionMode();
                 }
+                break;
+
+            case POP_UP_MENU_ITEM_CAMERA:
+                Intent it = new Intent();
+                it.setAction(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+                startActivity(it);
                 break;
 
         }

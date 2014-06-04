@@ -1141,9 +1141,8 @@ CHAR LIMIT = NONE]
     <string name="common_recommend">提示</string>
     <string name="common_error_nosdcard">没有检测到SD卡！</string>
     <!-- popup menu -->
-    <string name="popup_menu_defaut_order">默认排序</string>
-    <string name="popup_menu_time_order">时间排序</string>
-    <string name="popup_menu_select_mode">选择模式</string>
+    <string name="popup_menu_select_mode">选择</string>
+    <string name="popup_menu_take_picture">拍照</string>
     <string name="share_app_install_tip">请选择安装QQ或者QQ空间的手机客户端！</string>
 
     <!-- Text indicating the title of a media item in details window [CHAR LIMIT=14] -->
