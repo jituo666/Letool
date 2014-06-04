@@ -141,8 +141,8 @@
 
     <!-- configuration for album page -->
 
-    <integer name="album_rows_land">4</integer>
-    <integer name="album_rows_port">7</integer>
+    <integer name="album_rows_land">3</integer>
+    <integer name="album_rows_port">5</integer>
 
     <dimen name="album_thumbnail_gap">4dp</dimen>
     <dimen name="album_padding_left">4dp</dimen>
