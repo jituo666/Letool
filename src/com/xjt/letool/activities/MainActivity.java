@@ -1,5 +1,9 @@
+
 package com.xjt.letool.activities;
 
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.update.UmengUpdateAgent;
+import com.umeng.update.UpdateStatus;
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.fragment.LetoolFragment;
@@ -34,11 +38,26 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         initializeByIntent();
         mIsMainActivity = true;
+        UmengUpdateAgent.setDefault();
+        UmengUpdateAgent.setUpdateUIStyle(UpdateStatus.STYLE_NOTIFICATION);
+        UmengUpdateAgent.update(this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     private void initializeByIntent() {

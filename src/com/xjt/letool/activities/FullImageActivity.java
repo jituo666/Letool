@@ -1,7 +1,10 @@
+
 package com.xjt.letool.activities;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+
+import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.fragment.FullImageFragment;
@@ -30,6 +33,18 @@ public class FullImageActivity extends BaseActivity {
         data.putInt(FullImageFragment.KEY_INDEX_HINT, currentIndex);
         fragment.setArguments(data);
         mFragmentManager.beginTransaction().add(R.id.root_container, fragment, "PhotoFragment").commit();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     @Override

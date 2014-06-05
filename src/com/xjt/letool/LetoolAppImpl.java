@@ -1,6 +1,7 @@
 
 package com.xjt.letool;
 
+import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.imagedata.blobcache.BlobCacheService;
 import com.xjt.letool.metadata.DataManager;
@@ -30,6 +31,7 @@ public class LetoolAppImpl extends Application implements LetoolApp {
         super.onCreate();
         LetoolUtils.initialize(this);
         MediaSetUtils.initializeMyAlbumBuckets();
+        MobclickAgent.updateOnlineConfig(this);
     }
 
     @Override

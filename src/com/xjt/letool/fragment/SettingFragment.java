@@ -3,13 +3,19 @@ package com.xjt.letool.fragment;
 
 import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StatFs;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.umeng.update.UmengUpdateAgent;
+import com.umeng.update.UmengUpdateListener;
+import com.umeng.update.UpdateResponse;
+import com.umeng.update.UpdateStatus;
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.imagedata.blobcache.BlobCacheManager;
@@ -84,6 +90,30 @@ public class SettingFragment extends LetoolFragment {
         } else if (v.getId() == R.id.clear_cache) {
             new ClearCacheTask().execute();
         } else if (v.getId() == R.id.version_update_check) {
+            final Context context = getActivity();
+            UmengUpdateAgent.setDefault();
+            UmengUpdateAgent.setUpdateAutoPopup(false);
+            UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
+
+                @Override
+                public void onUpdateReturned(int updateStatus, UpdateResponse updateInfo) {
+                    switch (updateStatus) {
+                        case UpdateStatus.Yes: // has update
+                            UmengUpdateAgent.showUpdateDialog(context, updateInfo);
+                            break;
+                        case UpdateStatus.No: // has no update
+                            Toast.makeText(context, "没有更新", Toast.LENGTH_SHORT).show();
+                            break;
+                        case UpdateStatus.NoneWifi: // none wifi
+                            Toast.makeText(context, "没有wifi连接， 只在wifi下更新", Toast.LENGTH_SHORT).show();
+                            break;
+                        case UpdateStatus.Timeout: // time out
+                            Toast.makeText(context, "超时", Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+                }
+            });
+            UmengUpdateAgent.update(context);
         } else if (v.getId() == R.id.author_desc) {
         } else if (v.getId() == R.id.app_about) {
         }

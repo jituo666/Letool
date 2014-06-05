@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.umeng.update.UmengUpdateAgent;
 import com.xjt.letool.activities.BaseActivity;
 import com.xjt.letool.activities.ThumbnailActivity;
 import com.xjt.letool.R;
