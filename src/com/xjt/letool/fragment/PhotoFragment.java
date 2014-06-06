@@ -1,7 +1,6 @@
 
 package com.xjt.letool.fragment;
 
-import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.R;
 import com.xjt.letool.activities.FullImageActivity;

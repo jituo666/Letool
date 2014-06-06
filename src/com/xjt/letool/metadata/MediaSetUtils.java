@@ -1,16 +1,18 @@
-
 package com.xjt.letool.metadata;
 
 import android.os.Environment;
 
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.UtilStorage;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 
 public class MediaSetUtils {
 
+    private static final String TAG = MediaSetUtils.class.getSimpleName();
     public static final String IMPORTED = "Imported";
     public static final String DOWNLOAD = "download";
     public static final Comparator<MediaSet> NAME_COMPARATOR = new NameComparator();
@@ -26,20 +28,34 @@ public class MediaSetUtils {
             Environment.getExternalStorageDirectory().toString() +
                     "/Pictures/Screenshots");
 
-
     public static void initializeMyAlbumBuckets() {
         //common
         ArrayList<Integer> list = new ArrayList<Integer>();
         if (UtilStorage.getInstance().getExternalSdCardPath() != null) {
-            list.add(LetoolUtils.getBucketId(UtilStorage.getInstance().getExternalSdCardPath().toString() + "/DCIM/Camera"));
+            list.addAll(recurseCamerDir(UtilStorage.getInstance().getExternalSdCardPath().toString() + "/DCIM/"));
         }
-        if (UtilStorage.getInstance().getInnerSdCardPath()!= null) {
-            list.add(LetoolUtils.getBucketId(UtilStorage.getInstance().getInnerSdCardPath().toString() + "/DCIM/Camera"));
+        if (UtilStorage.getInstance().getInnerSdCardPath() != null) {
+            list.addAll(recurseCamerDir(UtilStorage.getInstance().getInnerSdCardPath().toString() + "/DCIM/"));
         }
         MY_ALBUM_BUCKETS = new int[list.size()];
-        for (int i = 0;i < list.size();i ++) {
+        for (int i = 0; i < list.size(); i++) {
             MY_ALBUM_BUCKETS[i] = list.get(i).intValue();
         }
+    }
+
+    private static ArrayList<Integer> recurseCamerDir(String dirPath) {
+        ArrayList<Integer> ret = new ArrayList<Integer>();
+        File f = new File(dirPath);
+        if (f != null && f.exists() && f.isDirectory()) {
+            File dirs[] = f.listFiles();
+            for (File dir : dirs) {
+                if (dir.isDirectory()) {
+                    LLog.i(TAG, "-------------------" + dir.getAbsolutePath());
+                    ret.add(LetoolUtils.getBucketId(dir.getAbsolutePath()));
+                }
+            }
+        }
+        return ret;
     }
 
     // Sort MediaSets by name
