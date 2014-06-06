@@ -12,6 +12,7 @@ import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.imagedata.utils.LetoolBitmapPool;
 import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.metadata.MediaItem;
+import com.xjt.letool.preference.GlobalPreference;
 import com.xjt.letool.view.LetoolActionBar;
 import com.xjt.letool.view.LetoolBottomBar;
 import com.xjt.letool.view.LetoolSlidingMenu;

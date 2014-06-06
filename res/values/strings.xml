@@ -1119,10 +1119,10 @@ CHAR LIMIT = NONE]
 
     <string name="clear_cache_title">清理缓存</string>
     <string name="clear_cache_desc">当前缓存大小 %1$s，手机剩余存储 %2$s</string>
-    <string name="version_update_check_title">版本更新检查</string>
-    <string name="version_update_check_desc">当前版本1.0，更新日期2014-3-15</string>
+    <string name="version_update_check_title">更新检查</string>
+    <string name="version_update_check_desc">当前版本:%1$s,最后更新时间：%2$s</string>
     <string name="author_title">作者</string>
-    <string name="author_desc">Jetoo.Xuan QQ:32437506 微信:ice-man_love</string>
+    <string name="author_desc">Jetoo.Xuan QQ:2518545630 微信:ice-man_love</string>
     <string name="app_about_title">关于</string>
     <string name="app_about_desc">有关作者、技术合作、版权等一些信息的描述</string>
     <string name="dashi_new_function_tip" translatable="false">New</string>

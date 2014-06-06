@@ -1,12 +1,16 @@
-
 package com.xjt.letool.fragment;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StatFs;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,14 +23,11 @@ import com.umeng.update.UpdateStatus;
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.imagedata.blobcache.BlobCacheManager;
-import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.settings.LetoolPreference;
 import com.xjt.letool.utils.StorageUtils;
 import com.xjt.letool.utils.StringUtils;
 import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.LetoolActionBar;
-
-import java.io.File;
 
 /**
  * @Author Jituo.Xuan
@@ -46,6 +47,19 @@ public class SettingFragment extends LetoolFragment {
         super.onCreate(savedInstanceState);
     }
 
+    public String getVersion() {
+        try {
+            PackageManager manager = getActivity().getPackageManager();
+            PackageInfo info = manager.getPackageInfo(getActivity().getPackageName(), 0);
+            Date now = new Date(info.lastUpdateTime);
+            SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.CHINESE);
+            return getString(R.string.version_update_check_desc, info.versionName, f.format(now));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
     private void initBrowseActionBar() {
         LetoolActionBar actionBar = getLetoolActionBar();
         actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_SETTINGS, this);
@@ -61,7 +75,7 @@ public class SettingFragment extends LetoolFragment {
         String x = getString(R.string.clear_cache_desc, getCacheSize(), StringUtils.formatBytes(StorageUtils.getExternalStorageAvailableSize()));
         LLog.i(TAG, "-----------------getCacheSize():" + getCacheSize());
         mClearCache.setSettingItemText(getString(R.string.clear_cache_title), x);
-        mVersionCheck.setSettingItemText(getString(R.string.version_update_check_title), getString(R.string.version_update_check_desc));
+        mVersionCheck.setSettingItemText(getString(R.string.version_update_check_title), getVersion());
 
         mAuthorDesc.setSettingItemText(getString(R.string.author_title), getString(R.string.author_desc));
         mAbout.setSettingItemText(getString(R.string.app_about_title), getString(R.string.app_about_desc));

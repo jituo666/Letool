@@ -1,4 +1,3 @@
-
 package com.xjt.letool.activities;
 
 import com.umeng.analytics.MobclickAgent;
@@ -6,9 +5,11 @@ import com.umeng.update.UmengUpdateAgent;
 import com.umeng.update.UpdateStatus;
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
+import com.xjt.letool.fragment.GalleryFragment;
 import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.fragment.PhotoFragment;
 import com.xjt.letool.metadata.DataManager;
+import com.xjt.letool.preference.GlobalPreference;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.Utils;
 
@@ -26,6 +27,7 @@ import android.view.WindowManager;
 public class MainActivity extends BaseActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final long UPDATE_CHECK_INTERVAL = 24 * 60 * 60 * 1000l;
     public static final String KEY_DISMISS_KEYGUARD = "dismiss-keyguard";
 
     @Override
@@ -38,9 +40,13 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         initializeByIntent();
         mIsMainActivity = true;
-        UmengUpdateAgent.setDefault();
-        UmengUpdateAgent.setUpdateUIStyle(UpdateStatus.STYLE_NOTIFICATION);
-        UmengUpdateAgent.update(this);
+        long time = GlobalPreference.getLastAppUpdateCheckTime(this);
+        if (System.currentTimeMillis() - time > UPDATE_CHECK_INTERVAL) {
+            UmengUpdateAgent.setDefault();
+            UmengUpdateAgent.setUpdateUIStyle(UpdateStatus.STYLE_NOTIFICATION);
+            UmengUpdateAgent.update(this);
+            GlobalPreference.setAppUpdateCheckTime(this, System.currentTimeMillis());
+        }
     }
 
     @Override
@@ -76,12 +82,21 @@ public class MainActivity extends BaseActivity {
     }
 
     public void startDefaultAction() {
-        Fragment fragment = new PhotoFragment();
-        Bundle data = new Bundle();
-        data.putString(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-        data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
-        fragment.setArguments(data);
-        getSupportFragmentManager().beginTransaction().add(R.id.root_container, fragment, LetoolFragment.FRAGMENT_TAG_THUMBNAIL).commit();
+        if (GlobalPreference.getLastUIComponents(this) == LetoolFragment.FRAGMENT_TAG_FOLDER) {
+            Fragment fragment = new GalleryFragment();
+            Bundle data = new Bundle();
+            data.putString(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
+            fragment.setArguments(data);
+            getSupportFragmentManager().beginTransaction().add(R.id.root_container, fragment, LetoolFragment.FRAGMENT_TAG_FOLDER).commit();
+        } else {
+            Fragment fragment = new PhotoFragment();
+            Bundle data = new Bundle();
+            data.putString(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+            data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
+            fragment.setArguments(data);
+            getSupportFragmentManager().beginTransaction().add(R.id.root_container, fragment, LetoolFragment.FRAGMENT_TAG_THUMBNAIL).commit();
+
+        }
     }
 
     private void startGetContentAction(Intent intent) {
@@ -126,6 +141,21 @@ public class MainActivity extends BaseActivity {
 
     private void startViewAction(Intent intent) {
 
+    }
+
+    @Override
+    protected void onStop() {
+        if (mFragmentManager.findFragmentByTag(LetoolFragment.FRAGMENT_TAG_THUMBNAIL) != null) {
+            GlobalPreference.setLastUIComponnents(this, LetoolFragment.FRAGMENT_TAG_THUMBNAIL);
+        } else if (mFragmentManager.findFragmentByTag(LetoolFragment.FRAGMENT_TAG_FOLDER) != null) {
+            GlobalPreference.setLastUIComponnents(this, LetoolFragment.FRAGMENT_TAG_FOLDER);
+        }
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
 }

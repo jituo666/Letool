@@ -26,6 +26,7 @@ import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.metadata.MediaSetUtils;
+import com.xjt.letool.preference.GlobalPreference;
 import com.xjt.letool.view.LetoolSlidingMenu;
 
 import java.util.List;
@@ -137,10 +138,12 @@ public class SlidingMenuFragment extends Fragment {
             data.putString(ThumbnailActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
             data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
             f.setArguments(data);
+            GlobalPreference.setLastUIComponnents(this.getActivity(), LetoolFragment.FRAGMENT_TAG_THUMBNAIL);
         } else if (f instanceof GalleryFragment) {
             Bundle data = new Bundle();
             data.putString(ThumbnailActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
             f.setArguments(data);
+            GlobalPreference.setLastUIComponnents(this.getActivity(), LetoolFragment.FRAGMENT_TAG_FOLDER);
         }
     }
 
