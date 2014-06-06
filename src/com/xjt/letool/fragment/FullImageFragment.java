@@ -27,6 +27,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.R;
 import com.xjt.letool.metadata.MediaDetails;
@@ -39,6 +40,7 @@ import com.xjt.letool.selectors.ContractSelector;
 import com.xjt.letool.share.ShareListActivity;
 import com.xjt.letool.share.ShareManager;
 import com.xjt.letool.share.ShareManager.ShareTo;
+import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.UsageStatistics;
 import com.xjt.letool.view.LetoolDialog;
@@ -306,6 +308,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     @Override
     public void onResume() {
         super.onResume();
+        MobclickAgent.onPageStart(getClass().getSimpleName()); 
         showBars();
         mGLRootView.onResume();
         mGLRootView.lockRenderThread();
@@ -327,7 +330,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     @Override
     public void onPause() {
         super.onPause();
-
+        MobclickAgent.onPageEnd(getClass().getSimpleName()); 
         mGLRootView.onPause();
         mGLRootView.lockRenderThread();
         try {
@@ -375,14 +378,20 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         if (v.getId() == R.id.action_navi) {
             getActivity().finish();
         } else if (v.getId() == R.id.action_share) {
+
+            MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_FULL_IMAGE_SHARE);
             showShareDialog();
         } else if (v.getId() == R.id.action_detail) {
+
+            MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_FULL_IMAGE_DETAIL);
             if (mShowDetails) {
                 hideDetails();
             } else {
                 showDetails();
             }
         } else if (v.getId() == R.id.action_delete) {
+
+            MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_FULL_IMAGE_DELETE);
             SingleDeleteMediaListener cdl = new SingleDeleteMediaListener(getActivity(), mDeletePath, getDataManager(),
                     new DeleteMediaProgressListener() {
 
@@ -398,7 +407,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             dlg.setOkBtn(R.string.common_ok, cdl);
             dlg.setCancelBtn(R.string.common_cancel, cdl);
             dlg.setOnDismissListener(cdl);
-            dlg.setMessage(R.string.common_delete_tip);
+            dlg.setMessage(R.string.common_delete_cur_tip);
             dlg.setDividerVisible(true);
             dlg.show();
 

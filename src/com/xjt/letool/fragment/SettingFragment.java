@@ -1,3 +1,4 @@
+
 package com.xjt.letool.fragment;
 
 import java.text.SimpleDateFormat;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 import com.umeng.update.UmengUpdateListener;
 import com.umeng.update.UpdateResponse;
@@ -24,6 +26,7 @@ import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.imagedata.blobcache.BlobCacheManager;
 import com.xjt.letool.settings.LetoolPreference;
+import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.StorageUtils;
 import com.xjt.letool.utils.StringUtils;
 import com.xjt.letool.view.GLController;
@@ -102,8 +105,12 @@ public class SettingFragment extends LetoolFragment {
         if (v.getId() == R.id.action_navi) {
             getLetoolSlidingMenu().toggle();
         } else if (v.getId() == R.id.clear_cache) {
+
+            MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_CLEAR_CAHCE);
             new ClearCacheTask().execute();
         } else if (v.getId() == R.id.version_update_check) {
+
+            MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_UPDATE_CHECK);
             final Context context = getActivity();
             UmengUpdateAgent.setDefault();
             UmengUpdateAgent.setUpdateAutoPopup(false);
@@ -194,4 +201,17 @@ public class SettingFragment extends LetoolFragment {
             }
         }
     }
+
+    @Override
+    public void onPause() {
+        MobclickAgent.onPageEnd(getClass().getSimpleName());
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        MobclickAgent.onPageStart(getClass().getSimpleName());
+        super.onResume();
+    }
+
 }

@@ -11,10 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.fragment.SlidingMenuFragment;
+import com.xjt.letool.stat.StatConstants;
 
 public class LetoolSlidingMenu {
 
@@ -34,6 +36,8 @@ public class LetoolSlidingMenu {
     }
 
     public void toggle() {
+
+        MobclickAgent.onEvent(mContext, StatConstants.EVENT_KEY_SLIDE_MENU);
         if (mFragmentManager.findFragmentByTag(LetoolFragment.FRAGMENT_TAG_SLIDING_MENU) == null) {
 
             mFragment = new SlidingMenuFragment();

@@ -1,6 +1,8 @@
 
 package com.xjt.letool.fragment;
 
+import com.nineoldandroids.animation.ObjectAnimator;
+import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.R;
 import com.xjt.letool.activities.FullImageActivity;
@@ -19,6 +21,7 @@ import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.metadata.source.LocalAlbum;
 import com.xjt.letool.selectors.ContractSelectListener;
 import com.xjt.letool.selectors.ContractSelector;
+import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.surpport.MenuItem;
 import com.xjt.letool.surpport.PopupMenu;
 import com.xjt.letool.surpport.PopupMenu.OnMenuItemClickListener;
@@ -46,7 +49,6 @@ import com.xjt.letool.views.utils.ViewConfigs;
 
 import java.util.ArrayList;
 
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -199,6 +201,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     }
 
     public void onLongTap(int thumbnailIndex) {
+        MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_PHOTO_LONG_PRESSED);
         if (mGetContent)
             return;
         MediaItem item = mAlbumDataSetLoader.get(thumbnailIndex);
@@ -361,6 +364,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     @Override
     public void onMenuClicked() {
         if (!mSelector.inSelectionMode()) {
+            MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_SLIDE_MENU);
             showPopupMenu();
         }
     }
@@ -368,6 +372,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     @Override
     public void onResume() {
         super.onResume();
+        MobclickAgent.onPageStart(getClass().getSimpleName());
         if (mHasSDCard) {
             LLog.i(TAG, "onResume" + System.currentTimeMillis());
             mGLRootView.onResume();
@@ -394,6 +399,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     @Override
     public void onPause() {
         super.onPause();
+        MobclickAgent.onPageEnd(getClass().getSimpleName());
         if (mHasSDCard) {
             LLog.i(TAG, "onPause");
             mGLRootView.onPause();
@@ -470,6 +476,8 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
                 getLetoolSlidingMenu().toggle();
             }
         } else if (v.getId() == R.id.operation_delete) {
+
+            MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_PHOTO_DELETE);
             int count = mSelector.getSelectedCount();
             if (count <= 0) {
                 Toast t = Toast.makeText(getActivity(), R.string.common_selection_tip, Toast.LENGTH_SHORT);
@@ -501,8 +509,10 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
             dlg.show();
 
         } else if (v.getId() == R.id.action_more) {
+            MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_POPUP_MENU);
             showPopupMenu();
         } else if (v.getId() == R.id.enter_selection_indicate) {
+            MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_SELECT_OK);
             mSelector.leaveSelectionMode();
         }
     }
@@ -565,12 +575,15 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     public void onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case POP_UP_MENU_ITEM_SELECT:
+
+                MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_MENU_SELECT);
                 if (mSelector != null) {
                     mSelector.enterSelectionMode();
                 }
                 break;
 
             case POP_UP_MENU_ITEM_CAMERA:
+                MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_MENU_CAMERA);
                 Intent it = new Intent();
                 it.setAction(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
                 startActivity(it);

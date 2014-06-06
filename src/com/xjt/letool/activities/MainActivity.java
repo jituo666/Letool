@@ -94,7 +94,7 @@ public class MainActivity extends BaseActivity {
             data.putString(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
             data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
             fragment.setArguments(data);
-            getSupportFragmentManager().beginTransaction().add(R.id.root_container, fragment, LetoolFragment.FRAGMENT_TAG_THUMBNAIL).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.root_container, fragment, LetoolFragment.FRAGMENT_TAG_PHOTO).commit();
 
         }
     }
@@ -110,7 +110,7 @@ public class MainActivity extends BaseActivity {
         data.putString(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
         data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
         fragment.setArguments(data);
-        getSupportFragmentManager().beginTransaction().add(R.id.root_container, fragment, LetoolFragment.FRAGMENT_TAG_THUMBNAIL).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.root_container, fragment, LetoolFragment.FRAGMENT_TAG_PHOTO).commit();
     }
 
     /**
@@ -136,7 +136,7 @@ public class MainActivity extends BaseActivity {
         data.putString(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
         data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
         fragment.setArguments(data);
-        getSupportFragmentManager().beginTransaction().add(R.id.root_container, fragment, LetoolFragment.FRAGMENT_TAG_THUMBNAIL).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.root_container, fragment, LetoolFragment.FRAGMENT_TAG_PHOTO).commit();
     }
 
     private void startViewAction(Intent intent) {
@@ -145,8 +145,8 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onStop() {
-        if (mFragmentManager.findFragmentByTag(LetoolFragment.FRAGMENT_TAG_THUMBNAIL) != null) {
-            GlobalPreference.setLastUIComponnents(this, LetoolFragment.FRAGMENT_TAG_THUMBNAIL);
+        if (mFragmentManager.findFragmentByTag(LetoolFragment.FRAGMENT_TAG_PHOTO) != null) {
+            GlobalPreference.setLastUIComponnents(this, LetoolFragment.FRAGMENT_TAG_PHOTO);
         } else if (mFragmentManager.findFragmentByTag(LetoolFragment.FRAGMENT_TAG_FOLDER) != null) {
             GlobalPreference.setLastUIComponnents(this, LetoolFragment.FRAGMENT_TAG_FOLDER);
         }

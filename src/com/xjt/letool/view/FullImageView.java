@@ -11,6 +11,7 @@ import android.util.FloatMath;
 import android.view.MotionEvent;
 import android.view.animation.AccelerateInterpolator;
 
+import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.R;
 import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.common.LLog;
@@ -19,6 +20,7 @@ import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaObject;
 import com.xjt.letool.metadata.MediaPath;
+import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.RangeArray;
 import com.xjt.letool.utils.UsageStatistics;
@@ -1005,6 +1007,7 @@ public class FullImageView extends GLBaseView {
         public boolean onDoubleTap(float x, float y) {
             if (mIgnoreSwipingGesture)
                 return true;
+            MobclickAgent.onEvent(mContext, StatConstants.EVENT_KEY_FULL_IMAGE_DOUBLE_CLICK);
             if (mPictures.get(0).isCamera())
                 return false;
             FullImageLayout controller = mPositionController;
@@ -1139,7 +1142,6 @@ public class FullImageView extends GLBaseView {
             // We ignore the scaling gesture if it is a camera preview.
             mIgnoreScalingGesture = mPictures.get(0).isCamera();
 
-            LLog.i(TAG, "onScaleBegin------------------mIgnoreScalingGesture:" + mIgnoreScalingGesture );
             if (mIgnoreScalingGesture) {
                 return true;
             }
@@ -1316,6 +1318,10 @@ public class FullImageView extends GLBaseView {
     public void setFilmMode(boolean enabled) {
         if (mFilmMode == enabled)
             return;
+        if (mFilmMode) {
+
+            MobclickAgent.onEvent(mContext, StatConstants.EVENT_KEY_FULL_IMAGE_Film_MODE);
+        }
         mFilmMode = enabled;
         mPositionController.setFilmMode(mFilmMode);
         mModel.setNeedFullImage(!enabled);

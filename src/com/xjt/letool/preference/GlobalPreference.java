@@ -41,7 +41,7 @@ public class GlobalPreference {
 
     public static String getLastUIComponents(Context ctx) {
         SharedPreferences prefs = initSharedPreferences(ctx);
-        return prefs.getString(PREFS_KEY_LAST_UI_COMPENTS, LetoolFragment.FRAGMENT_TAG_THUMBNAIL);
+        return prefs.getString(PREFS_KEY_LAST_UI_COMPENTS, LetoolFragment.FRAGMENT_TAG_PHOTO);
     }
 
     public static void setLastUIComponnents(Context ctx, String ui) {

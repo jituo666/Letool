@@ -10,6 +10,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11;
 
+import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.animations.AnimationTime;
 import com.xjt.letool.animations.CanvasAnim;
 import com.xjt.letool.common.ApiHelper;
@@ -166,6 +167,8 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
             mRenderLock.unlock();
         }
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+
+        MobclickAgent.setOpenGLContext(gl1);
     }
 
     @Override

@@ -4,6 +4,7 @@ package com.xjt.letool.fragment;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.R;
 import com.xjt.letool.activities.BaseActivity;
 import com.xjt.letool.activities.ThumbnailActivity;
@@ -18,6 +19,7 @@ import com.xjt.letool.metadata.loader.DataLoadingListener;
 import com.xjt.letool.metadata.loader.ThumbnailSetDataLoader;
 import com.xjt.letool.selectors.ContractSelectListener;
 import com.xjt.letool.selectors.ContractSelector;
+import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.view.CommonLoadingPanel;
 import com.xjt.letool.view.BatchDeleteMediaListener;
@@ -220,6 +222,8 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     public void onLongTap(int thumbnailIndex) {
         if (mGetContent)
             return;
+
+        MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_GALLERY_LONG_PRESSED);
         MediaSet set = mThumbnailSetAdapter.getMediaSet(thumbnailIndex);
         if (set == null)
             return;
@@ -356,6 +360,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     public void onResume() {
 
         super.onResume();
+        MobclickAgent.onPageStart(getClass().getSimpleName());
         LLog.i(TAG, "onResume");
         mGLRootView.onResume();
         mGLRootView.lockRenderThread();
@@ -372,8 +377,8 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
 
     @Override
     public void onPause() {
-
         super.onPause();
+        MobclickAgent.onPageEnd(getClass().getSimpleName());
         LLog.i(TAG, "onPause");
         mGLRootView.onPause();
         mGLRootView.lockRenderThread();
@@ -505,6 +510,8 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         if (v.getId() == R.id.action_navi) {
             getLetoolSlidingMenu().toggle();
         } else if (v.getId() == R.id.operation_delete) {
+
+            MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_GALLERY_DELETE);
             int count = mSelector.getSelectedCount();
             if (count <= 0) {
                 Toast t = Toast.makeText(getActivity(), R.string.common_selection_tip, Toast.LENGTH_SHORT);
