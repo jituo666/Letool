@@ -212,13 +212,11 @@ public class SlidingMenuFragment extends Fragment {
 
     @Override
     public void onPause() {
-        MobclickAgent.onPageEnd(getClass().getSimpleName());
         super.onPause();
     }
 
     @Override
     public void onResume() {
-        MobclickAgent.onPageStart(getClass().getSimpleName());
         super.onResume();
     }
 

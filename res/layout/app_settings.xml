@@ -2,15 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
     android:layout_marginTop="48dp"
     android:background="@drawable/main_screen_bg"
     android:orientation="vertical" >
 
     <include
         android:id="@+id/clear_cache"
-        layout="@layout/app_settings_item_normal" />
+        layout="@layout/app_settings_list_item" />
 
     <View
         android:layout_width="match_parent"
@@ -19,7 +17,7 @@
 
     <include
         android:id="@+id/version_update_check"
-        layout="@layout/app_settings_item_normal" />
+        layout="@layout/app_settings_list_item" />
 
     <View
         android:layout_width="match_parent"
@@ -28,7 +26,7 @@
 
     <include
         android:id="@+id/author_desc"
-        layout="@layout/app_settings_item_normal" />
+        layout="@layout/app_settings_list_item" />
 
     <View
         android:layout_width="match_parent"
@@ -37,7 +35,7 @@
 
     <include
         android:id="@+id/app_about"
-        layout="@layout/app_settings_item_normal" />
+        layout="@layout/app_settings_list_item" />
 
     <View
         android:layout_width="match_parent"

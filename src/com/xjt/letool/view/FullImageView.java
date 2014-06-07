@@ -1319,7 +1319,6 @@ public class FullImageView extends GLBaseView {
         if (mFilmMode == enabled)
             return;
         if (mFilmMode) {
-
             MobclickAgent.onEvent(mContext, StatConstants.EVENT_KEY_FULL_IMAGE_Film_MODE);
         }
         mFilmMode = enabled;

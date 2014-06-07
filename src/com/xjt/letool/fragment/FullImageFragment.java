@@ -308,7 +308,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     @Override
     public void onResume() {
         super.onResume();
-        MobclickAgent.onPageStart(getClass().getSimpleName()); 
         showBars();
         mGLRootView.onResume();
         mGLRootView.lockRenderThread();
@@ -330,7 +329,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     @Override
     public void onPause() {
         super.onPause();
-        MobclickAgent.onPageEnd(getClass().getSimpleName()); 
         mGLRootView.onPause();
         mGLRootView.lockRenderThread();
         try {

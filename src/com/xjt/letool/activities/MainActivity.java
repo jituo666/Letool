@@ -47,6 +47,7 @@ public class MainActivity extends BaseActivity {
             UmengUpdateAgent.update(this);
             GlobalPreference.setAppUpdateCheckTime(this, System.currentTimeMillis());
         }
+
     }
 
     @Override

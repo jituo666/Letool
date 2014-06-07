@@ -1122,16 +1122,22 @@ CHAR LIMIT = NONE]
     <string name="version_update_check_title">更新检查</string>
     <string name="version_update_check_desc">当前版本:%1$s,最后更新时间：%2$s</string>
     <string name="author_title">作者</string>
-    <string name="author_desc">SharkMan QQ:2518545630</string>
-    <string name="app_about_title">QQ群</string>
-    <string name="app_about_desc">,QQ群:248706772，欢迎加入讨论</string>
+    <string name="author_desc">SharkMan, QQ:2518545630</string>
+    <string name="app_communication_platfrom">交流平台</string>
+    <string name="app_QQ_group">"QQ群:248706772,点击即可加入,零距离交流!"</string>
+    <string name="app_QQ_group_failed">加群失败!</string>
+    <string name="app_QQ_to_clipboard">QQ号:2518545630已复制到剪切板!</string>
+    <string name="app_no_update">没有更新!</string>
+    <string name="app_update_only_wifi">没有wifi连接， 只在wifi下更新</string>
     <string name="dashi_new_function_tip" translatable="false">New</string>
+    <string name="common_connect_timeout">链接超时</string>
     <string name="common_share">分享</string>
     <string name="common_detail">详情</string>
     <string name="common_delete">删除</string>
     <string name="common_delete_tip">确定删除所选内容?</string>
     <string name="common_delete_cur_tip">确定删除当前图片!</string>
     <string name="common_delete_waiting">正在删除,请稍候...</string>
+    <string name="common_update_checking">正在 检查更新...</string>
     <string name="common_selection_tip">请选择所要删除的内容!</string>
     <string name="common_clear_cache">清理缓存</string>
     <string name="common_clear_cache_waitting">正在清理缓存,请稍候...</string>
@@ -1199,4 +1205,5 @@ CHAR LIMIT = NONE]
     <string name="details_title">第%1$d项,共%2$d项</string>
     <string name="close">关闭</string>
     <string name="test_channel_id">测试渠道</string>
+
 </resources>

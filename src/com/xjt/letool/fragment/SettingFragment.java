@@ -7,9 +7,12 @@ import java.util.Locale;
 
 import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
+import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -40,10 +43,11 @@ import com.xjt.letool.view.LetoolActionBar;
 public class SettingFragment extends LetoolFragment {
 
     private static final String TAG = SettingFragment.class.getSimpleName();
-    private LetoolPreference mAuthorDesc;
+
     private LetoolPreference mClearCache;
     private LetoolPreference mVersionCheck;
-    private LetoolPreference mAbout;
+    private LetoolPreference mAuthorDesc;
+    private LetoolPreference mQQGroup;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,26 +80,25 @@ public class SettingFragment extends LetoolFragment {
 
     private void initViews() {
         String x = getString(R.string.clear_cache_desc, getCacheSize(), StringUtils.formatBytes(StorageUtils.getExternalStorageAvailableSize()));
-        LLog.i(TAG, "-----------------getCacheSize():" + getCacheSize());
         mClearCache.setSettingItemText(getString(R.string.clear_cache_title), x);
         mVersionCheck.setSettingItemText(getString(R.string.version_update_check_title), getVersion());
 
         mAuthorDesc.setSettingItemText(getString(R.string.author_title), getString(R.string.author_desc));
-        mAbout.setSettingItemText(getString(R.string.app_about_title), getString(R.string.app_about_desc));
+        mQQGroup.setSettingItemText(getString(R.string.app_communication_platfrom), getString(R.string.app_QQ_group));
         mAuthorDesc.setOnClickListener(this);
         mClearCache.setOnClickListener(this);
         mVersionCheck.setOnClickListener(this);
-        mAbout.setOnClickListener(this);
+        mQQGroup.setOnClickListener(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.app_settings, container, false);
         initBrowseActionBar();
-        mAuthorDesc = (LetoolPreference) rootView.findViewById(R.id.author_desc);
         mClearCache = (LetoolPreference) rootView.findViewById(R.id.clear_cache);
         mVersionCheck = (LetoolPreference) rootView.findViewById(R.id.version_update_check);
-        mAbout = (LetoolPreference) rootView.findViewById(R.id.app_about);
+        mAuthorDesc = (LetoolPreference) rootView.findViewById(R.id.author_desc);
+        mQQGroup = (LetoolPreference) rootView.findViewById(R.id.app_about);
         initViews();
         return rootView;
     }
@@ -110,6 +113,7 @@ public class SettingFragment extends LetoolFragment {
             new ClearCacheTask().execute();
         } else if (v.getId() == R.id.version_update_check) {
 
+            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
             MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_UPDATE_CHECK);
             final Context context = getActivity();
             UmengUpdateAgent.setDefault();
@@ -118,25 +122,63 @@ public class SettingFragment extends LetoolFragment {
 
                 @Override
                 public void onUpdateReturned(int updateStatus, UpdateResponse updateInfo) {
+                    if (progressDialog.isShowing())
+                        progressDialog.dismiss();
                     switch (updateStatus) {
                         case UpdateStatus.Yes: // has update
                             UmengUpdateAgent.showUpdateDialog(context, updateInfo);
                             break;
                         case UpdateStatus.No: // has no update
-                            Toast.makeText(context, "没有更新", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, R.string.app_no_update, Toast.LENGTH_SHORT).show();
                             break;
                         case UpdateStatus.NoneWifi: // none wifi
-                            Toast.makeText(context, "没有wifi连接， 只在wifi下更新", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, R.string.app_update_only_wifi, Toast.LENGTH_SHORT).show();
                             break;
                         case UpdateStatus.Timeout: // time out
-                            Toast.makeText(context, "超时", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, R.string.common_connect_timeout, Toast.LENGTH_SHORT).show();
                             break;
                     }
                 }
             });
             UmengUpdateAgent.update(context);
+            progressDialog.setMessage(getAndroidContext().getString(R.string.common_update_checking));
+            progressDialog.setIndeterminate(true);
+            progressDialog.setCancelable(true);
+            progressDialog.show();
         } else if (v.getId() == R.id.author_desc) {
+            copyQQToClipBoard();
         } else if (v.getId() == R.id.app_about) {
+            if (!joinQQGroup("pan68pjSBp1edKE0a6mUIUogCS4U-qZW")) {
+                Toast.makeText(getAndroidContext(), R.string.app_QQ_group_failed, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    private void copyQQToClipBoard() {
+        ClipboardManager cmb = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+        cmb.setText("2518545630");
+        Toast.makeText(getAndroidContext(), R.string.app_QQ_to_clipboard, Toast.LENGTH_SHORT).show();
+    }
+
+    /****************
+    *
+    * 发起添加群流程。群号：了图交流群(248706772) 的 key 为： pan68pjSBp1edKE0a6mUIUogCS4U-qZW
+    * 调用 joinQQGroup(pan68pjSBp1edKE0a6mUIUogCS4U-qZW) 即可发起手Q客户端申请加群 了图交流群(248706772)
+    *
+    * @param key 由官网生成的key
+    * @return 返回true表示呼起手Q成功，返回false表示呼起失败
+    ******************/
+    public boolean joinQQGroup(String key) {
+        Intent intent = new Intent();
+        intent.setData(Uri.parse("mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26k%3D" + key));
+        // 此Flag可根据具体产品需要自定义，如设置，则在加群界面按返回，返回手Q主界面，不设置，按返回会返回到呼起产品界面    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        try {
+            startActivity(intent);
+            return true;
+        } catch (Exception e) {
+            // 未安装手Q或安装的版本不支持
+            return false;
         }
     }
 
@@ -204,13 +246,11 @@ public class SettingFragment extends LetoolFragment {
 
     @Override
     public void onPause() {
-        MobclickAgent.onPageEnd(getClass().getSimpleName());
         super.onPause();
     }
 
     @Override
     public void onResume() {
-        MobclickAgent.onPageStart(getClass().getSimpleName());
         super.onResume();
     }
 

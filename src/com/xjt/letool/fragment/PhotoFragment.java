@@ -372,7 +372,6 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     @Override
     public void onResume() {
         super.onResume();
-        MobclickAgent.onPageStart(getClass().getSimpleName());
         if (mHasSDCard) {
             LLog.i(TAG, "onResume" + System.currentTimeMillis());
             mGLRootView.onResume();
@@ -399,7 +398,6 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     @Override
     public void onPause() {
         super.onPause();
-        MobclickAgent.onPageEnd(getClass().getSimpleName());
         if (mHasSDCard) {
             LLog.i(TAG, "onPause");
             mGLRootView.onPause();

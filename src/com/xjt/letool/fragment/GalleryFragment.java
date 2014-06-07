@@ -360,7 +360,6 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     public void onResume() {
 
         super.onResume();
-        MobclickAgent.onPageStart(getClass().getSimpleName());
         LLog.i(TAG, "onResume");
         mGLRootView.onResume();
         mGLRootView.lockRenderThread();
@@ -378,7 +377,6 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     @Override
     public void onPause() {
         super.onPause();
-        MobclickAgent.onPageEnd(getClass().getSimpleName());
         LLog.i(TAG, "onPause");
         mGLRootView.onPause();
         mGLRootView.lockRenderThread();
@@ -542,6 +540,9 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
             dlg.setMessage(R.string.common_delete_tip);
             dlg.setDividerVisible(true);
             dlg.show();
+        } else if (v.getId() == R.id.enter_selection_indicate) {
+            MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_SELECT_OK);
+            mSelector.leaveSelectionMode();
         }
     }
 
