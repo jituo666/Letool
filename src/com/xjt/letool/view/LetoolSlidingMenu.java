@@ -36,10 +36,7 @@ public class LetoolSlidingMenu {
     }
 
     public void toggle() {
-
-        MobclickAgent.onEvent(mContext, StatConstants.EVENT_KEY_SLIDE_MENU);
         if (mFragmentManager.findFragmentByTag(LetoolFragment.FRAGMENT_TAG_SLIDING_MENU) == null) {
-
             mFragment = new SlidingMenuFragment();
             mAlphaHolder = new AlphaFragment();
             FragmentTransaction ft = mFragmentManager.beginTransaction();
@@ -49,14 +46,15 @@ public class LetoolSlidingMenu {
             FragmentTransaction ft1 = mFragmentManager.beginTransaction();
             ft1.setCustomAnimations(R.anim.slide_left_in, 0);
             ft1.add(R.id.root_container, mFragment, LetoolFragment.FRAGMENT_TAG_SLIDING_MENU).commit();
-            playTipAinm(true);
+            MobclickAgent.onEvent(mContext, StatConstants.EVENT_KEY_SLIDE_MENU);
+            //playTipAinm(true);
         } else if (mFragment != null) {
             FragmentTransaction ft = mFragmentManager.beginTransaction();
             ft.setCustomAnimations(0, R.anim.alpha_out);
             ft.remove(mAlphaHolder);
             ft.setCustomAnimations(0, R.anim.slide_left_out);
             ft.remove(mFragment).commit();
-            playTipAinm(false);
+            //playTipAinm(false);
         }
     }
 

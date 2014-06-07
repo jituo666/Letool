@@ -75,7 +75,6 @@ public class BatchDeleteMediaListener implements OnClickListener {
         @Override
         protected Void doInBackground(Void... arg0) {
             for (MediaPath p : deleteItems) {
-                LLog.i(TAG, "------------deleteItems:" + p);
                 manager.delete(p);
             }
             return null;
@@ -88,7 +87,7 @@ public class BatchDeleteMediaListener implements OnClickListener {
                 dialog.dismiss();
             }
             if (progressListener != null) {
-                progressListener.onConfirmDialogDismissed(false);
+                progressListener.onConfirmDialogDismissed(true);
             }
         }
 

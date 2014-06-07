@@ -286,9 +286,6 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
         if (mIsPhotoAlbum) {
             actionBar.setTitleIcon(R.drawable.ic_drawer);
-            View tip = getActivity().findViewById(R.id.action_navi_tip);
-            int distance = Math.round(getResources().getDimension(R.dimen.letool_action_bar_height) / 12);
-            ObjectAnimator.ofFloat(tip, "x", tip.getX() - distance, tip.getX()).setDuration(300).start();
         } else {
             actionBar.setTitleIcon(R.drawable.ic_action_previous_item);
         }
@@ -363,10 +360,9 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
 
     @Override
     public void onMenuClicked() {
-        if (!mSelector.inSelectionMode()) {
-            MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_SLIDE_MENU);
-            showPopupMenu();
-        }
+        LLog.i(TAG, "------------onMenuClicked----------------onMenuClicked----------------------------");
+            MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_SLIDE_MENU_MENU);
+            getLetoolSlidingMenu().toggle();
     }
 
     @Override
@@ -488,7 +484,8 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
 
                         @Override
                         public void onConfirmDialogDismissed(boolean confirmed) {
-                            mSelector.leaveSelectionMode();
+                            if (confirmed)
+                                    mSelector.leaveSelectionMode();
                         }
 
                         @Override
@@ -573,13 +570,11 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     public void onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case POP_UP_MENU_ITEM_SELECT:
-
                 MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_MENU_SELECT);
                 if (mSelector != null) {
                     mSelector.enterSelectionMode();
                 }
                 break;
-
             case POP_UP_MENU_ITEM_CAMERA:
                 MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_MENU_CAMERA);
                 Intent it = new Intent();

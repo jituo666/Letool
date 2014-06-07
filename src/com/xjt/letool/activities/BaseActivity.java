@@ -6,6 +6,7 @@ import java.util.List;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.OrientationManager;
 import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.fragment.LetoolFragment;
@@ -75,7 +76,6 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
 
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return super.onCreateOptionsMenu(menu);
@@ -116,25 +116,25 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
         Fragment f = mFragmentManager.findFragmentByTag(LetoolFragment.FRAGMENT_TAG_SLIDING_MENU);
         if (f != null) {
             FragmentTransaction ft = mFragmentManager.beginTransaction();
-            Fragment holder = mFragmentManager.findFragmentByTag(LetoolFragment.FRAGMENT_TAG_SLIDING_MENU_ALPHA);
-            if (holder != null) {
+            Fragment aphaHolder = mFragmentManager.findFragmentByTag(LetoolFragment.FRAGMENT_TAG_SLIDING_MENU_ALPHA);
+            if (aphaHolder != null) {
                 ft.setCustomAnimations(0, R.anim.alpha_out);
-                ft.remove(holder);
+                ft.remove(aphaHolder);
             }
             ft.setCustomAnimations(0, R.anim.slide_left_out);
             ft.remove(f);
             ft.commit();
-            View tip = findViewById(R.id.action_navi_tip);
-            int distance = Math.round(getResources().getDimension(R.dimen.letool_action_bar_height) / 12);
-            ObjectAnimator.ofFloat(tip, "x", tip.getX(), tip.getX() + distance).setDuration(300).start();
-
+            LLog.i(TAG, "--------------onBackPressed--------0-----onBackPressed---------");
         } else if (mIsMainActivity) {
+
             if (mWaitingForExit) {
+                LLog.i(TAG, "--------------onBackPressed-------1------onBackPressed---------");
                 if (mExitToast != null) {
                     mExitToast.cancel();
                 }
                 finish();
             } else {
+                LLog.i(TAG, "--------------onBackPressed------2-------onBackPressed---------");
                 mWaitingForExit = true;
                 mExitToast = Toast.makeText(this, R.string.common_exit_tip, Toast.LENGTH_SHORT);
                 mExitToast.show();
@@ -147,6 +147,7 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
                 }, 3000);
             }
         } else {
+            LLog.i(TAG, "--------------onBackPressed-------------onBackPressed---------");
             super.onBackPressed();
         }
     }
@@ -218,6 +219,7 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
             for (Fragment f : list) {
                 if (f != null && (f instanceof LetoolFragment) && f.isResumed()) {
                     ((LetoolFragment) f).onMenuClicked();
+                    return true;
                 }
             }
         }

@@ -26,7 +26,6 @@ import com.umeng.update.UmengUpdateListener;
 import com.umeng.update.UpdateResponse;
 import com.umeng.update.UpdateStatus;
 import com.xjt.letool.R;
-import com.xjt.letool.common.LLog;
 import com.xjt.letool.imagedata.blobcache.BlobCacheManager;
 import com.xjt.letool.settings.LetoolPreference;
 import com.xjt.letool.stat.StatConstants;
@@ -72,10 +71,6 @@ public class SettingFragment extends LetoolFragment {
         actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_SETTINGS, this);
         actionBar.setTitleIcon(R.drawable.ic_drawer);
         actionBar.setTitleText(R.string.common_settings);
-
-        View tip = getActivity().findViewById(R.id.action_navi_tip);
-        int distance = Math.round(getResources().getDimension(R.dimen.letool_action_bar_height) / 12);
-        ObjectAnimator.ofFloat(tip, "x", tip.getX() - distance, tip.getX()).setDuration(300).start();
     }
 
     private void initViews() {
@@ -108,7 +103,6 @@ public class SettingFragment extends LetoolFragment {
         if (v.getId() == R.id.action_navi) {
             getLetoolSlidingMenu().toggle();
         } else if (v.getId() == R.id.clear_cache) {
-
             MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_CLEAR_CAHCE);
             new ClearCacheTask().execute();
         } else if (v.getId() == R.id.version_update_check) {
@@ -238,10 +232,18 @@ public class SettingFragment extends LetoolFragment {
             if (dialog.isShowing()) {
                 dialog.dismiss();
                 String x = getString(R.string.clear_cache_desc, getCacheSize(), StringUtils.formatBytes(StorageUtils.getExternalStorageAvailableSize()));
-                LLog.i(TAG, "-----------------getCacheSize():" + getCacheSize());
                 mClearCache.setSettingItemText(getString(R.string.clear_cache_title), x);
             }
+            Toast.makeText(getActivity(), R.string.clear_cache_finished, Toast.LENGTH_SHORT).show();
         }
+
+    }
+
+    @Override
+    public void onMenuClicked() {
+        MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_SLIDE_MENU_MENU);
+        getLetoolSlidingMenu().toggle();
+
     }
 
     @Override

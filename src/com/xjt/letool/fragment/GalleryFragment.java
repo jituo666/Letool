@@ -297,9 +297,6 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
         actionBar.setTitleIcon(R.drawable.ic_drawer);
         actionBar.setTitleText(R.string.common_gallery);
-        View tip = getActivity().findViewById(R.id.action_navi_tip);
-        int distance = Math.round(getResources().getDimension(R.dimen.letool_action_bar_height) / 12);
-        ObjectAnimator.ofFloat(tip, "x", tip.getX() - distance, tip.getX()).setDuration(300).start();
     }
 
     private void getThumbnailCenter(int thumbnailIndex, int center[]) {
@@ -522,12 +519,12 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
 
                         @Override
                         public void onConfirmDialogDismissed(boolean confirmed) {
-                            mSelector.leaveSelectionMode();
+                            if (confirmed)
+                                mSelector.leaveSelectionMode();
                         }
 
                         @Override
                         public ArrayList<MediaPath> onGetDeleteItem() {
-                            // TODO Auto-generated method stub
                             return mSelector.getSelected(false);
                         }
 
@@ -572,6 +569,13 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         }
     }
 
+    @Override
+    public void onMenuClicked() {
+        MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_SLIDE_MENU_MENU);
+        getLetoolSlidingMenu().toggle();
+
+    }
+    
     @Override
     public void onSelectionModeChange(int mode) {
         switch (mode) {

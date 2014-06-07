@@ -9,6 +9,7 @@ public class StatConstants {
     public static final String UMENG_CHANNEL_ID = "10000";
 
     public static final String EVENT_KEY_SLIDE_MENU = "slid_menu";
+    public static final String EVENT_KEY_SLIDE_MENU_MENU = "slid_menu_menu";
     public static final String EVENT_KEY_POPUP_MENU = "popup_menu";
     public static final String EVENT_KEY_PHOTO_LONG_PRESSED = "ph_lp_select";
     public static final String EVENT_KEY_SELECT_OK = "select_ok";

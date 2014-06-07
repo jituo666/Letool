@@ -61,14 +61,9 @@ public class BlobCacheManager {
         BlobCache.deleteFiles(prefix + "bookmark");
     }
 
-    // Removes the old files if the data is wiped.
     public static void clearCachedFiles(Context context) {
-/*        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        pref.edit().putInt(KEY_CACHE_UP_TO_DATE, 1).commit();*/
-
         File cacheDir = context.getExternalCacheDir();
         String prefix = cacheDir.getAbsolutePath() + "/";
-
         BlobCache.deleteFiles(prefix + "imgcache");
         BlobCache.deleteFiles(prefix + "rev_geocoding");
         BlobCache.deleteFiles(prefix + "bookmark");
