@@ -180,7 +180,6 @@ public class LocalAlbum extends MediaSet {
         return true;
     }
 
-
     @Override
     public void closeCursor() {
         if (mAlbumCursor != null) {
@@ -197,5 +196,32 @@ public class LocalAlbum extends MediaSet {
                 new String[] {
                     String.valueOf(id)
                 }, null);
+    }
+
+    @Override
+    public int getMediaCount() {
+        int count = 0;
+        Cursor c = null;
+        try {
+            if (mBucketId.length == 1) {
+                c = mResolver.query(mBaseUri, new String[] {
+                        "count(*)"
+                }, mWhereClause, new String[] {
+                        String.valueOf(mBucketId[0])
+                }, null);
+            } else {
+                c = mResolver.query(mBaseUri, new String[] {
+                        "count(*)"
+                }, mWhereClause, null, null);
+            }
+            if (c != null && c.moveToFirst()) {
+                count = c.getInt(0);
+            }
+        } finally {
+            if (c != null) {
+                c.close();
+            }
+        }
+        return count;
     }
 }

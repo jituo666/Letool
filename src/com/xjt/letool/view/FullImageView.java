@@ -23,7 +23,6 @@ import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.RangeArray;
-import com.xjt.letool.utils.UsageStatistics;
 import com.xjt.letool.utils.Utils;
 import com.xjt.letool.views.layout.FullImageLayout;
 import com.xjt.letool.views.opengl.GLESCanvas;
@@ -1180,11 +1179,6 @@ public class FullImageView extends GLBaseView {
                     // Removing the touch down flag allows snapback to happen
                     // for film mode change.
                     mHolding &= ~HOLD_TOUCH_DOWN;
-                    if (mFilmMode) {
-                        UsageStatistics.setPendingTransitionCause(UsageStatistics.TRANSITION_PINCH_OUT);
-                    } else {
-                        UsageStatistics.setPendingTransitionCause(UsageStatistics.TRANSITION_PINCH_IN);
-                    }
                     setFilmMode(!mFilmMode);
 
                     // We need to call onScaleEnd() before setting mModeChanged

@@ -1,7 +1,6 @@
 
 package com.xjt.letool.fragment;
 
-import com.nineoldandroids.animation.ObjectAnimator;
 import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.R;
@@ -161,7 +160,8 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         mLoadingBits &= ~loadTaskBit;
         if (mLoadingBits == 0 && mIsActive) {
             if (mAlbumDataSetLoader.size() == 0) {
-                Toast.makeText(getAndroidContext(), R.string.empty_album, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.empty_album, Toast.LENGTH_LONG).show();
+                mGLRootView.setVisibility(View.GONE);
             }
         }
     }
@@ -361,8 +361,8 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     @Override
     public void onMenuClicked() {
         LLog.i(TAG, "------------onMenuClicked----------------onMenuClicked----------------------------");
-            MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_SLIDE_MENU_MENU);
-            getLetoolSlidingMenu().toggle();
+        MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_SLIDE_MENU_MENU);
+        getLetoolSlidingMenu().toggle();
     }
 
     @Override
@@ -484,8 +484,9 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
 
                         @Override
                         public void onConfirmDialogDismissed(boolean confirmed) {
-                            if (confirmed)
-                                    mSelector.leaveSelectionMode();
+                            if (confirmed) {
+                                mSelector.leaveSelectionMode();
+                            }
                         }
 
                         @Override

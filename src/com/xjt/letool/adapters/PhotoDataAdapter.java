@@ -140,7 +140,7 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
     private MediaPath mFocusHintPath = null;
 
     public interface DataListener extends DataLoadingListener {
-        public void onPhotoChanged(int index, MediaPath item);
+        public void onPhotoChanged(int index, MediaItem item);
     }
 
     private DataListener mDataListener;
@@ -388,7 +388,7 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
         updateTileProvider();
 
         if (mDataListener != null) {
-            mDataListener.onPhotoChanged(index, mItemPath);
+            mDataListener.onPhotoChanged(index, item);
         }
 
         fireDataChange();
@@ -980,7 +980,7 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
             updateImageRequests();
 
             if (mDataListener != null) {
-                mDataListener.onPhotoChanged(mCurrentIndex, mItemPath);
+                mDataListener.onPhotoChanged(mCurrentIndex, current);
             }
 
             fireDataChange();

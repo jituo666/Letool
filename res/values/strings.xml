@@ -1130,13 +1130,14 @@ CHAR LIMIT = NONE]
     <string name="app_QQ_to_clipboard">QQ号:2518545630已复制到剪切板!</string>
     <string name="app_no_update">没有更新!</string>
     <string name="app_update_only_wifi">没有wifi连接， 只在wifi下更新</string>
-    <string name="dashi_new_function_tip" translatable="false">New</string>
+     <string name="full_image_browse">大图浏览(%1$d/%2$d)</string>
+     <string name="full_image_browse_empty">该目录已没有图片！</string>
     <string name="common_connect_timeout">链接超时</string>
     <string name="common_share">分享</string>
     <string name="common_detail">详情</string>
     <string name="common_delete">删除</string>
     <string name="common_delete_tip">确定删除所选内容?</string>
-    <string name="common_delete_cur_tip">确定删除当前图片!</string>
+    <string name="common_delete_cur_tip">确定删除当前图片?</string>
     <string name="common_delete_waiting">"正在删除,请稍候..."</string>
     <string name="common_update_checking">"正在 检查更新..."</string>
     <string name="common_selection_tip">请选择所要删除的内容!</string>

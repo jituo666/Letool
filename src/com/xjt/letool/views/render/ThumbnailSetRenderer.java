@@ -210,20 +210,4 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         }
     }
 
-    @Override
-    public void initSortTagMetrics(int width, int height) {
-        // do nothing
-    }
-
-    @Override
-    public void onVisibleTagRangeChanged(int visibleStart, int visibleEnd) {
-        // do nothing
-    }
-
-    @Override
-    public int renderSortTag(GLESCanvas canvas, int index, int width, int height) {
-        // do nothing
-        return 0;
-    }
-
 }

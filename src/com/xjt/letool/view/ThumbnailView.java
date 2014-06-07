@@ -249,12 +249,6 @@ public class ThumbnailView extends GLBaseView {
 
         public int renderThumbnail(GLESCanvas canvas, int index, int pass, int width, int height);
 
-        // for tags
-        public void initSortTagMetrics(int width, int height);
-
-        public void onVisibleTagRangeChanged(int visibleStart, int visibleEnd);
-
-        public int renderSortTag(GLESCanvas canvas, int index, int width, int height);
     }
 
     public void setThumbnailRenderer(Renderer render) {
@@ -268,7 +262,7 @@ public class ThumbnailView extends GLBaseView {
     @Override
     protected void render(GLESCanvas canvas) {
         super.render(canvas);
-        if (mRenderer == null)
+        if (mRenderer == null || mLayout.getThumbnailCount() == 0)
             return;
         mRenderer.prepareDrawing();
         long animTime = AnimationTime.get();

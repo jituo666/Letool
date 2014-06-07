@@ -47,6 +47,9 @@ public abstract class MediaSet extends MediaObject {
         return 0;
     }
 
+    public int getMediaCount() {
+        return 0;
+    }
 
     // Returns the media items in the range [start, start + count).
     //
@@ -58,7 +61,6 @@ public abstract class MediaSet extends MediaObject {
     public ArrayList<MediaItem> getMediaItem(int start, int count) {
         return new ArrayList<MediaItem>();
     }
-
 
     public MediaItem getCoverMediaItem() {
         ArrayList<MediaItem> items = getMediaItem(0, 1);

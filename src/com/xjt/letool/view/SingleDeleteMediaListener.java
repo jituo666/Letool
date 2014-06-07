@@ -18,7 +18,7 @@ import com.xjt.letool.metadata.MediaPath;
  * @Date 4:44:26 PM May 18, 2014
  * @Comments:null
  */
-public class SingleDeleteMediaListener implements OnClickListener, DialogInterface.OnDismissListener{
+public class SingleDeleteMediaListener implements OnClickListener{
 
     DeleteMediaProgressListener progressListener;
     DataManager manager;
@@ -78,17 +78,10 @@ public class SingleDeleteMediaListener implements OnClickListener, DialogInterfa
                 dialog.dismiss();
             }
             if (progressListener != null) {
-                progressListener.onConfirmDialogDismissed(false);
+                progressListener.onConfirmDialogDismissed(true);
             }
         }
 
     }
 
-
-    @Override
-    public void onDismiss(DialogInterface dialog) {
-        if (progressListener != null) {
-            progressListener.onConfirmDialogDismissed(false);
-        }
-    }
 }

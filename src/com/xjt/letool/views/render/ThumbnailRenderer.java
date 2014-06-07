@@ -169,18 +169,5 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
         mDataWindow.pause();
     }
 
-    //// do nothing for tag showing
-    @Override
-    public void initSortTagMetrics(int width, int height) {
-    }
-
-    @Override
-    public void onVisibleTagRangeChanged(int visibleStart, int visibleEnd) {
-    }
-
-    @Override
-    public int renderSortTag(GLESCanvas canvas, int tagIndex, int width, int height) {
-        return 0;
-    }
 
 }
