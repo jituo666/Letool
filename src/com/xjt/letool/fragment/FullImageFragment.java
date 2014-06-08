@@ -113,12 +113,11 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     private DetailsHelper mDetailsHelper;
     private boolean mShowDetails;
 
-    private MediaSet mMediaSet; // mMediaSet could be null if there is no KEY_MEDIA_SET_PATH supplied. E.g., viewing a photo in gmail attachment
+    private MediaSet mMediaSet;
 
     private int mCurrentIndex = 0;
     private boolean mShowBars = false;
     private MediaItem mCurrentPhoto = null;
-    private String mCurrentPathString = "";
     private boolean mIsActive;
     private OrientationManager mOrientationManager;
     private boolean mStartInFilmstrip;
@@ -128,8 +127,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     private boolean mDeferredUpdateWaiting = false;
     private long mDeferUpdateUntil = Long.MAX_VALUE;
 
-    private MediaPath mDeletePath;// The item that is deleted (but it can still be undeleted before commiting)
-    private boolean mDeleteIsFocus; // whether the deleted item was in focus
     private BaseActivity mActivity;
 
     private Handler mHandler;
@@ -202,32 +199,30 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     //  Action Bar show/hide management
     //////////////////////////////////////////////////////////////////////////
 
-    private void showBars() {
+    private void showBars(boolean withAnim) {
         if (mShowBars)
             return;
         mShowBars = true;
         mOrientationManager.unlockOrientation();
-        getLetoolActionBar().setVisible(View.VISIBLE);
-        LetoolBottomBar bottomBar = getLetoolBottomBar();
-        bottomBar.setVisible(View.VISIBLE, true);
+        getLetoolActionBar().setVisible(View.VISIBLE, withAnim);
+        getLetoolBottomBar().setVisible(View.VISIBLE, withAnim);
 
     }
 
-    private void hideBars() {
+    private void hideBars(boolean withAnim) {
         if (!mShowBars)
             return;
         mShowBars = false;
-        getLetoolActionBar().setVisible(View.GONE);
-        LetoolBottomBar bottomBar = getLetoolBottomBar();
-        bottomBar.setVisible(View.GONE, true);
+        getLetoolActionBar().setVisible(View.GONE, withAnim);
+        getLetoolBottomBar().setVisible(View.GONE, withAnim);
         mHandler.removeMessages(MSG_HIDE_BARS);
     }
 
     private void toggleBars() {
         if (mShowBars) {
-            hideBars();
+            hideBars(true);
         } else {
-            showBars();
+            showBars(true);
         }
     }
 
@@ -269,36 +264,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         m.sendToTarget();
     }
 
-    // How we do delete/undo:
-    // When the user choose to delete a media item, we just tell the
-    // FilterDeleteSet to hide that item. If the user choose to undo it, we
-    // again tell FilterDeleteSet not to hide it. If the user choose to commit
-    // the deletion, we then actually delete the media item.
-    @Override
-    public void onDeleteImage(MediaPath path, int offset) {
-        onCommitDeleteImage(); // commit the previous deletion
-        mDeletePath = path;
-        mDeleteIsFocus = (offset == 0);
-    }
-
-    @Override
-    public void onUndoDeleteImage() {
-        if (mDeletePath == null)
-            return;
-        // If the deletion was done on the focused item, we want the model to focus on it when it is undeleted.
-        if (mDeleteIsFocus)
-            mModel.setFocusHintPath(mDeletePath);
-
-        mDeletePath = null;
-    }
-
-    @Override
-    public void onCommitDeleteImage() {
-        if (mDeletePath == null)
-            return;
-        mDeletePath = null;
-    }
-
     public void playVideo(Activity activity, Uri uri, String title) {
         try {
 
@@ -311,7 +276,10 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     @Override
     public void onResume() {
         super.onResume();
-        showBars();
+        if (mModel == null) {
+            mActivity.finish();
+            return;
+        }
         mGLRootView.onResume();
         mGLRootView.lockRenderThread();
         try {
@@ -348,7 +316,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             mFullImageView.pause();
             mHandler.removeMessages(MSG_HIDE_BARS);
             mHandler.removeMessages(MSG_REFRESH_BOTTOM_CONTROLS);
-            onCommitDeleteImage();
         } finally {
             mGLRootView.unlockRenderThread();
         }
@@ -387,7 +354,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         } else if (v.getId() == R.id.action_delete) {
 
             MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_FULL_IMAGE_DELETE);
-            SingleDeleteMediaListener cdl = new SingleDeleteMediaListener(getActivity(), mDeletePath, getDataManager(),
+            SingleDeleteMediaListener cdl = new SingleDeleteMediaListener(getActivity(), mCurrentPhoto.getPath(), getDataManager(),
                     new DeleteMediaProgressListener() {
 
                         @Override
@@ -404,7 +371,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
                                 }
                             }
                         }
-
+                        
                     });
 
             final LetoolDialog dlg = new LetoolDialog(getActivity());
@@ -457,8 +424,10 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         LetoolActionBar actionBar = getLetoolActionBar();
         actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_FULL_IMAGE, this);
         actionBar.setTitleIcon(R.drawable.ic_action_previous_item);
+        actionBar.setVisible(View.VISIBLE, false);
         LetoolBottomBar bottomBar = getLetoolBottomBar();
         bottomBar.setOnActionMode(LetoolBottomBar.BOTTOM_BAR_MODE_FULL_IMAGE, this);
+        bottomBar.setVisible(View.VISIBLE, false);
     }
 
     @Override
@@ -469,15 +438,19 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         initViews();
         initDatas();
         initBrowseActionBar();
-        mTotalCount = mMediaSet.getAllMediaItems();
-        if (mTotalCount > 0) {
-            if (mCurrentIndex >= mTotalCount)
-                mCurrentIndex = 0;
-            MediaItem it = mMediaSet.getMediaItem(mCurrentIndex, 1).get(0);
-            mDeletePath = it.getPath();
-            mCurrentPathString = it.getFilePath();
+
+        if (mCurrentPhoto == null) {
+            mTotalCount = mMediaSet.getAllMediaItems();
+            if (mTotalCount > 0) {
+                if (mCurrentIndex >= mTotalCount)
+                    mCurrentIndex = 0;
+                mCurrentPhoto = mMediaSet.getMediaItem(mCurrentIndex, 1).get(0);
+            } else {
+                return rootView;
+            }
         }
-        PhotoDataAdapter pda = new PhotoDataAdapter(this, mFullImageView, mMediaSet, mDeletePath, mCurrentIndex, false, false);
+
+        PhotoDataAdapter pda = new PhotoDataAdapter(this, mFullImageView, mMediaSet, mCurrentPhoto.getPath(), mCurrentIndex);
         mModel = pda;
         mFullImageView.setModel(mModel);
 
@@ -486,14 +459,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             @Override
             public void onPhotoChanged(int index, MediaItem item) {
                 mCurrentIndex = index;
-                if (item == null) {
-                    item = mMediaSet.getMediaItem(mCurrentIndex, 1).get(0);
-                    mDeletePath = null;
-                    mCurrentPathString = item.getFilePath();
-                } else {
-                    mDeletePath = item.getPath();
-                    mCurrentPathString = item.getFilePath();
-                }
                 updateActionBarMessage(getString(R.string.full_image_browse, Math.min(mCurrentIndex + 1, mTotalCount), mTotalCount));
 
             }
@@ -501,7 +466,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             @Override
             public void onLoadingStarted() {
             }
-            
+
             @Override
             public void onLoadingFinished(boolean loadingFailed) {
                 if (!mModel.isEmpty()) {
@@ -521,7 +486,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             public void handleMessage(Message message) {
                 switch (message.what) {
                     case MSG_HIDE_BARS: {
-                        hideBars();
+                        hideBars(true);
                         break;
                     }
                     case MSG_REFRESH_BOTTOM_CONTROLS: {
@@ -638,7 +603,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             return;
         }
         final ArrayList<String> shareData = new ArrayList<String>();
-        shareData.add(mCurrentPathString);
+        shareData.add(mCurrentPhoto.getFilePath());
         final LetoolDialog dlg = new LetoolDialog(getActivity());
         dlg.setTitle(R.string.common_share);
         dlg.setOkBtn(R.string.common_cancel, null);

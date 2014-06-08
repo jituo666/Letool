@@ -153,15 +153,11 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
     // can find the item. If mItemPath is null, then we use the mCurrentIndex to
     // find the image being viewed. cameraIndex is the index of the camera
     // preview. If cameraIndex < 0, there is no camera preview.
-    public PhotoDataAdapter(LetoolFragment activity, FullImageView view,
-            MediaSet mediaSet, MediaPath itemPath, int indexHint,
-            boolean isPanorama, boolean isStaticCamera) {
+    public PhotoDataAdapter(LetoolFragment activity, FullImageView view, MediaSet mediaSet, MediaPath itemPath, int indexHint) {
         mSource = Utils.checkNotNull(mediaSet);
         mPhotoView = Utils.checkNotNull(view);
         mItemPath = Utils.checkNotNull(itemPath);
         mCurrentIndex = indexHint;
-        mIsPanorama = isPanorama;
-        mIsStaticCamera = isStaticCamera;
         mThreadPool = activity.getThreadPool();
         mNeedFullImage = true;
 
@@ -197,7 +193,6 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
                 }
             }
         };
-
         updateSlidingWindow();
     }
 

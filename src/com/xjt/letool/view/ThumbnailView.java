@@ -89,8 +89,6 @@ public class ThumbnailView extends GLBaseView {
 
         public void onSingleTapUp(int index);
 
-        public void onSingleTagTapUp(int index);
-
         public void onLongTap(int index);
 
         public void onScrollPositionChanged(int position, int total);
@@ -118,10 +116,6 @@ public class ThumbnailView extends GLBaseView {
         public void onScrollPositionChanged(int position, int total) {
         }
 
-        @Override
-        public void onSingleTagTapUp(int index) {
-
-        }
     }
 
     private class MyGestureListener implements GestureDetector.OnGestureListener {
@@ -145,6 +139,10 @@ public class ThumbnailView extends GLBaseView {
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             cancelDown(false);
+            float distance = ThumbnailLayout.WIDE ? distanceX : distanceY;
+            // Log.i(TAG,
+            // "--------------------------------------------------Scroll");
+            mScroller.startScroll(Math.round(distance), 0, mLayout.getScrollLimit());
             invalidate();
             return true;
         }
@@ -254,9 +252,9 @@ public class ThumbnailView extends GLBaseView {
     public void setThumbnailRenderer(Renderer render) {
         mRenderer = render;
 
-            if (mRenderer != null) {
-                mRenderer.onThumbnailSizeChanged(mLayout.getThumbnailWidth(), mLayout.getThumbnailHeight());
-            }
+        if (mRenderer != null) {
+            mRenderer.onThumbnailSizeChanged(mLayout.getThumbnailWidth(), mLayout.getThumbnailHeight());
+        }
     }
 
     @Override
@@ -344,7 +342,6 @@ public class ThumbnailView extends GLBaseView {
             mScrollBar.setVisibility(View.VISIBLE);
         }
     }
-
 
     public void setThumbnailCount(int thumbnailCount) {
         mLayout.setThumbnailCount(thumbnailCount);

@@ -123,10 +123,11 @@ public class LetoolActionBar {
         }
     }
 
-    public void setVisible(int visible) {
+    public void setVisible(int visible, boolean withAnim) {
         if (mBarContainer != null) {
-
             mBarContainer.setVisibility(visible);
+            if (!withAnim)
+                return;
             if (visible == View.VISIBLE) {
                 mBarContainer.startAnimation(AnimationUtils.loadAnimation(mActivity, R.anim.slide_top_in));
             } else {

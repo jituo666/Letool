@@ -118,11 +118,11 @@ public class FullImageView extends GLBaseView {
 
         public void onCurrentImageUpdated();
 
-        public void onDeleteImage(MediaPath path, int offset);
+/*        public void onDeleteImage(MediaPath path, int offset);
 
         public void onUndoDeleteImage();
 
-        public void onCommitDeleteImage();
+        public void onCommitDeleteImage();*/
 
         public void onFilmModeChanged(boolean enabled);
 
@@ -150,8 +150,6 @@ public class FullImageView extends GLBaseView {
     private static final int MSG_CAPTURE_ANIMATION_DONE = 4;
     private static final int MSG_DELETE_ANIMATION_DONE = 5;
     private static final int MSG_DELETE_DONE = 6;
-    private static final int MSG_UNDO_BAR_TIMEOUT = 7;
-    private static final int MSG_UNDO_BAR_FULL_CAMERA = 8;
 
     private static final float SWIPE_THRESHOLD = 300f;
 
@@ -227,10 +225,6 @@ public class FullImageView extends GLBaseView {
     private int mTouchBoxIndex = Integer.MAX_VALUE;
     // Whether the box indicated by mTouchBoxIndex is deletable. Only meaningful if mTouchBoxIndex is not Integer.MAX_VALUE.
     private boolean mTouchBoxDeletable;
-    // This is the index of the last deleted item. This is only used as a hint
-    // to hide the undo button when we are too far away from the deleted
-    // item. The value Integer.MAX_VALUE means there is no such hint.
-    private int mUndoIndexHint = Integer.MAX_VALUE;
 
     private Context mContext;
 
@@ -324,48 +318,6 @@ public class FullImageView extends GLBaseView {
                     captureAnimationDone(message.arg1);
                     break;
                 }
-                case MSG_DELETE_ANIMATION_DONE: {
-                    // message.obj is the MediaPath of the MediaItem which should be
-                    // deleted. message.arg1 is the offset of the image.
-                    mListener.onDeleteImage((MediaPath) message.obj, message.arg1);
-                    // Normally a box which finishes delete animation will hold
-                    // position until the underlying MediaItem is actually
-                    // deleted, and HOLD_DELETE will be cancelled that time. In
-                    // case the MediaItem didn't actually get deleted in 2
-                    // seconds, we will cancel HOLD_DELETE and make it bounce
-                    // back.
-
-                    // We make sure there is at most one MSG_DELETE_DONE
-                    // in the handler.
-                    mHandler.removeMessages(MSG_DELETE_DONE);
-                    Message m = mHandler.obtainMessage(MSG_DELETE_DONE);
-                    mHandler.sendMessageDelayed(m, 2000);
-
-                    int numberOfPictures = mNextBound - mPrevBound + 1;
-                    if (numberOfPictures == 2) {
-                        if (mModel.isCamera(mNextBound)
-                                || mModel.isCamera(mPrevBound)) {
-                            numberOfPictures--;
-                        }
-                    }
-                    showUndoBar(numberOfPictures <= 1);
-                    break;
-                }
-                case MSG_DELETE_DONE: {
-                    if (!mHandler.hasMessages(MSG_DELETE_ANIMATION_DONE)) {
-                        mHolding &= ~HOLD_DELETE;
-                        snapback();
-                    }
-                    break;
-                }
-                case MSG_UNDO_BAR_TIMEOUT: {
-                    checkHideUndoBar(UNDO_BAR_TIMEOUT);
-                    break;
-                }
-                case MSG_UNDO_BAR_FULL_CAMERA: {
-                    checkHideUndoBar(UNDO_BAR_FULL_CAMERA);
-                    break;
-                }
                 default:
                     throw new AssertionError(message.what);
             }
@@ -393,13 +345,6 @@ public class FullImageView extends GLBaseView {
                     mTouchBoxIndex = i - SCREEN_NAIL_MAX;
                     break;
                 }
-            }
-        }
-
-        // Hide undo button if we are too far away
-        if (mUndoIndexHint != Integer.MAX_VALUE) {
-            if (Math.abs(mUndoIndexHint - mModel.getCurrentIndex()) >= 3) {
-                hideUndoBar();
             }
         }
 
@@ -1125,8 +1070,6 @@ public class FullImageView extends GLBaseView {
             MediaItem item = mModel.getMediaItem(mTouchBoxIndex);
             if (item == null)
                 return;
-            mListener.onCommitDeleteImage();
-            mUndoIndexHint = mModel.getCurrentIndex() + mTouchBoxIndex;
             mHolding |= HOLD_DELETE;
             Message m = mHandler.obtainMessage(MSG_DELETE_ANIMATION_DONE);
             m.obj = item.getPath();
@@ -1227,7 +1170,6 @@ public class FullImageView extends GLBaseView {
 
         @Override
         public void onDown(float x, float y) {
-            checkHideUndoBar(UNDO_BAR_TOUCHED);
 
             mDeltaY = 0;
             mModeChanged = false;
@@ -1337,7 +1279,6 @@ public class FullImageView extends GLBaseView {
         for (int i = -SCREEN_NAIL_MAX; i <= SCREEN_NAIL_MAX; i++) {
             mPictures.get(i).setScreenNail(null);
         }
-        hideUndoBar();
     }
 
     public void resume() {
@@ -1349,61 +1290,6 @@ public class FullImageView extends GLBaseView {
     public void resetToFirstPicture() {
         mModel.moveTo(0);
         setFilmMode(false);
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-    //  Undo Bar
-    ////////////////////////////////////////////////////////////////////////////
-
-    private int mUndoBarState;
-    private static final int UNDO_BAR_SHOW = 1;
-    private static final int UNDO_BAR_TIMEOUT = 2;
-    private static final int UNDO_BAR_TOUCHED = 4;
-    private static final int UNDO_BAR_FULL_CAMERA = 8;
-    private static final int UNDO_BAR_DELETE_LAST = 16;
-
-    // "deleteLast" means if the deletion is on the last remaining picture in
-    // the album.
-    private void showUndoBar(boolean deleteLast) {
-        mHandler.removeMessages(MSG_UNDO_BAR_TIMEOUT);
-        mUndoBarState = UNDO_BAR_SHOW;
-        if (deleteLast)
-            mUndoBarState |= UNDO_BAR_DELETE_LAST;
-        mHandler.sendEmptyMessageDelayed(MSG_UNDO_BAR_TIMEOUT, 3000);
-        // if (mListener != null) mListener.onUndoBarVisibilityChanged(true);
-    }
-
-    private void hideUndoBar() {
-        mHandler.removeMessages(MSG_UNDO_BAR_TIMEOUT);
-        mListener.onCommitDeleteImage();
-        mUndoBarState = 0;
-        mUndoIndexHint = Integer.MAX_VALUE;
-        //mListener.onUndoBarVisibilityChanged(false);
-    }
-
-    // Check if the one of the conditions for hiding the undo bar has been
-    // met. The conditions are:
-    //
-    // 1. It has been three seconds since last showing, and (a) the user has
-    // touched, or (b) the deleted picture is the last remaining picture in the
-    // album.
-    //
-    // 2. The camera is shown in full screen.
-    private void checkHideUndoBar(int addition) {
-        mUndoBarState |= addition;
-        if ((mUndoBarState & UNDO_BAR_SHOW) == 0)
-            return;
-        boolean timeout = (mUndoBarState & UNDO_BAR_TIMEOUT) != 0;
-        boolean touched = (mUndoBarState & UNDO_BAR_TOUCHED) != 0;
-        boolean fullCamera = (mUndoBarState & UNDO_BAR_FULL_CAMERA) != 0;
-        boolean deleteLast = (mUndoBarState & UNDO_BAR_DELETE_LAST) != 0;
-        if ((timeout && deleteLast) || fullCamera || touched) {
-            hideUndoBar();
-        }
-    }
-
-    public boolean canUndo() {
-        return (mUndoBarState & UNDO_BAR_SHOW) != 0;
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -1421,8 +1307,6 @@ public class FullImageView extends GLBaseView {
             mFullScreenCamera = full;
             mFirst = false;
             mListener.onFullScreenChanged(full);
-            if (full)
-                mHandler.sendEmptyMessage(MSG_UNDO_BAR_FULL_CAMERA);
         }
 
         // Determine how many photos we need to draw in addition to the center

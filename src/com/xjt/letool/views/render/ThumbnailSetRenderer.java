@@ -148,6 +148,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         Texture content = checkLabelTexture(entry.labelTexture);
         if (content == null) {
             content = mWaitLoadingTexture;
+            return 0;
         }
         int b = AlbumLabelMaker.getBorderSize();
         int h = mLabelSpec.labelBackgroundHeight;

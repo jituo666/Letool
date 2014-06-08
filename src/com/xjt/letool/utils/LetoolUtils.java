@@ -354,14 +354,6 @@ public class LetoolUtils {
         return typeBits;
     }
 
-    public static int getSelectionModePrompt(int typeBits) {
-        if ((typeBits & DataManager.INCLUDE_VIDEO) != 0) {
-            return (typeBits & DataManager.INCLUDE_IMAGE) == 0
-                    ? R.string.select_video : R.string.select_item;
-        }
-        return R.string.select_image;
-    }
-
     public static boolean hasSpaceForSize(long size) {
         String state = Environment.getExternalStorageState();
         if (!Environment.MEDIA_MOUNTED.equals(state)) {
