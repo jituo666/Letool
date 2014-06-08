@@ -116,7 +116,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     private MediaSet mMediaSet;
 
     private int mCurrentIndex = 0;
-    private boolean mShowBars = false;
+    private boolean mShowBars = true;
     private MediaItem mCurrentPhoto = null;
     private boolean mIsActive;
     private OrientationManager mOrientationManager;
@@ -238,22 +238,14 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     }
 
     ////////////////////////////////////////////////////////////////////////////
-    //  Callbacks from PhotoView
+    //  Callbacks from FullImageView
     ////////////////////////////////////////////////////////////////////////////
     @Override
-    public void onSingleTapUp(int x, int y) {
+    public void onSingleTapConfirmed(int x, int y) {
 
         MediaItem item = mModel.getMediaItem(0);
-        if (item == null) { // item is not ready or it is camera preview, ignore
+        if (item == null) {
             return;
-        }
-        int supported = item.getSupportedOperations();
-        boolean playVideo = ((supported & MediaItem.SUPPORT_PLAY) != 0);
-        if (playVideo) {
-            // determine if the point is at center (1/6) of the photo view.(The position of the "play" icon is at center (1/6) of the photo)
-            int w = mFullImageView.getWidth();
-            int h = mFullImageView.getHeight();
-            playVideo = (Math.abs(x - w / 2) * 12 <= w) && (Math.abs(y - h / 2) * 12 <= h);
         }
         toggleBars();
     }
@@ -264,63 +256,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         m.sendToTarget();
     }
 
-    public void playVideo(Activity activity, Uri uri, String title) {
-        try {
-
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(activity, activity.getString(R.string.video_err),
-                    Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mModel == null) {
-            mActivity.finish();
-            return;
-        }
-        mGLRootView.onResume();
-        mGLRootView.lockRenderThread();
-        try {
-            mGLRootView.freeze();
-            mIsActive = true;
-            mGLRootView.setContentPane(mRootPane);
-            mModel.resume();
-            mFullImageView.resume();
-            if (!mShowBars) {
-                mGLRootView.setLightsOutMode(true);
-            }
-            mHandler.sendEmptyMessageDelayed(MSG_UNFREEZE_GLROOT, UNFREEZE_GLROOT_TIMEOUT);
-        } finally {
-            mGLRootView.unlockRenderThread();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mGLRootView.onPause();
-        mGLRootView.lockRenderThread();
-        try {
-            mIsActive = false;
-            mGLRootView.unfreeze();
-            mHandler.removeMessages(MSG_UNFREEZE_GLROOT);
-            DetailsHelper.pause();
-            // Hide the detail dialog on exit
-            if (mShowDetails)
-                hideDetails();
-            if (mModel != null) {
-                mModel.pause();
-            }
-            mFullImageView.pause();
-            mHandler.removeMessages(MSG_HIDE_BARS);
-            mHandler.removeMessages(MSG_REFRESH_BOTTOM_CONTROLS);
-        } finally {
-            mGLRootView.unlockRenderThread();
-        }
-    }
-
     @Override
     public void onCurrentImageUpdated() {
         mGLRootView.unfreeze();
@@ -328,7 +263,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
 
     @Override
     public void onFilmModeChanged(boolean enabled) {
-
         if (enabled) {
             mHandler.removeMessages(MSG_HIDE_BARS);
         } else {
@@ -371,7 +305,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
                                 }
                             }
                         }
-                        
+
                     });
 
             final LetoolDialog dlg = new LetoolDialog(getActivity());
@@ -395,7 +329,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         mSelectionManager = new ContractSelector(mActivity, false);
         mFullImageView = new FullImageView(this);
         mFullImageView.setListener(this);
-        mFullImageView.setBackgroundColor(LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.default_background_thumbnail)));
         mRootPane.addComponent(mFullImageView);
         mOrientationManager = mActivity.getOrientationManager();
         mGLRootView.setOrientationSource(mOrientationManager);
@@ -479,7 +412,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             }
 
         });
-        mFullImageView.setFilmMode(mStartInFilmstrip && mMediaSet.getAllMediaItems() > 1);
         mHandler = new SynchronizedHandler(mGLRootView) {
 
             @Override
@@ -526,11 +458,9 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
                         break;
                     }
                     case MSG_UPDATE_SHARE_URI: {
-
                         break;
                     }
                     case MSG_UPDATE_PANORAMA_UI: {
-
                         break;
                     }
                     default:
@@ -538,7 +468,57 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
                 }
             }
         };
+
+        mFullImageView.setFilmMode(mStartInFilmstrip && mMediaSet.getAllMediaItems() > 1);
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mModel == null) {
+            mActivity.finish();
+            return;
+        }
+        mGLRootView.onResume();
+        mGLRootView.lockRenderThread();
+        try {
+            mGLRootView.freeze();
+            mIsActive = true;
+            mGLRootView.setContentPane(mRootPane);
+            mModel.resume();
+            mFullImageView.resume();
+            if (!mShowBars) {
+                mGLRootView.setLightsOutMode(true);
+            }
+            mHandler.sendEmptyMessageDelayed(MSG_UNFREEZE_GLROOT, UNFREEZE_GLROOT_TIMEOUT);
+        } finally {
+            mGLRootView.unlockRenderThread();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mGLRootView.onPause();
+        mGLRootView.lockRenderThread();
+        try {
+            mIsActive = false;
+            mGLRootView.unfreeze();
+            mHandler.removeMessages(MSG_UNFREEZE_GLROOT);
+            DetailsHelper.pause();
+            // Hide the detail dialog on exit
+            if (mShowDetails)
+                hideDetails();
+            if (mModel != null) {
+                mModel.pause();
+            }
+            mFullImageView.pause();
+            mHandler.removeMessages(MSG_HIDE_BARS);
+            mHandler.removeMessages(MSG_REFRESH_BOTTOM_CONTROLS);
+        } finally {
+            mGLRootView.unlockRenderThread();
+        }
     }
 
     @Override
@@ -616,7 +596,6 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
                 shareManager.onShareTo(getActivity(), shareToList.get(postion).shareToType, shareData);
                 dlg.dismiss();
             }
-
         });
         dlg.show();
     }

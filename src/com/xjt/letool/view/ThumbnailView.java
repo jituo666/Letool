@@ -16,8 +16,6 @@ import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.utils.UIListener;
 import com.xjt.letool.views.utils.ViewScrollerHelper;
 
-import java.util.ArrayList;
-
 import android.annotation.SuppressLint;
 import android.graphics.Rect;
 import android.view.GestureDetector;

@@ -1,3 +1,4 @@
+
 package com.xjt.letool.view;
 
 import android.content.Context;
@@ -34,6 +35,7 @@ import com.xjt.letool.views.opengl.TiledScreenNail;
 import com.xjt.letool.views.utils.GestureRecognizer;
 
 public class FullImageView extends GLBaseView {
+
     @SuppressWarnings("unused")
     private static final String TAG = FullImageView.class.getSimpleName();
     private final int mPlaceholderColor;
@@ -42,17 +44,18 @@ public class FullImageView extends GLBaseView {
     public static final long INVALID_DATA_VERSION = MediaObject.INVALID_DATA_VERSION;
 
     public static class Size {
+
         public int width;
         public int height;
     }
 
     public interface Model extends TileImageView.TileSource {
+
         public int getCurrentIndex();
 
         public void moveTo(int index);
 
-        // Returns the size for the specified picture. If the size information is
-        // not avaiable, width = height = 0.
+        // Returns the size for the specified picture. If the size information is not avaiable, width = height = 0.
         public void getImageSize(int offset, Size size);
 
         // Returns the media item for the specified picture.
@@ -75,8 +78,7 @@ public class FullImageView extends GLBaseView {
         // Returns true if the item is the Panorama.
         public boolean isPanorama(int offset);
 
-        // Returns true if the item is a static image that represents camera
-        // preview.
+        // Returns true if the item is a static image that represents camerapreview.
         public boolean isStaticCamera(int offset);
 
         // Returns true if the item is a Video.
@@ -91,16 +93,10 @@ public class FullImageView extends GLBaseView {
 
         public int getLoadingState(int offset);
 
-        // When data change happens, we need to decide which MediaItem to focus
-        // on.
-        //
+        // When data change happens, we need to decide which MediaItem to focus on.
         // 1. If focus hint path != null, we try to focus on it if we can find
-        // it.  This is used for undo a deletion, so we can focus on the
-        // undeleted item.
-        //
-        // 2. Otherwise try to focus on the MediaItem that is currently focused,
-        // if we can find it.
-        //
+        // it.  This is used for undo a deletion, so we can focus on the undeleted item.
+        // 2. Otherwise try to focus on the MediaItem that is currently focused, if we can find it.
         // 3. Otherwise try to focus on the previous MediaItem or the next
         // MediaItem, depending on the value of focus hint direction.
         public static final int FOCUS_HINT_NEXT = 0;
@@ -112,26 +108,19 @@ public class FullImageView extends GLBaseView {
     }
 
     public interface Listener {
-        public void onSingleTapUp(int x, int y);
+
+        public void onSingleTapConfirmed(int x, int y);
 
         public void onFullScreenChanged(boolean full);
 
         public void onCurrentImageUpdated();
 
-/*        public void onDeleteImage(MediaPath path, int offset);
-
-        public void onUndoDeleteImage();
-
-        public void onCommitDeleteImage();*/
-
         public void onFilmModeChanged(boolean enabled);
 
         public void onPictureCenter(boolean isCamera);
-        //public void onUndoBarVisibilityChanged(boolean visible);
     }
 
     // The rules about orientation locking:
-    //
     // (1) We need to lock the orientation if we are in page mode camera
     // preview, so there is no (unwanted) rotation animation when the user
     // rotates the device.
@@ -140,11 +129,8 @@ public class FullImageView extends GLBaseView {
     // because the action bar follows the system orientation.
     //
     // The rules about action bar:
-    //
     // (1) If we are in film mode, we don't show action bar.
-    //
-    // (2) If we go from camera to gallery with capture animation, we show
-    // action bar.
+    // (2) If we go from camera to gallery with capture animation, we show action bar.
     private static final int MSG_CANCEL_EXTRA_SCALING = 2;
     private static final int MSG_SWITCH_FOCUS = 3;
     private static final int MSG_CAPTURE_ANIMATION_DONE = 4;
@@ -235,7 +221,7 @@ public class FullImageView extends GLBaseView {
         mPlaceholderColor = mContext.getResources().getColor(R.color.photo_placeholder);
         mEdgeView = new EdgeView(mContext);
         addComponent(mEdgeView);
-        mNoThumbnailText = StringTexture.newInstance(mContext.getString(R.string.no_thumbnail),DEFAULT_TEXT_SIZE, Color.WHITE);
+        mNoThumbnailText = StringTexture.newInstance(mContext.getString(R.string.no_thumbnail), DEFAULT_TEXT_SIZE, Color.WHITE);
 
         mHandler = new MyHandler(activity.getGLController());
 
@@ -295,6 +281,7 @@ public class FullImageView extends GLBaseView {
     }
 
     class MyHandler extends SynchronizedHandler {
+
         public MyHandler(GLController root) {
             super(root);
         }
@@ -355,7 +342,7 @@ public class FullImageView extends GLBaseView {
             mSizes[i + SCREEN_NAIL_MAX] = p.getSize();
         }
 
-        boolean wasDeleting = mPositionController.hasDeletingBox();
+//        boolean wasDeleting = mPositionController.hasDeletingBox();
 
         // Move the boxes
         mPositionController.moveBox(fromIndex, mPrevBound < 0, mNextBound > 0, mModel.isCamera(0), mSizes);
@@ -364,14 +351,14 @@ public class FullImageView extends GLBaseView {
             setPictureSize(i);
         }
 
-        boolean isDeleting = mPositionController.hasDeletingBox();
+//        boolean isDeleting = mPositionController.hasDeletingBox();
 
-        // If the deletion is done, make HOLD_DELETE persist for only the time,needed for a snapback animation.
-        if (wasDeleting && !isDeleting) {
-            mHandler.removeMessages(MSG_DELETE_DONE);
-            Message m = mHandler.obtainMessage(MSG_DELETE_DONE);
-            mHandler.sendMessageDelayed(m, FullImageLayout.SNAPBACK_ANIMATION_TIME);
-        }
+//        // If the deletion is done, make HOLD_DELETE persist for only the time,needed for a snapback animation.
+//        if (wasDeleting && !isDeleting) {
+//            mHandler.removeMessages(MSG_DELETE_DONE);
+//            Message m = mHandler.obtainMessage(MSG_DELETE_DONE);
+//            mHandler.sendMessageDelayed(m, FullImageLayout.SNAPBACK_ANIMATION_TIME);
+//        }
 
         invalidate();
     }
@@ -504,6 +491,7 @@ public class FullImageView extends GLBaseView {
     ////////////////////////////////////////////////////////////////////////////
 
     private interface Picture {
+
         void reload();
 
         void draw(GLESCanvas canvas, Rect r);
@@ -520,6 +508,7 @@ public class FullImageView extends GLBaseView {
     }
 
     class FullPicture implements Picture {
+
         private int mRotation;
         private boolean mIsCamera;
         private boolean mIsPanorama;
@@ -713,6 +702,7 @@ public class FullImageView extends GLBaseView {
     }
 
     private class ScreenNailPicture implements Picture {
+
         private int mIndex;
         private int mRotation;
         private ScreenNail mScreenNail;
@@ -889,6 +879,7 @@ public class FullImageView extends GLBaseView {
     }
 
     private class MyGestureListener implements GestureRecognizer.Listener {
+
         private boolean mIgnoreUpEvent = false;
         // If we can change mode for this scale gesture.
         private boolean mCanChangeMode;
@@ -922,27 +913,36 @@ public class FullImageView extends GLBaseView {
             // no onSingleTapUp(). Base on these observations, the following condition is added to
             // filter out the false alarm where onSingleTapUp() is called within a pinch out
             // gesture. The framework fix went into ICS. Refer to b/4588114.
-//            if (Build.VERSION.SDK_INT < ApiHelper.VERSION_CODES.ICE_CREAM_SANDWICH) {
-//                if ((mHolding & HOLD_TOUCH_DOWN) == 0) {
-//                    return true;
-//                }
-//            }
+            if (Build.VERSION.SDK_INT < ApiHelper.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                if ((mHolding & HOLD_TOUCH_DOWN) == 0) {
+                    return true;
+                }
+            }
 
             // We do this in addition to onUp() because we want the snapback of setFilmMode to happen.
             mHolding &= ~HOLD_TOUCH_DOWN;
             if (mFilmMode && !mDownInScrolling) {
                 switchToHitPicture((int) (x + 0.5f), (int) (y + 0.5f));
-                mIgnoreUpEvent = true;
+                MediaItem item = mModel.getMediaItem(0);
+                int supported = 0;
+                if (item != null)
+                    supported = item.getSupportedOperations();
+                if ((supported & MediaItem.SUPPORT_ACTION) == 0) {
+                    setFilmMode(false);
+                    mIgnoreUpEvent = true;
+                    return true;
+                }
             }
 
-            if (mListener != null) {
-                // Do the inverse transform of the touch coordinates.
+            if (mListener != null) {// Do the inverse transform of the touch coordinates.
                 Matrix m = getGLController().getCompensationMatrix();
                 Matrix inv = new Matrix();
                 m.invert(inv);
-                float[] pts = new float[] { x, y };
+                float[] pts = new float[] {
+                        x, y
+                };
                 inv.mapPoints(pts);
-                mListener.onSingleTapUp((int) (pts[0] + 0.5f), (int) (pts[1] + 0.5f));
+                mListener.onSingleTapConfirmed((int) (pts[0] + 0.5f), (int) (pts[1] + 0.5f));
             }
             return true;
         }
@@ -974,7 +974,6 @@ public class FullImageView extends GLBaseView {
                 mScrolledAfterDown = true;
                 mFirstScrollX = (Math.abs(dx) > Math.abs(dy));
             }
-
             int dxi = (int) (-dx + 0.5f);
             int dyi = (int) (-dy + 0.5f);
             if (mFilmMode) {
@@ -1249,8 +1248,6 @@ public class FullImageView extends GLBaseView {
         mGestureListener.setSwipingEnabled(enabled);
     }
 
-
-
     public void setFilmMode(boolean enabled) {
         if (mFilmMode == enabled)
             return;
@@ -1261,7 +1258,6 @@ public class FullImageView extends GLBaseView {
         mPositionController.setFilmMode(mFilmMode);
         mModel.setNeedFullImage(!enabled);
         mModel.setFocusHintDirection(mFilmMode ? Model.FOCUS_HINT_PREVIOUS : Model.FOCUS_HINT_NEXT);
-
         mListener.onFilmModeChanged(enabled);
     }
 
@@ -1309,16 +1305,14 @@ public class FullImageView extends GLBaseView {
             mListener.onFullScreenChanged(full);
         }
 
-        // Determine how many photos we need to draw in addition to the center
-        // one.
+        // Determine how many photos we need to draw in addition to the center one.
         int neighbors;
         if (mFullScreenCamera) {
             neighbors = 0;
         } else {
-            // In page mode, we draw only one previous/next photo. But if we are
-            // doing capture animation, we want to draw all photos.
+            // In page mode, we draw only one previous/next photo. But if we are doing capture animation, we want to draw all photos.
             boolean inPageMode = (mPositionController.getFilmRatio() == 0f);
-            boolean inCaptureAnimation =((mHolding & HOLD_CAPTURE_ANIMATION) != 0);
+            boolean inCaptureAnimation = ((mHolding & HOLD_CAPTURE_ANIMATION) != 0);
             if (inPageMode && !inCaptureAnimation) {
                 neighbors = 1;
             } else {
@@ -1341,7 +1335,6 @@ public class FullImageView extends GLBaseView {
     ////////////////////////////////////////////////////////////////////////////
     //  Film mode focus switching
     ////////////////////////////////////////////////////////////////////////////
-
     // Runs in GL thread.
     private void checkFocusSwitching() {
         if (!mFilmMode)
@@ -1367,8 +1360,7 @@ public class FullImageView extends GLBaseView {
         }
     }
 
-    // Returns -1 if we should switch focus to the previous picture, +1 if we
-    // should switch to the next, 0 otherwise.
+    // Returns -1 if we should switch focus to the previous picture, +1 if we should switch to the next, 0 otherwise.
     private int switchPosition() {
         Rect curr = mPositionController.getPosition(0);
         int center = getWidth() / 2;
@@ -1392,8 +1384,7 @@ public class FullImageView extends GLBaseView {
         return 0;
     }
 
-    // Switch to the previous or next picture if the hit position is inside
-    // one of their boxes. This runs in main thread.
+    // Switch to the previous or next picture if the hit position is inside one of their boxes. This runs in main thread.
     private void switchToHitPicture(int x, int y) {
 
         if (mPrevBound < 0) {
@@ -1646,6 +1637,7 @@ public class FullImageView extends GLBaseView {
     // interpolator is applied to a scale animation on a view, it evokes the
     // sense that the object is shrinking due to moving away from the camera.
     private static class ZInterpolator {
+
         private float focalLength;
 
         public ZInterpolator(float foc) {

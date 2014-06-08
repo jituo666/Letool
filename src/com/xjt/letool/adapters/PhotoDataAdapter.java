@@ -30,6 +30,7 @@ import java.util.concurrent.FutureTask;
 
 import com.xjt.letool.common.Future;
 import com.xjt.letool.common.FutureListener;
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
 import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.common.ThreadPool.Job;
@@ -37,7 +38,7 @@ import com.xjt.letool.common.ThreadPool.JobContext;
 
 public class PhotoDataAdapter implements FullImageFragment.Model {
     @SuppressWarnings("unused")
-    private static final String TAG = "PhotoDataAdapter";
+    private static final String TAG = PhotoDataAdapter.class.getSimpleName();
 
     private static final int MSG_LOAD_START = 1;
     private static final int MSG_LOAD_FINISH = 2;
@@ -262,8 +263,7 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
             fromIndex[i] = (j < N) ? j - SCREEN_NAIL_MAX : Integer.MAX_VALUE;
         }
 
-        mPhotoView.notifyDataChange(fromIndex, -mCurrentIndex,
-                mSize - 1 - mCurrentIndex);
+        mPhotoView.notifyDataChange(fromIndex, -mCurrentIndex, mSize - 1 - mCurrentIndex);
     }
 
     public void setDataListener(DataListener listener) {
@@ -1014,8 +1014,7 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
                     info.size = mSource.getAllMediaItems();
                 }
                 if (!info.reloadContent) continue;
-                info.items = mSource.getMediaItem(
-                        info.contentStart, info.contentEnd);
+                info.items = mSource.getMediaItem(info.contentStart, info.contentEnd);
 
                 int index = MediaSet.INDEX_NOT_FOUND;
 
@@ -1051,12 +1050,11 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
                 }
 
                 // Don't change index if mSize == 0
-                if (mSize > 0) {
-                    if (index >= mSize) index = mSize - 1;
+                if (info.size > 0) {
+                    if (index >= info.size) index = info.size - 1;
+                    info.indexHint = index;
                 }
-
-                info.indexHint = index;
-
+                LLog.i(TAG, "----------------ReloadTask------------ReloadTask----------:" + index + " :" + info.size);
                 executeAndWait(new UpdateContent(info));
             }
         }
