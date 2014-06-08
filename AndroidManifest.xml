@@ -91,7 +91,7 @@
         </meta-data>
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="LETOOL0000001014" />
+            android:value="LETOOL0000001111" />
 
         <service
             android:name="com.umeng.update.net.DownloadingService"
