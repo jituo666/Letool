@@ -33,7 +33,6 @@ import com.xjt.letool.view.LetoolDialog;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.view.DetailsHelper.CloseListener;
 import com.xjt.letool.views.layout.ThumbnailSetContractLayout;
-import com.xjt.letool.views.layout.ThumbnailContractLayout;
 import com.xjt.letool.views.layout.ThumbnailLayout;
 import com.xjt.letool.views.layout.ThumbnailLayout.LayoutListener;
 import com.xjt.letool.views.opengl.FadeTexture;
@@ -41,9 +40,7 @@ import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.render.ThumbnailSetRenderer;
 import com.xjt.letool.views.utils.ViewConfigs;
 
-import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -53,9 +50,9 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 /**
@@ -297,6 +294,17 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
         actionBar.setTitleIcon(R.drawable.ic_drawer);
         actionBar.setTitleText(R.string.common_gallery);
+        ImageView v = (ImageView) actionBar.getActionPanel().findViewById(R.id.action_more);
+        v.setImageResource(R.drawable.ic_action_accept);
+        v.setVisibility(View.VISIBLE);
+    }
+
+    private void initSelectionActionBar() {
+        LetoolActionBar actionBar = getLetoolActionBar();
+        actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_SELECTION, this);
+        actionBar.setContractSelectionManager(mSelector);
+        String format = getResources().getQuantityString(R.plurals.number_of_items_selected, 0);
+        actionBar.setTitleText(String.format(format, 0));
     }
 
     private void getThumbnailCenter(int thumbnailIndex, int center[]) {
@@ -540,6 +548,11 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         } else if (v.getId() == R.id.enter_selection_indicate) {
             MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_SELECT_OK);
             mSelector.leaveSelectionMode();
+        } else if (v.getId() == R.id.action_more) {
+            MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_POPUP_MENU);
+            if (mSelector != null && !mSelector.inSelectionMode()) {
+                mSelector.enterSelectionMode();
+            }
         }
     }
 
@@ -575,20 +588,19 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         getLetoolSlidingMenu().toggle();
 
     }
-    
+
     @Override
     public void onSelectionModeChange(int mode) {
         switch (mode) {
             case ContractSelector.ENTER_SELECTION_MODE: {
-                getLetoolActionBar().setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_SELECTION, this);
-                getLetoolActionBar().setContractSelectionManager(mSelector);
+                initSelectionActionBar();
                 mRootPane.invalidate();
                 break;
             }
             case ContractSelector.LEAVE_SELECTION_MODE: {
-                getLetoolActionBar().setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
-                mRootPane.invalidate();
+
                 initBrowseActionBar();
+                mRootPane.invalidate();
                 break;
             }
             case ContractSelector.SELECT_ALL_MODE: {

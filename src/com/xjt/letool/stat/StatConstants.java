@@ -19,6 +19,7 @@ public class StatConstants {
     public static final String EVENT_KEY_SLIDE_MENU_PHOTO = "sl_photo";
     public static final String EVENT_KEY_SLIDE_MENU_GALLERY = "sl_gallery";
     public static final String EVENT_KEY_GALLERY_LONG_PRESSED = "g_lp_select";
+    public static final String EVENT_KEY_SELECT_GALLERY = "select_gallery";
     public static final String EVENT_KEY_SLIDE_MENU_SETTING = "sl_setting";
     public static final String EVENT_KEY_SLIDE_MENU_EXIT = "sl_exit";
 

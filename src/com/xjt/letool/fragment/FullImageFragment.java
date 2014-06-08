@@ -585,7 +585,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         final ArrayList<String> shareData = new ArrayList<String>();
         shareData.add(mCurrentPhoto.getFilePath());
         final LetoolDialog dlg = new LetoolDialog(getActivity());
-        dlg.setTitle(R.string.common_share);
+        dlg.setTitle(R.string.common_share_to);
         dlg.setOkBtn(R.string.common_cancel, null);
 
         ListView l = dlg.setListAdapter(new ShareToAdapter(shareToList));

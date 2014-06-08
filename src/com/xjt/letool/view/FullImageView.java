@@ -178,7 +178,6 @@ public class FullImageView extends GLBaseView {
     private StringTexture mNoThumbnailText;
     private TileImageView mTileView;
     private EdgeView mEdgeView;
-    private Texture mVideoPlayIcon;
 
     private SynchronizedHandler mHandler;
 
@@ -261,7 +260,6 @@ public class FullImageView extends GLBaseView {
                         mEdgeView.onAbsorb(velocity, direction);
                     }
                 });
-        mVideoPlayIcon = new ResourceTexture(mContext, R.drawable.ic_control_play);
         for (int i = -SCREEN_NAIL_MAX; i <= SCREEN_NAIL_MAX; i++) {
             if (i == 0) {
                 mPictures.put(i, new FullPicture());
@@ -855,7 +853,6 @@ public class FullImageView extends GLBaseView {
     private void drawVideoPlayIcon(GLESCanvas canvas, int side) {
         int s = side / ICON_RATIO;
         // Draw the video play icon at the center
-        mVideoPlayIcon.draw(canvas, -s / 2, -s / 2, s, s);
     }
 
     // Draw the "no thumbnail" message

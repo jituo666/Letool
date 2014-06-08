@@ -75,9 +75,10 @@ public class PopupMenu {
      *
      * @return item
      */
-    public MenuItem add(int itemId, int titleRes) {
+    public MenuItem add(int itemId, int iconRes, int titleRes) {
         MenuItem item = new MenuItem();
         item.setItemId(itemId);
+        item.setIcon(mContext.getResources().getDrawable(iconRes));
         item.setTitle(mContext.getString(titleRes));
         mItems.add(item);
         return item;

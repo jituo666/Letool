@@ -57,6 +57,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -91,7 +92,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     //views
     private CommonLoadingPanel mLoadingInsie;
     private GLRootView mGLRootView;
-    private View mMore;
+    private ImageView mMore;
     private ViewConfigs.AlbumPage mConfig;
     private ThumbnailView mThumbnailView;
     private ThumbnailRenderer mRender;
@@ -284,14 +285,26 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     private void initBrowseActionBar() {
         LetoolActionBar actionBar = getLetoolActionBar();
         actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
+
+        actionBar.setTitleText(mAlbumTitle);
+        mMore = (ImageView) actionBar.getActionPanel().findViewById(R.id.action_more);
+        mMore.setVisibility(View.VISIBLE);
         if (mIsPhotoAlbum) {
             actionBar.setTitleIcon(R.drawable.ic_drawer);
+            mMore.setImageResource(R.drawable.ic_action_more);
         } else {
             actionBar.setTitleIcon(R.drawable.ic_action_previous_item);
+            mMore.setImageResource(R.drawable.ic_action_accept);
+
         }
-        actionBar.setTitleText(mAlbumTitle);
-        mMore = actionBar.getActionPanel().findViewById(R.id.action_more);
-        mMore.setVisibility(View.VISIBLE);
+    }
+
+    private void initSelectionActionBar() {
+        LetoolActionBar actionBar = getLetoolActionBar();
+        actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_SELECTION, this);
+        actionBar.setContractSelectionManager(mSelector);
+        String format = getResources().getQuantityString(R.plurals.number_of_items_selected, 0);
+        actionBar.setTitleText(String.format(format, 0));
     }
 
     @Override
@@ -344,14 +357,6 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         return rootView;
     }
 
-    private void initSelectionActionBar() {
-        LetoolActionBar actionBar = getLetoolActionBar();
-        actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_SELECTION, this);
-        actionBar.setContractSelectionManager(mSelector);
-        String format = getResources().getQuantityString(R.plurals.number_of_items_selected, 0);
-        actionBar.setTitleText(String.format(format, 0));
-    }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -360,7 +365,8 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
 
     @Override
     public void onMenuClicked() {
-        LLog.i(TAG, "------------onMenuClicked----------------onMenuClicked----------------------------");
+        if (!mIsPhotoAlbum)
+            return;
         MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_SLIDE_MENU_MENU);
         getLetoolSlidingMenu().toggle();
     }
@@ -505,8 +511,13 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
             dlg.show();
 
         } else if (v.getId() == R.id.action_more) {
-            MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_POPUP_MENU);
-            showPopupMenu();
+            if (mIsPhotoAlbum) {
+                MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_POPUP_MENU);
+                showPopupMenu();
+            } else {
+                if (mSelector != null)
+                    mSelector.enterSelectionMode();
+            }
         } else if (v.getId() == R.id.enter_selection_indicate) {
             MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_SELECT_OK);
             mSelector.leaveSelectionMode();
@@ -516,8 +527,8 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     public void showPopupMenu() {
         PopupMenu popup = new PopupMenu(this.getActivity());
         popup.setOnItemSelectedListener(this);
-        popup.add(POP_UP_MENU_ITEM_SELECT, R.string.popup_menu_select_mode);
-        popup.add(POP_UP_MENU_ITEM_CAMERA, R.string.popup_menu_take_picture);
+        popup.add(POP_UP_MENU_ITEM_SELECT, R.drawable.ic_action_accept, R.string.popup_menu_select_mode);
+        popup.add(POP_UP_MENU_ITEM_CAMERA, R.drawable.ic_action_camera, R.string.popup_menu_take_picture);
         popup.show(mMore);
 
     }
