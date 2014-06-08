@@ -1,0 +1,20 @@
+Enter keystore password:  
+Re-enter new password: 
+What is your first and last name?
+  [Unknown]:  XuanJituo
+What is the name of your organizational unit?
+  [Unknown]:  Personal
+What is the name of your organization?
+  [Unknown]:  Myself
+What is the name of your City or Locality?
+  [Unknown]:  Chengdu
+What is the name of your State or Province?
+  [Unknown]:  China
+What is the two-letter country code for this unit?
+  [Unknown]:  86
+Is CN=XuanJituo, OU=Personal, O=Myself, L=Chengdu, ST=China, C=86 correct?
+  [no]:  yes
+
+Enter key password for <letoolrelease.keystore>
+	(RETURN if same as keystore password):  
+Re-enter new password: 
