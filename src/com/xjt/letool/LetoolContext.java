@@ -7,6 +7,8 @@ import android.os.Looper;
 
 import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.metadata.DataManager;
+import com.xjt.letool.view.LetoolBottomBar;
+import com.xjt.letool.view.LetoolTopBar;
 
 /**
  * @Author Jituo.Xuan
@@ -24,5 +26,9 @@ public interface LetoolContext {
     public Resources getResources();
 
     public ThreadPool getThreadPool();
+
+    public LetoolTopBar getLetoolTopBar();
+
+    public LetoolBottomBar getLetoolBottomBar();
 
 }

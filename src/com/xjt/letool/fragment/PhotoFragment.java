@@ -35,7 +35,7 @@ import com.xjt.letool.view.DetailsHelper;
 import com.xjt.letool.view.GLBaseView;
 import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.GLRootView;
-import com.xjt.letool.view.LetoolActionBar;
+import com.xjt.letool.view.LetoolTopBar;
 import com.xjt.letool.view.LetoolDialog;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.views.layout.ThumbnailContractLayout;
@@ -118,7 +118,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         @Override
         protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
             mEyePosition.resetPosition();
-            LetoolActionBar actionBar = getLetoolActionBar();
+            LetoolTopBar actionBar = getLetoolTopBar();
             int thumbnailViewLeft = left + mConfig.paddingLeft;
             int thumbnailViewRight = right - left - mConfig.paddingRight;
             int thumbnailViewTop = top + mConfig.paddingTop + actionBar.getHeight();
@@ -283,8 +283,8 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     }
 
     private void initBrowseActionBar() {
-        LetoolActionBar actionBar = getLetoolActionBar();
-        actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
+        LetoolTopBar actionBar = getLetoolTopBar();
+        actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_BROWSE, this);
 
         actionBar.setTitleText(mAlbumTitle);
         mMore = (ImageView) actionBar.getActionPanel().findViewById(R.id.action_more);
@@ -300,8 +300,8 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     }
 
     private void initSelectionActionBar() {
-        LetoolActionBar actionBar = getLetoolActionBar();
-        actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_SELECTION, this);
+        LetoolTopBar actionBar = getLetoolTopBar();
+        actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_SELECTION, this);
         actionBar.setContractSelectionManager(mSelector);
         String format = getResources().getQuantityString(R.plurals.number_of_items_selected, 0);
         actionBar.setTitleText(String.format(format, 0));
@@ -557,7 +557,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     public void onSelectionChange(MediaPath path, boolean selected) {
         int count = mSelector.getSelectedCount();
         String format = getResources().getQuantityString(R.plurals.number_of_items_selected, count);
-        getLetoolActionBar().setTitleText(String.format(format, count));
+        getLetoolTopBar().setTitleText(String.format(format, count));
     }
 
     private void pickPhoto(int index) {

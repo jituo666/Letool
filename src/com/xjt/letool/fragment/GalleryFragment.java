@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.R;
-import com.xjt.letool.activities.BaseActivity;
+import com.xjt.letool.activities.BaseFragmentActivity;
 import com.xjt.letool.activities.ThumbnailActivity;
 import com.xjt.letool.common.EyePosition;
 import com.xjt.letool.common.LLog;
@@ -29,7 +29,7 @@ import com.xjt.letool.view.DetailsHelper;
 import com.xjt.letool.view.GLBaseView;
 import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.GLRootView;
-import com.xjt.letool.view.LetoolActionBar;
+import com.xjt.letool.view.LetoolTopBar;
 import com.xjt.letool.view.LetoolDialog;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.view.DetailsHelper.CloseListener;
@@ -98,7 +98,6 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
 
     private int mLoadingBits = 0;
     private boolean mShowedEmptyToastForSelf = false;
-    private boolean mGetContent = false;
     private Handler mHandler;
 
     private final GLBaseView mRootPane = new GLBaseView() {
@@ -108,7 +107,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         @Override
         protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
             mEyePosition.resetPosition();
-            LetoolActionBar actionBar = getLetoolActionBar();
+            LetoolTopBar actionBar = getLetoolTopBar();
             int thumbnailViewLeft = left + mConfig.paddingLeft;
             int thumbnailViewRight = right - left - mConfig.paddingRight;
             int thumbnailViewTop = top + mConfig.paddingTop + actionBar.getHeight();
@@ -219,9 +218,6 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     }
 
     public void onLongTap(int thumbnailIndex) {
-        if (mGetContent)
-            return;
-
         MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_GALLERY_LONG_PRESSED);
         MediaSet set = mThumbnailSetAdapter.getMediaSet(thumbnailIndex);
         if (set == null)
@@ -282,9 +278,8 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     }
 
     private void initializeData() {
-        Bundle data = getArguments();
-        mGetContent = data.getBoolean(BaseActivity.KEY_GET_CONTENT, false);
-        mMediaSet = new LocalAlbumSet(new MediaPath(getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY), -1000), (LetoolApp)getActivity().getApplication());//getDataManager().getMediaSet(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), -1000);
+        mMediaSet = new LocalAlbumSet(new MediaPath(getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY), -1000), (LetoolApp) getActivity()
+                .getApplication());//getDataManager().getMediaSet(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), -1000);
         mSelector.setSourceMediaSet(mMediaSet);
         mThumbnailSetAdapter = new ThumbnailSetDataLoader(this, mMediaSet);
         mThumbnailSetAdapter.setLoadingListener(new MyLoadingListener());
@@ -292,8 +287,8 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     }
 
     private void initBrowseActionBar() {
-        LetoolActionBar actionBar = getLetoolActionBar();
-        actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_BROWSE, this);
+        LetoolTopBar actionBar = getLetoolTopBar();
+        actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_BROWSE, this);
         actionBar.setTitleIcon(R.drawable.ic_drawer);
         actionBar.setTitleText(R.string.common_gallery);
         ImageView v = (ImageView) actionBar.getActionPanel().findViewById(R.id.action_more);
@@ -302,8 +297,8 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     }
 
     private void initSelectionActionBar() {
-        LetoolActionBar actionBar = getLetoolActionBar();
-        actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_SELECTION, this);
+        LetoolTopBar actionBar = getLetoolTopBar();
+        actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_SELECTION, this);
         actionBar.setContractSelectionManager(mSelector);
         String format = getResources().getQuantityString(R.plurals.number_of_items_selected, 0);
         actionBar.setTitleText(String.format(format, 0));
@@ -570,18 +565,17 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         }
         hideEmptyAlbumToast();
         MediaPath mediaPath = targetSet.getPath();
-        if (!mGetContent) {
-            Intent it = new Intent();
-            it.setClass(getActivity(), ThumbnailActivity.class);
-            it.putExtra(ThumbnailActivity.KEY_ALBUM_ID, mediaPath.getIdentity());
-            it.putExtra(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-            it.putExtra(ThumbnailActivity.KEY_ALBUM_TITLE, targetSet.getName());
-            int[] center = new int[2];
-            getThumbnailCenter(thumbnailIndex, center);
-            it.putExtra(PhotoFragment.KEY_SET_CENTER, center);
-            startActivityForResult(it, ThumbnailActivity.REQUEST_FOR_PHOTO);
-            return;
-        }
+        Intent it = new Intent();
+        it.setClass(getActivity(), ThumbnailActivity.class);
+        it.putExtra(ThumbnailActivity.KEY_ALBUM_ID, mediaPath.getIdentity());
+        it.putExtra(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+        it.putExtra(ThumbnailActivity.KEY_ALBUM_TITLE, targetSet.getName());
+        int[] center = new int[2];
+        getThumbnailCenter(thumbnailIndex, center);
+        it.putExtra(PhotoFragment.KEY_SET_CENTER, center);
+        startActivityForResult(it, ThumbnailActivity.REQUEST_FOR_PHOTO);
+        return;
+
     }
 
     @Override
@@ -616,7 +610,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     public void onSelectionChange(MediaPath path, boolean selected) {
         int count = mSelector.getSelectedCount();
         String format = getResources().getQuantityString(R.plurals.number_of_items_selected, count);
-        getLetoolActionBar().setTitleText(String.format(format, count));
+        getLetoolTopBar().setTitleText(String.format(format, count));
     }
 
     @Override

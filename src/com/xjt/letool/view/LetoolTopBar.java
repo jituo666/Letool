@@ -10,10 +10,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.xjt.letool.R;
-import com.xjt.letool.activities.BaseActivity;
+import com.xjt.letool.activities.BaseFragmentActivity;
 import com.xjt.letool.selectors.ContractSelector;
 
-public class LetoolActionBar {
+public class LetoolTopBar {
 
     public static final int ACTION_BAR_MODE_NONE = -1;
     public static final int ACTION_BAR_MODE_BROWSE = 0;
@@ -21,7 +21,7 @@ public class LetoolActionBar {
     public static final int ACTION_BAR_MODE_SETTINGS = 2;
     public static final int ACTION_BAR_MODE_FULL_IMAGE = 3;
 
-    private BaseActivity mActivity;
+    private BaseFragmentActivity mActivity;
     public static final int ACTION_BAR_MODE[] = {
             ACTION_BAR_MODE_BROWSE,
             ACTION_BAR_MODE_SELECTION,
@@ -63,7 +63,7 @@ public class LetoolActionBar {
     private boolean mIsExpand = false;
     private ContractSelector mConractSelectionManager;
 
-    public LetoolActionBar(BaseActivity activity, ViewGroup barContainer) {
+    public LetoolTopBar(BaseFragmentActivity activity, ViewGroup barContainer) {
         mActivity = activity;
         mBarContainer = barContainer;
     }

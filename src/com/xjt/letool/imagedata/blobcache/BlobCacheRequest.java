@@ -44,7 +44,7 @@ public abstract class BlobCacheRequest implements Job<Bitmap> {
 //        if (bitmap == null || bitmap.isRecycled()) {
 //            bitmap = BitmapFactory.decodeResource(mApplication.getResources(), R.drawable.sliding_menu_logo_bg);
 //        }
-                BlobCacheService cacheService = mApplication.getImageCacheService();
+                BlobCacheService cacheService = mApplication.getBolbCacheService();
                 BytesBuffer buffer = MediaItem.getBytesBufferPool().get();
                 try {
                     boolean found = cacheService.getImageData(mPath, mTimeModified, mType, buffer);

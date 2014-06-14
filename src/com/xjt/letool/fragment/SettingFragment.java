@@ -32,7 +32,7 @@ import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.StorageUtils;
 import com.xjt.letool.utils.StringUtils;
 import com.xjt.letool.view.GLController;
-import com.xjt.letool.view.LetoolActionBar;
+import com.xjt.letool.view.LetoolTopBar;
 
 /**
  * @Author Jituo.Xuan
@@ -67,8 +67,8 @@ public class SettingFragment extends LetoolFragment {
     }
 
     private void initBrowseActionBar() {
-        LetoolActionBar actionBar = getLetoolActionBar();
-        actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_SETTINGS, this);
+        LetoolTopBar actionBar = getLetoolTopBar();
+        actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_SETTINGS, this);
         actionBar.setTitleIcon(R.drawable.ic_drawer);
         actionBar.setTitleText(R.string.common_settings);
     }

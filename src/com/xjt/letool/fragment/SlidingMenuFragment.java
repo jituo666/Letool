@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
-import com.xjt.letool.activities.BaseActivity;
+import com.xjt.letool.activities.BaseFragmentActivity;
 import com.xjt.letool.activities.ThumbnailActivity;
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
@@ -75,14 +75,14 @@ public class SlidingMenuFragment extends Fragment {
     };
     private ListView mMenusList;
     private ImageView mMenuLogo;
-    private BaseActivity mActivity;
+    private BaseFragmentActivity mActivity;
     private FragmentManager mFragmentManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFragmentManager = getFragmentManager();
-        mActivity = (BaseActivity) getActivity();
+        mActivity = (BaseFragmentActivity) getActivity();
     }
 
     @Override

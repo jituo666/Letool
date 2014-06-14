@@ -43,7 +43,7 @@ public abstract class ETCCacheRequest implements Job<ETC1Texture> {
 
     @Override
     public ETC1Texture run(JobContext jc) {
-        BlobCacheService cacheService = mApplication.getImageCacheService();
+        BlobCacheService cacheService = mApplication.getBolbCacheService();
         BytesBuffer buffer = MediaItem.getBytesBufferPool().get();
 
         try {
