@@ -1,3 +1,4 @@
+
 package com.xjt.letool.common;
 
 import android.app.admin.DevicePolicyManager;
@@ -10,13 +11,14 @@ import android.view.WindowManager;
 
 import java.lang.reflect.Field;
 
-
 /**
  * @Author Jituo.Xuan
  * @Date 11:32:06 AM Mar 20, 2014
  */
 public class ApiHelper {
+
     public static interface VERSION_CODES {
+
         // These value are copied from Build.VERSION_CODES
         public static final int GINGERBREAD_MR1 = 10;
         public static final int HONEYCOMB = 11;
@@ -31,56 +33,40 @@ public class ApiHelper {
 
     public static final boolean AT_LEAST_16 = Build.VERSION.SDK_INT >= 16;
 
-    public static final boolean USE_888_PIXEL_FORMAT =
-            Build.VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN;
+    public static final boolean USE_888_PIXEL_FORMAT = Build.VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN;
 
-    public static final boolean ENABLE_PHOTO_EDITOR =
-            Build.VERSION.SDK_INT >= VERSION_CODES.ICE_CREAM_SANDWICH;
+    public static final boolean ENABLE_PHOTO_EDITOR = Build.VERSION.SDK_INT >= VERSION_CODES.ICE_CREAM_SANDWICH;
 
-    public static final boolean HAS_VIEW_SYSTEM_UI_FLAG_LAYOUT_STABLE =
-            hasField(View.class, "SYSTEM_UI_FLAG_LAYOUT_STABLE");
+    public static final boolean HAS_VIEW_SYSTEM_UI_FLAG_LAYOUT_STABLE = hasField(View.class, "SYSTEM_UI_FLAG_LAYOUT_STABLE");
 
-    public static final boolean HAS_VIEW_SYSTEM_UI_FLAG_HIDE_NAVIGATION =
-            hasField(View.class, "SYSTEM_UI_FLAG_HIDE_NAVIGATION");
+    public static final boolean HAS_VIEW_SYSTEM_UI_FLAG_HIDE_NAVIGATION = hasField(View.class, "SYSTEM_UI_FLAG_HIDE_NAVIGATION");
 
-    public static final boolean HAS_MEDIA_COLUMNS_WIDTH_AND_HEIGHT =
-            hasField(MediaColumns.class, "WIDTH");
+    public static final boolean HAS_MEDIA_COLUMNS_WIDTH_AND_HEIGHT = hasField(MediaColumns.class, "WIDTH");
 
-    public static final boolean HAS_REUSING_BITMAP_IN_BITMAP_REGION_DECODER =
-            Build.VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN;
+    public static final boolean HAS_REUSING_BITMAP_IN_BITMAP_REGION_DECODER = Build.VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN;
 
-    public static final boolean HAS_REUSING_BITMAP_IN_BITMAP_FACTORY =
-            Build.VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB;
+    public static final boolean HAS_REUSING_BITMAP_IN_BITMAP_FACTORY = Build.VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB;
 
-    public static final boolean HAS_SET_BEAM_PUSH_URIS =
-            Build.VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN;
+    public static final boolean HAS_SET_BEAM_PUSH_URIS = Build.VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN;
 
-    public static final boolean HAS_SET_DEFALT_BUFFER_SIZE = hasMethod(
-            "android.graphics.SurfaceTexture", "setDefaultBufferSize",
-            int.class, int.class);
+    public static final boolean HAS_SET_DEFALT_BUFFER_SIZE = hasMethod("android.graphics.SurfaceTexture", "setDefaultBufferSize", int.class, int.class);
 
-    public static final boolean HAS_RELEASE_SURFACE_TEXTURE = hasMethod(
-            "android.graphics.SurfaceTexture", "release");
+    public static final boolean HAS_RELEASE_SURFACE_TEXTURE = hasMethod("android.graphics.SurfaceTexture", "release");
 
-    public static final boolean HAS_SURFACE_TEXTURE =
-            Build.VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB;
+    public static final boolean HAS_SURFACE_TEXTURE = Build.VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB;
 
-    public static final boolean HAS_MTP =
-            Build.VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB_MR1;
+    public static final boolean HAS_MTP = Build.VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB_MR1;
 
-    public static final boolean HAS_AUTO_FOCUS_MOVE_CALLBACK =
-            Build.VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN;
+    public static final boolean HAS_AUTO_FOCUS_MOVE_CALLBACK = Build.VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN;
 
-    public static final boolean HAS_REMOTE_VIEWS_SERVICE =
-            Build.VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB;
+    public static final boolean HAS_REMOTE_VIEWS_SERVICE = Build.VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB;
 
-    public static final boolean HAS_INTENT_EXTRA_LOCAL_ONLY =
-            Build.VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB;
+    public static final boolean HAS_INTENT_EXTRA_LOCAL_ONLY = Build.VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB;
 
-    public static final boolean HAS_SET_SYSTEM_UI_VISIBILITY =
-            hasMethod(View.class, "setSystemUiVisibility", int.class);
+    public static final boolean HAS_SET_SYSTEM_UI_VISIBILITY = hasMethod(View.class, "setSystemUiVisibility", int.class);
 
     public static final boolean HAS_FACE_DETECTION;
+
     static {
         boolean hasFaceDetection = false;
         try {
@@ -96,8 +82,11 @@ public class ApiHelper {
         HAS_FACE_DETECTION = hasFaceDetection;
     }
 
-    public static final boolean HAS_GET_CAMERA_DISABLED =
-            hasMethod(DevicePolicyManager.class, "getCameraDisabled", ComponentName.class);
+    public static boolean supportVersion(int version) {
+        return Build.VERSION.SDK_INT >= version;
+    }
+
+    public static final boolean HAS_GET_CAMERA_DISABLED = hasMethod(DevicePolicyManager.class, "getCameraDisabled", ComponentName.class);
 
     public static final boolean HAS_MEDIA_ACTION_SOUND =
             Build.VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN;

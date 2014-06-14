@@ -17,6 +17,7 @@ import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.metadata.loader.DataLoadingListener;
 import com.xjt.letool.metadata.loader.ThumbnailSetDataLoader;
+import com.xjt.letool.metadata.source.LocalAlbumSet;
 import com.xjt.letool.selectors.ContractSelectListener;
 import com.xjt.letool.selectors.ContractSelector;
 import com.xjt.letool.stat.StatConstants;
@@ -39,6 +40,7 @@ import com.xjt.letool.views.opengl.FadeTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.render.ThumbnailSetRenderer;
 import com.xjt.letool.views.utils.ViewConfigs;
+import com.xjt.letool.LetoolApp;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -282,7 +284,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     private void initializeData() {
         Bundle data = getArguments();
         mGetContent = data.getBoolean(BaseActivity.KEY_GET_CONTENT, false);
-        mMediaSet = getDataManager().getMediaSet(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), -1000);
+        mMediaSet = new LocalAlbumSet(new MediaPath(getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY), -1000), (LetoolApp)getActivity().getApplication());//getDataManager().getMediaSet(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), -1000);
         mSelector.setSourceMediaSet(mMediaSet);
         mThumbnailSetAdapter = new ThumbnailSetDataLoader(this, mMediaSet);
         mThumbnailSetAdapter.setLoadingListener(new MyLoadingListener());

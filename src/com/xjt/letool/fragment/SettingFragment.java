@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import android.animation.ObjectAnimator;
 import android.app.ProgressDialog;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -26,6 +25,7 @@ import com.umeng.update.UmengUpdateListener;
 import com.umeng.update.UpdateResponse;
 import com.umeng.update.UpdateStatus;
 import com.xjt.letool.R;
+import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.imagedata.blobcache.BlobCacheManager;
 import com.xjt.letool.settings.LetoolPreference;
 import com.xjt.letool.stat.StatConstants;
@@ -140,7 +140,8 @@ public class SettingFragment extends LetoolFragment {
             progressDialog.setCancelable(true);
             progressDialog.show();
         } else if (v.getId() == R.id.author_desc) {
-            copyQQToClipBoard();
+            if (ApiHelper.supportVersion(ApiHelper.VERSION_CODES.HONEYCOMB))
+                copyQQToClipBoard();
         } else if (v.getId() == R.id.app_about) {
             if (!joinQQGroup("pan68pjSBp1edKE0a6mUIUogCS4U-qZW")) {
                 Toast.makeText(getAndroidContext(), R.string.app_QQ_group_failed, Toast.LENGTH_SHORT).show();

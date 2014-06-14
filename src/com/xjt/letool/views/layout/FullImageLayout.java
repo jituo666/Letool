@@ -199,7 +199,7 @@ public class FullImageLayout {
     public FullImageLayout(Context context, Listener listener) {
         mListener = listener;
         mPageScroller = new FlingScroller();
-        mFilmScroller = new Scroller(context, null, false);
+        mFilmScroller = new Scroller(context, null);
 
         // Initialize the areas.
         initPlatform();

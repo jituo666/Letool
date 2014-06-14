@@ -1,3 +1,4 @@
+
 package com.xjt.letool.imagedata.utils;
 
 import android.graphics.Bitmap;
@@ -21,6 +22,7 @@ public class SparseArrayBitmapPool {
     private Node mPoolNodesTail = null;
 
     protected static class Node {
+
         Bitmap bitmap;
 
         // Each node is part of two doubly linked lists:
@@ -100,8 +102,9 @@ public class SparseArrayBitmapPool {
         n.nextInPool = null;
         n.prevInBucket = null;
         n.prevInPool = null;
-        mSizeBytes -= n.bitmap.getByteCount();
-        if (recycleBitmap) n.bitmap.recycle();
+        mSizeBytes -= (n.bitmap.getRowBytes() * n.bitmap.getHeight());
+        if (recycleBitmap)
+            n.bitmap.recycle();
         n.bitmap = null;
         mNodePool.release(n);
     }
@@ -150,7 +153,7 @@ public class SparseArrayBitmapPool {
         }
 
         // Ensure there is enough room to contain the new bitmap.
-        int bytes = b.getByteCount();
+        int bytes = b.getRowBytes() * b.getHeight();
         freeUpCapacity(bytes);
 
         Node newNode = mNodePool.acquire();
