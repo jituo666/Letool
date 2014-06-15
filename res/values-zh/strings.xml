@@ -66,6 +66,7 @@
     <string name="common_close">关闭</string>
     <string name="common_recommend">提示</string>
     <string name="common_error_nosdcard">没有检测到SD卡！</string>
+    <string name="common_error_nodcim">没有检测到有效的照片目录！</string>
     <!-- popup menu -->
     <string name="popup_menu_select_mode">选择</string>
     <string name="popup_menu_take_picture">拍照</string>

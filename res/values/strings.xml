@@ -66,6 +66,7 @@
     <string name="common_close">Close</string>
     <string name="common_recommend">Recommend</string>
     <string name="common_error_nosdcard">No SDcard！</string>
+    <string name="common_error_nodcim">No valid photoes directories！</string>
     <!-- popup menu -->
     <string name="popup_menu_select_mode">Select</string>
     <string name="popup_menu_take_picture">Camera</string>

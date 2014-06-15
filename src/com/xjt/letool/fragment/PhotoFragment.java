@@ -28,7 +28,6 @@ import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.RelativePosition;
 import com.xjt.letool.utils.StorageUtils;
 import com.xjt.letool.utils.Utils;
-import com.xjt.letool.view.CommonLoadingPanel;
 import com.xjt.letool.view.BatchDeleteMediaListener;
 import com.xjt.letool.view.BatchDeleteMediaListener.DeleteMediaProgressListener;
 import com.xjt.letool.view.DetailsHelper;
@@ -90,7 +89,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     private boolean mInitialSynced = false;
 
     //views
-    private CommonLoadingPanel mLoadingInsie;
+    private TextView mEmptyView;
     private GLRootView mGLRootView;
     private ImageView mMore;
     private ViewConfigs.AlbumPage mConfig;
@@ -102,6 +101,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     private String mAlbumTitle;
     private boolean mIsPhotoAlbum = false;
     private boolean mHasSDCard = false;
+    private boolean mHasDCIM = false;
     private boolean mGetContent;
     private SynchronizedHandler mHandler;
     protected ContractSelector mSelector;
@@ -228,10 +228,16 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         Bundle data = getArguments();
         mIsPhotoAlbum = data.getBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM);
         if (mIsPhotoAlbum) {
-            mAlbumTitle = getString(R.string.common_photo);
-            mDataSetPath = new MediaPath(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]);
-            mDataSet = new LocalAlbum(mDataSetPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.MY_ALBUM_BUCKETS, true,
-                    getString(R.string.common_photo));
+            if (MediaSetUtils.MY_ALBUM_BUCKETS.length > 0) {
+                mAlbumTitle = getString(R.string.common_photo);
+                mDataSetPath = new MediaPath(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]);
+                mDataSet = new LocalAlbum(mDataSetPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.MY_ALBUM_BUCKETS, true,
+                        getString(R.string.common_photo));
+                mHasDCIM = true;
+            } else {
+                mHasDCIM = false;
+                return;
+            }
         } else {
             mAlbumTitle = data.getString(ThumbnailActivity.KEY_ALBUM_TITLE);
             mDataSetPath = new MediaPath(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), data.getInt(ThumbnailActivity.KEY_ALBUM_ID));
@@ -335,14 +341,13 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
             }
         };
         mEyePosition = new EyePosition(getAndroidContext(), this);
+        mEmptyView = (TextView) rootView.findViewById(R.id.empty_view);
         if (!mHasSDCard) {
-            TextView emptyView = (TextView) rootView.findViewById(R.id.empty_view);
-            emptyView.setText(R.string.common_error_nosdcard);
-            emptyView.setVisibility(View.VISIBLE);
-            mGLRootView.setVisibility(View.GONE);
-        } else {
-            //mLoadingInsie = (CommonLoadingPanel) rootView.findViewById(R.id.loading);
-            //mLoadingInsie.setVisibility(View.VISIBLE);
+            showEmptyView(R.string.common_error_nosdcard);
+            return rootView;
+        } else if (mIsPhotoAlbum && !mHasDCIM) {
+            showEmptyView(R.string.common_error_nodcim);
+            return rootView;
         }
         Bundle data = getArguments();
         if (data != null) {
@@ -357,6 +362,12 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         return rootView;
     }
 
+    private void showEmptyView(int resId) {
+        mEmptyView.setText(resId);
+        mEmptyView.setVisibility(View.VISIBLE);
+        mGLRootView.setVisibility(View.GONE);
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -364,61 +375,55 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     }
 
     @Override
-    public void onMenuClicked() {
-        if (!mIsPhotoAlbum)
-            return;
-        MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_SLIDE_MENU_MENU);
-        getLetoolSlidingMenu().toggle();
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        if (mHasSDCard) {
-            LLog.i(TAG, "onResume" + System.currentTimeMillis());
-            mGLRootView.onResume();
-            mGLRootView.lockRenderThread();
-            try {
-                mIsActive = true;
-                mGLRootView.setContentPane(mRootPane);
-                // Set the reload bit here to prevent it exit this page in clearLoadingBit().
-                setLoadingBit(BIT_LOADING_RELOAD);
-                mAlbumDataSetLoader.resume();
-                mRender.resume();
-                mRender.setPressedIndex(-1);
-                mEyePosition.resume();
-                if (!mInitialSynced) {
-                    setLoadingBit(BIT_LOADING_SYNC);
-                    //mSyncTask = mDataSet.requestSync(this);
-                }
-            } finally {
-                mGLRootView.unlockRenderThread();
+        if (!mHasSDCard || mIsPhotoAlbum && !mHasDCIM) {
+            return;
+        }
+        LLog.i(TAG, "onResume" + System.currentTimeMillis());
+        mGLRootView.onResume();
+        mGLRootView.lockRenderThread();
+        try {
+            mIsActive = true;
+            mGLRootView.setContentPane(mRootPane);
+            // Set the reload bit here to prevent it exit this page in clearLoadingBit().
+            setLoadingBit(BIT_LOADING_RELOAD);
+            mAlbumDataSetLoader.resume();
+            mRender.resume();
+            mRender.setPressedIndex(-1);
+            mEyePosition.resume();
+            if (!mInitialSynced) {
+                setLoadingBit(BIT_LOADING_SYNC);
+                //mSyncTask = mDataSet.requestSync(this);
             }
+        } finally {
+            mGLRootView.unlockRenderThread();
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (mHasSDCard) {
-            LLog.i(TAG, "onPause");
-            mGLRootView.onPause();
-            mGLRootView.lockRenderThread();
-            try {
-                mIsActive = false;
-                mRender.setThumbnailFilter(null);
-                mAlbumDataSetLoader.pause();
-                mRender.pause();
-                DetailsHelper.pause();
-                mEyePosition.resume();
-                if (mSyncTask != null) {
-                    mSyncTask.cancel();
-                    mSyncTask = null;
-                    clearLoadingBit(BIT_LOADING_SYNC);
-                }
-            } finally {
-                mGLRootView.unlockRenderThread();
+        LLog.i(TAG, "onPause");
+        if (!mHasSDCard || mIsPhotoAlbum && !mHasDCIM) {
+            return;
+        }
+        mGLRootView.onPause();
+        mGLRootView.lockRenderThread();
+        try {
+            mIsActive = false;
+            mRender.setThumbnailFilter(null);
+            mAlbumDataSetLoader.pause();
+            mRender.pause();
+            DetailsHelper.pause();
+            mEyePosition.resume();
+            if (mSyncTask != null) {
+                mSyncTask.cancel();
+                mSyncTask = null;
+                clearLoadingBit(BIT_LOADING_SYNC);
             }
+        } finally {
+            mGLRootView.unlockRenderThread();
         }
     }
 
@@ -465,17 +470,30 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     }
 
     @Override
-    public void onClick(View v) {
-        if (!mIsActive) {
+    public void onMenuClicked() {
+        if (!mIsPhotoAlbum)
             return;
-        }
+        MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_SLIDE_MENU_MENU);
+        getLetoolSlidingMenu().toggle();
+    }
+
+    @Override
+    public void onClick(View v) {
         if (v.getId() == R.id.action_navi) {
+            if (!mIsActive && !(mIsPhotoAlbum && !mHasDCIM)) {
+                return;
+            }
             if (!mIsPhotoAlbum) {
                 getActivity().finish();
             } else {
                 getLetoolSlidingMenu().toggle();
             }
-        } else if (v.getId() == R.id.operation_delete) {
+            return;
+        }
+        if (!mIsActive) {
+            return;
+        }
+        if (v.getId() == R.id.operation_delete) {
 
             MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_PHOTO_DELETE);
             int count = mSelector.getSelectedCount();

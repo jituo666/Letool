@@ -23,6 +23,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:textSize="18sp"
+        android:textColor="@color/minor_text_color"
         android:visibility="gone" >
     </TextView>
 

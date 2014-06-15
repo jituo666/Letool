@@ -11,6 +11,7 @@ import com.xjt.letool.fragment.GalleryFragment;
 import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.fragment.PhotoFragment;
 import com.xjt.letool.metadata.DataManager;
+import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.preference.GlobalPreference;
 
 import android.os.Bundle;
@@ -31,22 +32,7 @@ public class MainActivity extends BaseFragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.layout_main);
         super.onCreate(savedInstanceState);
-        if (GlobalPreference.getLastUIComponents(this) == LetoolFragment.FRAGMENT_TAG_FOLDER) {
-            Fragment fragment = new GalleryFragment();
-            Bundle data = new Bundle();
-            data.putString(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
-            fragment.setArguments(data);
-            getSupportFragmentManager().beginTransaction().add(R.id.root_container, fragment, LetoolFragment.FRAGMENT_TAG_FOLDER).commit();
-        } else {
-            Fragment fragment = new PhotoFragment();
-            Bundle data = new Bundle();
-            data.putString(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-            data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
-            fragment.setArguments(data);
-            getSupportFragmentManager().beginTransaction().add(R.id.root_container, fragment, LetoolFragment.FRAGMENT_TAG_PHOTO).commit();
-
-        }
-
+        startDefaulFragment();
         mIsMainActivity = true;
         long time = GlobalPreference.getLastAppUpdateCheckTime(this);
         // app version check
@@ -57,6 +43,32 @@ public class MainActivity extends BaseFragmentActivity {
             GlobalPreference.setAppUpdateCheckTime(this, System.currentTimeMillis());
         }
 
+    }
+
+    private void startDefaulFragment() {
+        if (MediaSetUtils.MY_ALBUM_BUCKETS.length <= 0) {
+            Fragment fragment = new GalleryFragment();
+            Bundle data = new Bundle();
+            data.putString(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
+            fragment.setArguments(data);
+            getSupportFragmentManager().beginTransaction().add(R.id.root_container, fragment, LetoolFragment.FRAGMENT_TAG_FOLDER).commit();
+        } else {
+            if (GlobalPreference.getLastUIComponents(this) == LetoolFragment.FRAGMENT_TAG_FOLDER) {
+                Fragment fragment = new GalleryFragment();
+                Bundle data = new Bundle();
+                data.putString(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
+                fragment.setArguments(data);
+                getSupportFragmentManager().beginTransaction().add(R.id.root_container, fragment, LetoolFragment.FRAGMENT_TAG_FOLDER).commit();
+            } else {
+                Fragment fragment = new PhotoFragment();
+                Bundle data = new Bundle();
+                data.putString(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+                data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
+                fragment.setArguments(data);
+                getSupportFragmentManager().beginTransaction().add(R.id.root_container, fragment, LetoolFragment.FRAGMENT_TAG_PHOTO).commit();
+
+            }
+        }
     }
 
     @Override
