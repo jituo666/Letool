@@ -2,7 +2,6 @@
 package com.xjt.letool.adapters;
 
 import android.graphics.Bitmap;
-import android.opengl.ETC1Util.ETC1Texture;
 import android.os.Message;
 
 import com.xjt.letool.common.Future;
@@ -12,18 +11,13 @@ import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
 import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.imagedata.utils.BitmapLoader;
-import com.xjt.letool.imagedata.utils.ETC1TextureLoader;
 import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.utils.Utils;
 import com.xjt.letool.views.opengl.BitmapTexture;
-import com.xjt.letool.views.opengl.ETC1CompressedTexture;
-import com.xjt.letool.views.opengl.Texture;
-import com.xjt.letool.views.opengl.TextureUploader;
 import com.xjt.letool.views.opengl.TiledTexture;
 
-import java.util.ArrayList;
 
 /**
  * control the data window ,[activate range:media data], [content range: meta

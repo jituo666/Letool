@@ -12,7 +12,6 @@ import com.xjt.letool.views.opengl.ColorTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.opengl.Texture;
 
-import java.util.ArrayList;
 
 public class ThumbnailRenderer extends AbstractThumbnailRender {
 
@@ -105,6 +104,8 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
     public int renderThumbnail(GLESCanvas canvas, int index, int pass, int width, int height) {
         if (mThumbnailFilter != null && !mThumbnailFilter.acceptThumbnail(index))
             return 0;
+        if (!mDataWindow.isActiveThumbnail(index))
+            return 0;
         ThumbnailDataWindow.AlbumEntry entry = mDataWindow.get(index);
 
         int renderRequestFlags = 0;
@@ -168,6 +169,5 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
     public void pause() {
         mDataWindow.pause();
     }
-
 
 }
