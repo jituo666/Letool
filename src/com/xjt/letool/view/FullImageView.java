@@ -1,4 +1,3 @@
-
 package com.xjt.letool.view;
 
 import android.content.Context;
@@ -340,7 +339,7 @@ public class FullImageView extends GLBaseView {
             mSizes[i + SCREEN_NAIL_MAX] = p.getSize();
         }
 
-//        boolean wasDeleting = mPositionController.hasDeletingBox();
+        //        boolean wasDeleting = mPositionController.hasDeletingBox();
 
         // Move the boxes
         mPositionController.moveBox(fromIndex, mPrevBound < 0, mNextBound > 0, mModel.isCamera(0), mSizes);
@@ -349,14 +348,14 @@ public class FullImageView extends GLBaseView {
             setPictureSize(i);
         }
 
-//        boolean isDeleting = mPositionController.hasDeletingBox();
+        //        boolean isDeleting = mPositionController.hasDeletingBox();
 
-//        // If the deletion is done, make HOLD_DELETE persist for only the time,needed for a snapback animation.
-//        if (wasDeleting && !isDeleting) {
-//            mHandler.removeMessages(MSG_DELETE_DONE);
-//            Message m = mHandler.obtainMessage(MSG_DELETE_DONE);
-//            mHandler.sendMessageDelayed(m, FullImageLayout.SNAPBACK_ANIMATION_TIME);
-//        }
+        //        // If the deletion is done, make HOLD_DELETE persist for only the time,needed for a snapback animation.
+        //        if (wasDeleting && !isDeleting) {
+        //            mHandler.removeMessages(MSG_DELETE_DONE);
+        //            Message m = mHandler.obtainMessage(MSG_DELETE_DONE);
+        //            mHandler.sendMessageDelayed(m, FullImageLayout.SNAPBACK_ANIMATION_TIME);
+        //        }
 
         invalidate();
     }
@@ -1119,7 +1118,9 @@ public class FullImageView extends GLBaseView {
                     // for film mode change.
                     mHolding &= ~HOLD_TOUCH_DOWN;
                     setFilmMode(!mFilmMode);
-
+                    if (mFilmMode) {
+                        MobclickAgent.onEvent(mContext, StatConstants.EVENT_KEY_FULL_IMAGE_Film_MODE);
+                    }
                     // We need to call onScaleEnd() before setting mModeChanged
                     // to true.
                     onScaleEnd();
@@ -1248,9 +1249,6 @@ public class FullImageView extends GLBaseView {
     public void setFilmMode(boolean enabled) {
         if (mFilmMode == enabled)
             return;
-        if (mFilmMode) {
-            MobclickAgent.onEvent(mContext, StatConstants.EVENT_KEY_FULL_IMAGE_Film_MODE);
-        }
         mFilmMode = enabled;
         mPositionController.setFilmMode(mFilmMode);
         mModel.setNeedFullImage(!enabled);

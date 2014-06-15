@@ -3,14 +3,14 @@ package com.xjt.letool.fragment;
 
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
-import com.xjt.letool.activities.BaseActivity;
+import com.xjt.letool.activities.BaseFragmentActivity;
 import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.view.GLController;
-import com.xjt.letool.view.LetoolActionBar;
+import com.xjt.letool.view.LetoolTopBar;
 import com.xjt.letool.view.LetoolBottomBar;
 import com.xjt.letool.view.LetoolSlidingMenu;
-import com.xjt.letool.view.LetoolActionBar.OnActionModeListener;
+import com.xjt.letool.view.LetoolTopBar.OnActionModeListener;
 
 import android.content.Context;
 import android.os.Looper;
@@ -53,16 +53,16 @@ public abstract class LetoolFragment extends Fragment implements LetoolContext, 
         return getActivity().getMainLooper();
     }
 
-    public LetoolActionBar getLetoolActionBar() {
-        return ((BaseActivity) getActivity()).getLetoolActionBar();
+    public LetoolTopBar getLetoolTopBar() {
+        return ((BaseFragmentActivity) getActivity()).getLetoolTopBar();
     }
 
     public LetoolBottomBar getLetoolBottomBar() {
-        return ((BaseActivity) getActivity()).getLetoolBottomBar();
+        return ((BaseFragmentActivity) getActivity()).getLetoolBottomBar();
     }
 
     public LetoolSlidingMenu getLetoolSlidingMenu() {
-        return ((BaseActivity) getActivity()).getLetoolSlidingMenu();
+        return ((BaseFragmentActivity) getActivity()).getLetoolSlidingMenu();
     }
 
     public abstract GLController getGLController();

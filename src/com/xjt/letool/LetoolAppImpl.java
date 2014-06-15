@@ -52,7 +52,7 @@ public class LetoolAppImpl extends Application implements LetoolApp {
     }
 
     @Override
-    public BlobCacheService getImageCacheService() {
+    public BlobCacheService getBolbCacheService() {
 
         synchronized (mLock) {
             if (mImageCacheService == null) {

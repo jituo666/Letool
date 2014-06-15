@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.xjt.letool.LetoolContext;
-import com.xjt.letool.activities.BaseActivity;
+import com.xjt.letool.activities.BaseFragmentActivity;
 import com.xjt.letool.common.Future;
 import com.xjt.letool.common.FutureListener;
 import com.xjt.letool.common.ThreadPool.Job;

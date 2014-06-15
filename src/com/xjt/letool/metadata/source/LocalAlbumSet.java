@@ -5,8 +5,6 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
-import android.provider.MediaStore.Files;
-import android.provider.MediaStore.Files.FileColumns;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Images.ImageColumns;
 import android.provider.MediaStore.Video;
@@ -36,14 +34,11 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
     public static final String PATH_VIDEO = "/local/video/";
 
     private static final String TAG = "LocalAlbumSet";
-    private static final String EXTERNAL_MEDIA = "external";
-
     // The indices should match the following projections.
     private static final int INDEX_BUCKET_ID = 0;
-    private static final int INDEX_MEDIA_TYPE = 1;
-    private static final int INDEX_BUCKET_NAME = 2;
+    private static final int INDEX_BUCKET_NAME = 1;
 
-    private static final Uri mBaseUri = Files.getContentUri(EXTERNAL_MEDIA);
+    private static final Uri mBaseUri = Images.Media.EXTERNAL_CONTENT_URI;//Files.getContentUri(EXTERNAL_MEDIA);
     private static final Uri mWatchUriImage = Images.Media.EXTERNAL_CONTENT_URI;
     private static final Uri mWatchUriVideo = Video.Media.EXTERNAL_CONTENT_URI;
 
@@ -65,8 +60,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
     // The order of columns below is important: it must match to the index in
     // MediaStore.
     private static final String[] PROJECTION_BUCKET = {
-            ImageColumns.BUCKET_ID,
-            FileColumns.MEDIA_TYPE, ImageColumns.BUCKET_DISPLAY_NAME
+            ImageColumns.BUCKET_ID, ImageColumns.BUCKET_DISPLAY_NAME
     };
 
     // We want to order the albums by reverse chronological order. We abuse the
@@ -82,7 +76,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
     private static final String BUCKET_ORDER_BY = "MAX(datetaken) DESC";
 
     private final LetoolApp mApplication;
-    private final int mType;
+    //private final int mType;
     private ArrayList<MediaSet> mAlbums = new ArrayList<MediaSet>();
     private final DataNotifier mNotifierImage;
     private final DataNotifier mNotifierVideo;
@@ -97,7 +91,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
         super(path, nextVersionNumber());
         mApplication = application;
         mHandler = new Handler(application.getMainLooper());
-        mType = path.getMediaType();
+        //mType = path.getMediaType();
         mNotifierImage = new DataNotifier(this, mWatchUriImage, application);
         mNotifierVideo = new DataNotifier(this, mWatchUriVideo, application);
         mName = application.getResources().getString(R.string.set_label_local_albums);
@@ -129,30 +123,22 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
             return new BucketEntry[0];
         }
         ArrayList<BucketEntry> buffer = new ArrayList<BucketEntry>();
-        int typeBits = 0;
-        if ((mType & MEDIA_TYPE_IMAGE) != 0) {
-            typeBits |= (1 << FileColumns.MEDIA_TYPE_IMAGE);
-        }
-        if ((mType & MEDIA_TYPE_VIDEO) != 0) {
-            typeBits |= (1 << FileColumns.MEDIA_TYPE_VIDEO);
-        }
+
         try {
             while (cursor.moveToNext()) {
-                if ((typeBits & (1 << cursor.getInt(INDEX_MEDIA_TYPE))) != 0) {
-                    int bucketId = cursor.getInt(INDEX_BUCKET_ID);
-                    boolean isCamera = false;
-                    for (int id : MediaSetUtils.MY_ALBUM_BUCKETS) {
-                        if (id == bucketId) {
-                            isCamera = true;
-                            break;
-                        }
+                int bucketId = cursor.getInt(INDEX_BUCKET_ID);
+                boolean isCamera = false;
+                for (int id : MediaSetUtils.MY_ALBUM_BUCKETS) {
+                    if (id == bucketId) {
+                        isCamera = true;
+                        break;
                     }
-                    if (isCamera)
-                        continue;
-                    BucketEntry entry = new BucketEntry(bucketId, cursor.getString(INDEX_BUCKET_NAME));
-                    if (!buffer.contains(entry)) {
-                        buffer.add(entry);
-                    }
+                }
+                if (isCamera)
+                    continue;
+                BucketEntry entry = new BucketEntry(bucketId, cursor.getString(INDEX_BUCKET_NAME));
+                if (!buffer.contains(entry)) {
+                    buffer.add(entry);
                 }
                 if (jc.isCancelled())
                     return null;
@@ -191,26 +177,30 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
             ArrayList<MediaSet> albums = new ArrayList<MediaSet>();
             DataManager dataManager = mApplication.getDataManager();
             for (BucketEntry entry : entries) {
-                MediaSet album = getLocalAlbum(dataManager, mType, entry.bucketId, entry.bucketName);
+                MediaSet album = getLocalAlbum(dataManager, entry.bucketId, entry.bucketName);
                 albums.add(album);
             }
             return albums;
         }
     }
 
-    private MediaSet getLocalAlbum(DataManager manager, int type, int id, String name) {
+    private MediaSet getLocalAlbum(DataManager manager, int id, String name) {
         synchronized (DataManager.LOCK) {
-            switch (type) {
-                case MEDIA_TYPE_IMAGE:
-                    return new LocalAlbum(new MediaPath(PATH_IMAGE, id), mApplication, new int[] {
-                        id
-                    }, true, name);
-                case MEDIA_TYPE_VIDEO:
-                    return new LocalAlbum(new MediaPath(PATH_VIDEO, id), mApplication, new int[] {
-                        id
-                    }, false, name);
-            }
-            throw new IllegalArgumentException(String.valueOf(type));
+            return new LocalAlbum(new MediaPath(PATH_IMAGE, id), mApplication, new int[] {
+                    id
+            }, true, name);
+
+            /*            switch (type) {
+                            case MEDIA_TYPE_IMAGE:
+                                return new LocalAlbum(new MediaPath(PATH_IMAGE, id), mApplication, new int[] {
+                                        id
+                                }, true, name);
+                            case MEDIA_TYPE_VIDEO:
+                                return new LocalAlbum(new MediaPath(PATH_VIDEO, id), mApplication, new int[] {
+                                        id
+                                }, false, name);
+                        }*/
+            //            throw new IllegalArgumentException(String.valueOf(type));
         }
     }
 

@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -26,13 +26,14 @@ import com.umeng.update.UmengUpdateListener;
 import com.umeng.update.UpdateResponse;
 import com.umeng.update.UpdateStatus;
 import com.xjt.letool.R;
+import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.imagedata.blobcache.BlobCacheManager;
 import com.xjt.letool.settings.LetoolPreference;
 import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.StorageUtils;
 import com.xjt.letool.utils.StringUtils;
 import com.xjt.letool.view.GLController;
-import com.xjt.letool.view.LetoolActionBar;
+import com.xjt.letool.view.LetoolTopBar;
 
 /**
  * @Author Jituo.Xuan
@@ -67,8 +68,8 @@ public class SettingFragment extends LetoolFragment {
     }
 
     private void initBrowseActionBar() {
-        LetoolActionBar actionBar = getLetoolActionBar();
-        actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_SETTINGS, this);
+        LetoolTopBar actionBar = getLetoolTopBar();
+        actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_SETTINGS, this);
         actionBar.setTitleIcon(R.drawable.ic_drawer);
         actionBar.setTitleText(R.string.common_settings);
     }
@@ -77,7 +78,6 @@ public class SettingFragment extends LetoolFragment {
         String x = getString(R.string.clear_cache_desc, getCacheSize(), StringUtils.formatBytes(StorageUtils.getExternalStorageAvailableSize()));
         mClearCache.setSettingItemText(getString(R.string.clear_cache_title), x);
         mVersionCheck.setSettingItemText(getString(R.string.version_update_check_title), getVersion());
-
         mAuthorDesc.setSettingItemText(getString(R.string.author_title), getString(R.string.author_desc));
         mQQGroup.setSettingItemText(getString(R.string.app_communication_platfrom), getString(R.string.app_QQ_group));
         mAuthorDesc.setOnClickListener(this);
@@ -140,7 +140,8 @@ public class SettingFragment extends LetoolFragment {
             progressDialog.setCancelable(true);
             progressDialog.show();
         } else if (v.getId() == R.id.author_desc) {
-            copyQQToClipBoard();
+            if (ApiHelper.supportVersion(ApiHelper.VERSION_CODES.HONEYCOMB))
+                copyQQToClipBoard();
         } else if (v.getId() == R.id.app_about) {
             if (!joinQQGroup("pan68pjSBp1edKE0a6mUIUogCS4U-qZW")) {
                 Toast.makeText(getAndroidContext(), R.string.app_QQ_group_failed, Toast.LENGTH_SHORT).show();
@@ -148,6 +149,7 @@ public class SettingFragment extends LetoolFragment {
         }
     }
 
+    @SuppressLint("NewApi")
     @SuppressWarnings("deprecation")
     private void copyQQToClipBoard() {
         ClipboardManager cmb = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);

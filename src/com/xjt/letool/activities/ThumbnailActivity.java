@@ -14,7 +14,7 @@ import com.xjt.letool.fragment.PhotoFragment;
  * @Date 8:20:06 PM Apr 20, 2014
  * @Comments:null
  */
-public class ThumbnailActivity extends BaseActivity {
+public class ThumbnailActivity extends BaseFragmentActivity {
 
     private static final String TAG = ThumbnailActivity.class.getSimpleName();
 

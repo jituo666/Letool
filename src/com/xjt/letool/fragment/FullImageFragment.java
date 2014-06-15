@@ -44,13 +44,13 @@ import com.xjt.letool.view.FullImageView;
 import com.xjt.letool.view.GLBaseView;
 import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.GLRootView;
-import com.xjt.letool.view.LetoolActionBar;
+import com.xjt.letool.view.LetoolTopBar;
 import com.xjt.letool.view.DetailsHelper.DetailsSource;
 import com.xjt.letool.view.LetoolBottomBar;
 import com.xjt.letool.view.SingleDeleteMediaListener;
 import com.xjt.letool.views.opengl.GLESCanvas;
 
-import com.xjt.letool.activities.BaseActivity;
+import com.xjt.letool.activities.BaseFragmentActivity;
 import com.xjt.letool.activities.ThumbnailActivity;
 import com.xjt.letool.adapters.PhotoDataAdapter;
 import com.xjt.letool.common.LLog;
@@ -124,7 +124,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     private boolean mDeferredUpdateWaiting = false;
     private long mDeferUpdateUntil = Long.MAX_VALUE;
 
-    private BaseActivity mActivity;
+    private BaseFragmentActivity mActivity;
 
     private Handler mHandler;
 
@@ -201,7 +201,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             return;
         mShowBars = true;
         mOrientationManager.unlockOrientation();
-        getLetoolActionBar().setVisible(View.VISIBLE, withAnim);
+        getLetoolTopBar().setVisible(View.VISIBLE, withAnim);
         getLetoolBottomBar().setVisible(View.VISIBLE, withAnim);
 
     }
@@ -210,7 +210,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         if (!mShowBars)
             return;
         mShowBars = false;
-        getLetoolActionBar().setVisible(View.GONE, withAnim);
+        getLetoolTopBar().setVisible(View.GONE, withAnim);
         getLetoolBottomBar().setVisible(View.GONE, withAnim);
         mHandler.removeMessages(MSG_HIDE_BARS);
     }
@@ -224,7 +224,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     }
 
     private void updateActionBarMessage(final String message) {
-        final LetoolActionBar actionBar = getLetoolActionBar();
+        final LetoolTopBar actionBar = getLetoolTopBar();
         actionBar.getActionPanel().post(new Runnable() {
 
             @Override
@@ -319,7 +319,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivity = (BaseActivity) this.getActivity();
+        mActivity = (BaseFragmentActivity) this.getActivity();
     }
 
     private void initViews() {
@@ -351,8 +351,8 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     }
 
     private void initBrowseActionBar() {
-        LetoolActionBar actionBar = getLetoolActionBar();
-        actionBar.setOnActionMode(LetoolActionBar.ACTION_BAR_MODE_FULL_IMAGE, this);
+        LetoolTopBar actionBar = getLetoolTopBar();
+        actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_FULL_IMAGE, this);
         actionBar.setTitleIcon(R.drawable.ic_action_previous_item);
         actionBar.setVisible(View.VISIBLE, false);
         LetoolBottomBar bottomBar = getLetoolBottomBar();
@@ -635,4 +635,5 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             return v;
         }
     }
+
 }

@@ -13,19 +13,14 @@ import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.imagedata.utils.LetoolBitmapPool;
 import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.metadata.MediaItem;
-import com.xjt.letool.preference.GlobalPreference;
-import com.xjt.letool.view.LetoolActionBar;
+import com.xjt.letool.view.LetoolTopBar;
 import com.xjt.letool.view.LetoolBottomBar;
 import com.xjt.letool.view.LetoolSlidingMenu;
 
-import android.animation.ObjectAnimator;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -34,7 +29,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -43,42 +37,30 @@ import android.widget.Toast;
  * @Date 6:16:39 PM Apr 20, 2014
  * @Comments:null
  */
-public class BaseActivity extends FragmentActivity implements LetoolContext {
+public class BaseFragmentActivity extends FragmentActivity implements LetoolContext {
 
-    private static final String TAG = BaseActivity.class.getSimpleName();
+    private static final String TAG = BaseFragmentActivity.class.getSimpleName();
 
-    public static final String KEY_GET_CONTENT = "get-content";
-    public static final String KEY_TYPE_BITS = "type-bits";
-
-    private LetoolActionBar mActionBar;
+    private LetoolTopBar mTopBar;
     private LetoolBottomBar mBottomBar;
-
+    private Toast mExitToast;
     private LetoolSlidingMenu mSlidingMenu;
     private OrientationManager mOrientationManager;
+
     protected FragmentManager mFragmentManager;
+
     protected boolean mIsMainActivity = false;
     private boolean mWaitingForExit = false;
-
-    private Toast mExitToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mOrientationManager = new OrientationManager(this);
         mFragmentManager = getSupportFragmentManager();
+
+        mOrientationManager = new OrientationManager(this);
         mSlidingMenu = new LetoolSlidingMenu(this, mFragmentManager, findViewById(R.id.action_bar));
-        mActionBar = new LetoolActionBar(this, (ViewGroup) findViewById(R.id.action_bar));
+        mTopBar = new LetoolTopBar(this, (ViewGroup) findViewById(R.id.action_bar));
         mBottomBar = new LetoolBottomBar(this, (ViewGroup) findViewById(R.id.bottom_bar));
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -109,8 +91,8 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
 
     @Override
     public void onBackPressed() {
-        if (getLetoolActionBar().getActionBarMode() == LetoolActionBar.ACTION_BAR_MODE_SELECTION) {
-            getLetoolActionBar().exitSelection();
+        if (getLetoolTopBar().getActionBarMode() == LetoolTopBar.ACTION_BAR_MODE_SELECTION) {
+            getLetoolTopBar().exitSelection();
             return;
         }
         Fragment f = mFragmentManager.findFragmentByTag(LetoolFragment.FRAGMENT_TAG_SLIDING_MENU);
@@ -124,17 +106,14 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
             ft.setCustomAnimations(0, R.anim.slide_left_out);
             ft.remove(f);
             ft.commit();
-            LLog.i(TAG, "--------------onBackPressed--------0-----onBackPressed---------");
         } else if (mIsMainActivity) {
 
             if (mWaitingForExit) {
-                LLog.i(TAG, "--------------onBackPressed-------1------onBackPressed---------");
                 if (mExitToast != null) {
                     mExitToast.cancel();
                 }
                 finish();
             } else {
-                LLog.i(TAG, "--------------onBackPressed------2-------onBackPressed---------");
                 mWaitingForExit = true;
                 mExitToast = Toast.makeText(this, R.string.common_exit_tip, Toast.LENGTH_SHORT);
                 mExitToast.show();
@@ -147,7 +126,6 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
                 }, 3000);
             }
         } else {
-            LLog.i(TAG, "--------------onBackPressed-------------onBackPressed---------");
             super.onBackPressed();
         }
     }
@@ -172,11 +150,6 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
                 dialog.dismiss();
             }
         }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -204,10 +177,12 @@ public class BaseActivity extends FragmentActivity implements LetoolContext {
         return mSlidingMenu;
     }
 
-    public LetoolActionBar getLetoolActionBar() {
-        return mActionBar;
+    @Override
+    public LetoolTopBar getLetoolTopBar() {
+        return mTopBar;
     }
 
+    @Override
     public LetoolBottomBar getLetoolBottomBar() {
         return mBottomBar;
     }

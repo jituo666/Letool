@@ -20,7 +20,7 @@ public interface LetoolApp {
 
     public DataManager getDataManager();
 
-    public BlobCacheService getImageCacheService();
+    public BlobCacheService getBolbCacheService();
 
     public ThreadPool getThreadPool();
 

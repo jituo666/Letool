@@ -6,10 +6,9 @@ import android.support.v4.app.Fragment;
 
 import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.R;
-import com.xjt.letool.common.LLog;
 import com.xjt.letool.fragment.FullImageFragment;
 
-public class FullImageActivity extends BaseActivity {
+public class FullImageActivity extends BaseFragmentActivity {
 
     private static final String TAG = FullImageActivity.class.getSimpleName();
 
@@ -32,7 +31,7 @@ public class FullImageActivity extends BaseActivity {
         data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, getIntent().getBooleanExtra(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, false));
         data.putInt(FullImageFragment.KEY_INDEX_HINT, currentIndex);
         fragment.setArguments(data);
-        mFragmentManager.beginTransaction().add(R.id.root_container, fragment, "PhotoFragment").commit();
+        mFragmentManager.beginTransaction().add(R.id.root_container, fragment, "FullImageFragment").commit();
     }
 
     @Override

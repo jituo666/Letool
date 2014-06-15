@@ -8,8 +8,8 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AnimationUtils;
 
 import com.xjt.letool.R;
-import com.xjt.letool.activities.BaseActivity;
-import com.xjt.letool.view.LetoolActionBar.OnActionModeListener;
+import com.xjt.letool.activities.BaseFragmentActivity;
+import com.xjt.letool.view.LetoolTopBar.OnActionModeListener;
 
 /**
  * @Author Jituo.Xuan
@@ -38,13 +38,13 @@ public class LetoolBottomBar {
             R.id.action_delete
     };
 
-    private BaseActivity mActivity;
+    private BaseFragmentActivity mActivity;
     private ViewGroup mBarContainer;
     private View mBottomModePanel;
     private OnActionModeListener mOnActionModeListener;
     private int mCurBottomBarMode;
 
-    public LetoolBottomBar(BaseActivity activity, ViewGroup barContainer) {
+    public LetoolBottomBar(BaseFragmentActivity activity, ViewGroup barContainer) {
         mActivity = activity;
         mBarContainer = barContainer;
     }

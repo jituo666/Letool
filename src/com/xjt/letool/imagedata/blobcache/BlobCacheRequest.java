@@ -1,3 +1,4 @@
+
 package com.xjt.letool.imagedata.blobcache;
 
 import android.graphics.Bitmap;
@@ -5,6 +6,7 @@ import android.graphics.BitmapFactory;
 
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.R;
+import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.ThreadPool.Job;
 import com.xjt.letool.common.ThreadPool.JobContext;
@@ -24,7 +26,7 @@ public abstract class BlobCacheRequest implements Job<Bitmap> {
     private int mTargetSize;
     private long mTimeModified;
 
-//    private static Bitmap bitmap;
+    //    private static Bitmap bitmap;
 
     public BlobCacheRequest(LetoolApp application, MediaPath path, long timeModified, int type, int targetSize) {
         mApplication = application;
@@ -41,51 +43,59 @@ public abstract class BlobCacheRequest implements Job<Bitmap> {
 
     @Override
     public Bitmap run(JobContext jc) {
-//        if (bitmap == null || bitmap.isRecycled()) {
-//            bitmap = BitmapFactory.decodeResource(mApplication.getResources(), R.drawable.sliding_menu_logo_bg);
-//        }
-                BlobCacheService cacheService = mApplication.getImageCacheService();
-                BytesBuffer buffer = MediaItem.getBytesBufferPool().get();
-                try {
-                    boolean found = cacheService.getImageData(mPath, mTimeModified, mType, buffer);
-                    if (jc.isCancelled())
-                        return null;
-                    if (found) {
-                        BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                        Bitmap bitmap;
-                        if (mType == MediaItem.TYPE_MICROTHUMBNAIL) {
-                            bitmap = BitmapDecodeUtils.decodeUsingPool(jc, buffer.data, buffer.offset, buffer.length, options);
-                        } else {
-                            bitmap = BitmapDecodeUtils.decodeUsingPool(jc, buffer.data, buffer.offset, buffer.length, options);
-                        }
-                        if (bitmap == null && !jc.isCancelled()) {
-                            LLog.w(TAG, "decode cached failed " + debugTag());
-                        }
-                        return bitmap;
-                    }
-                } finally {
-                    MediaItem.getBytesBufferPool().recycle(buffer);
-                }
-        
-                Bitmap bitmap = onDecodeOriginal(jc, mType);
-                if (jc.isCancelled())
-                    return null;
-                if (bitmap == null) {
-                    LLog.w(TAG, "decode orig failed " + debugTag());
-                    return null;
-                }
+        //        if (bitmap == null || bitmap.isRecycled()) {
+        //            bitmap = BitmapFactory.decodeResource(mApplication.getResources(), R.drawable.sliding_menu_logo_bg);
+        //        }
+        BlobCacheService cacheService = mApplication.getBolbCacheService();
+        BytesBuffer buffer = MediaItem.getBytesBufferPool().get();
+        try {
+            boolean found = cacheService.getImageData(mPath, mTimeModified, mType, buffer);
+            if (jc.isCancelled())
+                return null;
+            if (found) {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+                Bitmap bitmap;
                 if (mType == MediaItem.TYPE_MICROTHUMBNAIL) {
-                    bitmap = BitmapUtils.resizeAndCropCenter(bitmap, mTargetSize, true);
+                    if (ApiHelper.supportVersion(ApiHelper.VERSION_CODES.HONEYCOMB))
+                        bitmap = BitmapDecodeUtils.decodeUsingPool(jc, buffer.data, buffer.offset, buffer.length, options);
+                    else {
+                        bitmap = BitmapDecodeUtils.decode(jc, buffer.data, buffer.offset, buffer.length, options);
+                    }
                 } else {
-                    bitmap = BitmapUtils.resizeDownBySideLength(bitmap, mTargetSize, true);
+                    if (ApiHelper.supportVersion(ApiHelper.VERSION_CODES.HONEYCOMB))
+                        bitmap = BitmapDecodeUtils.decodeUsingPool(jc, buffer.data, buffer.offset, buffer.length, options);
+                    else {
+                        bitmap = BitmapDecodeUtils.decode(jc, buffer.data, buffer.offset, buffer.length, options);
+                    }
                 }
-                if (jc.isCancelled())
-                    return null;
-                byte[] array = BitmapUtils.compressToBytes(bitmap);
-                if (jc.isCancelled())
-                    return null;
-                cacheService.putImageData(mPath, mTimeModified, mType, array);
+                if (bitmap == null && !jc.isCancelled()) {
+                    LLog.w(TAG, "decode cached failed " + debugTag());
+                }
+                return bitmap;
+            }
+        } finally {
+            MediaItem.getBytesBufferPool().recycle(buffer);
+        }
+
+        Bitmap bitmap = onDecodeOriginal(jc, mType);
+        if (jc.isCancelled())
+            return null;
+        if (bitmap == null) {
+            LLog.w(TAG, "decode orig failed " + debugTag());
+            return null;
+        }
+        if (mType == MediaItem.TYPE_MICROTHUMBNAIL) {
+            bitmap = BitmapUtils.resizeAndCropCenter(bitmap, mTargetSize, true);
+        } else {
+            bitmap = BitmapUtils.resizeDownBySideLength(bitmap, mTargetSize, true);
+        }
+        if (jc.isCancelled())
+            return null;
+        byte[] array = BitmapUtils.compressToBytes(bitmap);
+        if (jc.isCancelled())
+            return null;
+        cacheService.putImageData(mPath, mTimeModified, mType, array);
         return bitmap;
     }
 
