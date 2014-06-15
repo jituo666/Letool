@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.R;
-import com.xjt.letool.activities.BaseFragmentActivity;
 import com.xjt.letool.activities.ThumbnailActivity;
 import com.xjt.letool.common.EyePosition;
 import com.xjt.letool.common.LLog;
