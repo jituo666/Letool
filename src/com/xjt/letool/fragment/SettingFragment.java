@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -77,7 +78,6 @@ public class SettingFragment extends LetoolFragment {
         String x = getString(R.string.clear_cache_desc, getCacheSize(), StringUtils.formatBytes(StorageUtils.getExternalStorageAvailableSize()));
         mClearCache.setSettingItemText(getString(R.string.clear_cache_title), x);
         mVersionCheck.setSettingItemText(getString(R.string.version_update_check_title), getVersion());
-
         mAuthorDesc.setSettingItemText(getString(R.string.author_title), getString(R.string.author_desc));
         mQQGroup.setSettingItemText(getString(R.string.app_communication_platfrom), getString(R.string.app_QQ_group));
         mAuthorDesc.setOnClickListener(this);
@@ -149,6 +149,7 @@ public class SettingFragment extends LetoolFragment {
         }
     }
 
+    @SuppressLint("NewApi")
     @SuppressWarnings("deprecation")
     private void copyQQToClipBoard() {
         ClipboardManager cmb = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
