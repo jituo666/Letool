@@ -189,7 +189,6 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
         } finally {
             mRenderLock.unlock();
         }
-
         LLog.i(TAG, "+++++++++++[[[[  onDrawFrame  ]]] spend:" + (System.currentTimeMillis() - time) + " :" + System.currentTimeMillis());
     }
 
