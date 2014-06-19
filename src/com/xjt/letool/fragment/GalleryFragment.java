@@ -292,7 +292,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         actionBar.setTitleText(R.string.common_gallery);
         ImageView v = (ImageView) actionBar.getActionPanel().findViewById(R.id.action_more);
         v.setImageResource(R.drawable.ic_action_accept);
-        v.setVisibility(View.VISIBLE);
+        v.setVisibility(View.GONE);
     }
 
     private void initSelectionActionBar() {
