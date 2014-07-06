@@ -29,7 +29,7 @@ public class AboutFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.app_about, container, false);
-        mActivity.getLetoolTopBar().setTitleText(R.string.sliding_menu_title_about);
+        //mActivity.getLetoolTopBar().setTitleText(R.string.sliding_menu_title_about);
         return rootView;
     }
 }

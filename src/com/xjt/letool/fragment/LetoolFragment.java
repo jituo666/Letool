@@ -53,8 +53,8 @@ public abstract class LetoolFragment extends Fragment implements LetoolContext, 
         return getActivity().getMainLooper();
     }
 
-    public LetoolTopBar getLetoolTopBar() {
-        return ((BaseFragmentActivity) getActivity()).getLetoolTopBar();
+/*    public LetoolTopBar getLetoolTopBar() {
+        return null;// ((BaseFragmentActivity) getActivity()).getLetoolTopBar();
     }
 
     public LetoolBottomBar getLetoolBottomBar() {
@@ -63,7 +63,7 @@ public abstract class LetoolFragment extends Fragment implements LetoolContext, 
 
     public LetoolSlidingMenu getLetoolSlidingMenu() {
         return ((BaseFragmentActivity) getActivity()).getLetoolSlidingMenu();
-    }
+    }*/
 
     public abstract GLController getGLController();
 

@@ -118,10 +118,10 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         @Override
         protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
             mEyePosition.resetPosition();
-            LetoolTopBar actionBar = getLetoolTopBar();
+            //LetoolTopBar actionBar = getLetoolTopBar();
             int thumbnailViewLeft = left + mConfig.paddingLeft;
             int thumbnailViewRight = right - left - mConfig.paddingRight;
-            int thumbnailViewTop = top + mConfig.paddingTop + actionBar.getHeight();
+            int thumbnailViewTop = top + mConfig.paddingTop + 0;//actionBar.getHeight();
             int thumbnailViewBottom = bottom - top - mConfig.paddingBottom;
             mRender.setHighlightItemPath(null);
             // Set the mThumbnailView as a reference point to the open animation
@@ -289,7 +289,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     }
 
     private void initBrowseActionBar() {
-        LetoolTopBar actionBar = getLetoolTopBar();
+/*        LetoolTopBar actionBar = getLetoolTopBar();
         actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_BROWSE, this);
 
         actionBar.setTitleText(mAlbumTitle);
@@ -302,15 +302,15 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
             actionBar.setTitleIcon(R.drawable.ic_action_previous_item);
             mMore.setImageResource(R.drawable.ic_action_accept);
 
-        }
+        }*/
     }
 
     private void initSelectionActionBar() {
-        LetoolTopBar actionBar = getLetoolTopBar();
+/*        LetoolTopBar actionBar = getLetoolTopBar();
         actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_SELECTION, this);
         actionBar.setContractSelectionManager(mSelector);
         String format = getResources().getQuantityString(R.plurals.number_of_items_selected, 0);
-        actionBar.setTitleText(String.format(format, 0));
+        actionBar.setTitleText(String.format(format, 0));*/
     }
 
     @Override
@@ -474,7 +474,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         if (!mIsPhotoAlbum)
             return;
         MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_SLIDE_MENU_MENU);
-        getLetoolSlidingMenu().toggle();
+        //getLetoolSlidingMenu().toggle();
     }
 
     @Override
@@ -486,7 +486,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
             if (!mIsPhotoAlbum) {
                 getActivity().finish();
             } else {
-                getLetoolSlidingMenu().toggle();
+                //getLetoolSlidingMenu().toggle();
             }
             return;
         }
@@ -573,9 +573,9 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
 
     @Override
     public void onSelectionChange(MediaPath path, boolean selected) {
-        int count = mSelector.getSelectedCount();
+/*        int count = mSelector.getSelectedCount();
         String format = getResources().getQuantityString(R.plurals.number_of_items_selected, count);
-        getLetoolTopBar().setTitleText(String.format(format, count));
+        getLetoolTopBar().setTitleText(String.format(format, count));*/
     }
 
     private void pickPhoto(int index) {

@@ -106,10 +106,10 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         @Override
         protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
             mEyePosition.resetPosition();
-            LetoolTopBar actionBar = getLetoolTopBar();
+            //LetoolTopBar actionBar = getLetoolTopBar();
             int thumbnailViewLeft = left + mConfig.paddingLeft;
             int thumbnailViewRight = right - left - mConfig.paddingRight;
-            int thumbnailViewTop = top + mConfig.paddingTop + actionBar.getHeight();
+            int thumbnailViewTop = top + mConfig.paddingTop;
             int thumbnailViewBottom = bottom - top - mConfig.paddingBottom;
             if (mShowDetails) {
                 mDetailsHelper.layout(left, thumbnailViewTop, right, bottom);
@@ -286,21 +286,21 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     }
 
     private void initBrowseActionBar() {
-        LetoolTopBar actionBar = getLetoolTopBar();
+/*        LetoolTopBar actionBar = getLetoolTopBar();
         actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_BROWSE, this);
         actionBar.setTitleIcon(R.drawable.ic_drawer);
         actionBar.setTitleText(R.string.common_gallery);
         ImageView v = (ImageView) actionBar.getActionPanel().findViewById(R.id.action_more);
         v.setImageResource(R.drawable.ic_action_accept);
-        v.setVisibility(View.GONE);
+        v.setVisibility(View.GONE);*/
     }
 
     private void initSelectionActionBar() {
-        LetoolTopBar actionBar = getLetoolTopBar();
+/*        LetoolTopBar actionBar = getLetoolTopBar();
         actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_SELECTION, this);
         actionBar.setContractSelectionManager(mSelector);
         String format = getResources().getQuantityString(R.plurals.number_of_items_selected, 0);
-        actionBar.setTitleText(String.format(format, 0));
+        actionBar.setTitleText(String.format(format, 0));*/
     }
 
     private void getThumbnailCenter(int thumbnailIndex, int center[]) {
@@ -507,7 +507,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.action_navi) {
-            getLetoolSlidingMenu().toggle();
+            //getLetoolSlidingMenu().toggle();
         } else if (v.getId() == R.id.operation_delete) {
 
             MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_GALLERY_DELETE);
@@ -580,7 +580,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     @Override
     public void onMenuClicked() {
         MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_SLIDE_MENU_MENU);
-        getLetoolSlidingMenu().toggle();
+        //getLetoolSlidingMenu().toggle();
 
     }
 
@@ -607,9 +607,9 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
 
     @Override
     public void onSelectionChange(MediaPath path, boolean selected) {
-        int count = mSelector.getSelectedCount();
+/*        int count = mSelector.getSelectedCount();
         String format = getResources().getQuantityString(R.plurals.number_of_items_selected, count);
-        getLetoolTopBar().setTitleText(String.format(format, count));
+        getLetoolTopBar().setTitleText(String.format(format, count));*/
     }
 
     @Override

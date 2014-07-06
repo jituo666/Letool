@@ -204,8 +204,8 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
             return;
         mShowBars = true;
         mOrientationManager.unlockOrientation();
-        getLetoolTopBar().setVisible(View.VISIBLE, withAnim);
-        getLetoolBottomBar().setVisible(View.VISIBLE, withAnim);
+/*        getLetoolTopBar().setVisible(View.VISIBLE, withAnim);
+        getLetoolBottomBar().setVisible(View.VISIBLE, withAnim);*/
 
     }
 
@@ -213,8 +213,8 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         if (!mShowBars)
             return;
         mShowBars = false;
-        getLetoolTopBar().setVisible(View.GONE, withAnim);
-        getLetoolBottomBar().setVisible(View.GONE, withAnim);
+/*        getLetoolTopBar().setVisible(View.GONE, withAnim);
+        getLetoolBottomBar().setVisible(View.GONE, withAnim);*/
         mHandler.removeMessages(MSG_HIDE_BARS);
     }
 
@@ -227,14 +227,14 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     }
 
     private void updateActionBarMessage(final String message) {
-        final LetoolTopBar actionBar = getLetoolTopBar();
+/*        final LetoolTopBar actionBar = getLetoolTopBar();
         actionBar.getActionPanel().post(new Runnable() {
 
             @Override
             public void run() {
                 actionBar.setTitleText(message);
             }
-        });
+        });*/
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -354,13 +354,13 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     }
 
     private void initBrowseActionBar() {
-        LetoolTopBar actionBar = getLetoolTopBar();
+/*        LetoolTopBar actionBar = getLetoolTopBar();
         actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_FULL_IMAGE, this);
         actionBar.setTitleIcon(R.drawable.ic_action_previous_item);
         actionBar.setVisible(View.VISIBLE, false);
         LetoolBottomBar bottomBar = getLetoolBottomBar();
         bottomBar.setOnActionMode(LetoolBottomBar.BOTTOM_BAR_MODE_FULL_IMAGE, this);
-        bottomBar.setVisible(View.VISIBLE, false);
+        bottomBar.setVisible(View.VISIBLE, false);*/
     }
 
     @Override

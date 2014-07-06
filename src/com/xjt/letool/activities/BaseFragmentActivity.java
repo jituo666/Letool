@@ -91,10 +91,10 @@ public class BaseFragmentActivity extends FragmentActivity implements LetoolCont
 
     @Override
     public void onBackPressed() {
-        if (getLetoolTopBar().getActionBarMode() == LetoolTopBar.ACTION_BAR_MODE_SELECTION) {
+/*        if (getLetoolTopBar().getActionBarMode() == LetoolTopBar.ACTION_BAR_MODE_SELECTION) {
             getLetoolTopBar().exitSelection();
             return;
-        }
+        }*/
         Fragment f = mFragmentManager.findFragmentByTag(LetoolFragment.FRAGMENT_TAG_SLIDING_MENU);
         if (f != null) {
             FragmentTransaction ft = mFragmentManager.beginTransaction();
@@ -177,7 +177,7 @@ public class BaseFragmentActivity extends FragmentActivity implements LetoolCont
         return mSlidingMenu;
     }
 
-    @Override
+/*    @Override
     public LetoolTopBar getLetoolTopBar() {
         return mTopBar;
     }
@@ -185,7 +185,7 @@ public class BaseFragmentActivity extends FragmentActivity implements LetoolCont
     @Override
     public LetoolBottomBar getLetoolBottomBar() {
         return mBottomBar;
-    }
+    }*/
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

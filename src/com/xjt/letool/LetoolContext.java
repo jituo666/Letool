@@ -27,8 +27,8 @@ public interface LetoolContext {
 
     public ThreadPool getThreadPool();
 
-    public LetoolTopBar getLetoolTopBar();
+/*    public LetoolTopBar getLetoolTopBar();
 
-    public LetoolBottomBar getLetoolBottomBar();
+    public LetoolBottomBar getLetoolBottomBar();*/
 
 }
