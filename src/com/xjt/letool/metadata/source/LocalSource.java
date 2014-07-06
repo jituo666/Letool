@@ -119,33 +119,33 @@ public class LocalSource extends MediaSource {
         }
     }
 
-/*    @Override
-    public MediaPath findPathByUri(Uri uri, String type) {
-        try {
-            switch (mUriMatcher.match(uri)) {
-                case LOCAL_IMAGE_ITEM: {
-                    int id = ContentUris.parseId(uri);
-                    return id >= 0 ? new MediaPath(LocalImage.ITEM_PATH, id) : null;
+    /*    @Override
+        public MediaPath findPathByUri(Uri uri, String type) {
+            try {
+                switch (mUriMatcher.match(uri)) {
+                    case LOCAL_IMAGE_ITEM: {
+                        int id = ContentUris.parseId(uri);
+                        return id >= 0 ? new MediaPath(LocalImage.ITEM_PATH, id) : null;
+                    }
+                    case LOCAL_VIDEO_ITEM: {
+                        long id = ContentUris.parseId(uri);
+                        return id >= 0 ? new MediaPath(LocalVideo.ITEM_PATH, id) : null;
+                    }
+                    case LOCAL_IMAGE_ALBUM: {
+                        return getAlbumPath(uri, MediaObject.MEDIA_TYPE_IMAGE);
+                    }
+                    case LOCAL_VIDEO_ALBUM: {
+                        return getAlbumPath(uri, MediaObject.MEDIA_TYPE_VIDEO);
+                    }
+                    case LOCAL_ALL_ALBUM: {
+                        return getAlbumPath(uri, MediaObject.MEDIA_TYPE_ALL);
+                    }
                 }
-                case LOCAL_VIDEO_ITEM: {
-                    long id = ContentUris.parseId(uri);
-                    return id >= 0 ? new MediaPath(LocalVideo.ITEM_PATH, id) : null;
-                }
-                case LOCAL_IMAGE_ALBUM: {
-                    return getAlbumPath(uri, MediaObject.MEDIA_TYPE_IMAGE);
-                }
-                case LOCAL_VIDEO_ALBUM: {
-                    return getAlbumPath(uri, MediaObject.MEDIA_TYPE_VIDEO);
-                }
-                case LOCAL_ALL_ALBUM: {
-                    return getAlbumPath(uri, MediaObject.MEDIA_TYPE_ALL);
-                }
+            } catch (NumberFormatException e) {
+                LLog.w(TAG, "uri: " + uri.toString(), e);
             }
-        } catch (NumberFormatException e) {
-            LLog.w(TAG, "uri: " + uri.toString(), e);
-        }
-        return null;
-    }*/
+            return null;
+        }*/
 
     @Override
     public void resume() {
@@ -154,7 +154,9 @@ public class LocalSource extends MediaSource {
 
     @Override
     public void pause() {
-        mClient.release();
-        mClient = null;
+        if (mClient != null) {
+            mClient.release();
+            mClient = null;
+        }
     }
 }

@@ -39,7 +39,7 @@
     <string name="version_update_check_title">更新检查</string>
     <string name="version_update_check_desc">当前版本:%1$s,安装时间：%2$s</string>
     <string name="author_title">作者</string>
-    <string name="author_desc">SharkMan, QQ:2518545630</string>
+    <string name="author_desc">宣继托, QQ:2518545630</string>
     <string name="app_communication_platfrom">交流平台</string>
     <string name="app_QQ_group">"QQ群:248706772,点击即可加入,沟通零距离!"</string>
     <string name="app_QQ_group_failed">加群失败!</string>

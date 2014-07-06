@@ -7,7 +7,7 @@ public class StatConstants {
 
     public static final String UMENG_CHANNEL_ID_WDJ = "LETOOL0000001000"; //豌豆夹
     public static final String UMENG_CHANNEL_91 = "LETOOL0000001001"; //91手机助手
-    public static final String UMENG_CHANNEL_TENCENT = "LETOOL0000001002";//腾讯应用宝贝
+    public static final String UMENG_CHANNEL_TENCENT = "LETOOL0000001002";//腾讯应用宝
     public static final String UMENG_CHANNEL_BAIDU = "LETOOL0000001003";//百度
     public static final String UMENG_CHANNEL_360 = "LETOOL0000001004";//360手机助手
     public static final String UMENG_CHANNEL_ALI = "LETOOL0000001005";//阿里

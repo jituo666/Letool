@@ -39,7 +39,7 @@
     <string name="version_update_check_title">Update Check</string>
     <string name="version_update_check_desc">Current Version:%1$s,Install time：%2$s</string>
     <string name="author_title">Author</string>
-    <string name="author_desc">SharkMan, QQ:2518545630</string>
+    <string name="author_desc">Jituo.Xuan, QQ:2518545630</string>
     <string name="app_communication_platfrom">Communication</string>
     <string name="app_QQ_group">"QQ group:248706772,click to join!"</string>
     <string name="app_QQ_group_failed">Join refused!</string>

@@ -84,6 +84,7 @@ public class SettingFragment extends LetoolFragment {
         mClearCache.setOnClickListener(this);
         mVersionCheck.setOnClickListener(this);
         mQQGroup.setOnClickListener(this);
+        mQQGroup.setVisibility(View.GONE);
     }
 
     @Override
