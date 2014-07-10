@@ -4,12 +4,9 @@ package com.xjt.letool.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
 
 import android.graphics.Color;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -53,7 +50,7 @@ import com.xjt.letool.view.LetoolBottomBar;
 import com.xjt.letool.view.SingleDeleteMediaListener;
 import com.xjt.letool.views.opengl.GLESCanvas;
 
-import com.xjt.letool.activities.BaseFragmentActivity;
+import com.xjt.letool.activities.LocalImageBrowseActivity;
 import com.xjt.letool.activities.ThumbnailActivity;
 import com.xjt.letool.adapters.PhotoDataAdapter;
 import com.xjt.letool.common.LLog;
@@ -127,7 +124,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     private boolean mDeferredUpdateWaiting = false;
     private long mDeferUpdateUntil = Long.MAX_VALUE;
 
-    private BaseFragmentActivity mActivity;
+    private LocalImageBrowseActivity mActivity;
 
     private Handler mHandler;
 
@@ -322,7 +319,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivity = (BaseFragmentActivity) this.getActivity();
+        mActivity = (LocalImageBrowseActivity) this.getActivity();
     }
 
     private void initViews() {
@@ -366,8 +363,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.gl_root_view, container, false);
-        mGLRootView = (GLRootView) rootView.findViewById(R.id.gl_root_view);
+        mGLRootView = (GLRootView) getMainView().findViewById(R.id.gl_root_view);
         initViews();
         initDatas();
         initBrowseActionBar();
@@ -379,7 +375,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
                     mCurrentIndex = 0;
                 mCurrentPhoto = mMediaSet.getMediaItem(mCurrentIndex, 1).get(0);
             } else {
-                return rootView;
+                return null;
             }
         }
 
@@ -470,7 +466,7 @@ public class FullImageFragment extends LetoolFragment implements FullImageView.L
         };
 
         mFullImageView.setFilmMode(mStartInFilmstrip && mMediaSet.getAllMediaItems() > 1);
-        return rootView;
+        return null;
     }
 
     @Override

@@ -101,7 +101,7 @@ public class SettingFragment extends LetoolFragment {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.action_navi) {
-            getLetoolSlidingMenu().toggle();
+            //getLetoolSlidingMenu().toggle();
         } else if (v.getId() == R.id.clear_cache) {
             MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_CLEAR_CAHCE);
             new ClearCacheTask().execute();
@@ -244,7 +244,7 @@ public class SettingFragment extends LetoolFragment {
     @Override
     public void onMenuClicked() {
         MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_SLIDE_MENU_MENU);
-        getLetoolSlidingMenu().toggle();
+        //getLetoolSlidingMenu().toggle();
 
     }
 

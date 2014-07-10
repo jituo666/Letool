@@ -52,6 +52,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -316,9 +317,8 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LLog.i(TAG, "onCreateView" + System.currentTimeMillis());
-        View rootView = inflater.inflate(R.layout.gl_root_view, container, false);
         mHasSDCard = StorageUtils.externalStorageAvailable();
-        mGLRootView = (GLRootView) rootView.findViewById(R.id.gl_root_view);
+        mGLRootView = (GLRootView) getMainView().findViewById(R.id.gl_root_view);
         initializeData();
         initializeViews();
         initBrowseActionBar();
@@ -341,13 +341,13 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
             }
         };
         mEyePosition = new EyePosition(getAndroidContext(), this);
-        mEmptyView = (TextView) rootView.findViewById(R.id.empty_view);
+        mEmptyView = (TextView)getMainView().findViewById(R.id.empty_view);
         if (!mHasSDCard) {
             showEmptyView(R.string.common_error_nosdcard);
-            return rootView;
+            return null;
         } else if (mIsPhotoAlbum && !mHasDCIM) {
             showEmptyView(R.string.common_error_nodcim);
-            return rootView;
+            return null;
         }
         Bundle data = getArguments();
         if (data != null) {
@@ -359,7 +359,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
 
             }
         }
-        return rootView;
+        return null;
     }
 
     private void showEmptyView(int resId) {
@@ -474,7 +474,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
         if (!mIsPhotoAlbum)
             return;
         MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_SLIDE_MENU_MENU);
-        getLetoolSlidingMenu().toggle();
+        //getLetoolSlidingMenu().toggle();
     }
 
     @Override
@@ -486,7 +486,7 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
             if (!mIsPhotoAlbum) {
                 getActivity().finish();
             } else {
-                getLetoolSlidingMenu().toggle();
+                //getLetoolSlidingMenu().toggle();
             }
             return;
         }
@@ -579,19 +579,20 @@ public class PhotoFragment extends LetoolFragment implements EyePosition.EyePosi
     }
 
     private void pickPhoto(int index) {
-        Intent it = new Intent();
-        it.setClass(getAndroidContext(), FullImageActivity.class);
+        Bundle data = new Bundle();
         if (mIsPhotoAlbum) {
-            it.putExtra(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-            it.putExtra(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
+            data.putString(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+            data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
         } else {
-            it.putExtra(ThumbnailActivity.KEY_ALBUM_ID, mDataSet.getPath().getIdentity());
-            it.putExtra(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-            it.putExtra(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, false);
-            it.putExtra(ThumbnailActivity.KEY_ALBUM_TITLE, mDataSet.getName());
+            data.putInt(ThumbnailActivity.KEY_ALBUM_ID, mDataSet.getPath().getIdentity());
+            data.putString(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+            data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, false);
+            data.putString(ThumbnailActivity.KEY_ALBUM_TITLE, mDataSet.getName());
         }
-        it.putExtra(FullImageFragment.KEY_INDEX_HINT, index);
-        startActivity(it);
+        Fragment fragment = new FullImageFragment();
+        data.putInt(FullImageFragment.KEY_INDEX_HINT, index);
+        fragment.setArguments(data);
+        replace(fragment);
     }
 
     //-----------------------------------------------details-----------------------------------------------------------------------

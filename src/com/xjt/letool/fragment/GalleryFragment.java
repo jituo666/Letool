@@ -507,7 +507,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.action_navi) {
-            getLetoolSlidingMenu().toggle();
+            //getLetoolSlidingMenu().toggle();
         } else if (v.getId() == R.id.operation_delete) {
 
             MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_GALLERY_DELETE);
@@ -580,7 +580,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     @Override
     public void onMenuClicked() {
         MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_SLIDE_MENU_MENU);
-        getLetoolSlidingMenu().toggle();
+        //getLetoolSlidingMenu().toggle();
 
     }
 

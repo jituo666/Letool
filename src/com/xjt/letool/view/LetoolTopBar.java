@@ -1,6 +1,7 @@
 
 package com.xjt.letool.view;
 
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.xjt.letool.R;
-import com.xjt.letool.activities.BaseFragmentActivity;
 import com.xjt.letool.selectors.ContractSelector;
 
 public class LetoolTopBar {
@@ -21,7 +21,7 @@ public class LetoolTopBar {
     public static final int ACTION_BAR_MODE_SETTINGS = 2;
     public static final int ACTION_BAR_MODE_FULL_IMAGE = 3;
 
-    private BaseFragmentActivity mActivity;
+    private FragmentActivity mActivity;
     public static final int ACTION_BAR_MODE[] = {
             ACTION_BAR_MODE_BROWSE,
             ACTION_BAR_MODE_SELECTION,
@@ -63,7 +63,7 @@ public class LetoolTopBar {
     private boolean mIsExpand = false;
     private ContractSelector mConractSelectionManager;
 
-    public LetoolTopBar(BaseFragmentActivity activity, ViewGroup barContainer) {
+    public LetoolTopBar(FragmentActivity activity, ViewGroup barContainer) {
         mActivity = activity;
         mBarContainer = barContainer;
     }
