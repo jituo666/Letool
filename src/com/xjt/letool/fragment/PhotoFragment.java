@@ -70,8 +70,6 @@ public class PhotoFragment extends Fragment implements
 
 	private static final String TAG = PhotoFragment.class.getSimpleName();
 
-	public static final String KEY_SET_CENTER = "set-center";
-	public static final String KEY_RESUME_ANIMATION = "resume_animation";
 	private static final int BIT_LOADING_RELOAD = 1;
 	private static final int BIT_LOADING_SYNC = 2;
 	private static final int MSG_LAYOUT_CONFIRMED = 0;
@@ -237,7 +235,7 @@ public class PhotoFragment extends Fragment implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		LLog.i(TAG, "onCreate");
-		mLetoolContext = (LetoolContext) this.getActivity();
+		mLetoolContext = (LetoolContext) getActivity();
 		mGLController = mLetoolContext.getGLController();
 		mLayoutInflater = getActivity().getLayoutInflater();
 		mHasSDCard = StorageUtils.externalStorageAvailable();
@@ -268,16 +266,6 @@ public class PhotoFragment extends Fragment implements
 		} else if (mIsPhotoAlbum && !mHasDCIM) {
 			showEmptyView(R.string.common_error_nodcim);
 			return ;
-		}
-		Bundle data = getArguments();
-		if (data != null) {
-			int[] center = data.getIntArray(KEY_SET_CENTER);
-			if (center != null) {
-				mOpenCenter.setAbsolutePosition(center[0], center[1]);
-				mThumbnailView.startScatteringAnimation(mOpenCenter);
-			} else {
-
-			}
 		}
 	}
 
