@@ -13,6 +13,8 @@ import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.imagedata.utils.LetoolBitmapPool;
 import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.metadata.MediaItem;
+import com.xjt.letool.view.GLBaseView;
+import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.LetoolTopBar;
 import com.xjt.letool.view.LetoolBottomBar;
 import com.xjt.letool.view.LetoolSlidingMenu;
@@ -29,6 +31,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
@@ -160,7 +163,7 @@ public class BaseFragmentActivity extends FragmentActivity implements LetoolCont
     }
 
     @Override
-    public Context getAndroidContext() {
+    public Context getAppContext() {
         return this;
     }
 
@@ -193,11 +196,41 @@ public class BaseFragmentActivity extends FragmentActivity implements LetoolCont
             List<Fragment> list = mFragmentManager.getFragments();
             for (Fragment f : list) {
                 if (f != null && (f instanceof LetoolFragment) && f.isResumed()) {
-                    ((LetoolFragment) f).onMenuClicked();
+                    //((LetoolFragment) f).onMenuClicked();
                     return true;
                 }
             }
         }
         return super.onKeyDown(keyCode, event);
     }
+
+	@Override
+	public GLController getGLController() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setMainView(GLBaseView view) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setMainView(View view) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void pushContentFragment(Fragment newFragment) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void popContentFragment() {
+		// TODO Auto-generated method stub
+		
+	}
 }

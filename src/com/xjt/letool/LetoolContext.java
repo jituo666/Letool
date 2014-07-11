@@ -1,12 +1,16 @@
-
 package com.xjt.letool;
 
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Looper;
+import android.support.v4.app.Fragment;
+import android.view.View;
 
+import com.xjt.letool.common.OrientationManager;
 import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.metadata.DataManager;
+import com.xjt.letool.view.GLBaseView;
+import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.LetoolBottomBar;
 import com.xjt.letool.view.LetoolTopBar;
 
@@ -17,18 +21,32 @@ import com.xjt.letool.view.LetoolTopBar;
  */
 public interface LetoolContext {
 
-    public DataManager getDataManager();
+	public Context getAppContext();
 
-    public Context getAndroidContext();
+	public Looper getMainLooper();
 
-    public Looper getMainLooper();
+	public Resources getResources();
 
-    public Resources getResources();
+	//
+	public DataManager getDataManager();
 
-    public ThreadPool getThreadPool();
+	public ThreadPool getThreadPool();
 
-    public LetoolTopBar getLetoolTopBar();
+	public GLController getGLController();
 
-    public LetoolBottomBar getLetoolBottomBar();
+	//
+	public LetoolTopBar getLetoolTopBar();
+
+	public LetoolBottomBar getLetoolBottomBar();
+
+	public OrientationManager getOrientationManager();
+
+	//
+	public void setMainView(GLBaseView view);
+	public void setMainView(View view);
+
+	public void pushContentFragment(Fragment newFragment);
+
+	public void popContentFragment();
 
 }

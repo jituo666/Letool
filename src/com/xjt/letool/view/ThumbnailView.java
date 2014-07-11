@@ -1,6 +1,7 @@
 
 package com.xjt.letool.view;
 
+import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
 import com.xjt.letool.animations.AnimationTime;
 import com.xjt.letool.animations.ThumbnailAnim;
@@ -298,17 +299,17 @@ public class ThumbnailView extends GLBaseView {
 
     ////////////////////////////////////////////////////////////Layout////////////////////////////////////////////////////////////////////
 
-    public ThumbnailView(LetoolFragment activity, ThumbnailLayout layout) {
-        mGestureDetector = new GestureDetector(activity.getAndroidContext(), new MyGestureListener());
-        mScroller = new ViewScrollerHelper(activity.getAndroidContext());
+    public ThumbnailView(LetoolContext activity, ThumbnailLayout layout) {
+        mGestureDetector = new GestureDetector(activity.getAppContext(), new MyGestureListener());
+        mScroller = new ViewScrollerHelper(activity.getAppContext());
         mHandler = new SynchronizedHandler(activity.getGLController());
         mLayout = layout;
         int w = Math.round(activity.getResources().getDimension(R.dimen.common_scroll_bar_width));
         int h = Math.round(activity.getResources().getDimension(R.dimen.common_scroll_bar_height));
         if (ThumbnailLayout.WIDE) {
-            mScrollBar = new ScrollBarView(activity.getAndroidContext(), h, w);
+            mScrollBar = new ScrollBarView(activity.getAppContext(), h, w);
         } else {
-            mScrollBar = new ScrollBarView(activity.getAndroidContext(), w, h);
+            mScrollBar = new ScrollBarView(activity.getAppContext(), w, h);
         }
         mScrollBar.setVisibility(View.INVISIBLE);
         addComponent(mScrollBar);

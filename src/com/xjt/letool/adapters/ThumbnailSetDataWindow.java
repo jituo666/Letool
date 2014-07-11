@@ -3,6 +3,7 @@ package com.xjt.letool.adapters;
 import android.graphics.Bitmap;
 import android.os.Message;
 
+import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
 import com.xjt.letool.common.Future;
 import com.xjt.letool.common.FutureListener;
@@ -78,15 +79,15 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         private BitmapLoader coverLoader;
     }
 
-    public ThumbnailSetDataWindow(LetoolFragment fragment, ThumbnailSetDataLoader source, ThumbnailSetRenderer.LabelSpec labelSpec, int cacheSize) {
+    public ThumbnailSetDataWindow(LetoolContext fragment, ThumbnailSetDataLoader source, ThumbnailSetRenderer.LabelSpec labelSpec, int cacheSize) {
         source.setModelListener(this);
         mSource = source;
         mData = new AlbumSetEntry[cacheSize];
         mSize = source.size();
         mThreadPool = fragment.getThreadPool();
 
-        mLabelMaker = new AlbumLabelMaker(fragment.getAndroidContext(), labelSpec);
-        mLoadingText = fragment.getAndroidContext().getString(R.string.loading);
+        mLabelMaker = new AlbumLabelMaker(fragment.getAppContext(), labelSpec);
+        mLoadingText = fragment.getAppContext().getString(R.string.loading);
 
         mHandler = new SynchronizedHandler(fragment.getGLController()) {
 

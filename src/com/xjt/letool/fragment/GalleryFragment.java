@@ -5,6 +5,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import com.umeng.analytics.MobclickAgent;
+import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
 import com.xjt.letool.activities.ThumbnailActivity;
 import com.xjt.letool.common.EyePosition;
@@ -74,7 +75,8 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     private static final int BIT_LOADING_SYNC = 2;
     private static final int REQUEST_DO_ANIMATION = 1;
 
-    private GLRootView mGLRootView;
+    private LetoolContext mLetoolContext;
+    private GLController mGLController;
     private CommonLoadingPanel mLoadingInsie;
     private ThumbnailView mThumbnailView;
     private boolean mIsActive = false;
@@ -106,7 +108,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         @Override
         protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
             mEyePosition.resetPosition();
-            LetoolTopBar actionBar = getLetoolTopBar();
+            LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
             int thumbnailViewLeft = left + mConfig.paddingLeft;
             int thumbnailViewRight = right - left - mConfig.paddingRight;
             int thumbnailViewTop = top + mConfig.paddingTop + actionBar.getHeight();
@@ -172,7 +174,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
                 return;
             }
         }
-        toast = Toast.makeText(getAndroidContext(), R.string.empty_album, toastLength);
+        toast = Toast.makeText(mLetoolContext.getAppContext(), R.string.empty_album, toastLength);
         mEmptyAlbumToast = new WeakReference<Toast>(toast);
         toast.show();
     }
@@ -217,7 +219,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     }
 
     public void onLongTap(int thumbnailIndex) {
-        MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_GALLERY_LONG_PRESSED);
+        MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_GALLERY_LONG_PRESSED);
         MediaSet set = mThumbnailSetAdapter.getMediaSet(thumbnailIndex);
         if (set == null)
             return;
@@ -235,19 +237,20 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LLog.i(TAG, "onCreate");
-        setHasOptionsMenu(true);
+		mLetoolContext = (LetoolContext) getActivity();
+		mGLController = mLetoolContext.getGLController();
     }
 
     private void initializeViews() {
-        mSelector = new ContractSelector(this, true);
+        mSelector = new ContractSelector(mLetoolContext, true);
         mSelector.setSelectionListener(this);
-        mConfig = ViewConfigs.AlbumSetPage.get(getAndroidContext());
+        mConfig = ViewConfigs.AlbumSetPage.get(mLetoolContext.getAppContext());
         ThumbnailLayout layout = new ThumbnailSetContractLayout(mConfig.albumSetSpec);
-        mThumbnailView = new ThumbnailView(this, layout);
+        mThumbnailView = new ThumbnailView(mLetoolContext, layout);
         mThumbnailView.setBackgroundColor(
                 LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.default_background_thumbnail))
                 );
-        mThumbnailViewRenderer = new ThumbnailSetRenderer(this, mThumbnailView, mSelector);
+        mThumbnailViewRenderer = new ThumbnailSetRenderer(mLetoolContext, mThumbnailView, mSelector);
         layout.setRenderer(mThumbnailViewRenderer);
         layout.setLayoutListener(this);
         mThumbnailView.setThumbnailRenderer(mThumbnailViewRenderer);
@@ -277,16 +280,16 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     }
 
     private void initializeData() {
-        mMediaSet = new LocalAlbumSet(new MediaPath(getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY), -1000), (LetoolApp) getActivity()
+        mMediaSet = new LocalAlbumSet(new MediaPath(mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY), -1000), (LetoolApp) getActivity()
                 .getApplication());//getDataManager().getMediaSet(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), -1000);
         mSelector.setSourceMediaSet(mMediaSet);
-        mThumbnailSetAdapter = new ThumbnailSetDataLoader(this, mMediaSet);
+        mThumbnailSetAdapter = new ThumbnailSetDataLoader(mLetoolContext, mMediaSet);
         mThumbnailSetAdapter.setLoadingListener(new MyLoadingListener());
         mThumbnailViewRenderer.setModel(mThumbnailSetAdapter);
     }
 
     private void initBrowseActionBar() {
-        LetoolTopBar actionBar = getLetoolTopBar();
+        LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
         actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_BROWSE, this);
         actionBar.setTitleIcon(R.drawable.ic_drawer);
         actionBar.setTitleText(R.string.common_gallery);
@@ -296,7 +299,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     }
 
     private void initSelectionActionBar() {
-        LetoolTopBar actionBar = getLetoolTopBar();
+        LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
         actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_SELECTION, this);
         actionBar.setContractSelectionManager(mSelector);
         String format = getResources().getQuantityString(R.plurals.number_of_items_selected, 0);
@@ -322,10 +325,10 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LLog.i(TAG, "onCreateView");
         View rootView = inflater.inflate(R.layout.gl_root_view, container, false);
-        mGLRootView = (GLRootView) rootView.findViewById(R.id.gl_root_view);
-        mLoadingInsie = (CommonLoadingPanel) rootView.findViewById(R.id.loading);
+        mGLController = (GLRootView) rootView.findViewById(R.id.gl_root_view);
+        //mLoadingInsie = (CommonLoadingPanel) rootView.findViewById(R.id.loading);
         mLoadingInsie.setVisibility(View.VISIBLE);
-        mHandler = new SynchronizedHandler(mGLRootView) {
+        mHandler = new SynchronizedHandler(mGLController) {
 
             @Override
             public void handleMessage(Message message) {
@@ -346,9 +349,9 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         initializeViews();
         initBrowseActionBar();
         initializeData();
-        mEyePosition = new EyePosition(getAndroidContext(), this);
+        mEyePosition = new EyePosition(mLetoolContext.getAppContext(), this);
         //mThumbnailView.startRisingAnimation();
-        return rootView;
+        return null;
     }
 
     @Override
@@ -362,16 +365,15 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
 
         super.onResume();
         LLog.i(TAG, "onResume");
-        mGLRootView.onResume();
-        mGLRootView.lockRenderThread();
+        mGLController.lockRenderThread();
         try {
             mIsActive = true;
-            mGLRootView.setContentPane(mRootPane);
+            mGLController.setContentPane(mRootPane);
             mThumbnailSetAdapter.resume();
             mThumbnailViewRenderer.resume();
             mEyePosition.resume();
         } finally {
-            mGLRootView.unlockRenderThread();
+            mGLController.unlockRenderThread();
         }
     }
 
@@ -379,22 +381,21 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     public void onPause() {
         super.onPause();
         LLog.i(TAG, "onPause");
-        mGLRootView.onPause();
-        mGLRootView.lockRenderThread();
+        mGLController.lockRenderThread();
         try {
             mIsActive = false;
             mThumbnailSetAdapter.pause();
             mThumbnailViewRenderer.pause();
             mEyePosition.pause();
         } finally {
-            mGLRootView.unlockRenderThread();
+            mGLController.unlockRenderThread();
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        mGLRootView.lockRenderThread();
+        mGLController.lockRenderThread();
         try {
 
             super.onActivityResult(requestCode, resultCode, data);
@@ -407,7 +408,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
                 }
             }
         } finally {
-            mGLRootView.unlockRenderThread();
+            mGLController.unlockRenderThread();
         }
 
     }
@@ -440,11 +441,6 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     }
 
     @Override
-    public GLController getGLController() {
-        return mGLRootView;
-    }
-
-    @Override
     public void onEyePositionChanged(float x, float y, float z) {
         mRootPane.lockRendering();
         mX = x;
@@ -464,7 +460,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     private void showDetails() {
         mShowDetails = true;
         if (mDetailsHelper == null) {
-            mDetailsHelper = new DetailsHelper(this, mRootPane, mDetailsSource);
+            mDetailsHelper = new DetailsHelper(mLetoolContext, mRootPane, mDetailsSource);
             mDetailsHelper.setCloseListener(new CloseListener() {
 
                 @Override
@@ -518,7 +514,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
                 t.show();
                 return;
             }
-            BatchDeleteMediaListener cdl = new BatchDeleteMediaListener(getActivity(), getDataManager(),
+            BatchDeleteMediaListener cdl = new BatchDeleteMediaListener(getActivity(), mLetoolContext.getDataManager(),
                     new DeleteMediaProgressListener() {
 
                         @Override
@@ -542,10 +538,10 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
             dlg.setDividerVisible(true);
             dlg.show();
         } else if (v.getId() == R.id.enter_selection_indicate) {
-            MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_SELECT_OK);
+            MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_SELECT_OK);
             mSelector.leaveSelectionMode();
         } else if (v.getId() == R.id.action_more) {
-            MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_POPUP_MENU);
+            MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_POPUP_MENU);
             if (mSelector != null && !mSelector.inSelectionMode()) {
                 mSelector.enterSelectionMode();
             }
@@ -567,7 +563,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         Intent it = new Intent();
         it.setClass(getActivity(), ThumbnailActivity.class);
         it.putExtra(ThumbnailActivity.KEY_ALBUM_ID, mediaPath.getIdentity());
-        it.putExtra(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+        it.putExtra(ThumbnailActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
         it.putExtra(ThumbnailActivity.KEY_ALBUM_TITLE, targetSet.getName());
         int[] center = new int[2];
         getThumbnailCenter(thumbnailIndex, center);
@@ -577,9 +573,8 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
 
     }
 
-    @Override
     public void onMenuClicked() {
-        MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_SLIDE_MENU_MENU);
+        MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_SLIDE_MENU_MENU);
         //getLetoolSlidingMenu().toggle();
 
     }
@@ -609,7 +604,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     public void onSelectionChange(MediaPath path, boolean selected) {
         int count = mSelector.getSelectedCount();
         String format = getResources().getQuantityString(R.plurals.number_of_items_selected, count);
-        getLetoolTopBar().setTitleText(String.format(format, count));
+        mLetoolContext.getLetoolTopBar().setTitleText(String.format(format, count));
     }
 
     @Override

@@ -72,9 +72,9 @@ public class DialogDetailsView implements DetailsViewContainer {
 
     private void setDetails(MediaDetails details) {
         mAdapter = new DetailsAdapter(details);
-        String title = String.format(mActivity.getAndroidContext().getString(R.string.details_title), mIndex + 1, mSource.size());
+        String title = String.format(mActivity.getAppContext().getString(R.string.details_title), mIndex + 1, mSource.size());
 
-        mDialog = new LetoolDialog(mActivity.getAndroidContext());
+        mDialog = new LetoolDialog(mActivity.getAppContext());
         mDialog.setListAdapter(mAdapter);
         mDialog.setTitle(title);
         mDialog.setOkBtn(R.string.common_close, new View.OnClickListener() {
@@ -110,7 +110,7 @@ public class DialogDetailsView implements DetailsViewContainer {
         private int mHeightIndex = -1;
 
         public DetailsAdapter(MediaDetails details) {
-            Context context = mActivity.getAndroidContext();
+            Context context = mActivity.getAppContext();
             mItems = new ArrayList<PropertyData>(details.size());
             mLocationIndex = -1;
             setDetails(context, details);
@@ -258,7 +258,7 @@ public class DialogDetailsView implements DetailsViewContainer {
         public View getView(int position, View convertView, ViewGroup parent) {
             final View v;
             if (convertView == null) {
-                v = LayoutInflater.from(mActivity.getAndroidContext()).inflate(R.layout.details_list_item, parent, false);
+                v = LayoutInflater.from(mActivity.getAppContext()).inflate(R.layout.details_list_item, parent, false);
             } else {
                 v = convertView;
             }
@@ -281,7 +281,7 @@ public class DialogDetailsView implements DetailsViewContainer {
             if (width == 0 || height == 0)
                 return;
             // Update the resolution with the new width and height
-            Context context = mActivity.getAndroidContext();
+            Context context = mActivity.getAppContext();
             String widthString = String.format(mDefaultLocale, "%s: %d",
                     DetailsHelper.getDetailsName(
                             context, MediaDetails.INDEX_WIDTH), width);

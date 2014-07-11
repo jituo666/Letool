@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Process;
 
+import com.xjt.letool.LetoolContext;
 import com.xjt.letool.metadata.ContentListener;
 import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaObject;
@@ -64,7 +65,7 @@ public class ThumbnailSetDataLoader {
 
     private final MySourceListener mSourceListener = new MySourceListener();
 
-    public ThumbnailSetDataLoader(LetoolFragment activity, MediaSet albumSet) {
+    public ThumbnailSetDataLoader(LetoolContext activity, MediaSet albumSet) {
         mSource = Utils.checkNotNull(albumSet);
         mCoverItem = new MediaItem[DATA_CACHE_SIZE];
         mData = new MediaSet[DATA_CACHE_SIZE];

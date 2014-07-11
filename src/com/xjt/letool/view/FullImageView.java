@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.animation.AccelerateInterpolator;
 
 import com.umeng.analytics.MobclickAgent;
+import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
 import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.common.LLog;
@@ -212,10 +213,10 @@ public class FullImageView extends GLBaseView {
 
     private Context mContext;
 
-    public FullImageView(LetoolFragment activity) {
+    public FullImageView(LetoolContext activity) {
         mTileView = new TileImageView(activity);
         addComponent(mTileView);
-        mContext = activity.getAndroidContext();
+        mContext = activity.getAppContext();
         mPlaceholderColor = mContext.getResources().getColor(R.color.photo_placeholder);
         mEdgeView = new EdgeView(mContext);
         addComponent(mEdgeView);

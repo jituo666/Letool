@@ -1,28 +1,19 @@
 
 package com.xjt.letool.fragment;
 
-import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
-import com.xjt.letool.activities.LocalImageBrowseActivity;
-import com.xjt.letool.common.ThreadPool;
-import com.xjt.letool.metadata.DataManager;
-import com.xjt.letool.view.GLController;
-import com.xjt.letool.view.LetoolTopBar;
-import com.xjt.letool.view.LetoolBottomBar;
+
 import com.xjt.letool.view.LetoolSlidingMenu;
 import com.xjt.letool.view.LetoolTopBar.OnActionModeListener;
 
-import android.content.Context;
-import android.os.Looper;
 import android.support.v4.app.Fragment;
-import android.view.ViewGroup;
 
 /**
  * @Author Jituo.Xuan
  * @Date 11:24:54 PM Apr 19, 2014
  * @Comments:null
  */
-public abstract class LetoolFragment extends Fragment implements LetoolContext, OnActionModeListener {
+public abstract class LetoolFragment extends Fragment implements OnActionModeListener {
 
     private static final String TAG = LetoolFragment.class.getSimpleName();
 
@@ -34,7 +25,9 @@ public abstract class LetoolFragment extends Fragment implements LetoolContext, 
     public static final String FRAGMENT_TAG_SETTINGS = SettingFragment.class.getSimpleName();
     public static final String FRAGMENT_TAG_ABOUT = AboutFragment.class.getSimpleName();
 
-    @Override
+    private LetoolContext mLetoolContext;
+
+/*    @Override
     public DataManager getDataManager() {
         return ((LetoolApp) getActivity().getApplication()).getDataManager();
     }
@@ -45,7 +38,7 @@ public abstract class LetoolFragment extends Fragment implements LetoolContext, 
     }
 
     @Override
-    public Context getAndroidContext() {
+    public Context getAppContext() {
         return getActivity().getApplicationContext();
     }
 
@@ -62,21 +55,27 @@ public abstract class LetoolFragment extends Fragment implements LetoolContext, 
         return ((LocalImageBrowseActivity) getActivity()).getLetoolBottomBar();
     }
 
-/*    public LetoolSlidingMenu getLetoolSlidingMenu() {
+    public LetoolSlidingMenu getLetoolSlidingMenu() {
         return ((LocalImageBrowseActivity) getActivity()).getLetoolSlidingMenu();
-    }*/
-
-    public ViewGroup getMainView() {
-        return ((LocalImageBrowseActivity) getActivity()).getMainView();
     }
 
-    public void replace(Fragment f) {
-         ((LocalImageBrowseActivity) getActivity()).replace(f);
+    public void setMainView(GLBaseView view) {
+        ((LocalImageBrowseActivity) getActivity()).setMainView(view);
+    }
+
+    public void pushContentFragment(Fragment f) {
+         ((LocalImageBrowseActivity) getActivity()).pushContentFragment(f);
     }
     
-    public abstract GLController getGLController();
+	public void popContentFragment() {
+		 ((LocalImageBrowseActivity) getActivity()).popContentFragment();
+	}
+	
+    public GLController getGLController() {
+    	return ((LocalImageBrowseActivity) getActivity()).getGLController();
+    }
 
     public void onMenuClicked() {
 
-    }
+    }*/
 }

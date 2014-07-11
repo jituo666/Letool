@@ -25,6 +25,7 @@ import com.umeng.update.UmengUpdateAgent;
 import com.umeng.update.UmengUpdateListener;
 import com.umeng.update.UpdateResponse;
 import com.umeng.update.UpdateStatus;
+import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
 import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.imagedata.blobcache.BlobCacheManager;
@@ -48,10 +49,12 @@ public class SettingFragment extends LetoolFragment {
     private LetoolPreference mVersionCheck;
     private LetoolPreference mAuthorDesc;
     private LetoolPreference mQQGroup;
+    private LetoolContext mLetoolContext;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mLetoolContext = (LetoolContext) this.getActivity();
     }
 
     public String getVersion() {
@@ -68,7 +71,7 @@ public class SettingFragment extends LetoolFragment {
     }
 
     private void initBrowseActionBar() {
-        LetoolTopBar actionBar = getLetoolTopBar();
+        LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
         actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_SETTINGS, this);
         actionBar.setTitleIcon(R.drawable.ic_drawer);
         actionBar.setTitleText(R.string.common_settings);
@@ -135,7 +138,7 @@ public class SettingFragment extends LetoolFragment {
                 }
             });
             UmengUpdateAgent.update(context);
-            progressDialog.setMessage(getAndroidContext().getString(R.string.common_update_checking));
+            progressDialog.setMessage(mLetoolContext.getAppContext().getString(R.string.common_update_checking));
             progressDialog.setIndeterminate(true);
             progressDialog.setCancelable(true);
             progressDialog.show();
@@ -144,7 +147,7 @@ public class SettingFragment extends LetoolFragment {
                 copyQQToClipBoard();
         } else if (v.getId() == R.id.app_about) {
             if (!joinQQGroup("pan68pjSBp1edKE0a6mUIUogCS4U-qZW")) {
-                Toast.makeText(getAndroidContext(), R.string.app_QQ_group_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mLetoolContext.getAppContext(), R.string.app_QQ_group_failed, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -154,7 +157,7 @@ public class SettingFragment extends LetoolFragment {
     private void copyQQToClipBoard() {
         ClipboardManager cmb = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
         cmb.setText("2518545630");
-        Toast.makeText(getAndroidContext(), R.string.app_QQ_to_clipboard, Toast.LENGTH_SHORT).show();
+        Toast.makeText(mLetoolContext.getAppContext(), R.string.app_QQ_to_clipboard, Toast.LENGTH_SHORT).show();
     }
 
     /****************
@@ -178,10 +181,6 @@ public class SettingFragment extends LetoolFragment {
         }
     }
 
-    @Override
-    public GLController getGLController() {
-        return null;
-    }
 
     private String getCacheSize() {
         try {
@@ -224,7 +223,7 @@ public class SettingFragment extends LetoolFragment {
 
         @Override
         protected Void doInBackground(Void... arg0) {
-            BlobCacheManager.clearCachedFiles(getAndroidContext());
+            BlobCacheManager.clearCachedFiles(mLetoolContext.getAppContext());
             return null;
         }
 
@@ -241,9 +240,8 @@ public class SettingFragment extends LetoolFragment {
 
     }
 
-    @Override
     public void onMenuClicked() {
-        MobclickAgent.onEvent(getAndroidContext(), StatConstants.EVENT_KEY_SLIDE_MENU_MENU);
+        MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_SLIDE_MENU_MENU);
         //getLetoolSlidingMenu().toggle();
 
     }

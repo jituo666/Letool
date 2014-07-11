@@ -4,6 +4,7 @@ package com.xjt.letool.adapters;
 import android.graphics.Bitmap;
 import android.os.Message;
 
+import com.xjt.letool.LetoolContext;
 import com.xjt.letool.common.Future;
 import com.xjt.letool.common.FutureListener;
 import com.xjt.letool.common.JobLimiter;
@@ -68,7 +69,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
         private BitmapLoader contentLoader;
     }
 
-    public ThumbnailDataWindow(LetoolFragment fragment, ThumbnailDataLoader source) {
+    public ThumbnailDataWindow(LetoolContext fragment, ThumbnailDataLoader source) {
         source.setDataChangedListener(this);
         mDataSource = source;
         mImageData = new AlbumEntry[CACHE_SIZE];

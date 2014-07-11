@@ -5,6 +5,7 @@ import android.graphics.BitmapRegionDecoder;
 import android.os.Handler;
 import android.os.Message;
 
+import com.xjt.letool.LetoolContext;
 import com.xjt.letool.fragment.FullImageFragment;
 import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.imagedata.utils.BitmapUtils;
@@ -154,7 +155,7 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
     // can find the item. If mItemPath is null, then we use the mCurrentIndex to
     // find the image being viewed. cameraIndex is the index of the camera
     // preview. If cameraIndex < 0, there is no camera preview.
-    public PhotoDataAdapter(LetoolFragment activity, FullImageView view, MediaSet mediaSet, MediaPath itemPath, int indexHint) {
+    public PhotoDataAdapter(LetoolContext activity, FullImageView view, MediaSet mediaSet, MediaPath itemPath, int indexHint) {
         mSource = Utils.checkNotNull(mediaSet);
         mPhotoView = Utils.checkNotNull(view);
         mItemPath = Utils.checkNotNull(itemPath);

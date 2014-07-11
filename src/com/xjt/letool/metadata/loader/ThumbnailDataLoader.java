@@ -4,6 +4,7 @@ package com.xjt.letool.metadata.loader;
 import android.os.Message;
 import android.os.Process;
 
+import com.xjt.letool.LetoolContext;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
 import com.xjt.letool.fragment.LetoolFragment;
@@ -58,7 +59,7 @@ public class ThumbnailDataLoader {
         public void onContentChanged(int index);
     }
 
-    public ThumbnailDataLoader(LetoolFragment context, MediaSet mediaSet) {
+    public ThumbnailDataLoader(LetoolContext context, MediaSet mediaSet) {
         mSource = mediaSet;
         mData = new MediaItem[DATA_CACHE_SIZE];
         mItemVersion = new long[DATA_CACHE_SIZE];

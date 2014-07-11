@@ -2,6 +2,7 @@
 package com.xjt.letool.views.render;
 
 
+import com.xjt.letool.LetoolContext;
 import com.xjt.letool.adapters.ThumbnailSetDataWindow;
 import com.xjt.letool.adapters.ThumbnailSetDataWindow.AlbumSetEntry;
 import com.xjt.letool.fragment.LetoolFragment;
@@ -25,7 +26,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
     private final int mPlaceholderColor;
 
     private final ColorTexture mWaitLoadingTexture;
-    private LetoolFragment mActivity;
+    private LetoolContext mActivity;
 
     private ThumbnailView mThumbnailView;
     private ThumbnailSetDataWindow mDataWindow;
@@ -67,13 +68,13 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         }
     }
 
-    public ThumbnailSetRenderer(LetoolFragment activity, ThumbnailView thumbnailView, ContractSelector selector) {
-        super(activity.getAndroidContext());
+    public ThumbnailSetRenderer(LetoolContext activity, ThumbnailView thumbnailView, ContractSelector selector) {
+        super(activity.getAppContext());
         mActivity = activity;
         mThumbnailView = thumbnailView;
         mPlaceholderColor = 0xFFE8E8E8;
         mMediaSelector = selector;
-        mLabelSpec = ViewConfigs.AlbumSetPage.get(activity.getAndroidContext()).labelSpec;
+        mLabelSpec = ViewConfigs.AlbumSetPage.get(activity.getAppContext()).labelSpec;
 
         mWaitLoadingTexture = new ColorTexture(mPlaceholderColor);
         mWaitLoadingTexture.setSize(1, 1);

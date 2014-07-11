@@ -26,5 +26,8 @@ public interface GLController {
     public Matrix getCompensationMatrix();
     public void freeze();
     public void unfreeze();
+    //
+    public void onPause();
+    public void onResume();
     public void setLightsOutMode(boolean enabled);
 }

@@ -67,7 +67,7 @@ public class DetailsAddressResolver {
 
     private void updateLocation(Address address) {
         if (address != null) {
-            Context context = mContext.getAndroidContext();
+            Context context = mContext.getAppContext();
             String parts[] = {
                 address.getAdminArea(),
                 address.getSubAdminArea(),
