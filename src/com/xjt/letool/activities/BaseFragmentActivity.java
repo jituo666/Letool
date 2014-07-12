@@ -61,8 +61,8 @@ public class BaseFragmentActivity extends FragmentActivity implements LetoolCont
         mFragmentManager = getSupportFragmentManager();
 
         mOrientationManager = new OrientationManager(this);
-        mSlidingMenu = new LetoolSlidingMenu(this, mFragmentManager, findViewById(R.id.action_bar));
-        mTopBar = new LetoolTopBar(this, (ViewGroup) findViewById(R.id.action_bar));
+//        mSlidingMenu = new LetoolSlidingMenu(this, mFragmentManager, findViewById(R.id.action_bar));
+//        mTopBar = new LetoolTopBar(this, (ViewGroup) findViewById(R.id.action_bar));
         mBottomBar = new LetoolBottomBar(this, (ViewGroup) findViewById(R.id.bottom_bar));
     }
 

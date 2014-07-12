@@ -6,7 +6,7 @@
 
     <include
         android:id="@+id/app_settings_bar"
-        layout="@layout/action_bar_common" />
+        layout="@layout/letool_top_bar" />
 
     <FrameLayout
         android:id="@+id/settings_container"

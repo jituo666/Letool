@@ -477,8 +477,7 @@ public class FullImageFragment extends LetoolFragment implements
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         initBrowseActionBar();
         return null;
     }

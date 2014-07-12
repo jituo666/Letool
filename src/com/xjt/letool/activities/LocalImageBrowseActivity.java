@@ -24,8 +24,6 @@ import com.xjt.letool.view.GLRootView;
 import com.xjt.letool.view.LetoolBottomBar;
 import com.xjt.letool.view.LetoolTopBar;
 
-import java.util.List;
-
 public class LocalImageBrowseActivity extends FragmentActivity implements LetoolContext {
 
     private static final String TAG = LocalImageBrowseActivity.class.getSimpleName();
@@ -101,13 +99,13 @@ public class LocalImageBrowseActivity extends FragmentActivity implements Letool
             if (backup)
                 ft.addToBackStack(null);
         }
-        LLog.i(TAG, "xxxxxxxxxxxx   add :" + newFragment.getClass().getSimpleName());
+        LLog.i(TAG, " add :" + newFragment.getClass().getSimpleName());
         ft.add(newFragment, null);
         ft.commit();
     }
 
     public void popContentFragment() {
-        LLog.i(TAG, "xxxxxxxxxxxx   popBackStack :" + getSupportFragmentManager().getBackStackEntryCount());
+        LLog.i(TAG, " popBackStack :" + getSupportFragmentManager().getBackStackEntryCount());
         getSupportFragmentManager().popBackStack();
     }
 
@@ -115,6 +113,10 @@ public class LocalImageBrowseActivity extends FragmentActivity implements Letool
 
     @Override
     public void onBackPressed() {
+        if (getLetoolTopBar().getActionBarMode() == LetoolTopBar.ACTION_BAR_MODE_SELECTION) {
+            getLetoolTopBar().exitSelection();
+            return;
+        }
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             popContentFragment();
         } else {

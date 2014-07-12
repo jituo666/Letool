@@ -379,7 +379,8 @@ public class PhotoFragment extends Fragment implements
     }
 
     private void showEmptyView(int resId) {
-        View emptyView = mLayoutInflater.inflate(R.layout.action_bar, null);
+        //TODO
+        View emptyView = mLayoutInflater.inflate(R.layout.letool_fullmage_bar, null);
         mLetoolContext.setMainView(emptyView);
     }
 
