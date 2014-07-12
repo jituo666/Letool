@@ -58,7 +58,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -277,9 +276,7 @@ public class PhotoFragment extends Fragment implements
         if (mIsCameraSource) {
             if (MediaSetUtils.MY_ALBUM_BUCKETS.length > 0) {
                 mAlbumTitle = getString(R.string.common_photo);
-                mDataSetPath = new MediaPath(
-                        data.getString(ThumbnailActivity.KEY_MEDIA_PATH),
-                        MediaSetUtils.MY_ALBUM_BUCKETS[0]);
+                mDataSetPath = new MediaPath(data.getString(ThumbnailActivity.KEY_MEDIA_PATH),MediaSetUtils.MY_ALBUM_BUCKETS[0]);
                 mDataSet = new LocalAlbum(mDataSetPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.MY_ALBUM_BUCKETS, true,
                         getString(R.string.common_photo));
                 mHasDCIM = true;
@@ -342,9 +339,9 @@ public class PhotoFragment extends Fragment implements
     private void initBrowseActionBar() {
         LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
         actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_BROWSE, this);
-        actionBar.setTitleText(mAlbumTitle);
         ViewGroup nativeButtons = (ViewGroup) actionBar.getActionPanel().findViewById(R.id.navi_buttons);
         if (mIsCameraSource) {
+            actionBar.setTitleText(R.string.app_name);
             nativeButtons.setVisibility(View.VISIBLE);
             actionBar.setTitleIcon(R.drawable.ic_drawer);
             TextView naviToPhoto = (TextView) nativeButtons.findViewById(R.id.navi_to_photo);
@@ -352,11 +349,10 @@ public class PhotoFragment extends Fragment implements
             TextView naviToGallery = (TextView) nativeButtons.findViewById(R.id.navi_to_gallery);
             naviToGallery.setEnabled(true);
             naviToGallery.setOnClickListener(this);
-
         } else {
+            actionBar.setTitleText(mAlbumTitle);
             nativeButtons.setVisibility(View.GONE);
             actionBar.setTitleIcon(R.drawable.ic_action_previous_item);
-
         }
         LetoolBottomBar bottomBar = mLetoolContext.getLetoolBottomBar();
         bottomBar.setVisible(View.GONE, false);

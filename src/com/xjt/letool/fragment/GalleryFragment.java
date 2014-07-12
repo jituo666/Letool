@@ -18,6 +18,7 @@ import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.metadata.loader.DataLoadingListener;
 import com.xjt.letool.metadata.loader.ThumbnailSetDataLoader;
 import com.xjt.letool.metadata.source.LocalAlbumSet;
+import com.xjt.letool.preference.GlobalPreference;
 import com.xjt.letool.selectors.ContractSelectListener;
 import com.xjt.letool.selectors.ContractSelector;
 import com.xjt.letool.stat.StatConstants;
@@ -309,8 +310,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
 
     private void initializeData() {
         mMediaSet = new LocalAlbumSet(new MediaPath(mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY), -1000),
-                (LetoolApp) getActivity()
-                        .getApplication());//getDataManager().getMediaSet(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), -1000);
+                (LetoolApp) getActivity().getApplication());
         mSelector.setSourceMediaSet(mMediaSet);
         mThumbnailSetAdapter = new ThumbnailSetDataLoader(mLetoolContext, mMediaSet);
         mThumbnailSetAdapter.setLoadingListener(new MyLoadingListener());
@@ -321,7 +321,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
         actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_BROWSE, this);
         actionBar.setTitleIcon(R.drawable.ic_drawer);
-        actionBar.setTitleText(R.string.common_gallery);
+        actionBar.setTitleText(R.string.app_name);
         mNativeButtons = (ViewGroup) actionBar.getActionPanel().findViewById(R.id.navi_buttons);
         mNativeButtons.setVisibility(View.VISIBLE);
 
@@ -556,7 +556,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
             data.putString(ThumbnailActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
             data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
             f.setArguments(data);
-            mLetoolContext.pushContentFragment(f,this,false);
+            mLetoolContext.pushContentFragment(f, this, false);
         }
     }
 
