@@ -38,7 +38,6 @@ public class ThumbnailActivity extends BaseFragmentActivity {
         data.putInt(KEY_ALBUM_ID, albumId);
         data.putString(KEY_MEDIA_PATH, albumMediaPath);
         data.putBoolean(KEY_IS_PHOTO_ALBUM, false);
-        data.putIntArray(PhotoFragment.KEY_SET_CENTER, getIntent().getIntArrayExtra(PhotoFragment.KEY_SET_CENTER));
         fragment.setArguments(data);
         LLog.i(TAG, " start album id:" + albumId + " albumTitle:" + albumTitle + " albumMediaPath:" + albumMediaPath);
         mFragmentManager.beginTransaction().add(R.id.root_container, fragment, "PhotoFragment").commit();

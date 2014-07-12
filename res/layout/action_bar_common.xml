@@ -25,36 +25,66 @@
             android:id="@+id/app_logo"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"   
+            android:layout_weight="3"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_launcher" />
     </LinearLayout>
 
-    <View
-        android:id="@+id/sliding_menu_divider"
-        android:layout_width="1dp"
+    <LinearLayout
+        android:id="@+id/navi_buttons"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginBottom="8dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginTop="8dp"
-        android:layout_toRightOf="@id/action_navi"
-        android:background="@drawable/common_action_bar_divider"
-        android:visibility="invisible" />
+        android:layout_alignParentRight="true"
+        android:background="@drawable/vpi__tab_unselected_holo"
+        android:orientation="horizontal" >
 
-    <ImageView
+        <TextView
+            android:id="@+id/navi_to_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/vpi__tab_indicator"
+            android:gravity="center"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="@string/common_photo"
+            android:textColor="@color/major_text_color"
+            android:textSize="@dimen/letool_action_bar_text_size1" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/common_action_bar_divider" />
+
+        <TextView
+            android:id="@+id/navi_to_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/vpi__tab_indicator"
+            android:gravity="center"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="@string/common_gallery"
+            android:textColor="@color/major_text_color"
+            android:textSize="@dimen/letool_action_bar_text_size1" />
+    </LinearLayout>
+    <!--
+         <ImageView
         android:id="@+id/action_more"
         style="@style/MyWidget.ActionBarIconStyle"
         android:layout_alignParentRight="true"
         android:visibility="gone"
         android:src="@drawable/ic_action_more" />
+    -->
 
     <TextView
         android:id="@+id/navi_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_toLeftOf="@id/action_more"
-        android:layout_toRightOf="@id/sliding_menu_divider"
-        android:layout_alignWithParentIfMissing="true"
+        android:layout_marginLeft="4dp"
+        android:layout_toLeftOf="@id/navi_buttons"
+        android:layout_toRightOf="@id/action_navi"
         android:ellipsize="end"
         android:gravity="left|center_vertical"
         android:singleLine="true"

@@ -1,3 +1,4 @@
+
 package com.xjt.letool.fragment;
 
 import com.umeng.analytics.MobclickAgent;
@@ -57,6 +58,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -65,583 +67,580 @@ import android.widget.Toast;
  * @Comments:null
  */
 public class PhotoFragment extends Fragment implements
-		EyePosition.EyePositionListener, ContractSelectListener,OnActionModeListener,
-		LayoutListener, OnMenuItemClickListener {
+        EyePosition.EyePositionListener, ContractSelectListener, OnActionModeListener,
+        LayoutListener, OnMenuItemClickListener {
 
-	private static final String TAG = PhotoFragment.class.getSimpleName();
+    private static final String TAG = PhotoFragment.class.getSimpleName();
 
-	private static final int BIT_LOADING_RELOAD = 1;
-	private static final int BIT_LOADING_SYNC = 2;
-	private static final int MSG_LAYOUT_CONFIRMED = 0;
-	private static final int MSG_PICK_PHOTO = 1;
+    private static final int BIT_LOADING_RELOAD = 1;
+    private static final int BIT_LOADING_SYNC = 2;
+    private static final int MSG_LAYOUT_CONFIRMED = 0;
+    private static final int MSG_PICK_PHOTO = 1;
 
-	private static final int POP_UP_MENU_ITEM_SELECT = 0;
-	private static final int POP_UP_MENU_ITEM_CAMERA = 1;
+    private static final int POP_UP_MENU_ITEM_SELECT = 0;
+    private static final int POP_UP_MENU_ITEM_CAMERA = 1;
 
-	private LetoolContext mLetoolContext;
+    private LetoolContext mLetoolContext;
 
-	// photo data
-	private MediaPath mDataSetPath;
-	private MediaSet mDataSet;
-	private ThumbnailDataLoader mAlbumDataSetLoader;
-	private int mLoadingBits = 0;
-	private Future<Integer> mSyncTask = null; // synchronize data
-	private boolean mInitialSynced = false;
+    // photo data
+    private MediaPath mDataSetPath;
+    private MediaSet mDataSet;
+    private ThumbnailDataLoader mAlbumDataSetLoader;
+    private int mLoadingBits = 0;
+    private Future<Integer> mSyncTask = null; // synchronize data
+    private boolean mInitialSynced = false;
 
-	// views
-	private GLController mGLController;
-	private ImageView mMore;
-	private ViewConfigs.AlbumPage mConfig;
-	private ThumbnailView mThumbnailView;
-	private ThumbnailRenderer mRender;
-	private RelativePosition mOpenCenter = new RelativePosition();
-	private boolean mIsActive = false;
+    // views
+    private GLController mGLController;
+    private ViewGroup mNativeButtons;
+    private ViewConfigs.AlbumPage mConfig;
+    private ThumbnailView mThumbnailView;
+    private ThumbnailRenderer mRender;
+    private RelativePosition mOpenCenter = new RelativePosition();
+    private boolean mIsActive = false;
 
-	private String mAlbumTitle;
-	private boolean mIsPhotoAlbum = false;
-	private boolean mHasSDCard = false;
-	private boolean mHasDCIM = false;
-	private boolean mGetContent;
-	private SynchronizedHandler mHandler;
-	protected ContractSelector mSelector;
-	private EyePosition mEyePosition; // The eyes' position of the user, the
-										// origin is at the center of the device
-										// and the unit is in pixels.
-	private float mUserDistance; // in pixel
-	private float mX;
-	private float mY;
-	private float mZ;
+    private String mAlbumTitle;
+    private boolean mIsCameraSource = false;
+    private boolean mHasSDCard = false;
+    private boolean mHasDCIM = false;
+    private boolean mGetContent;
+    private SynchronizedHandler mHandler;
+    protected ContractSelector mSelector;
+    private EyePosition mEyePosition; // The eyes' position of the user, the
+                                      // origin is at the center of the device
+                                      // and the unit is in pixels.
+    private float mUserDistance; // in pixel
+    private float mX;
+    private float mY;
+    private float mZ;
 
-	private LayoutInflater mLayoutInflater;
+    private LayoutInflater mLayoutInflater;
 
-	private final GLBaseView mRootPane = new GLBaseView() {
+    private final GLBaseView mRootPane = new GLBaseView() {
 
-		private final float mMatrix[] = new float[16];
+        private final float mMatrix[] = new float[16];
 
-		@Override
-		protected void onLayout(boolean changed, int left, int top, int right,
-				int bottom) {
-			mEyePosition.resetPosition();
-			LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
-			int thumbnailViewLeft = left + mConfig.paddingLeft;
-			int thumbnailViewRight = right - left - mConfig.paddingRight;
-			int thumbnailViewTop = top + mConfig.paddingTop
-					+ actionBar.getHeight();
-			int thumbnailViewBottom = bottom - top - mConfig.paddingBottom;
-			mRender.setHighlightItemPath(null);
-			// Set the mThumbnailView as a reference point to the open animation
-			mOpenCenter.setReferencePosition(0, thumbnailViewTop);
-			mThumbnailView.layout(thumbnailViewLeft, thumbnailViewTop,
-					thumbnailViewRight, thumbnailViewBottom);
-			LetoolUtils.setViewPointMatrix(mMatrix, (right - left) / 2,
-					(bottom - top) / 2, -mUserDistance);
-		}
+        @Override
+        protected void onLayout(boolean changed, int left, int top, int right,
+                int bottom) {
+            mEyePosition.resetPosition();
+            LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
+            int thumbnailViewLeft = left + mConfig.paddingLeft;
+            int thumbnailViewRight = right - left - mConfig.paddingRight;
+            int thumbnailViewTop = top + mConfig.paddingTop
+                    + actionBar.getHeight();
+            int thumbnailViewBottom = bottom - top - mConfig.paddingBottom;
+            mRender.setHighlightItemPath(null);
+            // Set the mThumbnailView as a reference point to the open animation
+            mOpenCenter.setReferencePosition(0, thumbnailViewTop);
+            mThumbnailView.layout(thumbnailViewLeft, thumbnailViewTop,
+                    thumbnailViewRight, thumbnailViewBottom);
+            LetoolUtils.setViewPointMatrix(mMatrix, (right - left) / 2,
+                    (bottom - top) / 2, -mUserDistance);
+        }
 
-		@Override
-		protected void render(GLESCanvas canvas) {
-			canvas.save(GLESCanvas.SAVE_FLAG_MATRIX);
-			LetoolUtils.setViewPointMatrix(mMatrix, getWidth() / 2 + mX,
-					getHeight() / 2 + mY, mZ);
-			canvas.multiplyMatrix(mMatrix, 0);
-			super.render(canvas);
-			canvas.restore();
-		}
-	};
+        @Override
+        protected void render(GLESCanvas canvas) {
+            canvas.save(GLESCanvas.SAVE_FLAG_MATRIX);
+            LetoolUtils.setViewPointMatrix(mMatrix, getWidth() / 2 + mX,
+                    getHeight() / 2 + mY, mZ);
+            canvas.multiplyMatrix(mMatrix, 0);
+            super.render(canvas);
+            canvas.restore();
+        }
+    };
 
-	private class MetaDataLoadingListener implements DataLoadingListener {
+    private class MetaDataLoadingListener implements DataLoadingListener {
 
-		@Override
-		public void onLoadingStarted() {
-			setLoadingBit(BIT_LOADING_RELOAD);
-		}
+        @Override
+        public void onLoadingStarted() {
+            setLoadingBit(BIT_LOADING_RELOAD);
+        }
 
-		@Override
-		public void onLoadingFinished(boolean loadFailed) {
-			clearLoadingBit(BIT_LOADING_RELOAD);
-		}
-	}
+        @Override
+        public void onLoadingFinished(boolean loadFailed) {
+            clearLoadingBit(BIT_LOADING_RELOAD);
+        }
+    }
 
-	private void setLoadingBit(int loadTaskBit) {
-		mLoadingBits |= loadTaskBit;
-	}
+    private void setLoadingBit(int loadTaskBit) {
+        mLoadingBits |= loadTaskBit;
+    }
 
-	private void clearLoadingBit(int loadTaskBit) {
-		mLoadingBits &= ~loadTaskBit;
-		if (mLoadingBits == 0 && mIsActive) {
-			if (mAlbumDataSetLoader.size() == 0) {
-				Toast.makeText(getActivity(), R.string.empty_album,
-						Toast.LENGTH_LONG).show();
-				showEmptyView(R.string.common_error_nodcim);
-			}
-		}
-	}
+    private void clearLoadingBit(int loadTaskBit) {
+        mLoadingBits &= ~loadTaskBit;
+        if (mLoadingBits == 0 && mIsActive) {
+            if (mAlbumDataSetLoader.size() == 0) {
+                Toast.makeText(getActivity(), R.string.empty_album,
+                        Toast.LENGTH_LONG).show();
+                showEmptyView(R.string.common_error_nodcim);
+            }
+        }
+    }
 
-	@Override
-	public void onLayoutFinshed(int count) {
-		mHandler.obtainMessage(MSG_LAYOUT_CONFIRMED, count, 0).sendToTarget();
-	}
+    @Override
+    public void onLayoutFinshed(int count) {
+        mHandler.obtainMessage(MSG_LAYOUT_CONFIRMED, count, 0).sendToTarget();
+    }
 
-	private void onDown(int index) {
-		mRender.setPressedIndex(index);
-	}
+    private void onDown(int index) {
+        mRender.setPressedIndex(index);
+    }
 
-	private void onUp(boolean followedByLongPress) {
-		if (followedByLongPress) {
-			mRender.setPressedIndex(-1); // Avoid showing press-up animations
-											// for long-press.
-		} else {
-			mRender.setPressedUp();
-		}
-	}
+    private void onUp(boolean followedByLongPress) {
+        if (followedByLongPress) {
+            mRender.setPressedIndex(-1); // Avoid showing press-up animations
+                                         // for long-press.
+        } else {
+            mRender.setPressedUp();
+        }
+    }
 
-	private void onSingleTapUp(int thumbnailIndex) {
-		if (!mIsActive)
-			return;
+    private void onSingleTapUp(int thumbnailIndex) {
+        if (!mIsActive)
+            return;
 
-		if (mSelector.inSelectionMode()) {
-			MediaItem item = mAlbumDataSetLoader.get(thumbnailIndex);
-			if (item == null)
-				return; // Item not ready yet, ignore the click
-			mSelector.toggle(item.getPath());
-			mThumbnailView.invalidate();
-		} else { // Render transition in pressed state
-			mRender.setPressedIndex(thumbnailIndex);
-			mRender.setPressedUp();
-			mHandler.sendMessageDelayed(
-					mHandler.obtainMessage(MSG_PICK_PHOTO, thumbnailIndex, 0),
-					FadeTexture.DURATION);
-		}
-	}
+        if (mSelector.inSelectionMode()) {
+            MediaItem item = mAlbumDataSetLoader.get(thumbnailIndex);
+            if (item == null)
+                return; // Item not ready yet, ignore the click
+            mSelector.toggle(item.getPath());
+            mThumbnailView.invalidate();
+        } else { // Render transition in pressed state
+            mRender.setPressedIndex(thumbnailIndex);
+            mRender.setPressedUp();
+            mHandler.sendMessageDelayed(
+                    mHandler.obtainMessage(MSG_PICK_PHOTO, thumbnailIndex, 0),
+                    FadeTexture.DURATION);
+        }
+    }
 
-	public void onLongTap(int thumbnailIndex) {
-		MobclickAgent.onEvent(mLetoolContext.getAppContext(),
-				StatConstants.EVENT_KEY_PHOTO_LONG_PRESSED);
-		if (mGetContent)
-			return;
-		MediaItem item = mAlbumDataSetLoader.get(thumbnailIndex);
-		if (item == null)
-			return;
-		mSelector.toggle(item.getPath());
-		mThumbnailView.invalidate();
-	}
+    public void onLongTap(int thumbnailIndex) {
+        MobclickAgent.onEvent(mLetoolContext.getAppContext(),
+                StatConstants.EVENT_KEY_PHOTO_LONG_PRESSED);
+        if (mGetContent)
+            return;
+        MediaItem item = mAlbumDataSetLoader.get(thumbnailIndex);
+        if (item == null)
+            return;
+        mSelector.toggle(item.getPath());
+        mThumbnailView.invalidate();
+    }
 
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		LLog.i(TAG, "onAttach");
-	}
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        LLog.i(TAG, "onAttach");
+    }
 
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		LLog.i(TAG, "onCreate");
-		mLetoolContext = (LetoolContext) getActivity();
-		mGLController = mLetoolContext.getGLController();
-		mLayoutInflater = getActivity().getLayoutInflater();
-		mHasSDCard = StorageUtils.externalStorageAvailable();
-		initializeData();
-		initializeViews();
-		mHandler = new SynchronizedHandler(mGLController) {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        LLog.i(TAG, "onCreate");
+        mLetoolContext = (LetoolContext) getActivity();
+        mGLController = mLetoolContext.getGLController();
+        mLayoutInflater = getActivity().getLayoutInflater();
+        mHasSDCard = StorageUtils.externalStorageAvailable();
+        initializeData();
+        initializeViews();
+        mHandler = new SynchronizedHandler(mGLController) {
 
-			@Override
-			public void handleMessage(Message message) {
-				switch (message.what) {
-				case MSG_LAYOUT_CONFIRMED: {
-					// mLoadingInsie.setVisibility(View.GONE);
-					break;
-				}
-				case MSG_PICK_PHOTO: {
-					pickPhoto(message.arg1);
-					break;
-				}
-				default:
-					throw new AssertionError(message.what);
-				}
-			}
-		};
-		mEyePosition = new EyePosition(mLetoolContext.getAppContext(), this);
-		if (!mHasSDCard) {
-			showEmptyView(R.string.common_error_nosdcard);
-			return ;
-		} else if (mIsPhotoAlbum && !mHasDCIM) {
-			showEmptyView(R.string.common_error_nodcim);
-			return ;
-		}
-	}
+            @Override
+            public void handleMessage(Message message) {
+                switch (message.what) {
+                    case MSG_LAYOUT_CONFIRMED: {
+                        // mLoadingInsie.setVisibility(View.GONE);
+                        break;
+                    }
+                    case MSG_PICK_PHOTO: {
+                        pickPhoto(message.arg1);
+                        break;
+                    }
+                    default:
+                        throw new AssertionError(message.what);
+                }
+            }
+        };
+        mEyePosition = new EyePosition(mLetoolContext.getAppContext(), this);
+        if (!mHasSDCard) {
+            showEmptyView(R.string.common_error_nosdcard);
+            return;
+        } else if (mIsCameraSource && !mHasDCIM) {
+            showEmptyView(R.string.common_error_nodcim);
+            return;
+        }
+    }
 
-	private void initializeData() {
-		Bundle data = getArguments();
-		mIsPhotoAlbum = data.getBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM);
-		if (mIsPhotoAlbum) {
-			if (MediaSetUtils.MY_ALBUM_BUCKETS.length > 0) {
-				mAlbumTitle = getString(R.string.common_photo);
-				mDataSetPath = new MediaPath(
-						data.getString(ThumbnailActivity.KEY_MEDIA_PATH),
-						MediaSetUtils.MY_ALBUM_BUCKETS[0]);
-				mDataSet = new LocalAlbum(mDataSetPath,
-						(LetoolApp) getActivity().getApplication(),
-						MediaSetUtils.MY_ALBUM_BUCKETS, true,
-						getString(R.string.common_photo));
-				mHasDCIM = true;
-			} else {
-				mHasDCIM = false;
-				return;
-			}
-		} else {
-			mAlbumTitle = data.getString(ThumbnailActivity.KEY_ALBUM_TITLE);
-			mDataSetPath = new MediaPath(
-					data.getString(ThumbnailActivity.KEY_MEDIA_PATH),
-					data.getInt(ThumbnailActivity.KEY_ALBUM_ID));
-			mDataSet = mLetoolContext.getDataManager()
-					.getMediaSet(mDataSetPath);
-			if (mDataSet == null) {
-				Utils.fail("MediaSet is null. Path = %s", mDataSetPath);
-			}
-		}
-		mAlbumDataSetLoader = new ThumbnailDataLoader(mLetoolContext, mDataSet);
-		mAlbumDataSetLoader.setLoadingListener(new MetaDataLoadingListener());
-	}
+    private void initializeData() {
+        Bundle data = getArguments();
+        mIsCameraSource = data.getBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM);
+        if (mIsCameraSource) {
+            if (MediaSetUtils.MY_ALBUM_BUCKETS.length > 0) {
+                mAlbumTitle = getString(R.string.common_photo);
+                mDataSetPath = new MediaPath(
+                        data.getString(ThumbnailActivity.KEY_MEDIA_PATH),
+                        MediaSetUtils.MY_ALBUM_BUCKETS[0]);
+                mDataSet = new LocalAlbum(mDataSetPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.MY_ALBUM_BUCKETS, true,
+                        getString(R.string.common_photo));
+                mHasDCIM = true;
+            } else {
+                mHasDCIM = false;
+                return;
+            }
+        } else {
+            mAlbumTitle = data.getString(ThumbnailActivity.KEY_ALBUM_TITLE);
+            mDataSetPath = new MediaPath(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), data.getInt(ThumbnailActivity.KEY_ALBUM_ID));
+            mDataSet = mLetoolContext.getDataManager().getMediaSet(mDataSetPath);
+            if (mDataSet == null) {
+                Utils.fail("MediaSet is null. Path = %s", mDataSetPath);
+            }
+        }
+        mAlbumDataSetLoader = new ThumbnailDataLoader(mLetoolContext, mDataSet);
+        mAlbumDataSetLoader.setLoadingListener(new MetaDataLoadingListener());
+    }
 
-	private void initializeViews() {
-		mSelector = new ContractSelector(mLetoolContext, false);
-		mSelector.setSelectionListener(this);
-		mConfig = ViewConfigs.AlbumPage.get(mLetoolContext.getAppContext());
-		ThumbnailLayout layout;
-		layout = new ThumbnailContractLayout(mConfig.albumSpec);
-		mThumbnailView = new ThumbnailView(mLetoolContext, layout);
-		mThumbnailView.setBackgroundColor(LetoolUtils
-				.intColorToFloatARGBArray(getResources().getColor(
-						R.color.default_background_thumbnail)));
-		mThumbnailView.setListener(new ThumbnailView.SimpleListener() {
+    private void initializeViews() {
+        mSelector = new ContractSelector(mLetoolContext, false);
+        mSelector.setSelectionListener(this);
+        mConfig = ViewConfigs.AlbumPage.get(mLetoolContext.getAppContext());
+        ThumbnailLayout layout;
+        layout = new ThumbnailContractLayout(mConfig.albumSpec);
+        mThumbnailView = new ThumbnailView(mLetoolContext, layout);
+        mThumbnailView.setBackgroundColor(LetoolUtils
+                .intColorToFloatARGBArray(getResources().getColor(
+                        R.color.default_background_thumbnail)));
+        mThumbnailView.setListener(new ThumbnailView.SimpleListener() {
 
-			@Override
-			public void onDown(int index) {
-				PhotoFragment.this.onDown(index);
-			}
+            @Override
+            public void onDown(int index) {
+                PhotoFragment.this.onDown(index);
+            }
 
-			@Override
-			public void onUp(boolean followedByLongPress) {
-				PhotoFragment.this.onUp(followedByLongPress);
-			}
+            @Override
+            public void onUp(boolean followedByLongPress) {
+                PhotoFragment.this.onUp(followedByLongPress);
+            }
 
-			@Override
-			public void onSingleTapUp(int thumbnailIndex) {
-				PhotoFragment.this.onSingleTapUp(thumbnailIndex);
-			}
+            @Override
+            public void onSingleTapUp(int thumbnailIndex) {
+                PhotoFragment.this.onSingleTapUp(thumbnailIndex);
+            }
 
-			@Override
-			public void onLongTap(int thumbnailIndex) {
-				PhotoFragment.this.onLongTap(thumbnailIndex);
-			}
-		});
-		mRender = new ThumbnailRenderer(mLetoolContext, mThumbnailView, mSelector);
-		layout.setRenderer(mRender);
-		layout.setLayoutListener(this);
-		mThumbnailView.setThumbnailRenderer(mRender);
-		mRender.setModel(mAlbumDataSetLoader);
-		mRootPane.addComponent(mThumbnailView);
-	}
+            @Override
+            public void onLongTap(int thumbnailIndex) {
+                PhotoFragment.this.onLongTap(thumbnailIndex);
+            }
+        });
+        mRender = new ThumbnailRenderer(mLetoolContext, mThumbnailView, mSelector);
+        layout.setRenderer(mRender);
+        layout.setLayoutListener(this);
+        mThumbnailView.setThumbnailRenderer(mRender);
+        mRender.setModel(mAlbumDataSetLoader);
+        mRootPane.addComponent(mThumbnailView);
+    }
 
-	private void initBrowseActionBar() {
-		LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
-		actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_BROWSE, this);
+    private void initBrowseActionBar() {
+        LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
+        actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_BROWSE, this);
+        actionBar.setTitleText(mAlbumTitle);
+        mNativeButtons = (ViewGroup) actionBar.getActionPanel().findViewById(R.id.navi_buttons);
+        mNativeButtons.setVisibility(View.VISIBLE);
+        if (mIsCameraSource) {
+            actionBar.setTitleIcon(R.drawable.ic_drawer);
+            TextView naviToPhoto = (TextView) mNativeButtons.findViewById(R.id.navi_to_photo);
+            naviToPhoto.setEnabled(false);
+            TextView naviToGallery = (TextView) mNativeButtons.findViewById(R.id.navi_to_gallery);
+            naviToGallery.setEnabled(true);
+            naviToGallery.setOnClickListener(this);
 
-		actionBar.setTitleText(mAlbumTitle);
-		mMore = (ImageView) actionBar.getActionPanel().findViewById(
-				R.id.action_more);
-		mMore.setVisibility(View.VISIBLE);
-		if (mIsPhotoAlbum) {
-			actionBar.setTitleIcon(R.drawable.ic_drawer);
-			mMore.setImageResource(R.drawable.ic_action_more);
-		} else {
-			actionBar.setTitleIcon(R.drawable.ic_action_previous_item);
-			mMore.setImageResource(R.drawable.ic_action_accept);
+        } else {
+            actionBar.setTitleIcon(R.drawable.ic_action_previous_item);
+            //mMore.setImageResource(R.drawable.ic_action_accept);
 
-		}
-	}
+        }
+    }
 
-	private void initSelectionActionBar() {
-		LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
-		actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_SELECTION, this);
-		actionBar.setContractSelectionManager(mSelector);
-		String format = getResources().getQuantityString(
-				R.plurals.number_of_items_selected, 0);
-		actionBar.setTitleText(String.format(format, 0));
-	}
+    private void initSelectionActionBar() {
+        LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
+        actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_SELECTION, this);
+        actionBar.setContractSelectionManager(mSelector);
+        String format = getResources().getQuantityString(
+                R.plurals.number_of_items_selected, 0);
+        actionBar.setTitleText(String.format(format, 0));
+    }
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-		LLog.i(TAG, "onCreateView" + System.currentTimeMillis());
-		initBrowseActionBar();
-		return null;
-	}
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        LLog.i(TAG, "onCreateView" + System.currentTimeMillis());
+        initBrowseActionBar();
+        return null;
+    }
 
-	private void showEmptyView(int resId) {
-		View emptyView = mLayoutInflater.inflate(R.layout.action_bar, null);
-		mLetoolContext.setMainView(emptyView);
-	}
+    private void showEmptyView(int resId) {
+        View emptyView = mLayoutInflater.inflate(R.layout.action_bar, null);
+        mLetoolContext.setMainView(emptyView);
+    }
 
-	@Override
-	public void onStart() {
-		super.onStart();
-		LLog.i(TAG, "onStart");
-	}
+    @Override
+    public void onStart() {
+        super.onStart();
+        LLog.i(TAG, "onStart");
+    }
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		mGLController.onResume();
-		if (!mHasSDCard || mIsPhotoAlbum && !mHasDCIM) {
-			return;
-		}
-		LLog.i(TAG, "onResume" + System.currentTimeMillis());
-		mGLController.lockRenderThread();
-		try {
-			mIsActive = true;
-			mGLController.setContentPane(mRootPane);
-			// Set the reload bit here to prevent it exit this page in
-			// clearLoadingBit().
-			setLoadingBit(BIT_LOADING_RELOAD);
-			mAlbumDataSetLoader.resume();
-			mRender.resume();
-			mRender.setPressedIndex(-1);
-			mEyePosition.resume();
-			if (!mInitialSynced) {
-				setLoadingBit(BIT_LOADING_SYNC);
-				// mSyncTask = mDataSet.requestSync(this);
-			}
-		} finally {
-			mGLController.unlockRenderThread();
-		}
-	}
+    @Override
+    public void onResume() {
+        super.onResume();
+        mGLController.onResume();
+        if (!mHasSDCard || mIsCameraSource && !mHasDCIM) {
+            return;
+        }
+        LLog.i(TAG, "onResume" + System.currentTimeMillis());
+        mGLController.lockRenderThread();
+        try {
+            mIsActive = true;
+            mGLController.setContentPane(mRootPane);
+            // Set the reload bit here to prevent it exit this page in
+            // clearLoadingBit().
+            setLoadingBit(BIT_LOADING_RELOAD);
+            mAlbumDataSetLoader.resume();
+            mRender.resume();
+            mRender.setPressedIndex(-1);
+            mEyePosition.resume();
+            if (!mInitialSynced) {
+                setLoadingBit(BIT_LOADING_SYNC);
+                // mSyncTask = mDataSet.requestSync(this);
+            }
+        } finally {
+            mGLController.unlockRenderThread();
+        }
+    }
 
-	@Override
-	public void onPause() {
-		super.onPause();
-		LLog.i(TAG, "onPause");
-		mGLController.onPause();
-		if (!mHasSDCard || mIsPhotoAlbum && !mHasDCIM) {
-			return;
-		}
-		mGLController.lockRenderThread();
-		try {
-			mIsActive = false;
-			mRender.setThumbnailFilter(null);
-			mAlbumDataSetLoader.pause();
-			mRender.pause();
-			DetailsHelper.pause();
-			mEyePosition.resume();
-			if (mSyncTask != null) {
-				mSyncTask.cancel();
-				mSyncTask = null;
-				clearLoadingBit(BIT_LOADING_SYNC);
-			}
-		} finally {
-			mGLController.unlockRenderThread();
-		}
-	}
+    @Override
+    public void onPause() {
+        super.onPause();
+        LLog.i(TAG, "onPause");
+        mGLController.onPause();
+        if (!mHasSDCard || mIsCameraSource && !mHasDCIM) {
+            return;
+        }
+        mGLController.lockRenderThread();
+        try {
+            mIsActive = false;
+            mRender.setThumbnailFilter(null);
+            mAlbumDataSetLoader.pause();
+            mRender.pause();
+            DetailsHelper.pause();
+            mEyePosition.resume();
+            if (mSyncTask != null) {
+                mSyncTask.cancel();
+                mSyncTask = null;
+                clearLoadingBit(BIT_LOADING_SYNC);
+            }
+        } finally {
+            mGLController.unlockRenderThread();
+        }
+    }
 
-	@Override
-	public void onStop() {
-		super.onStop();
-		LLog.i(TAG, "onStop");
-	}
+    @Override
+    public void onStop() {
+        super.onStop();
+        LLog.i(TAG, "onStop");
+    }
 
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		LLog.i(TAG, "onDestroyView");
-	}
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        LLog.i(TAG, "onDestroyView");
+    }
 
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		LLog.i(TAG, "onDetach");
-	}
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        LLog.i(TAG, "onDetach");
+    }
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		if (mDataSet != null) {
-			mDataSet.closeCursor();
-		}
-		LLog.i(TAG, "onDestroy");
-	}
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mDataSet != null) {
+            mDataSet.closeCursor();
+        }
+        LLog.i(TAG, "onDestroy");
+    }
 
-	@Override
-	public void onEyePositionChanged(float x, float y, float z) {
-		mRootPane.lockRendering();
-		mX = x;
-		mY = y;
-		mZ = z;
-		mRootPane.unlockRendering();
-		mRootPane.invalidate();
-	}
+    @Override
+    public void onEyePositionChanged(float x, float y, float z) {
+        mRootPane.lockRendering();
+        mX = x;
+        mY = y;
+        mZ = z;
+        mRootPane.unlockRendering();
+        mRootPane.invalidate();
+    }
 
-	public void onMenuClicked() {
-		if (!mIsPhotoAlbum)
-			return;
-		MobclickAgent.onEvent(mLetoolContext.getAppContext(),
-				StatConstants.EVENT_KEY_SLIDE_MENU_MENU);
-		// getLetoolSlidingMenu().toggle();
-	}
+    public void onMenuClicked() {
+        if (!mIsCameraSource)
+            return;
+        MobclickAgent.onEvent(mLetoolContext.getAppContext(),
+                StatConstants.EVENT_KEY_SLIDE_MENU_MENU);
+        // getLetoolSlidingMenu().toggle();
+    }
 
-	@Override
-	public void onClick(View v) {
-		if (v.getId() == R.id.action_navi) {
-			if (!mIsActive && !(mIsPhotoAlbum && !mHasDCIM)) {
-				return;
-			}
-			if (!mIsPhotoAlbum) {
-				getActivity().finish();
-			} else {
-				// getLetoolSlidingMenu().toggle();
-			}
-			return;
-		}
-		if (!mIsActive) {
-			return;
-		}
-		if (v.getId() == R.id.operation_delete) {
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.action_navi) {
+            if (!mIsActive && !(mIsCameraSource && !mHasDCIM)) {
+                return;
+            }
+            if (mIsCameraSource) {
+                getActivity().finish();
+            } else {
+                // getLetoolSlidingMenu().toggle();
+            }
+            return;
+        }
+        if (!mIsActive) {
+            return;
+        }
+        if (v.getId() == R.id.operation_delete) {
 
-			MobclickAgent.onEvent(mLetoolContext.getAppContext(),
-					StatConstants.EVENT_KEY_PHOTO_DELETE);
-			int count = mSelector.getSelectedCount();
-			if (count <= 0) {
-				Toast t = Toast.makeText(getActivity(),
-						R.string.common_selection_tip, Toast.LENGTH_SHORT);
-				t.setGravity(Gravity.CENTER, 0, 0);
-				t.show();
-				return;
-			}
-			BatchDeleteMediaListener cdl = new BatchDeleteMediaListener(
-					getActivity(), mLetoolContext.getDataManager(),
-					new DeleteMediaProgressListener() {
+            MobclickAgent.onEvent(mLetoolContext.getAppContext(),
+                    StatConstants.EVENT_KEY_PHOTO_DELETE);
+            int count = mSelector.getSelectedCount();
+            if (count <= 0) {
+                Toast t = Toast.makeText(getActivity(),
+                        R.string.common_selection_tip, Toast.LENGTH_SHORT);
+                t.setGravity(Gravity.CENTER, 0, 0);
+                t.show();
+                return;
+            }
+            BatchDeleteMediaListener cdl = new BatchDeleteMediaListener(
+                    getActivity(), mLetoolContext.getDataManager(),
+                    new DeleteMediaProgressListener() {
 
-						@Override
-						public void onConfirmDialogDismissed(boolean confirmed) {
-							if (confirmed) {
-								mSelector.leaveSelectionMode();
-							}
-						}
+                        @Override
+                        public void onConfirmDialogDismissed(boolean confirmed) {
+                            if (confirmed) {
+                                mSelector.leaveSelectionMode();
+                            }
+                        }
 
-						@Override
-						public ArrayList<MediaPath> onGetDeleteItem() {
-							return mSelector.getSelected(false);
-						}
+                        @Override
+                        public ArrayList<MediaPath> onGetDeleteItem() {
+                            return mSelector.getSelected(false);
+                        }
 
-					});
-			final LetoolDialog dlg = new LetoolDialog(getActivity());
-			dlg.setTitle(R.string.common_recommend);
-			dlg.setOkBtn(R.string.common_ok, cdl);
-			dlg.setCancelBtn(R.string.common_cancel, cdl);
-			dlg.setDividerVisible(true);
-			dlg.setMessage(R.string.common_delete_tip);
-			dlg.setDividerVisible(true);
-			dlg.show();
+                    });
+            final LetoolDialog dlg = new LetoolDialog(getActivity());
+            dlg.setTitle(R.string.common_recommend);
+            dlg.setOkBtn(R.string.common_ok, cdl);
+            dlg.setCancelBtn(R.string.common_cancel, cdl);
+            dlg.setDividerVisible(true);
+            dlg.setMessage(R.string.common_delete_tip);
+            dlg.setDividerVisible(true);
+            dlg.show();
 
-		} else if (v.getId() == R.id.action_more) {
-			if (mIsPhotoAlbum) {
-				MobclickAgent.onEvent(mLetoolContext.getAppContext(),
-						StatConstants.EVENT_KEY_POPUP_MENU);
-				showPopupMenu();
-			} else {
-				if (mSelector != null)
-					mSelector.enterSelectionMode();
-			}
-		} else if (v.getId() == R.id.enter_selection_indicate) {
-			MobclickAgent.onEvent(mLetoolContext.getAppContext(),
-					StatConstants.EVENT_KEY_SELECT_OK);
-			mSelector.leaveSelectionMode();
-		}
-	}
+        }
+        else if (v.getId() == R.id.navi_to_gallery) {
+            GalleryFragment f = new GalleryFragment();
+            Bundle data = new Bundle();
+            data.putString(ThumbnailActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
+            f.setArguments(data);
+            mLetoolContext.pushContentFragment(f, false);
+        }
+        else if (v.getId() == R.id.enter_selection_indicate) {
+            MobclickAgent.onEvent(mLetoolContext.getAppContext(),
+                    StatConstants.EVENT_KEY_SELECT_OK);
+            mSelector.leaveSelectionMode();
+        }
+    }
 
-	public void showPopupMenu() {
-		PopupMenu popup = new PopupMenu(this.getActivity());
-		popup.setOnItemSelectedListener(this);
-		popup.add(POP_UP_MENU_ITEM_SELECT, R.drawable.ic_action_accept,
-				R.string.popup_menu_select_mode);
-		popup.add(POP_UP_MENU_ITEM_CAMERA, R.drawable.ic_action_camera,
-				R.string.popup_menu_take_picture);
-		popup.show(mMore);
+    public void showPopupMenu() {
+        PopupMenu popup = new PopupMenu(this.getActivity());
+        popup.setOnItemSelectedListener(this);
+        popup.add(POP_UP_MENU_ITEM_SELECT, R.drawable.ic_action_accept,
+                R.string.popup_menu_select_mode);
+        popup.add(POP_UP_MENU_ITEM_CAMERA, R.drawable.ic_action_camera,
+                R.string.popup_menu_take_picture);
+        //popup.show(mMore);
 
-	}
+    }
 
-	@Override
-	public void onSelectionModeChange(int mode) {
-		switch (mode) {
-		case ContractSelector.ENTER_SELECTION_MODE: {
-			initSelectionActionBar();
-			mRootPane.invalidate();
-			break;
-		}
-		case ContractSelector.LEAVE_SELECTION_MODE: {
-			initBrowseActionBar();
-			mRootPane.invalidate();
-			break;
-		}
-		case ContractSelector.SELECT_ALL_MODE: {
-			mRootPane.invalidate();
-			break;
-		}
-		}
-	}
+    @Override
+    public void onSelectionModeChange(int mode) {
+        switch (mode) {
+            case ContractSelector.ENTER_SELECTION_MODE: {
+                initSelectionActionBar();
+                mRootPane.invalidate();
+                break;
+            }
+            case ContractSelector.LEAVE_SELECTION_MODE: {
+                initBrowseActionBar();
+                mRootPane.invalidate();
+                break;
+            }
+            case ContractSelector.SELECT_ALL_MODE: {
+                mRootPane.invalidate();
+                break;
+            }
+        }
+    }
 
-	@Override
-	public void onSelectionChange(MediaPath path, boolean selected) {
-		int count = mSelector.getSelectedCount();
-		String format = getResources().getQuantityString(
-				R.plurals.number_of_items_selected, count);
-		mLetoolContext.getLetoolTopBar().setTitleText(
-				String.format(format, count));
-	}
+    @Override
+    public void onSelectionChange(MediaPath path, boolean selected) {
+        int count = mSelector.getSelectedCount();
+        String format = getResources().getQuantityString(
+                R.plurals.number_of_items_selected, count);
+        mLetoolContext.getLetoolTopBar().setTitleText(
+                String.format(format, count));
+    }
 
-	private void pickPhoto(int index) {
-		Bundle data = new Bundle();
-		if (mIsPhotoAlbum) {
-			data.putString(
-					ThumbnailActivity.KEY_MEDIA_PATH,
-					mLetoolContext.getDataManager().getTopSetPath(
-							DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-			data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
-		} else {
-			data.putInt(ThumbnailActivity.KEY_ALBUM_ID, mDataSet.getPath()
-					.getIdentity());
-			data.putString(
-					ThumbnailActivity.KEY_MEDIA_PATH,
-					mLetoolContext.getDataManager().getTopSetPath(
-							DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-			data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, false);
-			data.putString(ThumbnailActivity.KEY_ALBUM_TITLE,
-					mDataSet.getName());
-		}
-		Fragment fragment = new FullImageFragment();
-		data.putInt(FullImageFragment.KEY_INDEX_HINT, index);
-		fragment.setArguments(data);
-		mLetoolContext.pushContentFragment(fragment);
-	}
+    private void pickPhoto(int index) {
+        Bundle data = new Bundle();
+        if (mIsCameraSource) {
+            data.putString(
+                    ThumbnailActivity.KEY_MEDIA_PATH,
+                    mLetoolContext.getDataManager().getTopSetPath(
+                            DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+            data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
+        } else {
+            data.putInt(ThumbnailActivity.KEY_ALBUM_ID, mDataSet.getPath()
+                    .getIdentity());
+            data.putString(
+                    ThumbnailActivity.KEY_MEDIA_PATH,
+                    mLetoolContext.getDataManager().getTopSetPath(
+                            DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+            data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, false);
+            data.putString(ThumbnailActivity.KEY_ALBUM_TITLE,
+                    mDataSet.getName());
+        }
+        Fragment fragment = new FullImageFragment();
+        data.putInt(FullImageFragment.KEY_INDEX_HINT, index);
+        fragment.setArguments(data);
+        mLetoolContext.pushContentFragment(fragment, true);
+    }
 
-	// -----------------------------------------------details-----------------------------------------------------------------------
+    // -----------------------------------------------details-----------------------------------------------------------------------
 
-	@Override
-	public void onMenuItemClick(MenuItem item) {
-		switch (item.getItemId()) {
-		case POP_UP_MENU_ITEM_SELECT:
-			MobclickAgent.onEvent(mLetoolContext.getAppContext(),
-					StatConstants.EVENT_KEY_MENU_SELECT);
-			if (mSelector != null) {
-				mSelector.enterSelectionMode();
-			}
-			break;
-		case POP_UP_MENU_ITEM_CAMERA:
-			MobclickAgent.onEvent(mLetoolContext.getAppContext(),
-					StatConstants.EVENT_KEY_MENU_CAMERA);
-			Intent it = new Intent();
-			it.setAction(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
-			startActivity(it);
-			break;
+    @Override
+    public void onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case POP_UP_MENU_ITEM_SELECT:
+                MobclickAgent.onEvent(mLetoolContext.getAppContext(),
+                        StatConstants.EVENT_KEY_MENU_SELECT);
+                if (mSelector != null) {
+                    mSelector.enterSelectionMode();
+                }
+                break;
+            case POP_UP_MENU_ITEM_CAMERA:
+                MobclickAgent.onEvent(mLetoolContext.getAppContext(),
+                        StatConstants.EVENT_KEY_MENU_CAMERA);
+                Intent it = new Intent();
+                it.setAction(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+                startActivity(it);
+                break;
 
-		}
-	}
+        }
+    }
 
 }

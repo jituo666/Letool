@@ -48,7 +48,6 @@ public class LetoolTopBar {
             R.id.operation_delete,
             R.id.action_navi,
             R.id.action_navi,
-            R.id.action_more,
             R.id.enter_selection_indicate
     };
 

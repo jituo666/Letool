@@ -125,11 +125,11 @@
     <integer name="albumset_rows_port">5</integer>
 
     <dimen name="albumset_thumbnail_label_height">36dp</dimen>
-    <dimen name="albumset_thumbnail_gap">4dp</dimen>
-    <dimen name="albumset_padding_left">4dp</dimen>
-    <dimen name="albumset_padding_top">4dp</dimen>
-    <dimen name="albumset_padding_bottom">4dp</dimen>
-    <dimen name="albumset_padding_right">4dp</dimen>
+    <dimen name="albumset_thumbnail_gap">2dp</dimen>
+    <dimen name="albumset_padding_left">0dp</dimen>
+    <dimen name="albumset_padding_top">0dp</dimen>
+    <dimen name="albumset_padding_bottom">0dp</dimen>
+    <dimen name="albumset_padding_right">0dp</dimen>
     <dimen name="albumset_label_background_height">36dp</dimen>
     <dimen name="albumset_left_margin">2dp</dimen>
     <dimen name="albumset_title_right_margin">20dp</dimen>
@@ -144,11 +144,11 @@
     <integer name="album_rows_land">3</integer>
     <integer name="album_rows_port">5</integer>
 
-    <dimen name="album_thumbnail_gap">4dp</dimen>
-    <dimen name="album_padding_left">4dp</dimen>
-    <dimen name="album_padding_top">4dp</dimen>
-    <dimen name="album_padding_bottom">4dp</dimen>
-    <dimen name="album_padding_right">4dp</dimen>
+    <dimen name="album_thumbnail_gap">2dp</dimen>
+    <dimen name="album_padding_left">0dp</dimen>
+    <dimen name="album_padding_top">0dp</dimen>
+    <dimen name="album_padding_bottom">0dp</dimen>
+    <dimen name="album_padding_right">0dp</dimen>
     <dimen name="album_label_height">40dp</dimen>
     <dimen name="album_label_width">320dp</dimen>
     <dimen name="album_count_font_size">28sp</dimen>

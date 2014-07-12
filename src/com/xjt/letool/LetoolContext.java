@@ -45,7 +45,7 @@ public interface LetoolContext {
 	public void setMainView(GLBaseView view);
 	public void setMainView(View view);
 
-	public void pushContentFragment(Fragment newFragment);
+	public void pushContentFragment(Fragment newFragment, boolean backToStack);
 
 	public void popContentFragment();
 

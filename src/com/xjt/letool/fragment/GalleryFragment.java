@@ -48,6 +48,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -55,6 +56,7 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -75,9 +77,10 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     private static final int BIT_LOADING_SYNC = 2;
     private static final int REQUEST_DO_ANIMATION = 1;
 
+    private ViewGroup mNativeButtons;
     private LetoolContext mLetoolContext;
     private GLController mGLController;
-    private CommonLoadingPanel mLoadingInsie;
+    //    private CommonLoadingPanel mLoadingInsie;
     private ThumbnailView mThumbnailView;
     private boolean mIsActive = false;
     private ViewConfigs.AlbumSetPage mConfig;
@@ -237,8 +240,33 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LLog.i(TAG, "onCreate");
-		mLetoolContext = (LetoolContext) getActivity();
-		mGLController = mLetoolContext.getGLController();
+        mLetoolContext = (LetoolContext) getActivity();
+        mGLController = mLetoolContext.getGLController();
+
+        //mLoadingInsie = (CommonLoadingPanel) rootView.findViewById(R.id.loading);
+        //        mLoadingInsie.setVisibility(View.VISIBLE);
+        mHandler = new SynchronizedHandler(mGLController) {
+
+            @Override
+            public void handleMessage(Message message) {
+                switch (message.what) {
+                    case MSG_LAYOUT_CONFIRMED: {
+                        //                        mLoadingInsie.setVisibility(View.GONE);
+                        break;
+                    }
+                    case MSG_PICK_ALBUM: {
+                        pickAlbum(message.arg1);
+                        break;
+                    }
+                    default:
+                        throw new AssertionError(message.what);
+                }
+            }
+        };
+        initializeViews();
+        initializeData();
+        mEyePosition = new EyePosition(mLetoolContext.getAppContext(), this);
+        //mThumbnailView.startRisingAnimation();
     }
 
     private void initializeViews() {
@@ -280,8 +308,9 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     }
 
     private void initializeData() {
-        mMediaSet = new LocalAlbumSet(new MediaPath(mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY), -1000), (LetoolApp) getActivity()
-                .getApplication());//getDataManager().getMediaSet(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), -1000);
+        mMediaSet = new LocalAlbumSet(new MediaPath(mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY), -1000),
+                (LetoolApp) getActivity()
+                        .getApplication());//getDataManager().getMediaSet(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), -1000);
         mSelector.setSourceMediaSet(mMediaSet);
         mThumbnailSetAdapter = new ThumbnailSetDataLoader(mLetoolContext, mMediaSet);
         mThumbnailSetAdapter.setLoadingListener(new MyLoadingListener());
@@ -293,9 +322,15 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_BROWSE, this);
         actionBar.setTitleIcon(R.drawable.ic_drawer);
         actionBar.setTitleText(R.string.common_gallery);
-        ImageView v = (ImageView) actionBar.getActionPanel().findViewById(R.id.action_more);
-        v.setImageResource(R.drawable.ic_action_accept);
-        v.setVisibility(View.GONE);
+        mNativeButtons = (ViewGroup) actionBar.getActionPanel().findViewById(R.id.navi_buttons);
+        mNativeButtons.setVisibility(View.VISIBLE);
+
+        TextView naviToGallery = (TextView) mNativeButtons.findViewById(R.id.navi_to_gallery);
+        naviToGallery.setEnabled(false);
+        TextView naviToPhoto = (TextView) mNativeButtons.findViewById(R.id.navi_to_photo);
+        naviToPhoto.setEnabled(true);
+        naviToPhoto.setOnClickListener(this);
+
     }
 
     private void initSelectionActionBar() {
@@ -324,33 +359,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LLog.i(TAG, "onCreateView");
-        View rootView = inflater.inflate(R.layout.gl_root_view, container, false);
-        mGLController = (GLRootView) rootView.findViewById(R.id.gl_root_view);
-        //mLoadingInsie = (CommonLoadingPanel) rootView.findViewById(R.id.loading);
-        mLoadingInsie.setVisibility(View.VISIBLE);
-        mHandler = new SynchronizedHandler(mGLController) {
-
-            @Override
-            public void handleMessage(Message message) {
-                switch (message.what) {
-                    case MSG_LAYOUT_CONFIRMED: {
-                        mLoadingInsie.setVisibility(View.GONE);
-                        break;
-                    }
-                    case MSG_PICK_ALBUM: {
-                        pickAlbum(message.arg1);
-                        break;
-                    }
-                    default:
-                        throw new AssertionError(message.what);
-                }
-            }
-        };
-        initializeViews();
         initBrowseActionBar();
-        initializeData();
-        mEyePosition = new EyePosition(mLetoolContext.getAppContext(), this);
-        //mThumbnailView.startRisingAnimation();
         return null;
     }
 
@@ -362,9 +371,9 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
 
     @Override
     public void onResume() {
-
         super.onResume();
         LLog.i(TAG, "onResume");
+        mGLController.onResume();
         mGLController.lockRenderThread();
         try {
             mIsActive = true;
@@ -381,6 +390,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     public void onPause() {
         super.onPause();
         LLog.i(TAG, "onPause");
+        mGLController.onPause();
         mGLController.lockRenderThread();
         try {
             mIsActive = false;
@@ -540,11 +550,13 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         } else if (v.getId() == R.id.enter_selection_indicate) {
             MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_SELECT_OK);
             mSelector.leaveSelectionMode();
-        } else if (v.getId() == R.id.action_more) {
-            MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_POPUP_MENU);
-            if (mSelector != null && !mSelector.inSelectionMode()) {
-                mSelector.enterSelectionMode();
-            }
+        } else if (v.getId() == R.id.navi_to_photo) {
+            Fragment f = new PhotoFragment();
+            Bundle data = new Bundle();
+            data.putString(ThumbnailActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+            data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
+            f.setArguments(data);
+            mLetoolContext.pushContentFragment(f, false);
         }
     }
 
@@ -567,7 +579,6 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         it.putExtra(ThumbnailActivity.KEY_ALBUM_TITLE, targetSet.getName());
         int[] center = new int[2];
         getThumbnailCenter(thumbnailIndex, center);
-        it.putExtra(PhotoFragment.KEY_SET_CENTER, center);
         startActivityForResult(it, ThumbnailActivity.REQUEST_FOR_PHOTO);
         return;
 
