@@ -33,7 +33,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
 
     private static final int MSG_UPDATE_ENTRY = 0;
     private static final int JOB_LIMIT = 1;
-    private static final int CACHE_SIZE = 96;
+    private static final int CACHE_SIZE = 48;
 
     private int mActiveRequestCount = 0;
     private boolean mIsActive = false;

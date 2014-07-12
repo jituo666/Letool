@@ -33,6 +33,7 @@ import com.xjt.letool.view.BatchDeleteMediaListener.DeleteMediaProgressListener;
 import com.xjt.letool.view.DetailsHelper;
 import com.xjt.letool.view.GLBaseView;
 import com.xjt.letool.view.GLController;
+import com.xjt.letool.view.LetoolBottomBar;
 import com.xjt.letool.view.LetoolTopBar;
 import com.xjt.letool.view.LetoolDialog;
 import com.xjt.letool.view.LetoolTopBar.OnActionModeListener;
@@ -92,7 +93,6 @@ public class PhotoFragment extends Fragment implements
 
     // views
     private GLController mGLController;
-    private ViewGroup mNativeButtons;
     private ViewConfigs.AlbumPage mConfig;
     private ThumbnailView mThumbnailView;
     private ThumbnailRenderer mRender;
@@ -343,21 +343,23 @@ public class PhotoFragment extends Fragment implements
         LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
         actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_BROWSE, this);
         actionBar.setTitleText(mAlbumTitle);
-        mNativeButtons = (ViewGroup) actionBar.getActionPanel().findViewById(R.id.navi_buttons);
-        mNativeButtons.setVisibility(View.VISIBLE);
+        ViewGroup nativeButtons = (ViewGroup) actionBar.getActionPanel().findViewById(R.id.navi_buttons);
         if (mIsCameraSource) {
+            nativeButtons.setVisibility(View.VISIBLE);
             actionBar.setTitleIcon(R.drawable.ic_drawer);
-            TextView naviToPhoto = (TextView) mNativeButtons.findViewById(R.id.navi_to_photo);
+            TextView naviToPhoto = (TextView) nativeButtons.findViewById(R.id.navi_to_photo);
             naviToPhoto.setEnabled(false);
-            TextView naviToGallery = (TextView) mNativeButtons.findViewById(R.id.navi_to_gallery);
+            TextView naviToGallery = (TextView) nativeButtons.findViewById(R.id.navi_to_gallery);
             naviToGallery.setEnabled(true);
             naviToGallery.setOnClickListener(this);
 
         } else {
+            nativeButtons.setVisibility(View.GONE);
             actionBar.setTitleIcon(R.drawable.ic_action_previous_item);
-            //mMore.setImageResource(R.drawable.ic_action_accept);
 
         }
+        LetoolBottomBar bottomBar = mLetoolContext.getLetoolBottomBar();
+        bottomBar.setVisible(View.GONE, false);
     }
 
     private void initSelectionActionBar() {
@@ -399,8 +401,7 @@ public class PhotoFragment extends Fragment implements
         try {
             mIsActive = true;
             mGLController.setContentPane(mRootPane);
-            // Set the reload bit here to prevent it exit this page in
-            // clearLoadingBit().
+            // Set the reload bit here to prevent it exit this page in clearLoadingBit().
             setLoadingBit(BIT_LOADING_RELOAD);
             mAlbumDataSetLoader.resume();
             mRender.resume();
@@ -493,9 +494,9 @@ public class PhotoFragment extends Fragment implements
                 return;
             }
             if (mIsCameraSource) {
-                getActivity().finish();
+                //getLetoolSlidingMenu().toggle();
             } else {
-                // getLetoolSlidingMenu().toggle();
+                mLetoolContext.popContentFragment();
             }
             return;
         }
@@ -546,7 +547,7 @@ public class PhotoFragment extends Fragment implements
             Bundle data = new Bundle();
             data.putString(ThumbnailActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
             f.setArguments(data);
-            mLetoolContext.pushContentFragment(f, false);
+            mLetoolContext.pushContentFragment(f, this, false);
         }
         else if (v.getId() == R.id.enter_selection_indicate) {
             MobclickAgent.onEvent(mLetoolContext.getAppContext(),
@@ -598,18 +599,11 @@ public class PhotoFragment extends Fragment implements
     private void pickPhoto(int index) {
         Bundle data = new Bundle();
         if (mIsCameraSource) {
-            data.putString(
-                    ThumbnailActivity.KEY_MEDIA_PATH,
-                    mLetoolContext.getDataManager().getTopSetPath(
-                            DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+            data.putString(ThumbnailActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
             data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
         } else {
-            data.putInt(ThumbnailActivity.KEY_ALBUM_ID, mDataSet.getPath()
-                    .getIdentity());
-            data.putString(
-                    ThumbnailActivity.KEY_MEDIA_PATH,
-                    mLetoolContext.getDataManager().getTopSetPath(
-                            DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+            data.putInt(ThumbnailActivity.KEY_ALBUM_ID, mDataSet.getPath().getIdentity());
+            data.putString(ThumbnailActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
             data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, false);
             data.putString(ThumbnailActivity.KEY_ALBUM_TITLE,
                     mDataSet.getName());
@@ -617,7 +611,7 @@ public class PhotoFragment extends Fragment implements
         Fragment fragment = new FullImageFragment();
         data.putInt(FullImageFragment.KEY_INDEX_HINT, index);
         fragment.setArguments(data);
-        mLetoolContext.pushContentFragment(fragment, true);
+        mLetoolContext.pushContentFragment(fragment, this, true);
     }
 
     // -----------------------------------------------details-----------------------------------------------------------------------

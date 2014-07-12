@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.OrientationManager;
 import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.fragment.PhotoFragment;
@@ -25,9 +26,9 @@ import com.xjt.letool.view.LetoolTopBar;
 
 import java.util.List;
 
-public class LocalImageBrowseActivity extends FragmentActivity implements
-        LetoolContext {
+public class LocalImageBrowseActivity extends FragmentActivity implements LetoolContext {
 
+    private static final String TAG = LocalImageBrowseActivity.class.getSimpleName();
     private LetoolTopBar mTopBar;
     private LetoolBottomBar mBottomBar;
     private ViewGroup mMainView;
@@ -49,7 +50,7 @@ public class LocalImageBrowseActivity extends FragmentActivity implements
                 .getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
         data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
         f.setArguments(data);
-        pushContentFragment(f, false);
+        pushContentFragment(f, null, false);
     }
 
     @Override
@@ -91,29 +92,35 @@ public class LocalImageBrowseActivity extends FragmentActivity implements
         normalView.setVisibility(View.VISIBLE);
     }
 
-    public void pushContentFragment(Fragment newFragment, boolean backToStack) {
+    public void pushContentFragment(Fragment newFragment, Fragment oldFragment, boolean backup) {
 
         FragmentManager fm = getSupportFragmentManager();
-        List<Fragment> fragments = fm.getFragments();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        if (fragments != null && fragments.size() > 0) {
-            for (Fragment oldFragment : fragments) {
-                if (oldFragment != null) {
-                    ft.remove(oldFragment);
-                    if (backToStack)
-                        ft.addToBackStack(null);
-                }
-            }
+        if (oldFragment != null) {
+            ft.remove(oldFragment);
+            if (backup)
+                ft.addToBackStack(null);
         }
+        LLog.i(TAG, "xxxxxxxxxxxx   add :" + newFragment.getClass().getSimpleName());
         ft.add(newFragment, null);
         ft.commit();
     }
 
     public void popContentFragment() {
+        LLog.i(TAG, "xxxxxxxxxxxx   popBackStack :" + getSupportFragmentManager().getBackStackEntryCount());
         getSupportFragmentManager().popBackStack();
     }
 
     //
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            popContentFragment();
+        } else {
+            super.onBackPressed();
+        }
+    }
 
     @Override
     public LetoolTopBar getLetoolTopBar() {

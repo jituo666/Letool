@@ -432,7 +432,7 @@ public class FullImageFragment extends LetoolFragment implements
             }
         };
 
-        mFullImageView.setFilmMode(mStartInFilmstrip&& mMediaSet.getAllMediaItems() > 1);
+        mFullImageView.setFilmMode(mStartInFilmstrip && mMediaSet.getAllMediaItems() > 1);
     }
 
     private void initViews() {
@@ -464,10 +464,13 @@ public class FullImageFragment extends LetoolFragment implements
     }
 
     private void initBrowseActionBar() {
-        LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
-        actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_FULL_IMAGE, this);
-        actionBar.setTitleIcon(R.drawable.ic_action_previous_item);
-        actionBar.setVisible(View.VISIBLE, false);
+        LetoolTopBar topBar = mLetoolContext.getLetoolTopBar();
+        topBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_FULL_IMAGE, this);
+        topBar.setTitleIcon(R.drawable.ic_action_previous_item);
+        topBar.setVisible(View.VISIBLE, false);
+        ViewGroup nativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);
+        nativeButtons.setVisibility(View.GONE);
+        //
         LetoolBottomBar bottomBar = mLetoolContext.getLetoolBottomBar();
         bottomBar.setOnActionMode(LetoolBottomBar.BOTTOM_BAR_MODE_FULL_IMAGE, this);
         bottomBar.setVisible(View.VISIBLE, false);
@@ -530,10 +533,10 @@ public class FullImageFragment extends LetoolFragment implements
 
     @Override
     public void onDestroy() {
-        mGLController.setOrientationSource(null);
-        mHandler.removeCallbacksAndMessages(null); // Remove all pending
-                                                   // messages.
         super.onDestroy();
+        mGLController.setOrientationSource(null);
+        mHandler.removeCallbacksAndMessages(null); // Remove all pending messages.
+
     }
 
     // ////////////////////////////////////////////////////////[detail]/////////////////////////////////////////////////////////////////

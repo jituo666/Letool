@@ -223,7 +223,7 @@ public class BaseFragmentActivity extends FragmentActivity implements LetoolCont
 	}
 
 	@Override
-	public void pushContentFragment(Fragment newFragment, boolean backToStack) {
+	public void pushContentFragment(Fragment newFragment, Fragment oldFragment, boolean backup) {
 		// TODO Auto-generated method stub
 		
 	}

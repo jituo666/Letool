@@ -29,6 +29,7 @@ import com.xjt.letool.view.DetailsHelper;
 import com.xjt.letool.view.GLBaseView;
 import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.GLRootView;
+import com.xjt.letool.view.LetoolBottomBar;
 import com.xjt.letool.view.LetoolTopBar;
 import com.xjt.letool.view.LetoolDialog;
 import com.xjt.letool.view.ThumbnailView;
@@ -55,7 +56,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,7 +68,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
 
     private static final String TAG = GalleryFragment.class.getSimpleName();
 
-    public static final String KEY_EMPTY_ALBUM = "empty-album";
+    public static final String KEY_IS_EMPTY_ALBUM = "empty-album";
 
     private static final int MSG_LAYOUT_CONFIRMED = 0;
     private static final int MSG_PICK_ALBUM = 1;
@@ -409,7 +409,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         try {
 
             super.onActivityResult(requestCode, resultCode, data);
-            if (data != null && data.getBooleanExtra(KEY_EMPTY_ALBUM, false)) {
+            if (data != null && data.getBooleanExtra(KEY_IS_EMPTY_ALBUM, false)) {
                 showEmptyAlbumToast(Toast.LENGTH_SHORT);
             }
             switch (requestCode) {
@@ -556,7 +556,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
             data.putString(ThumbnailActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
             data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
             f.setArguments(data);
-            mLetoolContext.pushContentFragment(f, false);
+            mLetoolContext.pushContentFragment(f,this,false);
         }
     }
 
@@ -572,14 +572,22 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         }
         hideEmptyAlbumToast();
         MediaPath mediaPath = targetSet.getPath();
-        Intent it = new Intent();
-        it.setClass(getActivity(), ThumbnailActivity.class);
-        it.putExtra(ThumbnailActivity.KEY_ALBUM_ID, mediaPath.getIdentity());
-        it.putExtra(ThumbnailActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-        it.putExtra(ThumbnailActivity.KEY_ALBUM_TITLE, targetSet.getName());
-        int[] center = new int[2];
-        getThumbnailCenter(thumbnailIndex, center);
-        startActivityForResult(it, ThumbnailActivity.REQUEST_FOR_PHOTO);
+        Fragment f = new PhotoFragment();
+        Bundle data = new Bundle();
+        data.putString(ThumbnailActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+        data.putString(ThumbnailActivity.KEY_ALBUM_TITLE, targetSet.getName());
+        data.putInt(ThumbnailActivity.KEY_ALBUM_ID, mediaPath.getIdentity());
+        data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, false);
+        f.setArguments(data);
+        mLetoolContext.pushContentFragment(f, this, true);
+        /* Intent it = new Intent();
+         it.setClass(getActivity(), ThumbnailActivity.class);
+         it.putExtra(ThumbnailActivity.KEY_ALBUM_ID, mediaPath.getIdentity());
+         it.putExtra(ThumbnailActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+         it.putExtra(ThumbnailActivity.KEY_ALBUM_TITLE, targetSet.getName());
+         int[] center = new int[2];
+         getThumbnailCenter(thumbnailIndex, center);
+         startActivityForResult(it, ThumbnailActivity.REQUEST_FOR_PHOTO);*/
         return;
 
     }
