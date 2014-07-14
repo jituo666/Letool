@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 
 import android.view.View;
@@ -38,6 +39,7 @@ import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.view.LetoolDialog;
 import com.xjt.letool.view.DetailsHelper;
+import com.xjt.letool.view.LetoolTopBar.OnActionModeListener;
 import com.xjt.letool.view.SingleDeleteMediaListener.DeleteMediaProgressListener;
 import com.xjt.letool.view.DetailsHelper.CloseListener;
 import com.xjt.letool.view.FullImageView;
@@ -60,7 +62,7 @@ import com.xjt.letool.common.SynchronizedHandler;
  * @Date 9:40:15 PM Apr 20, 2014
  * @Comments:null
  */
-public class FullImageFragment extends LetoolFragment implements
+public class FullImageFragment extends Fragment implements OnActionModeListener,
         FullImageView.Listener {
 
     private static final String TAG = FullImageFragment.class.getSimpleName();
@@ -442,7 +444,7 @@ public class FullImageFragment extends LetoolFragment implements
 
     private void initDatas() {
         Bundle data = this.getArguments();
-        mIsCameraSource = data.getBoolean(LocalImageBrowseActivity.KEY_IS_PHOTO_ALBUM);
+        mIsCameraSource = data.getBoolean(LocalImageBrowseActivity.KEY_IS_CAMERA_SOURCE);
         if (!mIsCameraSource) {
             String albumTitle = data.getString(LocalImageBrowseActivity.KEY_ALBUM_TITLE);
             int albumId = data.getInt(LocalImageBrowseActivity.KEY_ALBUM_ID, 0);
@@ -450,9 +452,11 @@ public class FullImageFragment extends LetoolFragment implements
             LLog.i(TAG, " photo fragment onCreateView id:" + albumId + " albumTitle:" + albumTitle + " albumMediaPath:" + albumMediaPath + " mIsCameraSource:");
             mMediaSet = mLetoolContext.getDataManager().getMediaSet(new MediaPath(albumMediaPath, albumId));
         } else {
+        	boolean isImage = mLetoolContext.isImageBrwosing();
             mMediaSet = new LocalAlbum(new MediaPath(
                     data.getString(LocalImageBrowseActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]),
-                    (LetoolApp) getActivity().getApplication(), MediaSetUtils.MY_ALBUM_BUCKETS, true, getString(R.string.common_picture));
+                    (LetoolApp) getActivity().getApplication(),
+                    MediaSetUtils.MY_ALBUM_BUCKETS, isImage, getString(isImage?R.string.common_picture:R.string.common_record));
         }
         mStartInFilmstrip = data.getBoolean(KEY_START_IN_FILMSTRIP, false);
         mCurrentIndex = data.getInt(KEY_INDEX_HINT, 0);

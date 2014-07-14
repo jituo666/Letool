@@ -2,7 +2,6 @@
 package com.xjt.letool.metadata.source;
 
 import android.content.ContentResolver;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore.Images;
@@ -11,20 +10,17 @@ import android.provider.MediaStore.Video;
 import android.provider.MediaStore.Video.VideoColumns;
 
 import com.xjt.letool.LetoolApp;
-import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.metadata.DataNotifier;
 import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.MediaSet;
-import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.metadata.image.LocalImage;
 import com.xjt.letool.metadata.image.LocalMediaItem;
 import com.xjt.letool.metadata.video.LocalVideo;
 import com.xjt.letool.utils.LetoolUtils;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class LocalAlbum extends MediaSet {

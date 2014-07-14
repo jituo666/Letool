@@ -38,7 +38,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
     private static final int INDEX_BUCKET_ID = 0;
     private static final int INDEX_BUCKET_NAME = 1;
 
-    private static final Uri mBaseUri = Images.Media.EXTERNAL_CONTENT_URI;//Files.getContentUri(EXTERNAL_MEDIA);
+    private static Uri mBaseUri = null;
     private static final Uri mWatchUriImage = Images.Media.EXTERNAL_CONTENT_URI;
     private static final Uri mWatchUriVideo = Video.Media.EXTERNAL_CONTENT_URI;
 
@@ -78,22 +78,27 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
     private final LetoolApp mApplication;
     //private final int mType;
     private ArrayList<MediaSet> mAlbums = new ArrayList<MediaSet>();
-    private final DataNotifier mNotifierImage;
-    private final DataNotifier mNotifierVideo;
+    private final DataNotifier mNotifierMedia;
     private final String mName;
     private final Handler mHandler;
     private boolean mIsLoading;
 
     private Future<ArrayList<MediaSet>> mLoadTask;
     private ArrayList<MediaSet> mLoadBuffer;
+    private boolean mIsImage;
 
-    public LocalAlbumSet(MediaPath path, LetoolApp application) {
+    public LocalAlbumSet(MediaPath path, LetoolApp application, boolean isImage) {
         super(path, nextVersionNumber());
         mApplication = application;
         mHandler = new Handler(application.getMainLooper());
-        //mType = path.getMediaType();
-        mNotifierImage = new DataNotifier(this, mWatchUriImage, application);
-        mNotifierVideo = new DataNotifier(this, mWatchUriVideo, application);
+        mIsImage = isImage;
+        if (isImage) {
+        	mBaseUri = mWatchUriImage;
+        	mNotifierMedia = new DataNotifier(this, mWatchUriImage, application);
+        } else {
+        	mBaseUri = mWatchUriVideo;
+        	mNotifierMedia = new DataNotifier(this, mWatchUriVideo, application);
+        }
         mName = application.getResources().getString(R.string.set_label_local_albums);
     }
 
@@ -177,30 +182,25 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
             ArrayList<MediaSet> albums = new ArrayList<MediaSet>();
             DataManager dataManager = mApplication.getDataManager();
             for (BucketEntry entry : entries) {
-                MediaSet album = getLocalAlbum(dataManager, entry.bucketId, entry.bucketName);
+                MediaSet album = getLocalAlbum(dataManager, entry.bucketId, entry.bucketName, mIsImage);
                 albums.add(album);
             }
             return albums;
         }
     }
 
-    private MediaSet getLocalAlbum(DataManager manager, int id, String name) {
+    private MediaSet getLocalAlbum(DataManager manager, int id, String name, boolean mIsImage) {
         synchronized (DataManager.LOCK) {
-            return new LocalAlbum(new MediaPath(PATH_IMAGE, id), mApplication, new int[] {
-                    id
-            }, true, name);
-
-            /*            switch (type) {
-                            case MEDIA_TYPE_IMAGE:
-                                return new LocalAlbum(new MediaPath(PATH_IMAGE, id), mApplication, new int[] {
-                                        id
-                                }, true, name);
-                            case MEDIA_TYPE_VIDEO:
-                                return new LocalAlbum(new MediaPath(PATH_VIDEO, id), mApplication, new int[] {
-                                        id
-                                }, false, name);
-                        }*/
-            //            throw new IllegalArgumentException(String.valueOf(type));
+            if (mIsImage)  {
+                    return new LocalAlbum(new MediaPath(PATH_IMAGE, id), mApplication, new int[] {
+                            id
+                    }, true, name);
+	        } else {
+	                    return new LocalAlbum(new MediaPath(PATH_VIDEO, id), mApplication, new int[] {
+	                            id
+	                    }, false, name);
+	
+	        }
         }
     }
 
@@ -239,7 +239,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
     // 2. Prevent calling onFutureDone() and reload() concurrently
     public synchronized long reload() {
         // "|" is used instead of "||" because we want to clear both flags.
-        if (mNotifierImage.isDirty() | mNotifierVideo.isDirty()) {
+        if (mNotifierMedia.isDirty()) {
             if (mLoadTask != null)
                 mLoadTask.cancel();
             mIsLoading = true;
@@ -276,8 +276,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
 
     // For debug only. Fake there is a ContentObserver.onChange() event.
     void fakeChange() {
-        mNotifierImage.fakeChange();
-        mNotifierVideo.fakeChange();
+    	mNotifierMedia.fakeChange();
     }
 
     private static class BucketEntry {

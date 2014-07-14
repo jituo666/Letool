@@ -7,7 +7,6 @@ import android.os.Process;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
-import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.metadata.ContentListener;
 import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.metadata.MediaItem;

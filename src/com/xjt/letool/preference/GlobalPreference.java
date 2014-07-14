@@ -1,6 +1,6 @@
 package com.xjt.letool.preference;
 
-import com.xjt.letool.fragment.LetoolFragment;
+import com.xjt.letool.fragment.PhotoFragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -41,7 +41,7 @@ public class GlobalPreference {
 
     public static String getLastUIComponents(Context ctx) {
         SharedPreferences prefs = initSharedPreferences(ctx);
-        return prefs.getString(PREFS_KEY_LAST_UI_COMPENTS, LetoolFragment.FRAGMENT_TAG_PHOTO);
+        return prefs.getString(PREFS_KEY_LAST_UI_COMPENTS, PhotoFragment.class.getSimpleName());
     }
 
     public static void setLastUIComponnents(Context ctx, String ui) {

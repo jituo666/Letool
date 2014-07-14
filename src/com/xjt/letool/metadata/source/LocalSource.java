@@ -68,8 +68,9 @@ public class LocalSource extends MediaSource {
         switch (mMatcher.match(path.getPrefix())) {
             case LOCAL_ALL_ALBUMSET:
             case LOCAL_IMAGE_ALBUMSET:
+            	return new LocalAlbumSet(path, mApplication, true);
             case LOCAL_VIDEO_ALBUMSET:
-                return new LocalAlbumSet(path, mApplication);
+                return new LocalAlbumSet(path, mApplication, false);
             case LOCAL_IMAGE_ALBUM:
                 return new LocalAlbum(path, app, path.getIdentity(), true);
             case LOCAL_VIDEO_ALBUM:

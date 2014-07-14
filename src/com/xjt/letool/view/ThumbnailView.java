@@ -9,7 +9,6 @@ import com.xjt.letool.animations.ThumbnailRisingAnim;
 import com.xjt.letool.animations.ThumbnailScatteringAnim;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
-import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.utils.RelativePosition;
 import com.xjt.letool.utils.Utils;
 import com.xjt.letool.views.layout.ThumbnailLayout;

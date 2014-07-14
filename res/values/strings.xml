@@ -16,6 +16,7 @@
 
     <string name="app_name">Letool</string>
     <string name="common_picture">Pictures</string>
+    <string name="common_photo">Photos</string>
     <string name="common_video">Videos</string>
     <string name="common_gallery">Gallery</string>
     <string name="common_settings">Settings</string>

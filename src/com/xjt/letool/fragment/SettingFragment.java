@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,15 +34,15 @@ import com.xjt.letool.settings.LetoolPreference;
 import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.StorageUtils;
 import com.xjt.letool.utils.StringUtils;
-import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.LetoolTopBar;
+import com.xjt.letool.view.LetoolTopBar.OnActionModeListener;
 
 /**
  * @Author Jituo.Xuan
  * @Date 9:47:49 AM Apr 19, 2014
  * @Comments:null
  */
-public class SettingFragment extends LetoolFragment {
+public class SettingFragment extends Fragment implements OnActionModeListener {
 
     private static final String TAG = SettingFragment.class.getSimpleName();
 
@@ -71,10 +72,12 @@ public class SettingFragment extends LetoolFragment {
     }
 
     private void initBrowseActionBar() {
-        LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
-        actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_SETTINGS, this);
-        actionBar.setTitleIcon(R.drawable.ic_drawer);
-        actionBar.setTitleText(R.string.common_settings);
+        LetoolTopBar topBar = mLetoolContext.getLetoolTopBar();
+        topBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_SETTINGS, this);
+        topBar.setTitleIcon(R.drawable.ic_drawer);
+        topBar.setTitleText(R.string.common_settings);
+        ViewGroup nativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);
+        nativeButtons.setVisibility(View.GONE);
     }
 
     private void initViews() {
@@ -104,7 +107,7 @@ public class SettingFragment extends LetoolFragment {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.action_navi) {
-            //getLetoolSlidingMenu().toggle();
+            mLetoolContext.getLetoolSlidingMenu().toggle();
         } else if (v.getId() == R.id.clear_cache) {
             MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_CLEAR_CAHCE);
             new ClearCacheTask().execute();
@@ -237,12 +240,6 @@ public class SettingFragment extends LetoolFragment {
             }
             Toast.makeText(getActivity(), R.string.clear_cache_finished, Toast.LENGTH_SHORT).show();
         }
-
-    }
-
-    public void onMenuClicked() {
-        MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_SLIDE_MENU_MENU);
-        //getLetoolSlidingMenu().toggle();
 
     }
 

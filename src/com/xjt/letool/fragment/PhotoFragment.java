@@ -260,13 +260,13 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
 
     private void initializeData() {
         Bundle data = getArguments();
-        mIsCameraSource = data.getBoolean(LocalImageBrowseActivity.KEY_IS_PHOTO_ALBUM);
+        mIsCameraSource = data.getBoolean(LocalImageBrowseActivity.KEY_IS_CAMERA_SOURCE);
         if (mIsCameraSource) {
             if (MediaSetUtils.MY_ALBUM_BUCKETS.length > 0) {
-                mAlbumTitle = getString(R.string.common_picture);
+                mAlbumTitle = getString(R.string.common_photo);
                 mDataSetPath = new MediaPath(data.getString(LocalImageBrowseActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]);
-                mDataSet = new LocalAlbum(mDataSetPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.MY_ALBUM_BUCKETS, true,
-                        getString(R.string.common_picture));
+                mDataSet = new LocalAlbum(mDataSetPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.MY_ALBUM_BUCKETS, mLetoolContext.isImageBrwosing(),
+                        getString(R.string.common_photo));
                 mHasDCIM = true;
             } else {
                 mHasDCIM = false;
@@ -331,8 +331,10 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
             nativeButtons.setVisibility(View.VISIBLE);
             topBar.setTitleIcon(R.drawable.ic_drawer);
             TextView naviToPhoto = (TextView) nativeButtons.findViewById(R.id.navi_to_photo);
+            naviToPhoto.setText(mLetoolContext.isImageBrwosing()?R.string.common_photo:R.string.common_record);
             naviToPhoto.setEnabled(false);
             TextView naviToGallery = (TextView) nativeButtons.findViewById(R.id.navi_to_gallery);
+            naviToGallery.setText(mLetoolContext.isImageBrwosing()?R.string.common_gallery:R.string.common_video);
             naviToGallery.setEnabled(true);
             naviToGallery.setOnClickListener(this);
         } else {
@@ -461,14 +463,6 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         mRootPane.invalidate();
     }
 
-    public void onMenuClicked() {
-        if (!mIsCameraSource)
-            return;
-        MobclickAgent.onEvent(mLetoolContext.getAppContext(),
-                StatConstants.EVENT_KEY_SLIDE_MENU_MENU);
-        // getLetoolSlidingMenu().toggle();
-    }
-
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.action_navi) {
@@ -527,7 +521,8 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         else if (v.getId() == R.id.navi_to_gallery) {
             GalleryFragment f = new GalleryFragment();
             Bundle data = new Bundle();
-            data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
+            data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
+            		.getTopSetPath(mLetoolContext.isImageBrwosing()?DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
             f.setArguments(data);
             mLetoolContext.pushContentFragment(f, this, false);
         }
@@ -579,12 +574,14 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     private void pickPhoto(int index) {
         Bundle data = new Bundle();
         if (mIsCameraSource) {
-            data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-            data.putBoolean(LocalImageBrowseActivity.KEY_IS_PHOTO_ALBUM, true);
+            data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
+            		.getTopSetPath(mLetoolContext.isImageBrwosing()?DataManager.INCLUDE_LOCAL_IMAGE_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
+            data.putBoolean(LocalImageBrowseActivity.KEY_IS_CAMERA_SOURCE, true);
         } else {
             data.putInt(LocalImageBrowseActivity.KEY_ALBUM_ID, mDataSet.getPath().getIdentity());
-            data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-            data.putBoolean(LocalImageBrowseActivity.KEY_IS_PHOTO_ALBUM, false);
+            data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
+            		.getTopSetPath(mLetoolContext.isImageBrwosing()?DataManager.INCLUDE_LOCAL_IMAGE_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
+            data.putBoolean(LocalImageBrowseActivity.KEY_IS_CAMERA_SOURCE, false);
             data.putString(LocalImageBrowseActivity.KEY_ALBUM_TITLE, mDataSet.getName());
         }
         Fragment fragment = new FullImageFragment();

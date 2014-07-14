@@ -32,6 +32,8 @@ public interface LetoolContext {
     //
     public DataManager getDataManager();
 
+    public boolean isImageBrwosing();
+    
     public ThreadPool getThreadPool();
 
     public GLController getGLController();

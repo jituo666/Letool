@@ -14,7 +14,6 @@ import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.utils.Utils;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
-import com.xjt.letool.fragment.LetoolFragment;
 
 import java.util.Arrays;
 import java.util.concurrent.Callable;

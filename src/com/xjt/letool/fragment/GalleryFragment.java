@@ -31,6 +31,7 @@ import com.xjt.letool.view.LetoolTopBar;
 import com.xjt.letool.view.LetoolDialog;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.view.DetailsHelper.CloseListener;
+import com.xjt.letool.view.LetoolTopBar.OnActionModeListener;
 import com.xjt.letool.views.layout.ThumbnailSetContractLayout;
 import com.xjt.letool.views.layout.ThumbnailLayout;
 import com.xjt.letool.views.layout.ThumbnailLayout.LayoutListener;
@@ -61,7 +62,7 @@ import android.widget.Toast;
  * @Date 9:40:26 PM Apr 20, 2014
  * @Comments:null
  */
-public class GalleryFragment extends LetoolFragment implements EyePosition.EyePositionListener, ContractSelectListener, LayoutListener {
+public class GalleryFragment extends Fragment implements OnActionModeListener, EyePosition.EyePositionListener, ContractSelectListener, LayoutListener {
 
     private static final String TAG = GalleryFragment.class.getSimpleName();
 
@@ -305,8 +306,9 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     }
 
     private void initializeData() {
-        mMediaSet = new LocalAlbumSet(new MediaPath(mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY), -1000),
-                (LetoolApp) getActivity().getApplication());
+        mMediaSet = new LocalAlbumSet(new MediaPath(mLetoolContext.getDataManager()
+        		.getTopSetPath(mLetoolContext.isImageBrwosing()?DataManager.INCLUDE_LOCAL_IMAGE_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_ONLY), -1000),
+                (LetoolApp) getActivity().getApplication(),mLetoolContext.isImageBrwosing());
         mSelector.setSourceMediaSet(mMediaSet);
         mThumbnailSetAdapter = new ThumbnailSetDataLoader(mLetoolContext, mMediaSet);
         mThumbnailSetAdapter.setLoadingListener(new MyLoadingListener());
@@ -320,10 +322,12 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         topBar.setTitleText(R.string.app_name);
         mNativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);
         mNativeButtons.setVisibility(View.VISIBLE);
-
+        
         TextView naviToGallery = (TextView) mNativeButtons.findViewById(R.id.navi_to_gallery);
+        naviToGallery.setText(mLetoolContext.isImageBrwosing()?R.string.common_gallery:R.string.common_video);
         naviToGallery.setEnabled(false);
         TextView naviToPhoto = (TextView) mNativeButtons.findViewById(R.id.navi_to_photo);
+        naviToPhoto.setText(mLetoolContext.isImageBrwosing()?R.string.common_photo:R.string.common_record);
         naviToPhoto.setEnabled(true);
         naviToPhoto.setOnClickListener(this);
 
@@ -549,8 +553,9 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         } else if (v.getId() == R.id.navi_to_photo) {
             Fragment f = new PhotoFragment();
             Bundle data = new Bundle();
-            data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-            data.putBoolean(LocalImageBrowseActivity.KEY_IS_PHOTO_ALBUM, true);
+            data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
+            		.getTopSetPath(mLetoolContext.isImageBrwosing()?DataManager.INCLUDE_LOCAL_IMAGE_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
+            data.putBoolean(LocalImageBrowseActivity.KEY_IS_CAMERA_SOURCE, true);
             f.setArguments(data);
             mLetoolContext.pushContentFragment(f, this, false);
         }
@@ -570,29 +575,16 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         MediaPath mediaPath = targetSet.getPath();
         Fragment f = new PhotoFragment();
         Bundle data = new Bundle();
-        data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+        data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
+        		.getTopSetPath(mLetoolContext.isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
         data.putString(LocalImageBrowseActivity.KEY_ALBUM_TITLE, targetSet.getName());
         data.putInt(LocalImageBrowseActivity.KEY_ALBUM_ID, mediaPath.getIdentity());
-        data.putBoolean(LocalImageBrowseActivity.KEY_IS_PHOTO_ALBUM, false);
+        data.putBoolean(LocalImageBrowseActivity.KEY_IS_CAMERA_SOURCE, false);
         f.setArguments(data);
         mLetoolContext.pushContentFragment(f, this, true);
-        /* Intent it = new Intent();
-         it.setClass(getActivity(), LocalImageBrowseActivity.class);
-         it.putExtra(LocalImageBrowseActivity.KEY_ALBUM_ID, mediaPath.getIdentity());
-         it.putExtra(LocalImageBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-         it.putExtra(LocalImageBrowseActivity.KEY_ALBUM_TITLE, targetSet.getName());
-         int[] center = new int[2];
-         getThumbnailCenter(thumbnailIndex, center);
-         startActivityForResult(it, LocalImageBrowseActivity.REQUEST_FOR_PHOTO);*/
-        return;
 
     }
 
-    public void onMenuClicked() {
-        MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_SLIDE_MENU_MENU);
-        //getLetoolSlidingMenu().toggle();
-
-    }
 
     @Override
     public void onSelectionModeChange(int mode) {

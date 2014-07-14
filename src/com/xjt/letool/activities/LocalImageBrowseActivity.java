@@ -19,8 +19,8 @@ import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.OrientationManager;
 import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.fragment.GalleryFragment;
-import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.fragment.PhotoFragment;
+import com.xjt.letool.fragment.SlidingMenuFragment;
 import com.xjt.letool.imagedata.utils.LetoolBitmapPool;
 import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.metadata.MediaItem;
@@ -40,7 +40,9 @@ public class LocalImageBrowseActivity extends FragmentActivity implements Letool
     public static final String KEY_ALBUM_TITLE = "album_title";
     public static final String KEY_MEDIA_PATH = "media-path";
     public static final String KEY_ALBUM_ID = "album_id";
-    public static final String KEY_IS_PHOTO_ALBUM = "is_photo_album";
+    public static final String KEY_IS_CAMERA_SOURCE = "is_camera_source";
+    public static final String KEY_IS_IMAGE = "is_image";
+    public boolean mIsImage = true;
     
     private LetoolTopBar mTopBar;
     private LetoolBottomBar mBottomBar;
@@ -55,6 +57,8 @@ public class LocalImageBrowseActivity extends FragmentActivity implements Letool
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         setContentView(R.layout.local_browse_image);
+        mIsImage = getIntent().getBooleanExtra(KEY_IS_IMAGE, true);
+		LLog.i(TAG, "--------isImageBrwosing:" + getIntent().getBooleanExtra(KEY_IS_IMAGE, true));
         mTopBar = new LetoolTopBar(this, (ViewGroup) findViewById(R.id.local_image_browse_top_bar));
         mBottomBar = new LetoolBottomBar(this, (ViewGroup) findViewById(R.id.local_image_browse_bottom_bar));
         mSlidingMenu = new LetoolSlidingMenu(this, getSupportFragmentManager(), findViewById(R.id.local_image_browse_top_bar));
@@ -105,19 +109,22 @@ public class LocalImageBrowseActivity extends FragmentActivity implements Letool
         if (MediaSetUtils.MY_ALBUM_BUCKETS.length <= 0) {
             fragment = new GalleryFragment();
             Bundle data = new Bundle();
-            data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
+            data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, getDataManager()
+            		.getTopSetPath(isImageBrwosing() ?DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
             fragment.setArguments(data);
         } else {
             if (GalleryFragment.class.getSimpleName().equals(GlobalPreference.getLastUIComponents(this))) {
                 fragment = new GalleryFragment();
                 Bundle data = new Bundle();
-                data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
+                data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, getDataManager()
+                		.getTopSetPath(isImageBrwosing() ?DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
                 fragment.setArguments(data);
             } else {
                 fragment = new PhotoFragment();
                 Bundle data = new Bundle();
-                data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-                data.putBoolean(LocalImageBrowseActivity.KEY_IS_PHOTO_ALBUM, true);
+                data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, getDataManager()
+                		.getTopSetPath(isImageBrwosing() ?DataManager.INCLUDE_LOCAL_IMAGE_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
+                data.putBoolean(LocalImageBrowseActivity.KEY_IS_CAMERA_SOURCE, true);
                 fragment.setArguments(data);
             }
         }
@@ -170,10 +177,10 @@ public class LocalImageBrowseActivity extends FragmentActivity implements Letool
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             popContentFragment();
         } else {
-            Fragment f = getSupportFragmentManager().findFragmentByTag(LetoolFragment.FRAGMENT_TAG_SLIDING_MENU);
+            Fragment f = getSupportFragmentManager().findFragmentByTag(SlidingMenuFragment.class.getSimpleName());
             if (f != null) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                Fragment aphaHolder = getSupportFragmentManager().findFragmentByTag(LetoolFragment.FRAGMENT_TAG_SLIDING_MENU_ALPHA);
+                Fragment aphaHolder = getSupportFragmentManager().findFragmentByTag(LetoolSlidingMenu.AlphaFragment.class.getSimpleName());
                 if (aphaHolder != null) {
                     ft.setCustomAnimations(0, R.anim.alpha_out);
                     ft.remove(aphaHolder);
@@ -254,5 +261,10 @@ public class LocalImageBrowseActivity extends FragmentActivity implements Letool
     public GLController getGLController() {
         return mGLESView;
     }
+
+	@Override
+	public boolean isImageBrwosing() {
+		return mIsImage;
+	}
 
 }

@@ -16,8 +16,10 @@
 
     <string name="app_name">牛图</string>
     <string name="common_picture">图片</string>
-    <string name="common_video">视频</string>
+    <string name="common_photo">照片</string>
     <string name="common_gallery">图库</string>
+    <string name="common_record">录像</string>
+    <string name="common_video">视频</string>
     <string name="common_settings">设置</string>
     <string name="common_exit">退出</string>
     <string name="sliding_menu_title_hide_list">隐藏列表</string>

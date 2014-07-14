@@ -10,7 +10,6 @@ import com.xjt.letool.common.FutureListener;
 import com.xjt.letool.common.JobLimiter;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
-import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.imagedata.utils.BitmapLoader;
 import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaPath;

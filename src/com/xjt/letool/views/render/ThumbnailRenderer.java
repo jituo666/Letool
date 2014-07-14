@@ -3,7 +3,6 @@ package com.xjt.letool.views.render;
 
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.adapters.ThumbnailDataWindow;
-import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.selectors.ContractSelector;

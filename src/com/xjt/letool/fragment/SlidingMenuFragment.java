@@ -2,6 +2,7 @@
 package com.xjt.letool.fragment;
 
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,7 +23,8 @@ import android.widget.TextView;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 import com.xjt.letool.activities.LocalImageBrowseActivity;
-import com.xjt.letool.activities.LocalImageBrowseActivity;
+import com.xjt.letool.activities.SettingsActivity;
+import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.metadata.DataManager;
@@ -31,6 +33,7 @@ import com.xjt.letool.preference.GlobalPreference;
 import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.view.LetoolSlidingMenu;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,37 +55,32 @@ public class SlidingMenuFragment extends Fragment {
             new SlidingMenuItem(SLIDING_MENU_PHOTO, R.drawable.ic_action_photo, R.string.common_picture, true, true),
             new SlidingMenuItem(SLIDING_MENU_FOLDER, R.drawable.ic_action_gallery, R.string.common_video, true, true),
             new SlidingMenuItem(SLIDING_MENU_SETTING, R.drawable.ic_action_settings, R.string.common_settings, true, true),
-            new SlidingMenuItem(SLIDING_MENU_EXIT, R.drawable.ic_action_exit, R.string.common_exit, true, true),
+            new SlidingMenuItem(SLIDING_MENU_EXIT, R.drawable.ic_action_exit, R.string.common_exit, true, true)
     };
 
-    private static final Class<?>[] MenuFragmentClasses = new Class<?>[] {
-            PhotoFragment.class,
-            GalleryFragment.class,
-            SettingFragment.class
-
-    };
-
-    private static final String[] MenuFragmentTags = new String[] {
-            LetoolFragment.FRAGMENT_TAG_PHOTO,
-            LetoolFragment.FRAGMENT_TAG_FOLDER,
-            LetoolFragment.FRAGMENT_TAG_SETTINGS
-    };
-
-    private static final String[] UMENT_STATS_KEY = new String[] {
-            StatConstants.EVENT_KEY_SLIDE_MENU_PHOTO,
-            StatConstants.EVENT_KEY_SLIDE_MENU_GALLERY,
-            StatConstants.EVENT_KEY_SLIDE_MENU_SETTING
-    };
+    private List<Intent> mIntents;
     private ListView mMenusList;
     private ImageView mMenuLogo;
-    private LocalImageBrowseActivity mActivity;
+    private LetoolContext mLetoolContext;
     private FragmentManager mFragmentManager;
 
+    private void initIntentDatas() {
+    	mIntents = new ArrayList<Intent>();
+    	Intent itImage = new Intent(getActivity(),LocalImageBrowseActivity.class);
+    	itImage.putExtra(LocalImageBrowseActivity.KEY_IS_IMAGE, true);
+    	mIntents.add(itImage);
+    	Intent itVideo = new Intent(getActivity(),LocalImageBrowseActivity.class);
+    	itVideo.putExtra(LocalImageBrowseActivity.KEY_IS_IMAGE, false);
+    	mIntents.add(itVideo);
+    	Intent itSetting = new Intent(getActivity(),SettingsActivity.class);
+    	mIntents.add(itSetting);
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFragmentManager = getFragmentManager();
-        mActivity = (LocalImageBrowseActivity) getActivity();
+        mLetoolContext = (LetoolContext) getActivity();
+        initIntentDatas();
     }
 
     @Override
@@ -92,7 +90,7 @@ public class SlidingMenuFragment extends Fragment {
 
             @Override
             public boolean onTouch(View v, MotionEvent m) {
-                mActivity.getLetoolSlidingMenu().toggle();
+                mLetoolContext.getLetoolSlidingMenu().toggle();
                 return true;
             }
 
@@ -111,49 +109,20 @@ public class SlidingMenuFragment extends Fragment {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                try {
-                    if (position < MenuFragmentClasses.length) {
-                        FragmentTransaction ft = mFragmentManager.beginTransaction();
-                        ft.setCustomAnimations(R.anim.alpha_out, 0);
-                        ft.remove(mFragmentManager.findFragmentByTag(LetoolFragment.FRAGMENT_TAG_SLIDING_MENU_ALPHA));
-                        ft.setCustomAnimations(0, R.anim.slide_left_out);
-                        ft.remove(SlidingMenuFragment.this);
-                        if (mFragmentManager.findFragmentByTag(MenuFragmentTags[position]) == null) {
-                            Fragment f = (Fragment) MenuFragmentClasses[position].newInstance();
-                            initFragmentData(f);
-                            ft.setCustomAnimations(0, 0);
-                            ft.replace(R.id.root_container, f, MenuFragmentTags[position]);
-                            MobclickAgent.onEvent(getActivity(), UMENT_STATS_KEY[position]);
-                        }
-                        ft.commit();
-                    } else if (position == MenuFragmentClasses.length) { // exit
-                        MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_SLIDE_MENU_EXIT);
-                        getActivity().finish();
+                    if (position < mIntents.size()) {
+                    	mLetoolContext.getLetoolSlidingMenu().toggle();
+                    	if (mIntents.get(position).hasExtra(LocalImageBrowseActivity.KEY_IS_IMAGE)
+                    			&& mLetoolContext.isImageBrwosing() == mIntents.get(position).getBooleanExtra(LocalImageBrowseActivity.KEY_IS_IMAGE, true))
+                    	{
+                    		return;
+                    	}
+                    	getActivity().startActivity(mIntents.get(position));
                     }
-                } catch (java.lang.InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
+                    getActivity().finish();
+
             }
         });
-        LLog.i(TAG, " mFragmentManager" + mFragmentManager);
         return rootView;
-    }
-
-    private void initFragmentData(Fragment f) {
-        if (f instanceof PhotoFragment) {
-            Bundle data = new Bundle();
-            data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-            data.putBoolean(LocalImageBrowseActivity.KEY_IS_PHOTO_ALBUM, true);
-            f.setArguments(data);
-            GlobalPreference.setLastUIComponnents(this.getActivity(), LetoolFragment.FRAGMENT_TAG_PHOTO);
-        } else if (f instanceof GalleryFragment) {
-            Bundle data = new Bundle();
-            data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
-            f.setArguments(data);
-            GlobalPreference.setLastUIComponnents(this.getActivity(), LetoolFragment.FRAGMENT_TAG_FOLDER);
-        }
     }
 
     private static class SlidingMenuItem {

@@ -7,7 +7,6 @@ import android.os.Message;
 
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.fragment.FullImageFragment;
-import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.imagedata.utils.BitmapUtils;
 import com.xjt.letool.metadata.ContentListener;
 import com.xjt.letool.metadata.MediaItem;
