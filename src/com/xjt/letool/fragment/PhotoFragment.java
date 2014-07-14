@@ -66,8 +66,7 @@ import android.widget.Toast;
  * @Date 9:48:35 AM Apr 19, 2014
  * @Comments:null
  */
-public class PhotoFragment extends Fragment implements
-        EyePosition.EyePositionListener, ContractSelectListener, OnActionModeListener,
+public class PhotoFragment extends Fragment implements EyePosition.EyePositionListener, ContractSelectListener, OnActionModeListener,
         LayoutListener, OnMenuItemClickListener {
 
     private static final String TAG = PhotoFragment.class.getSimpleName();
@@ -105,9 +104,7 @@ public class PhotoFragment extends Fragment implements
     private boolean mGetContent;
     private SynchronizedHandler mHandler;
     protected ContractSelector mSelector;
-    private EyePosition mEyePosition; // The eyes' position of the user, the
-                                      // origin is at the center of the device
-                                      // and the unit is in pixels.
+    private EyePosition mEyePosition; // The eyes' position of the user, the origin is at the center of the device and the unit is in pixels.
     private float mUserDistance; // in pixel
     private float mX;
     private float mY;
@@ -126,23 +123,19 @@ public class PhotoFragment extends Fragment implements
             LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
             int thumbnailViewLeft = left + mConfig.paddingLeft;
             int thumbnailViewRight = right - left - mConfig.paddingRight;
-            int thumbnailViewTop = top + mConfig.paddingTop
-                    + actionBar.getHeight();
+            int thumbnailViewTop = top + mConfig.paddingTop + actionBar.getHeight();
             int thumbnailViewBottom = bottom - top - mConfig.paddingBottom;
             mRender.setHighlightItemPath(null);
             // Set the mThumbnailView as a reference point to the open animation
             mOpenCenter.setReferencePosition(0, thumbnailViewTop);
-            mThumbnailView.layout(thumbnailViewLeft, thumbnailViewTop,
-                    thumbnailViewRight, thumbnailViewBottom);
-            LetoolUtils.setViewPointMatrix(mMatrix, (right - left) / 2,
-                    (bottom - top) / 2, -mUserDistance);
+            mThumbnailView.layout(thumbnailViewLeft, thumbnailViewTop, thumbnailViewRight, thumbnailViewBottom);
+            LetoolUtils.setViewPointMatrix(mMatrix, (right - left) / 2, (bottom - top) / 2, -mUserDistance);
         }
 
         @Override
         protected void render(GLESCanvas canvas) {
             canvas.save(GLESCanvas.SAVE_FLAG_MATRIX);
-            LetoolUtils.setViewPointMatrix(mMatrix, getWidth() / 2 + mX,
-                    getHeight() / 2 + mY, mZ);
+            LetoolUtils.setViewPointMatrix(mMatrix, getWidth() / 2 + mX, getHeight() / 2 + mY, mZ);
             canvas.multiplyMatrix(mMatrix, 0);
             super.render(canvas);
             canvas.restore();
@@ -170,8 +163,7 @@ public class PhotoFragment extends Fragment implements
         mLoadingBits &= ~loadTaskBit;
         if (mLoadingBits == 0 && mIsActive) {
             if (mAlbumDataSetLoader.size() == 0) {
-                Toast.makeText(getActivity(), R.string.empty_album,
-                        Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.empty_album, Toast.LENGTH_LONG).show();
                 showEmptyView(R.string.common_error_nodcim);
             }
         }
@@ -188,8 +180,7 @@ public class PhotoFragment extends Fragment implements
 
     private void onUp(boolean followedByLongPress) {
         if (followedByLongPress) {
-            mRender.setPressedIndex(-1); // Avoid showing press-up animations
-                                         // for long-press.
+            mRender.setPressedIndex(-1); // Avoid showing press-up animations for long-press.
         } else {
             mRender.setPressedUp();
         }
@@ -208,15 +199,12 @@ public class PhotoFragment extends Fragment implements
         } else { // Render transition in pressed state
             mRender.setPressedIndex(thumbnailIndex);
             mRender.setPressedUp();
-            mHandler.sendMessageDelayed(
-                    mHandler.obtainMessage(MSG_PICK_PHOTO, thumbnailIndex, 0),
-                    FadeTexture.DURATION);
+            mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_PICK_PHOTO, thumbnailIndex, 0), FadeTexture.DURATION);
         }
     }
 
     public void onLongTap(int thumbnailIndex) {
-        MobclickAgent.onEvent(mLetoolContext.getAppContext(),
-                StatConstants.EVENT_KEY_PHOTO_LONG_PRESSED);
+        MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_PHOTO_LONG_PRESSED);
         if (mGetContent)
             return;
         MediaItem item = mAlbumDataSetLoader.get(thumbnailIndex);
@@ -275,10 +263,10 @@ public class PhotoFragment extends Fragment implements
         mIsCameraSource = data.getBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM);
         if (mIsCameraSource) {
             if (MediaSetUtils.MY_ALBUM_BUCKETS.length > 0) {
-                mAlbumTitle = getString(R.string.common_photo);
-                mDataSetPath = new MediaPath(data.getString(ThumbnailActivity.KEY_MEDIA_PATH),MediaSetUtils.MY_ALBUM_BUCKETS[0]);
+                mAlbumTitle = getString(R.string.common_picture);
+                mDataSetPath = new MediaPath(data.getString(ThumbnailActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]);
                 mDataSet = new LocalAlbum(mDataSetPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.MY_ALBUM_BUCKETS, true,
-                        getString(R.string.common_photo));
+                        getString(R.string.common_picture));
                 mHasDCIM = true;
             } else {
                 mHasDCIM = false;
@@ -303,9 +291,7 @@ public class PhotoFragment extends Fragment implements
         ThumbnailLayout layout;
         layout = new ThumbnailContractLayout(mConfig.albumSpec);
         mThumbnailView = new ThumbnailView(mLetoolContext, layout);
-        mThumbnailView.setBackgroundColor(LetoolUtils
-                .intColorToFloatARGBArray(getResources().getColor(
-                        R.color.default_background_thumbnail)));
+        mThumbnailView.setBackgroundColor(LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.default_background_thumbnail)));
         mThumbnailView.setListener(new ThumbnailView.SimpleListener() {
 
             @Override
@@ -336,41 +322,40 @@ public class PhotoFragment extends Fragment implements
         mRootPane.addComponent(mThumbnailView);
     }
 
-    private void initBrowseActionBar() {
-        LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
-        actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_BROWSE, this);
-        ViewGroup nativeButtons = (ViewGroup) actionBar.getActionPanel().findViewById(R.id.navi_buttons);
+    private void initBars() {
+        LetoolTopBar topBar = mLetoolContext.getLetoolTopBar();
+        topBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_BROWSE, this);
+        ViewGroup nativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);
         if (mIsCameraSource) {
-            actionBar.setTitleText(R.string.app_name);
+            topBar.setTitleText(R.string.app_name);
             nativeButtons.setVisibility(View.VISIBLE);
-            actionBar.setTitleIcon(R.drawable.ic_drawer);
+            topBar.setTitleIcon(R.drawable.ic_drawer);
             TextView naviToPhoto = (TextView) nativeButtons.findViewById(R.id.navi_to_photo);
             naviToPhoto.setEnabled(false);
             TextView naviToGallery = (TextView) nativeButtons.findViewById(R.id.navi_to_gallery);
             naviToGallery.setEnabled(true);
             naviToGallery.setOnClickListener(this);
         } else {
-            actionBar.setTitleText(mAlbumTitle);
+            topBar.setTitleText(mAlbumTitle);
             nativeButtons.setVisibility(View.GONE);
-            actionBar.setTitleIcon(R.drawable.ic_action_previous_item);
+            topBar.setTitleIcon(R.drawable.ic_action_previous_item);
         }
         LetoolBottomBar bottomBar = mLetoolContext.getLetoolBottomBar();
         bottomBar.setVisible(View.GONE, false);
     }
 
-    private void initSelectionActionBar() {
+    private void initSelectionBar() {
         LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
         actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_SELECTION, this);
         actionBar.setContractSelectionManager(mSelector);
-        String format = getResources().getQuantityString(
-                R.plurals.number_of_items_selected, 0);
+        String format = getResources().getQuantityString(R.plurals.number_of_items_selected, 0);
         actionBar.setTitleText(String.format(format, 0));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LLog.i(TAG, "onCreateView" + System.currentTimeMillis());
-        initBrowseActionBar();
+        initBars();
         return null;
     }
 
@@ -491,7 +476,7 @@ public class PhotoFragment extends Fragment implements
                 return;
             }
             if (mIsCameraSource) {
-                //getLetoolSlidingMenu().toggle();
+                mLetoolContext.getLetoolSlidingMenu().toggle();
             } else {
                 mLetoolContext.popContentFragment();
             }
@@ -556,10 +541,8 @@ public class PhotoFragment extends Fragment implements
     public void showPopupMenu() {
         PopupMenu popup = new PopupMenu(this.getActivity());
         popup.setOnItemSelectedListener(this);
-        popup.add(POP_UP_MENU_ITEM_SELECT, R.drawable.ic_action_accept,
-                R.string.popup_menu_select_mode);
-        popup.add(POP_UP_MENU_ITEM_CAMERA, R.drawable.ic_action_camera,
-                R.string.popup_menu_take_picture);
+        popup.add(POP_UP_MENU_ITEM_SELECT, R.drawable.ic_action_accept, R.string.popup_menu_select_mode);
+        popup.add(POP_UP_MENU_ITEM_CAMERA, R.drawable.ic_action_camera, R.string.popup_menu_take_picture);
         //popup.show(mMore);
 
     }
@@ -568,12 +551,12 @@ public class PhotoFragment extends Fragment implements
     public void onSelectionModeChange(int mode) {
         switch (mode) {
             case ContractSelector.ENTER_SELECTION_MODE: {
-                initSelectionActionBar();
+                initSelectionBar();
                 mRootPane.invalidate();
                 break;
             }
             case ContractSelector.LEAVE_SELECTION_MODE: {
-                initBrowseActionBar();
+                initBars();
                 mRootPane.invalidate();
                 break;
             }
@@ -602,8 +585,7 @@ public class PhotoFragment extends Fragment implements
             data.putInt(ThumbnailActivity.KEY_ALBUM_ID, mDataSet.getPath().getIdentity());
             data.putString(ThumbnailActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
             data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, false);
-            data.putString(ThumbnailActivity.KEY_ALBUM_TITLE,
-                    mDataSet.getName());
+            data.putString(ThumbnailActivity.KEY_ALBUM_TITLE, mDataSet.getName());
         }
         Fragment fragment = new FullImageFragment();
         data.putInt(FullImageFragment.KEY_INDEX_HINT, index);
@@ -617,15 +599,13 @@ public class PhotoFragment extends Fragment implements
     public void onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case POP_UP_MENU_ITEM_SELECT:
-                MobclickAgent.onEvent(mLetoolContext.getAppContext(),
-                        StatConstants.EVENT_KEY_MENU_SELECT);
+                MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_MENU_SELECT);
                 if (mSelector != null) {
                     mSelector.enterSelectionMode();
                 }
                 break;
             case POP_UP_MENU_ITEM_CAMERA:
-                MobclickAgent.onEvent(mLetoolContext.getAppContext(),
-                        StatConstants.EVENT_KEY_MENU_CAMERA);
+                MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_MENU_CAMERA);
                 Intent it = new Intent();
                 it.setAction(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
                 startActivity(it);

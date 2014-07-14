@@ -15,6 +15,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.fragment.LetoolFragment;
+import com.xjt.letool.fragment.PhotoFragment;
 import com.xjt.letool.fragment.SlidingMenuFragment;
 import com.xjt.letool.stat.StatConstants;
 
@@ -41,11 +42,11 @@ public class LetoolSlidingMenu {
             mAlphaHolder = new AlphaFragment();
             FragmentTransaction ft = mFragmentManager.beginTransaction();
             ft.setCustomAnimations(R.anim.alpha_in, 0);
-            ft.add(R.id.root_container, mAlphaHolder, LetoolFragment.FRAGMENT_TAG_SLIDING_MENU_ALPHA);
+            ft.add(R.id.local_image_browse_main_view, mAlphaHolder, LetoolFragment.FRAGMENT_TAG_SLIDING_MENU_ALPHA);
             ft.commit();
             FragmentTransaction ft1 = mFragmentManager.beginTransaction();
             ft1.setCustomAnimations(R.anim.slide_left_in, 0);
-            ft1.add(R.id.root_container, mFragment, LetoolFragment.FRAGMENT_TAG_SLIDING_MENU).commit();
+            ft1.add(R.id.local_image_browse_main_view, mFragment, LetoolFragment.FRAGMENT_TAG_SLIDING_MENU).commit();
             MobclickAgent.onEvent(mContext, StatConstants.EVENT_KEY_SLIDE_MENU);
             //playTipAinm(true);
         } else if (mFragment != null) {

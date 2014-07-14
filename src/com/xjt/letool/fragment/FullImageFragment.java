@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 
 import android.view.View;
@@ -26,7 +25,6 @@ import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
-import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.metadata.MediaDetails;
 import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaPath;
@@ -45,14 +43,12 @@ import com.xjt.letool.view.DetailsHelper.CloseListener;
 import com.xjt.letool.view.FullImageView;
 import com.xjt.letool.view.GLBaseView;
 import com.xjt.letool.view.GLController;
-import com.xjt.letool.view.GLRootView;
 import com.xjt.letool.view.LetoolTopBar;
 import com.xjt.letool.view.DetailsHelper.DetailsSource;
 import com.xjt.letool.view.LetoolBottomBar;
 import com.xjt.letool.view.SingleDeleteMediaListener;
 import com.xjt.letool.views.opengl.GLESCanvas;
 
-import com.xjt.letool.activities.LocalImageBrowseActivity;
 import com.xjt.letool.activities.ThumbnailActivity;
 import com.xjt.letool.adapters.PhotoDataAdapter;
 import com.xjt.letool.common.LLog;
@@ -456,14 +452,14 @@ public class FullImageFragment extends LetoolFragment implements
         } else {
             mMediaSet = new LocalAlbum(new MediaPath(
                     data.getString(ThumbnailActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]),
-                    (LetoolApp) getActivity().getApplication(), MediaSetUtils.MY_ALBUM_BUCKETS, true, getString(R.string.common_photo));
+                    (LetoolApp) getActivity().getApplication(), MediaSetUtils.MY_ALBUM_BUCKETS, true, getString(R.string.common_picture));
         }
         mStartInFilmstrip = data.getBoolean(KEY_START_IN_FILMSTRIP, false);
         mCurrentIndex = data.getInt(KEY_INDEX_HINT, 0);
         mSelectionManager.setSourceMediaSet(mMediaSet);
     }
 
-    private void initBrowseActionBar() {
+    private void initBars() {
         LetoolTopBar topBar = mLetoolContext.getLetoolTopBar();
         topBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_FULL_IMAGE, this);
         topBar.setTitleIcon(R.drawable.ic_action_previous_item);
@@ -478,7 +474,7 @@ public class FullImageFragment extends LetoolFragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        initBrowseActionBar();
+        initBars();
         return null;
     }
 

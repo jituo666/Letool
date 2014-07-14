@@ -1,3 +1,4 @@
+
 package com.xjt.letool;
 
 import android.content.Context;
@@ -12,6 +13,7 @@ import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.view.GLBaseView;
 import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.LetoolBottomBar;
+import com.xjt.letool.view.LetoolSlidingMenu;
 import com.xjt.letool.view.LetoolTopBar;
 
 /**
@@ -21,32 +23,35 @@ import com.xjt.letool.view.LetoolTopBar;
  */
 public interface LetoolContext {
 
-	public Context getAppContext();
+    public Context getAppContext();
 
-	public Looper getMainLooper();
+    public Looper getMainLooper();
 
-	public Resources getResources();
+    public Resources getResources();
 
-	//
-	public DataManager getDataManager();
+    //
+    public DataManager getDataManager();
 
-	public ThreadPool getThreadPool();
+    public ThreadPool getThreadPool();
 
-	public GLController getGLController();
+    public GLController getGLController();
 
-	//
-	public LetoolTopBar getLetoolTopBar();
+    //
+    public LetoolTopBar getLetoolTopBar();
 
-	public LetoolBottomBar getLetoolBottomBar();
+    public LetoolBottomBar getLetoolBottomBar();
 
-	public OrientationManager getOrientationManager();
+    public OrientationManager getOrientationManager();
 
-	//
-	public void setMainView(GLBaseView view);
-	public void setMainView(View view);
+    //
+    public void setMainView(GLBaseView view);
 
-	public void pushContentFragment(Fragment newFragment, Fragment oldFragment, boolean backup);
+    public void setMainView(View view);
 
-	public void popContentFragment();
+    public void pushContentFragment(Fragment newFragment, Fragment oldFragment, boolean backup);
+
+    public void popContentFragment();
+
+    public LetoolSlidingMenu getLetoolSlidingMenu();
 
 }

@@ -5,7 +5,7 @@
     android:background="@drawable/main_action_bar_bg"
     android:orientation="vertical" >
 
-    <include layout="@layout/gl_root_view" />
+    <include layout="@layout/letool_main_view" />
 
     <FrameLayout
         android:id="@+id/local_image_browse_top_bar"

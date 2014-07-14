@@ -18,19 +18,15 @@ import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.metadata.loader.DataLoadingListener;
 import com.xjt.letool.metadata.loader.ThumbnailSetDataLoader;
 import com.xjt.letool.metadata.source.LocalAlbumSet;
-import com.xjt.letool.preference.GlobalPreference;
 import com.xjt.letool.selectors.ContractSelectListener;
 import com.xjt.letool.selectors.ContractSelector;
 import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.LetoolUtils;
-import com.xjt.letool.view.CommonLoadingPanel;
 import com.xjt.letool.view.BatchDeleteMediaListener;
 import com.xjt.letool.view.BatchDeleteMediaListener.DeleteMediaProgressListener;
 import com.xjt.letool.view.DetailsHelper;
 import com.xjt.letool.view.GLBaseView;
 import com.xjt.letool.view.GLController;
-import com.xjt.letool.view.GLRootView;
-import com.xjt.letool.view.LetoolBottomBar;
 import com.xjt.letool.view.LetoolTopBar;
 import com.xjt.letool.view.LetoolDialog;
 import com.xjt.letool.view.ThumbnailView;
@@ -317,12 +313,12 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         mThumbnailViewRenderer.setModel(mThumbnailSetAdapter);
     }
 
-    private void initBrowseActionBar() {
-        LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
-        actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_BROWSE, this);
-        actionBar.setTitleIcon(R.drawable.ic_drawer);
-        actionBar.setTitleText(R.string.app_name);
-        mNativeButtons = (ViewGroup) actionBar.getActionPanel().findViewById(R.id.navi_buttons);
+    private void initBars() {
+        LetoolTopBar topBar = mLetoolContext.getLetoolTopBar();
+        topBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_BROWSE, this);
+        topBar.setTitleIcon(R.drawable.ic_drawer);
+        topBar.setTitleText(R.string.app_name);
+        mNativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);
         mNativeButtons.setVisibility(View.VISIBLE);
 
         TextView naviToGallery = (TextView) mNativeButtons.findViewById(R.id.navi_to_gallery);
@@ -359,7 +355,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LLog.i(TAG, "onCreateView");
-        initBrowseActionBar();
+        initBars();
         return null;
     }
 
@@ -513,7 +509,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.action_navi) {
-            //getLetoolSlidingMenu().toggle();
+            mLetoolContext.getLetoolSlidingMenu().toggle();
         } else if (v.getId() == R.id.operation_delete) {
 
             MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_GALLERY_DELETE);
@@ -608,7 +604,7 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
             }
             case ContractSelector.LEAVE_SELECTION_MODE: {
 
-                initBrowseActionBar();
+                initBars();
                 mRootPane.invalidate();
                 break;
             }

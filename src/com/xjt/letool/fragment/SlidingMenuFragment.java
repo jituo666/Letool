@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 import com.xjt.letool.activities.BaseFragmentActivity;
+import com.xjt.letool.activities.LocalImageBrowseActivity;
 import com.xjt.letool.activities.ThumbnailActivity;
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
@@ -49,8 +50,8 @@ public class SlidingMenuFragment extends Fragment {
     public static final int SLIDING_MENU_EXIT = 3;
 
     private static final SlidingMenuItem[] SLIDING_MENUS = new SlidingMenuItem[] {
-            new SlidingMenuItem(SLIDING_MENU_PHOTO, R.drawable.ic_action_photo, R.string.common_photo, true, true),
-            new SlidingMenuItem(SLIDING_MENU_FOLDER, R.drawable.ic_action_gallery, R.string.common_gallery, true, true),
+            new SlidingMenuItem(SLIDING_MENU_PHOTO, R.drawable.ic_action_photo, R.string.common_picture, true, true),
+            new SlidingMenuItem(SLIDING_MENU_FOLDER, R.drawable.ic_action_gallery, R.string.common_video, true, true),
             new SlidingMenuItem(SLIDING_MENU_SETTING, R.drawable.ic_action_settings, R.string.common_settings, true, true),
             new SlidingMenuItem(SLIDING_MENU_EXIT, R.drawable.ic_action_exit, R.string.common_exit, true, true),
     };
@@ -75,14 +76,14 @@ public class SlidingMenuFragment extends Fragment {
     };
     private ListView mMenusList;
     private ImageView mMenuLogo;
-    private BaseFragmentActivity mActivity;
+    private LocalImageBrowseActivity mActivity;
     private FragmentManager mFragmentManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFragmentManager = getFragmentManager();
-        mActivity = (BaseFragmentActivity) getActivity();
+        mActivity = (LocalImageBrowseActivity) getActivity();
     }
 
     @Override

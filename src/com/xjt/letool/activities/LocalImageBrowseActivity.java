@@ -3,11 +3,14 @@ package com.xjt.letool.activities;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
@@ -16,6 +19,7 @@ import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.OrientationManager;
 import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.fragment.GalleryFragment;
+import com.xjt.letool.fragment.LetoolFragment;
 import com.xjt.letool.fragment.PhotoFragment;
 import com.xjt.letool.imagedata.utils.LetoolBitmapPool;
 import com.xjt.letool.metadata.DataManager;
@@ -26,6 +30,7 @@ import com.xjt.letool.view.GLBaseView;
 import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.GLRootView;
 import com.xjt.letool.view.LetoolBottomBar;
+import com.xjt.letool.view.LetoolSlidingMenu;
 import com.xjt.letool.view.LetoolTopBar;
 
 public class LocalImageBrowseActivity extends FragmentActivity implements LetoolContext {
@@ -33,9 +38,12 @@ public class LocalImageBrowseActivity extends FragmentActivity implements Letool
     private static final String TAG = LocalImageBrowseActivity.class.getSimpleName();
     private LetoolTopBar mTopBar;
     private LetoolBottomBar mBottomBar;
+    private LetoolSlidingMenu mSlidingMenu;
     private ViewGroup mMainView;
     private GLRootView mGLESView;
+    private Toast mExitToast;
     private OrientationManager mOrientationManager;
+    private boolean mWaitingForExit = false;
 
     @Override
     protected void onCreate(Bundle b) {
@@ -43,7 +51,8 @@ public class LocalImageBrowseActivity extends FragmentActivity implements Letool
         setContentView(R.layout.local_browse_image);
         mTopBar = new LetoolTopBar(this, (ViewGroup) findViewById(R.id.local_image_browse_top_bar));
         mBottomBar = new LetoolBottomBar(this, (ViewGroup) findViewById(R.id.local_image_browse_bottom_bar));
-        mMainView = (ViewGroup) findViewById(R.id.main_view);
+        mSlidingMenu = new LetoolSlidingMenu(this, getSupportFragmentManager(), findViewById(R.id.local_image_browse_top_bar));
+        mMainView = (ViewGroup) findViewById(R.id.local_image_browse_main_view);
         mGLESView = (GLRootView) mMainView.findViewById(R.id.gl_root_view);
         mOrientationManager = new OrientationManager(this);
         startFirstFragment();
@@ -155,8 +164,50 @@ public class LocalImageBrowseActivity extends FragmentActivity implements Letool
         if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             popContentFragment();
         } else {
-            super.onBackPressed();
+            Fragment f = getSupportFragmentManager().findFragmentByTag(LetoolFragment.FRAGMENT_TAG_SLIDING_MENU);
+            if (f != null) {
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                Fragment aphaHolder = getSupportFragmentManager().findFragmentByTag(LetoolFragment.FRAGMENT_TAG_SLIDING_MENU_ALPHA);
+                if (aphaHolder != null) {
+                    ft.setCustomAnimations(0, R.anim.alpha_out);
+                    ft.remove(aphaHolder);
+                }
+                ft.setCustomAnimations(0, R.anim.slide_left_out);
+                ft.remove(f);
+                ft.commit();
+            } else {
+                if (mWaitingForExit) {
+                    if (mExitToast != null) {
+                        mExitToast.cancel();
+                    }
+                    finish();
+                } else {
+                    mWaitingForExit = true;
+                    mExitToast = Toast.makeText(this, R.string.common_exit_tip, Toast.LENGTH_SHORT);
+                    mExitToast.show();
+                    new Handler().postDelayed(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            mWaitingForExit = false;
+                        }
+                    }, 3000);
+                }
+            }
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        LLog.i(TAG, "onKeyDown menu1:" + keyCode);
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+            LLog.i(TAG, "onKeyDown menu2:" + getSupportFragmentManager().getBackStackEntryCount());
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                mSlidingMenu.toggle();
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -167,6 +218,11 @@ public class LocalImageBrowseActivity extends FragmentActivity implements Letool
     @Override
     public LetoolBottomBar getLetoolBottomBar() {
         return mBottomBar;
+    }
+
+    @Override
+    public LetoolSlidingMenu getLetoolSlidingMenu() {
+        return mSlidingMenu;
     }
 
     @Override
