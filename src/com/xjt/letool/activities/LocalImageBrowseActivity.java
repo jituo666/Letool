@@ -36,6 +36,12 @@ import com.xjt.letool.view.LetoolTopBar;
 public class LocalImageBrowseActivity extends FragmentActivity implements LetoolContext {
 
     private static final String TAG = LocalImageBrowseActivity.class.getSimpleName();
+    
+    public static final String KEY_ALBUM_TITLE = "album_title";
+    public static final String KEY_MEDIA_PATH = "media-path";
+    public static final String KEY_ALBUM_ID = "album_id";
+    public static final String KEY_IS_PHOTO_ALBUM = "is_photo_album";
+    
     private LetoolTopBar mTopBar;
     private LetoolBottomBar mBottomBar;
     private LetoolSlidingMenu mSlidingMenu;
@@ -99,19 +105,19 @@ public class LocalImageBrowseActivity extends FragmentActivity implements Letool
         if (MediaSetUtils.MY_ALBUM_BUCKETS.length <= 0) {
             fragment = new GalleryFragment();
             Bundle data = new Bundle();
-            data.putString(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
+            data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
             fragment.setArguments(data);
         } else {
             if (GalleryFragment.class.getSimpleName().equals(GlobalPreference.getLastUIComponents(this))) {
                 fragment = new GalleryFragment();
                 Bundle data = new Bundle();
-                data.putString(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
+                data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
                 fragment.setArguments(data);
             } else {
                 fragment = new PhotoFragment();
                 Bundle data = new Bundle();
-                data.putString(ThumbnailActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-                data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
+                data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+                data.putBoolean(LocalImageBrowseActivity.KEY_IS_PHOTO_ALBUM, true);
                 fragment.setArguments(data);
             }
         }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
-import com.xjt.letool.activities.ThumbnailActivity;
+import com.xjt.letool.activities.LocalImageBrowseActivity;
 import com.xjt.letool.common.EyePosition;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
@@ -549,8 +549,8 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         } else if (v.getId() == R.id.navi_to_photo) {
             Fragment f = new PhotoFragment();
             Bundle data = new Bundle();
-            data.putString(ThumbnailActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-            data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
+            data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+            data.putBoolean(LocalImageBrowseActivity.KEY_IS_PHOTO_ALBUM, true);
             f.setArguments(data);
             mLetoolContext.pushContentFragment(f, this, false);
         }
@@ -570,20 +570,20 @@ public class GalleryFragment extends LetoolFragment implements EyePosition.EyePo
         MediaPath mediaPath = targetSet.getPath();
         Fragment f = new PhotoFragment();
         Bundle data = new Bundle();
-        data.putString(ThumbnailActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-        data.putString(ThumbnailActivity.KEY_ALBUM_TITLE, targetSet.getName());
-        data.putInt(ThumbnailActivity.KEY_ALBUM_ID, mediaPath.getIdentity());
-        data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, false);
+        data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+        data.putString(LocalImageBrowseActivity.KEY_ALBUM_TITLE, targetSet.getName());
+        data.putInt(LocalImageBrowseActivity.KEY_ALBUM_ID, mediaPath.getIdentity());
+        data.putBoolean(LocalImageBrowseActivity.KEY_IS_PHOTO_ALBUM, false);
         f.setArguments(data);
         mLetoolContext.pushContentFragment(f, this, true);
         /* Intent it = new Intent();
-         it.setClass(getActivity(), ThumbnailActivity.class);
-         it.putExtra(ThumbnailActivity.KEY_ALBUM_ID, mediaPath.getIdentity());
-         it.putExtra(ThumbnailActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-         it.putExtra(ThumbnailActivity.KEY_ALBUM_TITLE, targetSet.getName());
+         it.setClass(getActivity(), LocalImageBrowseActivity.class);
+         it.putExtra(LocalImageBrowseActivity.KEY_ALBUM_ID, mediaPath.getIdentity());
+         it.putExtra(LocalImageBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+         it.putExtra(LocalImageBrowseActivity.KEY_ALBUM_TITLE, targetSet.getName());
          int[] center = new int[2];
          getThumbnailCenter(thumbnailIndex, center);
-         startActivityForResult(it, ThumbnailActivity.REQUEST_FOR_PHOTO);*/
+         startActivityForResult(it, LocalImageBrowseActivity.REQUEST_FOR_PHOTO);*/
         return;
 
     }

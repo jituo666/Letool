@@ -1,7 +1,7 @@
 package com.xjt.letool.fragment;
 
-import com.xjt.letool.activities.BaseFragmentActivity;
-import com.xjt.letool.activities.ThumbnailActivity;
+import com.xjt.letool.LetoolContext;
+import com.xjt.letool.activities.LocalImageBrowseActivity;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.metadata.DataManager;
 
@@ -16,7 +16,7 @@ public class LetoolFragmentAdpter extends FragmentPagerAdapter {
 
     public final int TAB_POS_PHOTO = 0;
     public final int TAB_POS_PICTURE = 1;
-    private BaseFragmentActivity mActivity;
+    private LetoolContext mLetoolContext;
 
     private static final String[] CONTENT = new String[] { "照片", "图库" };
     private static final Class<?>[] fragments = new Class<?>[] {
@@ -24,9 +24,9 @@ public class LetoolFragmentAdpter extends FragmentPagerAdapter {
             GalleryFragment.class
     };
 
-    public LetoolFragmentAdpter(BaseFragmentActivity activity, FragmentManager fm) {
+    public LetoolFragmentAdpter(LetoolContext activity, FragmentManager fm) {
         super(fm);
-        mActivity = activity;
+        mLetoolContext = activity;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class LetoolFragmentAdpter extends FragmentPagerAdapter {
                     e.printStackTrace();
                 }
                 Bundle data = new Bundle();
-                data.putString(ThumbnailActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+                data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
                 fragment.setArguments(data);
                 return fragment;
             }
@@ -56,7 +56,7 @@ public class LetoolFragmentAdpter extends FragmentPagerAdapter {
                     e.printStackTrace();
                 }
                 Bundle data = new Bundle();
-                data.putString(ThumbnailActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
+                data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
                 LLog.i(TAG, "PictureFragment");
                 fragment.setArguments(data);
                 return fragment;

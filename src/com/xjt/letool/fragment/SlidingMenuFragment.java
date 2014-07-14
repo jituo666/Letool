@@ -21,9 +21,8 @@ import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
-import com.xjt.letool.activities.BaseFragmentActivity;
 import com.xjt.letool.activities.LocalImageBrowseActivity;
-import com.xjt.letool.activities.ThumbnailActivity;
+import com.xjt.letool.activities.LocalImageBrowseActivity;
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.metadata.DataManager;
@@ -145,13 +144,13 @@ public class SlidingMenuFragment extends Fragment {
     private void initFragmentData(Fragment f) {
         if (f instanceof PhotoFragment) {
             Bundle data = new Bundle();
-            data.putString(ThumbnailActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-            data.putBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM, true);
+            data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+            data.putBoolean(LocalImageBrowseActivity.KEY_IS_PHOTO_ALBUM, true);
             f.setArguments(data);
             GlobalPreference.setLastUIComponnents(this.getActivity(), LetoolFragment.FRAGMENT_TAG_PHOTO);
         } else if (f instanceof GalleryFragment) {
             Bundle data = new Bundle();
-            data.putString(ThumbnailActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
+            data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, mActivity.getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
             f.setArguments(data);
             GlobalPreference.setLastUIComponnents(this.getActivity(), LetoolFragment.FRAGMENT_TAG_FOLDER);
         }

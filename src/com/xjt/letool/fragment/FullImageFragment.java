@@ -49,7 +49,7 @@ import com.xjt.letool.view.LetoolBottomBar;
 import com.xjt.letool.view.SingleDeleteMediaListener;
 import com.xjt.letool.views.opengl.GLESCanvas;
 
-import com.xjt.letool.activities.ThumbnailActivity;
+import com.xjt.letool.activities.LocalImageBrowseActivity;
 import com.xjt.letool.adapters.PhotoDataAdapter;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.OrientationManager;
@@ -442,16 +442,16 @@ public class FullImageFragment extends LetoolFragment implements
 
     private void initDatas() {
         Bundle data = this.getArguments();
-        mIsCameraSource = data.getBoolean(ThumbnailActivity.KEY_IS_PHOTO_ALBUM);
+        mIsCameraSource = data.getBoolean(LocalImageBrowseActivity.KEY_IS_PHOTO_ALBUM);
         if (!mIsCameraSource) {
-            String albumTitle = data.getString(ThumbnailActivity.KEY_ALBUM_TITLE);
-            int albumId = data.getInt(ThumbnailActivity.KEY_ALBUM_ID, 0);
-            String albumMediaPath = data.getString(ThumbnailActivity.KEY_MEDIA_PATH);
+            String albumTitle = data.getString(LocalImageBrowseActivity.KEY_ALBUM_TITLE);
+            int albumId = data.getInt(LocalImageBrowseActivity.KEY_ALBUM_ID, 0);
+            String albumMediaPath = data.getString(LocalImageBrowseActivity.KEY_MEDIA_PATH);
             LLog.i(TAG, " photo fragment onCreateView id:" + albumId + " albumTitle:" + albumTitle + " albumMediaPath:" + albumMediaPath + " mIsCameraSource:");
             mMediaSet = mLetoolContext.getDataManager().getMediaSet(new MediaPath(albumMediaPath, albumId));
         } else {
             mMediaSet = new LocalAlbum(new MediaPath(
-                    data.getString(ThumbnailActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]),
+                    data.getString(LocalImageBrowseActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]),
                     (LetoolApp) getActivity().getApplication(), MediaSetUtils.MY_ALBUM_BUCKETS, true, getString(R.string.common_picture));
         }
         mStartInFilmstrip = data.getBoolean(KEY_START_IN_FILMSTRIP, false);

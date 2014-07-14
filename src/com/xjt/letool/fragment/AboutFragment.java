@@ -7,8 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
-import com.xjt.letool.activities.BaseFragmentActivity;
 
 
 /**
@@ -18,18 +18,18 @@ import com.xjt.letool.activities.BaseFragmentActivity;
  */
 public class AboutFragment extends Fragment {
 
-    private BaseFragmentActivity mActivity;
+    private LetoolContext mLetoolContext;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mActivity = (BaseFragmentActivity) getActivity();
+        mLetoolContext = (LetoolContext) getActivity();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.app_about, container, false);
-        mActivity.getLetoolTopBar().setTitleText(R.string.sliding_menu_title_about);
+        mLetoolContext.getLetoolTopBar().setTitleText(R.string.sliding_menu_title_about);
         return rootView;
     }
 }
