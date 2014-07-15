@@ -325,6 +325,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     private void initBars() {
         LetoolTopBar topBar = mLetoolContext.getLetoolTopBar();
         topBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_BROWSE, this);
+        topBar.setVisible(View.VISIBLE, false);
         ViewGroup nativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);
         if (mIsCameraSource) {
             topBar.setTitleText(R.string.app_name);

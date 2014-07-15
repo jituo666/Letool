@@ -3,7 +3,6 @@ package com.xjt.letool.activities;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
-import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.OrientationManager;
 import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.fragment.SettingFragment;
@@ -19,7 +18,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -45,19 +43,6 @@ public class SettingsActivity extends FragmentActivity implements LetoolContext 
 		mSlidingMenu = new LetoolSlidingMenu(this, getSupportFragmentManager(),findViewById(R.id.local_image_browse_top_bar));
 		startFirstFragment();
 	}
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        LLog.i(TAG, "onKeyDown menu1:" + keyCode);
-        if (keyCode == KeyEvent.KEYCODE_MENU) {
-            LLog.i(TAG, "onKeyDown menu2:" + getSupportFragmentManager().getBackStackEntryCount());
-            if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-                mSlidingMenu.toggle();
-                return true;
-            }
-        }
-        return super.onKeyDown(keyCode, event);
-    }
     
 	@Override
 	protected void onDestroy() {

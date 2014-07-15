@@ -2,6 +2,7 @@
 package com.xjt.letool.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -58,7 +59,6 @@ public class LocalImageBrowseActivity extends FragmentActivity implements Letool
         super.onCreate(b);
         setContentView(R.layout.local_browse_image);
         mIsImage = getIntent().getBooleanExtra(KEY_IS_IMAGE, true);
-		LLog.i(TAG, "--------isImageBrwosing:" + getIntent().getBooleanExtra(KEY_IS_IMAGE, true));
         mTopBar = new LetoolTopBar(this, (ViewGroup) findViewById(R.id.local_image_browse_top_bar));
         mBottomBar = new LetoolBottomBar(this, (ViewGroup) findViewById(R.id.local_image_browse_bottom_bar));
         mSlidingMenu = new LetoolSlidingMenu(this, getSupportFragmentManager(), findViewById(R.id.local_image_browse_top_bar));
@@ -68,7 +68,7 @@ public class LocalImageBrowseActivity extends FragmentActivity implements Letool
         startFirstFragment();
     }
 
-    @Override
+	@Override
     protected void onResume() {
         super.onResume();
         if (mGLESView.getVisibility() == View.VISIBLE)

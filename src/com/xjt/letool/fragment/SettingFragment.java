@@ -74,7 +74,7 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
     private void initBrowseActionBar() {
         LetoolTopBar topBar = mLetoolContext.getLetoolTopBar();
         topBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_SETTINGS, this);
-        topBar.setTitleIcon(R.drawable.ic_drawer);
+        topBar.setTitleIcon(R.drawable.ic_action_previous_item);
         topBar.setTitleText(R.string.common_settings);
         ViewGroup nativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);
         nativeButtons.setVisibility(View.GONE);
@@ -107,7 +107,7 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.action_navi) {
-            mLetoolContext.getLetoolSlidingMenu().toggle();
+            getActivity().finish();
         } else if (v.getId() == R.id.clear_cache) {
             MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_CLEAR_CAHCE);
             new ClearCacheTask().execute();

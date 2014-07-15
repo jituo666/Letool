@@ -109,7 +109,8 @@ public class SlidingMenuFragment extends Fragment {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                    if (position < mIntents.size()) {
+
+                    if (position < 2) {
                     	mLetoolContext.getLetoolSlidingMenu().toggle();
                     	if (mIntents.get(position).hasExtra(LocalImageBrowseActivity.KEY_IS_IMAGE)
                     			&& mLetoolContext.isImageBrwosing() == mIntents.get(position).getBooleanExtra(LocalImageBrowseActivity.KEY_IS_IMAGE, true))
@@ -117,8 +118,13 @@ public class SlidingMenuFragment extends Fragment {
                     		return;
                     	}
                     	getActivity().startActivity(mIntents.get(position));
+                        getActivity().finish();
+                    } else if (position == 2) {
+                    	mLetoolContext.getLetoolSlidingMenu().toggle();
+                    	getActivity().startActivity(mIntents.get(position));
+                    } else if (position == 3){
+                        getActivity().finish();
                     }
-                    getActivity().finish();
 
             }
         });
