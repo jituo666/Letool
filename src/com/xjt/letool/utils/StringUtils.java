@@ -2,6 +2,9 @@ package com.xjt.letool.utils;
 
 import java.text.DecimalFormat;
 
+import com.xjt.letool.R;
+
+import android.content.Context;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
@@ -158,5 +161,19 @@ public class StringUtils {
         if (index > 0)
             return str.substring(index);
         return str;
+    }
+    
+    public static String formatTime(Context c,long time) {
+
+    	return String.format("(" + c.getString(R.string.duration) + " %02d:%02d:%02d"  + ")", time/3600,time%3600/60,time%60);
+/*    	String result = "";
+    	long temp = 0;
+    	temp = time/3600;
+    	if (temp > 0) {
+    		result += temp + c.getString(R.string.common_hour);
+    	}
+    	String second = String.valueOf(time%60);
+    	String minutes = String.valueOf(time%3600);
+    	return result + minutes + c.getString(R.string.common_minutes) + second + c.getString(R.string.common_seconds);*/
     }
 }

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
-import com.xjt.letool.activities.LocalImageBrowseActivity;
+import com.xjt.letool.activities.LocalMediaBrowseActivity;
 import com.xjt.letool.common.EyePosition;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
@@ -81,7 +81,6 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     //    private CommonLoadingPanel mLoadingInsie;
     private ThumbnailView mThumbnailView;
     private boolean mIsActive = false;
-    private ViewConfigs.AlbumSetPage mConfig;
     private ThumbnailSetRenderer mThumbnailViewRenderer;
 
     private ContractSelector mSelector;
@@ -109,11 +108,26 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         @Override
         protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
             mEyePosition.resetPosition();
+            int paddingLeft =0, paddingRight =0,paddingTop = 0,paddingBottom=0;
+            if (mLetoolContext.isImageBrwosing()) {
+    	        ViewConfigs.AlbumSetPage config = ViewConfigs.AlbumSetPage.get(mLetoolContext.getAppContext());
+    	        paddingLeft =config.paddingLeft; 
+    	        paddingRight =config.paddingRight;
+    	        paddingTop = config.paddingTop;
+    	        paddingBottom=config.paddingBottom;
+            } else {
+            	ViewConfigs.VideoSetPage config = ViewConfigs.VideoSetPage.get(mLetoolContext.getAppContext());
+            	paddingLeft =config.paddingLeft; 
+    	        paddingRight =config.paddingRight;
+    	        paddingTop = config.paddingTop;
+    	        paddingBottom=config.paddingBottom;
+            }
+            
             LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
-            int thumbnailViewLeft = left + mConfig.paddingLeft;
-            int thumbnailViewRight = right - left - mConfig.paddingRight;
-            int thumbnailViewTop = top + mConfig.paddingTop + actionBar.getHeight();
-            int thumbnailViewBottom = bottom - top - mConfig.paddingBottom;
+            int thumbnailViewLeft = left + paddingLeft;
+            int thumbnailViewRight = right - left - paddingRight;
+            int thumbnailViewTop = top + paddingTop + actionBar.getHeight();
+            int thumbnailViewBottom = bottom - top - paddingBottom;
             if (mShowDetails) {
                 mDetailsHelper.layout(left, thumbnailViewTop, right, bottom);
             } else {
@@ -270,8 +284,14 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     private void initializeViews() {
         mSelector = new ContractSelector(mLetoolContext, true);
         mSelector.setSelectionListener(this);
-        mConfig = ViewConfigs.AlbumSetPage.get(mLetoolContext.getAppContext());
-        ThumbnailLayout layout = new ThumbnailSetContractLayout(mConfig.albumSetSpec);
+        ThumbnailLayout layout = null;
+        if (mLetoolContext.isImageBrwosing()) {
+	        ViewConfigs.AlbumSetPage config = ViewConfigs.AlbumSetPage.get(mLetoolContext.getAppContext());
+	        layout = new ThumbnailSetContractLayout(config.albumSetSpec);
+        } else {
+        	ViewConfigs.VideoSetPage config = ViewConfigs.VideoSetPage.get(mLetoolContext.getAppContext());
+ 	        layout = new ThumbnailSetContractLayout(config.videoSetSpec);
+        }
         mThumbnailView = new ThumbnailView(mLetoolContext, layout);
         mThumbnailView.setBackgroundColor(
                 LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.default_background_thumbnail))
@@ -551,11 +571,11 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
             MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_SELECT_OK);
             mSelector.leaveSelectionMode();
         } else if (v.getId() == R.id.navi_to_photo) {
-            Fragment f = new PhotoFragment();
+            Fragment f = mLetoolContext.isImageBrwosing()?new PhotoFragment():new VideoFragment();
             Bundle data = new Bundle();
-            data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
+            data.putString(LocalMediaBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
             		.getTopSetPath(mLetoolContext.isImageBrwosing()?DataManager.INCLUDE_LOCAL_IMAGE_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
-            data.putBoolean(LocalImageBrowseActivity.KEY_IS_CAMERA_SOURCE, true);
+            data.putBoolean(LocalMediaBrowseActivity.KEY_IS_CAMERA_SOURCE, true);
             f.setArguments(data);
             mLetoolContext.pushContentFragment(f, this, false);
         }
@@ -573,13 +593,13 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         }
         hideEmptyAlbumToast();
         MediaPath mediaPath = targetSet.getPath();
-        Fragment f = new PhotoFragment();
+        Fragment f = mLetoolContext.isImageBrwosing()?new PhotoFragment():new VideoFragment();
         Bundle data = new Bundle();
-        data.putString(LocalImageBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
+        data.putString(LocalMediaBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
         		.getTopSetPath(mLetoolContext.isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
-        data.putString(LocalImageBrowseActivity.KEY_ALBUM_TITLE, targetSet.getName());
-        data.putInt(LocalImageBrowseActivity.KEY_ALBUM_ID, mediaPath.getIdentity());
-        data.putBoolean(LocalImageBrowseActivity.KEY_IS_CAMERA_SOURCE, false);
+        data.putString(LocalMediaBrowseActivity.KEY_ALBUM_TITLE, targetSet.getName());
+        data.putInt(LocalMediaBrowseActivity.KEY_ALBUM_ID, mediaPath.getIdentity());
+        data.putBoolean(LocalMediaBrowseActivity.KEY_IS_CAMERA_SOURCE, false);
         f.setArguments(data);
         mLetoolContext.pushContentFragment(f, this, true);
 

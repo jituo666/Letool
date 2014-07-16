@@ -51,7 +51,7 @@ import com.xjt.letool.view.LetoolBottomBar;
 import com.xjt.letool.view.SingleDeleteMediaListener;
 import com.xjt.letool.views.opengl.GLESCanvas;
 
-import com.xjt.letool.activities.LocalImageBrowseActivity;
+import com.xjt.letool.activities.LocalMediaBrowseActivity;
 import com.xjt.letool.adapters.PhotoDataAdapter;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.OrientationManager;
@@ -444,17 +444,17 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
 
     private void initDatas() {
         Bundle data = this.getArguments();
-        mIsCameraSource = data.getBoolean(LocalImageBrowseActivity.KEY_IS_CAMERA_SOURCE);
+        mIsCameraSource = data.getBoolean(LocalMediaBrowseActivity.KEY_IS_CAMERA_SOURCE);
         if (!mIsCameraSource) {
-            String albumTitle = data.getString(LocalImageBrowseActivity.KEY_ALBUM_TITLE);
-            int albumId = data.getInt(LocalImageBrowseActivity.KEY_ALBUM_ID, 0);
-            String albumMediaPath = data.getString(LocalImageBrowseActivity.KEY_MEDIA_PATH);
+            String albumTitle = data.getString(LocalMediaBrowseActivity.KEY_ALBUM_TITLE);
+            int albumId = data.getInt(LocalMediaBrowseActivity.KEY_ALBUM_ID, 0);
+            String albumMediaPath = data.getString(LocalMediaBrowseActivity.KEY_MEDIA_PATH);
             LLog.i(TAG, " photo fragment onCreateView id:" + albumId + " albumTitle:" + albumTitle + " albumMediaPath:" + albumMediaPath + " mIsCameraSource:");
             mMediaSet = mLetoolContext.getDataManager().getMediaSet(new MediaPath(albumMediaPath, albumId));
         } else {
         	boolean isImage = mLetoolContext.isImageBrwosing();
             mMediaSet = new LocalAlbum(new MediaPath(
-                    data.getString(LocalImageBrowseActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]),
+                    data.getString(LocalMediaBrowseActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]),
                     (LetoolApp) getActivity().getApplication(),
                     MediaSetUtils.MY_ALBUM_BUCKETS, isImage, getString(isImage?R.string.common_picture:R.string.common_record));
         }

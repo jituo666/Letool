@@ -21,9 +21,9 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class SettingsActivity extends FragmentActivity implements LetoolContext {
+public class GlobalSettingsActivity extends FragmentActivity implements LetoolContext {
 
-    private static final String TAG = SettingsActivity.class.getSimpleName();
+    private static final String TAG = GlobalSettingsActivity.class.getSimpleName();
     
 	private LetoolTopBar mTopBar;
 	private LetoolSlidingMenu mSlidingMenu;

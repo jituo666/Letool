@@ -9,6 +9,9 @@
     <color name="albumset_label_background">#EE414143</color>
     <color name="albumset_label_title">#FBFBFB</color>
     <color name="albumset_label_count">#A9ABAD</color>
+    <color name="video_label_background">#EE414143</color>
+    <color name="video_label_title">#FBFBFB</color>
+    <color name="video_label_count">#A9ABAD</color>
 
     <!-- configuration for album page -->
     <color name="album_background">#FF1A1A1A</color>

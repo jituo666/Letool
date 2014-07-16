@@ -27,8 +27,7 @@ public class LocalVideo extends LocalMediaItem {
     private static final String TAG = "LocalVideo";
     public static final String ITEM_PATH = "/local/video/item/*";
 
-    // Must preserve order between these indices and the order of the terms in
-    // the following PROJECTION array.
+    // Must preserve order between these indices and the order of the terms in the following PROJECTION array.
     private static final int INDEX_ID = 0;
     private static final int INDEX_CAPTION = 1;
     private static final int INDEX_MIME_TYPE = 2;
@@ -196,8 +195,7 @@ public class LocalVideo extends LocalMediaItem {
         MediaDetails details = super.getDetails();
         int s = durationInSec;
         if (s > 0) {
-            details.addDetail(MediaDetails.INDEX_DURATION, LetoolUtils.formatDuration(
-                    mApplication.getAndroidContext(), durationInSec));
+            details.addDetail(MediaDetails.INDEX_DURATION, LetoolUtils.formatDuration(mApplication.getAndroidContext(), durationInSec));
         }
         return details;
     }
@@ -219,7 +217,10 @@ public class LocalVideo extends LocalMediaItem {
 
     @Override
     public Job<ETC1Texture> requestImage(int type, int extra) {
-        // TODO Auto-generated method stub
         return null;
+    }
+    
+    public long getDuration() {
+    	return durationInSec;
     }
 }

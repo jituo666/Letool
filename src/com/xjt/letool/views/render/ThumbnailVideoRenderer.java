@@ -3,23 +3,22 @@ package com.xjt.letool.views.render;
 
 
 import com.xjt.letool.LetoolContext;
-import com.xjt.letool.adapters.ThumbnailSetDataWindow;
-import com.xjt.letool.adapters.ThumbnailSetDataWindow.AlbumSetEntry;
+import com.xjt.letool.adapters.ThumbnailVideoDataWindow;
+import com.xjt.letool.adapters.ThumbnailVideoDataWindow.VideoEntry;
 import com.xjt.letool.metadata.MediaPath;
-import com.xjt.letool.metadata.loader.ThumbnailSetDataLoader;
+import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.selectors.ContractSelector;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.views.opengl.ColorTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.opengl.Texture;
-import com.xjt.letool.views.opengl.TiledTexture;
 import com.xjt.letool.views.opengl.UploadedBitmapTexture;
 import com.xjt.letool.views.utils.AlbumLabelMaker;
 import com.xjt.letool.views.utils.ViewConfigs;
 
-public class ThumbnailSetRenderer extends AbstractThumbnailRender {
+public class ThumbnailVideoRenderer extends AbstractThumbnailRender {
 
-    private static final String TAG = ThumbnailSetRenderer.class.getSimpleName();
+    private static final String TAG = ThumbnailVideoRenderer.class.getSimpleName();
 
     private static final int CACHE_SIZE = 48;
     private final int mPlaceholderColor;
@@ -28,7 +27,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
     private LetoolContext mActivity;
 
     private ThumbnailView mThumbnailView;
-    private ThumbnailSetDataWindow mDataWindow;
+    private ThumbnailVideoDataWindow mDataWindow;
 
     private int mPressedIndex = -1;
     private boolean mAnimatePressedUp;
@@ -54,7 +53,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         public int borderSize;
     }
 
-    private class MyCacheListener implements ThumbnailSetDataWindow.Listener {
+    private class MyCacheListener implements ThumbnailVideoDataWindow.Listener {
 
         @Override
         public void onSizeChanged(int size) {
@@ -67,26 +66,26 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         }
     }
 
-    public ThumbnailSetRenderer(LetoolContext activity, ThumbnailView thumbnailView, ContractSelector selector) {
+    public ThumbnailVideoRenderer(LetoolContext activity, ThumbnailView thumbnailView, ContractSelector selector) {
         super(activity.getAppContext());
         mActivity = activity;
         mThumbnailView = thumbnailView;
         mPlaceholderColor = 0xFFE8E8E8;
         mMediaSelector = selector;
-        mLabelSpec = ViewConfigs.AlbumSetPage.get(activity.getAppContext()).labelSpec;
+        mLabelSpec = ViewConfigs.VideoPage.get(activity.getAppContext()).labelSpec;
 
         mWaitLoadingTexture = new ColorTexture(mPlaceholderColor);
         mWaitLoadingTexture.setSize(1, 1);
     }
 
-    public void setModel(ThumbnailSetDataLoader model) {
+    public void setModel(ThumbnailDataLoader model) {
         if (mDataWindow != null) {
             mDataWindow.setListener(null);
             mDataWindow = null;
             mThumbnailView.setThumbnailCount(0);
         }
         if (model != null) {
-            mDataWindow = new ThumbnailSetDataWindow(mActivity, model, mLabelSpec, CACHE_SIZE);
+            mDataWindow = new ThumbnailVideoDataWindow(mActivity, model, mLabelSpec, CACHE_SIZE);
             mDataWindow.setListener(new MyCacheListener());
             mThumbnailView.setThumbnailCount(mDataWindow.size());
         }
@@ -119,13 +118,10 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         return ((texture instanceof UploadedBitmapTexture) && ((UploadedBitmapTexture) texture).isUploading()) ? null : texture;
     }
 
-    private static Texture checkContentTexture(Texture texture) {
-        return ((texture instanceof TiledTexture) && !((TiledTexture) texture).isReady()) ? null : texture;
-    }
 
     @Override
     public int renderThumbnail(GLESCanvas canvas, int index, int pass, int width, int height) {
-        AlbumSetEntry entry = mDataWindow.get(index);
+        VideoEntry entry = mDataWindow.get(index);
         int renderRequestFlags = 0;
         renderRequestFlags |= renderContent(canvas, entry, width, height - mLabelSpec.labelHeight);
         renderRequestFlags |= renderLabel(canvas, entry, width, height);
@@ -133,7 +129,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         return renderRequestFlags;
     }
 
-    protected int renderContent(GLESCanvas canvas, AlbumSetEntry entry, int width, int height) {
+    protected int renderContent(GLESCanvas canvas, VideoEntry entry, int width, int height) {
         int renderRequestFlags = 0;
         Texture content = entry.bitmapTexture;
         if (content == null) {
@@ -144,7 +140,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         return renderRequestFlags;
     }
 
-    protected int renderLabel(GLESCanvas canvas, AlbumSetEntry entry, int width, int height) {
+    protected int renderLabel(GLESCanvas canvas, VideoEntry entry, int width, int height) {
         Texture content = checkLabelTexture(entry.labelTexture);
         if (content == null) {
             content = mWaitLoadingTexture;
@@ -156,7 +152,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         return 0;
     }
 
-    protected int renderOverlay(GLESCanvas canvas, AlbumSetEntry entry, int index, int width, int height) {
+    protected int renderOverlay(GLESCanvas canvas, VideoEntry entry, int index, int width, int height) {
         int renderRequestFlags = 0;
 
         if (mPressedIndex == index) {

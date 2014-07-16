@@ -43,7 +43,7 @@ import com.xjt.letool.views.layout.ThumbnailLayout;
 import com.xjt.letool.views.layout.ThumbnailLayout.LayoutListener;
 import com.xjt.letool.views.opengl.FadeTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
-import com.xjt.letool.views.render.ThumbnailRenderer;
+import com.xjt.letool.views.render.ThumbnailVideoRenderer;
 import com.xjt.letool.views.utils.ViewConfigs;
 
 import java.util.ArrayList;
@@ -66,10 +66,10 @@ import android.widget.Toast;
  * @Date 9:48:35 AM Apr 19, 2014
  * @Comments:null
  */
-public class PhotoFragment extends Fragment implements EyePosition.EyePositionListener, ContractSelectListener, OnActionModeListener,
+public class VideoFragment extends Fragment implements EyePosition.EyePositionListener, ContractSelectListener, OnActionModeListener,
         LayoutListener, OnMenuItemClickListener {
 
-    private static final String TAG = PhotoFragment.class.getSimpleName();
+    private static final String TAG = VideoFragment.class.getSimpleName();
 
     private static final int BIT_LOADING_RELOAD = 1;
     private static final int BIT_LOADING_SYNC = 2;
@@ -91,9 +91,9 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
 
     // views
     private GLController mGLController;
-    private ViewConfigs.AlbumPage mConfig;
+    private ViewConfigs.VideoPage mConfig;
     private ThumbnailView mThumbnailView;
-    private ThumbnailRenderer mRender;
+    private ThumbnailVideoRenderer mRender;
     private RelativePosition mOpenCenter = new RelativePosition();
     private boolean mIsActive = false;
 
@@ -287,34 +287,34 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     private void initializeViews() {
         mSelector = new ContractSelector(mLetoolContext, false);
         mSelector.setSelectionListener(this);
-        mConfig = ViewConfigs.AlbumPage.get(mLetoolContext.getAppContext());
+        mConfig = ViewConfigs.VideoPage.get(mLetoolContext.getAppContext());
         ThumbnailLayout layout;
-        layout = new ThumbnailContractLayout(mConfig.albumSpec);
+        layout = new ThumbnailContractLayout(mConfig.videoSpec);
         mThumbnailView = new ThumbnailView(mLetoolContext, layout);
         mThumbnailView.setBackgroundColor(LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.default_background_thumbnail)));
         mThumbnailView.setListener(new ThumbnailView.SimpleListener() {
 
             @Override
             public void onDown(int index) {
-                PhotoFragment.this.onDown(index);
+                VideoFragment.this.onDown(index);
             }
 
             @Override
             public void onUp(boolean followedByLongPress) {
-                PhotoFragment.this.onUp(followedByLongPress);
+                VideoFragment.this.onUp(followedByLongPress);
             }
 
             @Override
             public void onSingleTapUp(int thumbnailIndex) {
-                PhotoFragment.this.onSingleTapUp(thumbnailIndex);
+                VideoFragment.this.onSingleTapUp(thumbnailIndex);
             }
 
             @Override
             public void onLongTap(int thumbnailIndex) {
-                PhotoFragment.this.onLongTap(thumbnailIndex);
+                VideoFragment.this.onLongTap(thumbnailIndex);
             }
         });
-        mRender = new ThumbnailRenderer(mLetoolContext, mThumbnailView, mSelector);
+        mRender = new ThumbnailVideoRenderer(mLetoolContext, mThumbnailView, mSelector);
         layout.setRenderer(mRender);
         layout.setLayoutListener(this);
         mThumbnailView.setThumbnailRenderer(mRender);
@@ -332,7 +332,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
             nativeButtons.setVisibility(View.VISIBLE);
             topBar.setTitleIcon(R.drawable.ic_drawer);
             TextView naviToPhoto = (TextView) nativeButtons.findViewById(R.id.navi_to_photo);
-            naviToPhoto.setText(R.string.common_photo);
+            naviToPhoto.setText(R.string.common_record);
             naviToPhoto.setEnabled(false);
             TextView naviToGallery = (TextView) nativeButtons.findViewById(R.id.navi_to_gallery);
             naviToGallery.setText(mLetoolContext.isImageBrwosing()?R.string.common_gallery:R.string.common_video);
@@ -412,7 +412,6 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         mGLController.lockRenderThread();
         try {
             mIsActive = false;
-            mRender.setThumbnailFilter(null);
             mAlbumDataSetLoader.pause();
             mRender.pause();
             DetailsHelper.pause();

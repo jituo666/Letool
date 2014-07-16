@@ -5,6 +5,7 @@ import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.common.ThreadPool.JobContext;
 import com.xjt.letool.imagedata.utils.LetoolBitmapPool;
 import com.xjt.letool.views.render.ThumbnailSetRenderer;
+import com.xjt.letool.views.render.ThumbnailVideoRenderer;
 
 import android.content.Context;
 import android.graphics.*;
@@ -12,7 +13,7 @@ import android.graphics.Bitmap.Config;
 import android.text.TextPaint;
 import android.text.TextUtils;
 
-public class AlbumLabelMaker {
+public class VideoLabelMaker {
 
     private static final int FONT_COLOR_TITLE = 0xFF333333;// 0xFF999fa5;//Color.BLACK;
     private static final int FONT_COLOR_COUNT = 0xFF222222;// 0xFFeeeeee;//Color.WHITE;
@@ -21,14 +22,14 @@ public class AlbumLabelMaker {
     private static final int BORDER_SIZE = 1;
     private static final int BACKGROUND_COLOR = Color.TRANSPARENT; // 为了显示底色,采取透明色
 
-    private final ThumbnailSetRenderer.LabelSpec mSpec;
+    private final ThumbnailVideoRenderer.LabelSpec mSpec;
     private final TextPaint mTitlePaint;
     private final TextPaint mCountPaint;
 
     private int mLabelWidth;
     private int mLabelHeight;
 
-    public AlbumLabelMaker(Context context, ThumbnailSetRenderer.LabelSpec spec) {
+    public VideoLabelMaker(Context context, ThumbnailVideoRenderer.LabelSpec spec) {
         mSpec = spec;
         mTitlePaint = getTextPaint(spec.titleFontSize, FONT_COLOR_TITLE, false);
         mCountPaint = getTextPaint(spec.countFontSize, FONT_COLOR_COUNT, false);
