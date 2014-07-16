@@ -55,6 +55,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
     private int mActiveRequestCount = 0;
     private boolean mIsActive = false;
     private BitmapTexture mLoadingLabel;
+    private LetoolContext mLetoolContext;
 
     private int mSlotWidth;
 
@@ -78,17 +79,17 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         private BitmapLoader coverLoader;
     }
 
-    public ThumbnailSetDataWindow(LetoolContext fragment, ThumbnailSetDataLoader source, ThumbnailSetRenderer.LabelSpec labelSpec, int cacheSize) {
+    public ThumbnailSetDataWindow(LetoolContext c, ThumbnailSetDataLoader source, ThumbnailSetRenderer.LabelSpec labelSpec, int cacheSize) {
         source.setModelListener(this);
         mSource = source;
         mData = new AlbumSetEntry[cacheSize];
         mSize = source.size();
-        mThreadPool = fragment.getThreadPool();
+        mThreadPool = c.getThreadPool();
+        mLetoolContext = c;
+        mLabelMaker = new AlbumLabelMaker(c.getAppContext(), labelSpec);
+        mLoadingText = c.getAppContext().getString(R.string.loading);
 
-        mLabelMaker = new AlbumLabelMaker(fragment.getAppContext(), labelSpec);
-        mLoadingText = fragment.getAppContext().getString(R.string.loading);
-
-        mHandler = new SynchronizedHandler(fragment.getGLController()) {
+        mHandler = new SynchronizedHandler(c.getGLController()) {
 
             @Override
             public void handleMessage(Message message) {
@@ -402,7 +403,9 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
 
         @Override
         protected Future<Bitmap> submitBitmapTask(FutureListener<Bitmap> l) {
-            return mThreadPool.submit(mLabelMaker.requestLabel(mTitle, "(" + String.valueOf(mTotalCount) + ")"), l);
+        	String label = mLetoolContext.isImageBrwosing() ? "(" + String.valueOf(mTotalCount) + ")":
+        		mLetoolContext.getAppContext().getString(R.string.common_video_set,mTotalCount);
+            return mThreadPool.submit(mLabelMaker.requestLabel(mTitle,label ), l);
         }
 
         @Override

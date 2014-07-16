@@ -137,6 +137,7 @@ public class ThumbnailVideoRenderer extends AbstractThumbnailRender {
             entry.isWaitLoadingDisplayed = true;
         }
         drawContent(canvas, content, width, height, entry.rotation);
+        drawVideoOverlay(canvas, width, height);
         return renderRequestFlags;
     }
 

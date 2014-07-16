@@ -14,12 +14,16 @@ import com.xjt.letool.views.opengl.Texture;
 
 public abstract class AbstractThumbnailRender implements ThumbnailView.Renderer {
 
+	private final ResourceTexture mVideoOverlay;
+	private final ResourceTexture mVideoPlayIcon;
     protected FadeOutTexture mFramePressedUp;
     protected final NinePatchTexture mFramePressed;
     protected final ResourceTexture mFramePreSelected;
     protected final ResourceTexture mFrameSelected;
 
     protected AbstractThumbnailRender(Context context) {
+    	mVideoOverlay = new ResourceTexture(context, R.drawable.ic_video_thumb);
+    	mVideoPlayIcon = new ResourceTexture(context, R.drawable.ic_gallery_play);
         mFramePressed = new NinePatchTexture(context, R.drawable.grid_pressed);
         mFramePreSelected = new ResourceTexture(context, R.drawable.grid_preselected);
         mFrameSelected = new ResourceTexture(context, R.drawable.grid_selected);
@@ -42,6 +46,19 @@ public abstract class AbstractThumbnailRender implements ThumbnailView.Renderer 
         canvas.restore();
     }
 
+    protected void drawVideoOverlay(GLESCanvas canvas, int width, int height) {
+        // Scale the video overlay to the height of the thumbnail and put it
+        // on the left side.
+        ResourceTexture v = mVideoOverlay;
+        float scale = (float) height / v.getHeight();
+        int w = Math.round(scale * v.getWidth());
+        int h = Math.round(scale * v.getHeight());
+        v.draw(canvas, 0, 0, w, h);
+
+        int s = Math.min(width, height) / 6;
+        mVideoPlayIcon.draw(canvas, (width - s) / 2, (height - s) / 2, s, s);
+    }
+    
     protected boolean isPressedUpFrameFinished() {
         if (mFramePressedUp != null) {
             if (mFramePressedUp.isAnimating()) {

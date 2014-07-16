@@ -25,7 +25,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
     private final int mPlaceholderColor;
 
     private final ColorTexture mWaitLoadingTexture;
-    private LetoolContext mActivity;
+    private LetoolContext mLetoolContext;
 
     private ThumbnailView mThumbnailView;
     private ThumbnailSetDataWindow mDataWindow;
@@ -69,7 +69,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
 
     public ThumbnailSetRenderer(LetoolContext activity, ThumbnailView thumbnailView, ContractSelector selector) {
         super(activity.getAppContext());
-        mActivity = activity;
+        mLetoolContext = activity;
         mThumbnailView = thumbnailView;
         mPlaceholderColor = 0xFFE8E8E8;
         mMediaSelector = selector;
@@ -86,7 +86,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
             mThumbnailView.setThumbnailCount(0);
         }
         if (model != null) {
-            mDataWindow = new ThumbnailSetDataWindow(mActivity, model, mLabelSpec, CACHE_SIZE);
+            mDataWindow = new ThumbnailSetDataWindow(mLetoolContext, model, mLabelSpec, CACHE_SIZE);
             mDataWindow.setListener(new MyCacheListener());
             mThumbnailView.setThumbnailCount(mDataWindow.size());
         }
@@ -141,6 +141,8 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
             entry.isWaitLoadingDisplayed = true;
         }
         drawContent(canvas, content, width, height, entry.rotation);
+        if (!mLetoolContext.isImageBrwosing())
+        	drawVideoOverlay(canvas, width, height);
         return renderRequestFlags;
     }
 
