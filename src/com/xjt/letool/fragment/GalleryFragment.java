@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
-import com.xjt.letool.activities.LocalMediaBrowseActivity;
+import com.xjt.letool.activities.LocalMediaActivity;
 import com.xjt.letool.common.EyePosition;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
@@ -574,9 +574,9 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         } else if (v.getId() == R.id.navi_to_photo) {
             Fragment f = mLetoolContext.isImageBrwosing()?new PhotoFragment():new VideoFragment();
             Bundle data = new Bundle();
-            data.putString(LocalMediaBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
+            data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
             		.getTopSetPath(mLetoolContext.isImageBrwosing()?DataManager.INCLUDE_LOCAL_IMAGE_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
-            data.putBoolean(LocalMediaBrowseActivity.KEY_IS_CAMERA_SOURCE, true);
+            data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, true);
             f.setArguments(data);
             mLetoolContext.pushContentFragment(f, this, false);
         }
@@ -596,11 +596,11 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         MediaPath mediaPath = targetSet.getPath();
         Fragment f = mLetoolContext.isImageBrwosing()?new PhotoFragment():new VideoFragment();
         Bundle data = new Bundle();
-        data.putString(LocalMediaBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
+        data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
         		.getTopSetPath(mLetoolContext.isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
-        data.putString(LocalMediaBrowseActivity.KEY_ALBUM_TITLE, targetSet.getName());
-        data.putInt(LocalMediaBrowseActivity.KEY_ALBUM_ID, mediaPath.getIdentity());
-        data.putBoolean(LocalMediaBrowseActivity.KEY_IS_CAMERA_SOURCE, false);
+        data.putString(LocalMediaActivity.KEY_ALBUM_TITLE, targetSet.getName());
+        data.putInt(LocalMediaActivity.KEY_ALBUM_ID, mediaPath.getIdentity());
+        data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, false);
         f.setArguments(data);
         mLetoolContext.pushContentFragment(f, this, true);
 

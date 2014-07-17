@@ -25,7 +25,7 @@
         android:largeHeap="true"
         android:logo="@drawable/ic_launcher" >
         <activity
-            android:name="com.xjt.letool.activities.LocalMediaBrowseActivity"
+            android:name="com.xjt.letool.activities.LocalMediaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/MainTheme" >

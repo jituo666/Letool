@@ -5,7 +5,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
-import com.xjt.letool.activities.LocalMediaBrowseActivity;
+import com.xjt.letool.activities.LocalMediaActivity;
 import com.xjt.letool.activities.MoviePlayActivity;
 import com.xjt.letool.common.EyePosition;
 import com.xjt.letool.common.Future;
@@ -86,9 +86,9 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     private LetoolContext mLetoolContext;
 
     // photo data
-    private MediaPath mDataSetPath;
-    private MediaSet mDataSet;
-    private ThumbnailDataLoader mAlbumDataSetLoader;
+    private MediaPath mVideoDataPath;
+    private MediaSet mVideoData;
+    private ThumbnailDataLoader mVideoDataLoader;
     private int mLoadingBits = 0;
     private Future<Integer> mSyncTask = null; // synchronize data
     private boolean mInitialSynced = false;
@@ -166,7 +166,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     private void clearLoadingBit(int loadTaskBit) {
         mLoadingBits &= ~loadTaskBit;
         if (mLoadingBits == 0 && mIsActive) {
-            if (mAlbumDataSetLoader.size() == 0) {
+            if (mVideoDataLoader.size() == 0) {
                 Toast.makeText(getActivity(), R.string.empty_album, Toast.LENGTH_LONG).show();
                 showEmptyView(R.string.common_error_nodcim);
             }
@@ -195,7 +195,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             return;
 
         if (mSelector.inSelectionMode()) {
-            MediaItem item = mAlbumDataSetLoader.get(videoIndex);
+            MediaItem item = mVideoDataLoader.get(videoIndex);
             if (item == null)
                 return; // Item not ready yet, ignore the click
             mSelector.toggle(item.getPath());
@@ -211,7 +211,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_PHOTO_LONG_PRESSED);
         if (mGetContent)
             return;
-        MediaItem item = mAlbumDataSetLoader.get(videoIndex);
+        MediaItem item = mVideoDataLoader.get(videoIndex);
         if (item == null)
             return;
         mSelector.toggle(item.getPath());
@@ -264,12 +264,12 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
 
     private void initializeData() {
         Bundle data = getArguments();
-        mIsCameraSource = data.getBoolean(LocalMediaBrowseActivity.KEY_IS_CAMERA_SOURCE);
+        mIsCameraSource = data.getBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE);
         if (mIsCameraSource) {
             if (MediaSetUtils.MY_ALBUM_BUCKETS.length > 0) {
                 mAlbumTitle = getString(R.string.common_photo);
-                mDataSetPath = new MediaPath(data.getString(LocalMediaBrowseActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]);
-                mDataSet = new LocalAlbum(mDataSetPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.MY_ALBUM_BUCKETS, mLetoolContext.isImageBrwosing(),
+                mVideoDataPath = new MediaPath(data.getString(LocalMediaActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]);
+                mVideoData = new LocalAlbum(mVideoDataPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.MY_ALBUM_BUCKETS, mLetoolContext.isImageBrwosing(),
                         getString(R.string.common_photo));
                 mHasDCIM = true;
             } else {
@@ -277,15 +277,15 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
                 return;
             }
         } else {
-            mAlbumTitle = data.getString(LocalMediaBrowseActivity.KEY_ALBUM_TITLE);
-            mDataSetPath = new MediaPath(data.getString(LocalMediaBrowseActivity.KEY_MEDIA_PATH), data.getInt(LocalMediaBrowseActivity.KEY_ALBUM_ID));
-            mDataSet = mLetoolContext.getDataManager().getMediaSet(mDataSetPath);
-            if (mDataSet == null) {
-                Utils.fail("MediaSet is null. Path = %s", mDataSetPath);
+            mAlbumTitle = data.getString(LocalMediaActivity.KEY_ALBUM_TITLE);
+            mVideoDataPath = new MediaPath(data.getString(LocalMediaActivity.KEY_MEDIA_PATH), data.getInt(LocalMediaActivity.KEY_ALBUM_ID));
+            mVideoData = mLetoolContext.getDataManager().getMediaSet(mVideoDataPath);
+            if (mVideoData == null) {
+                Utils.fail("MediaSet is null. Path = %s", mVideoDataPath);
             }
         }
-        mAlbumDataSetLoader = new ThumbnailDataLoader(mLetoolContext, mDataSet);
-        mAlbumDataSetLoader.setLoadingListener(new MetaDataLoadingListener());
+        mVideoDataLoader = new ThumbnailDataLoader(mLetoolContext, mVideoData);
+        mVideoDataLoader.setLoadingListener(new MetaDataLoadingListener());
     }
 
     private void initializeViews() {
@@ -322,7 +322,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         layout.setRenderer(mRender);
         layout.setLayoutListener(this);
         mThumbnailView.setThumbnailRenderer(mRender);
-        mRender.setModel(mAlbumDataSetLoader);
+        mRender.setModel(mVideoDataLoader);
         mRootPane.addComponent(mThumbnailView);
     }
 
@@ -392,13 +392,13 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             mGLController.setContentPane(mRootPane);
             // Set the reload bit here to prevent it exit this page in clearLoadingBit().
             setLoadingBit(BIT_LOADING_RELOAD);
-            mAlbumDataSetLoader.resume();
+            mVideoDataLoader.resume();
             mRender.resume();
             mRender.setPressedIndex(-1);
             mEyePosition.resume();
             if (!mInitialSynced) {
                 setLoadingBit(BIT_LOADING_SYNC);
-                // mSyncTask = mDataSet.requestSync(this);
+                // mSyncTask = mVideoData.requestSync(this);
             }
         } finally {
             mGLController.unlockRenderThread();
@@ -416,7 +416,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         mGLController.lockRenderThread();
         try {
             mIsActive = false;
-            mAlbumDataSetLoader.pause();
+            mVideoDataLoader.pause();
             mRender.pause();
             DetailsHelper.pause();
             mEyePosition.resume();
@@ -451,8 +451,8 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mDataSet != null) {
-            mDataSet.closeCursor();
+        if (mVideoData != null) {
+            mVideoData.closeCursor();
         }
         LLog.i(TAG, "onDestroy");
     }
@@ -525,7 +525,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         else if (v.getId() == R.id.navi_to_gallery) {
             GalleryFragment f = new GalleryFragment();
             Bundle data = new Bundle();
-            data.putString(LocalMediaBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
+            data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
             		.getTopSetPath(mLetoolContext.isImageBrwosing()?DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
             f.setArguments(data);
             mLetoolContext.pushContentFragment(f, this, false);
@@ -574,7 +574,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     }
 
     private void playVideo(int videoIndex) {
-    	MediaItem item = mAlbumDataSetLoader.get(videoIndex);
+    	MediaItem item = mVideoDataLoader.get(videoIndex);
         if (item == null)
             return;
         Context c = mLetoolContext.getAppContext();

@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
-import com.xjt.letool.activities.LocalMediaBrowseActivity;
+import com.xjt.letool.activities.LocalMediaActivity;
 import com.xjt.letool.activities.GlobalSettingsActivity;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
@@ -66,11 +66,11 @@ public class SlidingMenuFragment extends Fragment {
 
     private void initIntentDatas() {
     	mIntents = new ArrayList<Intent>();
-    	Intent itImage = new Intent(getActivity(),LocalMediaBrowseActivity.class);
-    	itImage.putExtra(LocalMediaBrowseActivity.KEY_IS_IMAGE, true);
+    	Intent itImage = new Intent(getActivity(),LocalMediaActivity.class);
+    	itImage.putExtra(LocalMediaActivity.KEY_IS_IMAGE, true);
     	mIntents.add(itImage);
-    	Intent itVideo = new Intent(getActivity(),LocalMediaBrowseActivity.class);
-    	itVideo.putExtra(LocalMediaBrowseActivity.KEY_IS_IMAGE, false);
+    	Intent itVideo = new Intent(getActivity(),LocalMediaActivity.class);
+    	itVideo.putExtra(LocalMediaActivity.KEY_IS_IMAGE, false);
     	mIntents.add(itVideo);
     	Intent itSetting = new Intent(getActivity(),GlobalSettingsActivity.class);
     	mIntents.add(itSetting);
@@ -112,8 +112,8 @@ public class SlidingMenuFragment extends Fragment {
 
                     if (position < 2) {
                     	mLetoolContext.getLetoolSlidingMenu().toggle();
-                    	if (mIntents.get(position).hasExtra(LocalMediaBrowseActivity.KEY_IS_IMAGE)
-                    			&& mLetoolContext.isImageBrwosing() == mIntents.get(position).getBooleanExtra(LocalMediaBrowseActivity.KEY_IS_IMAGE, true))
+                    	if (mIntents.get(position).hasExtra(LocalMediaActivity.KEY_IS_IMAGE)
+                    			&& mLetoolContext.isImageBrwosing() == mIntents.get(position).getBooleanExtra(LocalMediaActivity.KEY_IS_IMAGE, true))
                     	{
                     		return;
                     	}

@@ -33,9 +33,9 @@ import com.xjt.letool.view.LetoolBottomBar;
 import com.xjt.letool.view.LetoolSlidingMenu;
 import com.xjt.letool.view.LetoolTopBar;
 
-public class LocalMediaBrowseActivity extends FragmentActivity implements LetoolContext {
+public class LocalMediaActivity extends FragmentActivity implements LetoolContext {
 
-    private static final String TAG = LocalMediaBrowseActivity.class.getSimpleName();
+    private static final String TAG = LocalMediaActivity.class.getSimpleName();
     
     public static final String KEY_ALBUM_TITLE = "album_title";
     public static final String KEY_MEDIA_PATH = "media-path";
@@ -104,16 +104,16 @@ public class LocalMediaBrowseActivity extends FragmentActivity implements Letool
         if (MediaSetUtils.MY_ALBUM_BUCKETS.length <= 0) {
             fragment = new GalleryFragment();
             Bundle data = new Bundle();
-            data.putString(LocalMediaBrowseActivity.KEY_MEDIA_PATH, getDataManager()
+            data.putString(LocalMediaActivity.KEY_MEDIA_PATH, getDataManager()
             		.getTopSetPath(isImageBrwosing() ?DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
             fragment.setArguments(data);
         } else {
 
             fragment = mIsImage?new PhotoFragment():new VideoFragment();
             Bundle data = new Bundle();
-            data.putString(LocalMediaBrowseActivity.KEY_MEDIA_PATH, getDataManager()
+            data.putString(LocalMediaActivity.KEY_MEDIA_PATH, getDataManager()
             		.getTopSetPath(isImageBrwosing() ?DataManager.INCLUDE_LOCAL_IMAGE_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
-            data.putBoolean(LocalMediaBrowseActivity.KEY_IS_CAMERA_SOURCE, true);
+            data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, true);
             fragment.setArguments(data);
 
         }
@@ -203,8 +203,9 @@ public class LocalMediaBrowseActivity extends FragmentActivity implements Letool
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         LLog.i(TAG, "onKeyDown menu1:" + keyCode);
         if (keyCode == KeyEvent.KEYCODE_MENU) {
-            LLog.i(TAG, "onKeyDown menu2:" + getSupportFragmentManager().getBackStackEntryCount());
-            if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            if (getLetoolTopBar().getActionBarMode() == LetoolTopBar.ACTION_BAR_MODE_SELECTION) {
+                return true;
+            } else if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
                 mSlidingMenu.toggle();
                 return true;
             }

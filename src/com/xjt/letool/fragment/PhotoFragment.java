@@ -5,7 +5,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
-import com.xjt.letool.activities.LocalMediaBrowseActivity;
+import com.xjt.letool.activities.LocalMediaActivity;
 import com.xjt.letool.common.EyePosition;
 import com.xjt.letool.common.Future;
 import com.xjt.letool.common.LLog;
@@ -260,11 +260,11 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
 
     private void initializeData() {
         Bundle data = getArguments();
-        mIsCameraSource = data.getBoolean(LocalMediaBrowseActivity.KEY_IS_CAMERA_SOURCE);
+        mIsCameraSource = data.getBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE);
         if (mIsCameraSource) {
             if (MediaSetUtils.MY_ALBUM_BUCKETS.length > 0) {
                 mAlbumTitle = getString(R.string.common_photo);
-                mDataSetPath = new MediaPath(data.getString(LocalMediaBrowseActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]);
+                mDataSetPath = new MediaPath(data.getString(LocalMediaActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]);
                 mDataSet = new LocalAlbum(mDataSetPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.MY_ALBUM_BUCKETS, mLetoolContext.isImageBrwosing(),
                         getString(R.string.common_photo));
                 mHasDCIM = true;
@@ -273,8 +273,8 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                 return;
             }
         } else {
-            mAlbumTitle = data.getString(LocalMediaBrowseActivity.KEY_ALBUM_TITLE);
-            mDataSetPath = new MediaPath(data.getString(LocalMediaBrowseActivity.KEY_MEDIA_PATH), data.getInt(LocalMediaBrowseActivity.KEY_ALBUM_ID));
+            mAlbumTitle = data.getString(LocalMediaActivity.KEY_ALBUM_TITLE);
+            mDataSetPath = new MediaPath(data.getString(LocalMediaActivity.KEY_MEDIA_PATH), data.getInt(LocalMediaActivity.KEY_ALBUM_ID));
             mDataSet = mLetoolContext.getDataManager().getMediaSet(mDataSetPath);
             if (mDataSet == null) {
                 Utils.fail("MediaSet is null. Path = %s", mDataSetPath);
@@ -522,7 +522,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         else if (v.getId() == R.id.navi_to_gallery) {
             GalleryFragment f = new GalleryFragment();
             Bundle data = new Bundle();
-            data.putString(LocalMediaBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
+            data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
             		.getTopSetPath(mLetoolContext.isImageBrwosing()?DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
             f.setArguments(data);
             mLetoolContext.pushContentFragment(f, this, false);
@@ -575,15 +575,15 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     private void pickPhoto(int index) {
         Bundle data = new Bundle();
         if (mIsCameraSource) {
-            data.putString(LocalMediaBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
+            data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
             		.getTopSetPath(mLetoolContext.isImageBrwosing()?DataManager.INCLUDE_LOCAL_IMAGE_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
-            data.putBoolean(LocalMediaBrowseActivity.KEY_IS_CAMERA_SOURCE, true);
+            data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, true);
         } else {
-            data.putInt(LocalMediaBrowseActivity.KEY_ALBUM_ID, mDataSet.getPath().getIdentity());
-            data.putString(LocalMediaBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
+            data.putInt(LocalMediaActivity.KEY_ALBUM_ID, mDataSet.getPath().getIdentity());
+            data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
             		.getTopSetPath(mLetoolContext.isImageBrwosing()?DataManager.INCLUDE_LOCAL_IMAGE_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
-            data.putBoolean(LocalMediaBrowseActivity.KEY_IS_CAMERA_SOURCE, false);
-            data.putString(LocalMediaBrowseActivity.KEY_ALBUM_TITLE, mDataSet.getName());
+            data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, false);
+            data.putString(LocalMediaActivity.KEY_ALBUM_TITLE, mDataSet.getName());
         }
         Fragment fragment = new FullImageFragment();
         data.putInt(FullImageFragment.KEY_INDEX_HINT, index);
