@@ -6,6 +6,7 @@ import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
 import com.xjt.letool.activities.LocalMediaBrowseActivity;
+import com.xjt.letool.activities.MovieActivity;
 import com.xjt.letool.common.EyePosition;
 import com.xjt.letool.common.Future;
 import com.xjt.letool.common.LLog;
@@ -49,7 +50,10 @@ import com.xjt.letool.views.utils.ViewConfigs;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -186,28 +190,28 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         }
     }
 
-    private void onSingleTapUp(int thumbnailIndex) {
+    private void onSingleTapUp(int videoIndex) {
         if (!mIsActive)
             return;
 
         if (mSelector.inSelectionMode()) {
-            MediaItem item = mAlbumDataSetLoader.get(thumbnailIndex);
+            MediaItem item = mAlbumDataSetLoader.get(videoIndex);
             if (item == null)
                 return; // Item not ready yet, ignore the click
             mSelector.toggle(item.getPath());
             mThumbnailView.invalidate();
         } else { // Render transition in pressed state
-            mRender.setPressedIndex(thumbnailIndex);
+            mRender.setPressedIndex(videoIndex);
             mRender.setPressedUp();
-            mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_PICK_PHOTO, thumbnailIndex, 0), FadeTexture.DURATION);
+            mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_PICK_PHOTO, videoIndex, 0), FadeTexture.DURATION);
         }
     }
 
-    public void onLongTap(int thumbnailIndex) {
+    public void onLongTap(int videoIndex) {
         MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_PHOTO_LONG_PRESSED);
         if (mGetContent)
             return;
-        MediaItem item = mAlbumDataSetLoader.get(thumbnailIndex);
+        MediaItem item = mAlbumDataSetLoader.get(videoIndex);
         if (item == null)
             return;
         mSelector.toggle(item.getPath());
@@ -240,7 +244,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
                         break;
                     }
                     case MSG_PICK_PHOTO: {
-                        pickPhoto(message.arg1);
+                        playVideo(message.arg1);
                         break;
                     }
                     default:
@@ -305,13 +309,13 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             }
 
             @Override
-            public void onSingleTapUp(int thumbnailIndex) {
-                VideoFragment.this.onSingleTapUp(thumbnailIndex);
+            public void onSingleTapUp(int videoIndex) {
+                VideoFragment.this.onSingleTapUp(videoIndex);
             }
 
             @Override
-            public void onLongTap(int thumbnailIndex) {
-                VideoFragment.this.onLongTap(thumbnailIndex);
+            public void onLongTap(int videoIndex) {
+                VideoFragment.this.onLongTap(videoIndex);
             }
         });
         mRender = new ThumbnailVideoRenderer(mLetoolContext, mThumbnailView, mSelector);
@@ -565,29 +569,25 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     @Override
     public void onSelectionChange(MediaPath path, boolean selected) {
         int count = mSelector.getSelectedCount();
-        String format = getResources().getQuantityString(
-                R.plurals.number_of_items_selected, count);
-        mLetoolContext.getLetoolTopBar().setTitleText(
-                String.format(format, count));
+        String format = getResources().getQuantityString(R.plurals.number_of_items_selected, count);
+        mLetoolContext.getLetoolTopBar().setTitleText(String.format(format, count));
     }
 
-    private void pickPhoto(int index) {
-        Bundle data = new Bundle();
-        if (mIsCameraSource) {
-            data.putString(LocalMediaBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
-            		.getTopSetPath(mLetoolContext.isImageBrwosing()?DataManager.INCLUDE_LOCAL_IMAGE_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
-            data.putBoolean(LocalMediaBrowseActivity.KEY_IS_CAMERA_SOURCE, true);
-        } else {
-            data.putInt(LocalMediaBrowseActivity.KEY_ALBUM_ID, mDataSet.getPath().getIdentity());
-            data.putString(LocalMediaBrowseActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
-            		.getTopSetPath(mLetoolContext.isImageBrwosing()?DataManager.INCLUDE_LOCAL_IMAGE_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
-            data.putBoolean(LocalMediaBrowseActivity.KEY_IS_CAMERA_SOURCE, false);
-            data.putString(LocalMediaBrowseActivity.KEY_ALBUM_TITLE, mDataSet.getName());
+    private void playVideo(int videoIndex) {
+    	MediaItem item = mAlbumDataSetLoader.get(videoIndex);
+        if (item == null)
+            return;
+        Context c = mLetoolContext.getAppContext();
+        try {
+        	Intent intent = new Intent();
+        	intent.setClass(c, MovieActivity.class);
+            intent.setDataAndType(Uri.parse(item.getFilePath()), "video/*");
+            intent.putExtra(Intent.EXTRA_TITLE, "");
+            intent.putExtra(MovieActivity.KEY_TREAT_UP_AS_BACK, true);
+        	c.startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(c, c.getString(R.string.app_name),Toast.LENGTH_SHORT).show();
         }
-        Fragment fragment = new FullImageFragment();
-        data.putInt(FullImageFragment.KEY_INDEX_HINT, index);
-        fragment.setArguments(data);
-        mLetoolContext.pushContentFragment(fragment, this, true);
     }
 
     // -----------------------------------------------details-----------------------------------------------------------------------
