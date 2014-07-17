@@ -38,6 +38,7 @@
         <activity
             android:name="com.xjt.letool.activities.MoviePlayActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
             android:theme="@style/MainTheme" >
         </activity>
 

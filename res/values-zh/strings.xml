@@ -37,7 +37,7 @@
     </plurals>
 
     <string name="loading_video">加载视频\u2026</string>
-    <string name="resume_playing_title">回复视频</string>
+    <string name="resume_playing_title">恢复视频</string>
     <string name="resume_playing_restart">重播</string>
     <string name="resume_playing_message">从 %s 开始继续播放?</string>
     <string name="resume_playing_resume">继续播放?</string>

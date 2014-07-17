@@ -1,8 +1,11 @@
 package com.xjt.letool.movieplayer;
 
 import com.xjt.letool.R;
+import com.xjt.letool.common.LLog;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.view.Gravity;
@@ -20,17 +23,16 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.app.Activity;
 
 
 /**
  * The playback controller for the Movie Player.
  */
-public class MovieControllerOverlay extends FrameLayout implements
-    ControllerOverlay,
-    OnClickListener,
-    AnimationListener,
-    TimeBar.Listener {
+public class MovieControllerOverlay extends FrameLayout implements ControllerOverlay,OnClickListener
+		,AnimationListener,TimeBar.Listener {
 
+	private static final String TAG = MovieControllerOverlay.class.getSimpleName();
   private enum State {
     PLAYING,
     PAUSED,
@@ -50,6 +52,7 @@ public class MovieControllerOverlay extends FrameLayout implements
   private final LinearLayout loadingView;
   private final TextView errorView;
   private final ImageView playPauseReplayView;
+  private final ImageView playRotatedButton;
 
   private final Handler handler;
   private final Runnable startHidingRunnable;
@@ -60,36 +63,34 @@ public class MovieControllerOverlay extends FrameLayout implements
   private boolean hidden;
 
   private boolean canReplay = true;
+  
+  private Activity mActivity;
 
-  public MovieControllerOverlay(Context context) {
-    super(context);
-
+  public MovieControllerOverlay(Activity activity) {
+    super(activity);
+    mActivity = activity;
     state = State.LOADING;
-
-    LayoutParams wrapContent =
-        new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-    LayoutParams matchParent =
-        new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-
-    background = new View(context);
-    background.setBackgroundColor(context.getResources().getColor(R.color.darker_transparent));
+    LayoutParams wrapContent = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+    LayoutParams matchParent = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+    background = new View(activity);
+    background.setBackgroundColor(activity.getResources().getColor(R.color.darker_transparent));
     addView(background, matchParent);
 
-    timeBar = new TimeBar(context, this);
+    timeBar = new TimeBar(activity, this);
     addView(timeBar, wrapContent);
 
-    loadingView = new LinearLayout(context);
+    loadingView = new LinearLayout(activity);
     loadingView.setOrientation(LinearLayout.VERTICAL);
     loadingView.setGravity(Gravity.CENTER_HORIZONTAL);
-    ProgressBar spinner = new ProgressBar(context);
+    ProgressBar spinner = new ProgressBar(activity);
     spinner.setIndeterminate(true);
     loadingView.addView(spinner, wrapContent);
-    TextView loadingText = createOverlayTextView(context);
+    TextView loadingText = createOverlayTextView(activity);
     loadingText.setText(R.string.loading_video);
     loadingView.addView(loadingText, wrapContent);
     addView(loadingView, wrapContent);
 
-    playPauseReplayView = new ImageView(context);
+    playPauseReplayView = new ImageView(activity);
     playPauseReplayView.setImageResource(R.drawable.ic_vidcontrol_play);
     playPauseReplayView.setBackgroundResource(R.drawable.bg_vidcontrol);
     playPauseReplayView.setScaleType(ScaleType.CENTER);
@@ -98,7 +99,16 @@ public class MovieControllerOverlay extends FrameLayout implements
     playPauseReplayView.setOnClickListener(this);
     addView(playPauseReplayView, wrapContent);
 
-    errorView = createOverlayTextView(context);
+    playRotatedButton = new ImageView(activity);
+    playRotatedButton.setImageResource(R.drawable.ic_vidcontrol_play);
+    playRotatedButton.setBackgroundResource(R.drawable.bg_vidcontrol);
+    playRotatedButton.setScaleType(ScaleType.CENTER);
+    playRotatedButton.setFocusable(true);
+    playRotatedButton.setClickable(true);
+    playRotatedButton.setOnClickListener(this);
+    addView(playRotatedButton, wrapContent);
+    
+    errorView = createOverlayTextView(activity);
     addView(errorView, matchParent);
 
     handler = new Handler();
@@ -108,11 +118,10 @@ public class MovieControllerOverlay extends FrameLayout implements
       }
     };
 
-    hideAnimation = AnimationUtils.loadAnimation(context, R.anim.player_out);
+    hideAnimation = AnimationUtils.loadAnimation(activity, R.anim.player_out);
     hideAnimation.setAnimationListener(this);
 
-    RelativeLayout.LayoutParams params =
-        new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
     setLayoutParams(params);
     hide();
   }
@@ -188,8 +197,7 @@ public class MovieControllerOverlay extends FrameLayout implements
     mainView = view;
     errorView.setVisibility(mainView == errorView ? View.VISIBLE : View.INVISIBLE);
     loadingView.setVisibility(mainView == loadingView ? View.VISIBLE : View.INVISIBLE);
-    playPauseReplayView.setVisibility(
-        mainView == playPauseReplayView ? View.VISIBLE : View.INVISIBLE);
+    playPauseReplayView.setVisibility(mainView == playPauseReplayView ? View.VISIBLE : View.INVISIBLE);
     show();
   }
 
@@ -253,6 +261,13 @@ public class MovieControllerOverlay extends FrameLayout implements
         } else if (state == State.PAUSED || state == State.PLAYING) {
           listener.onPlayPause();
         }
+      } else if (view == playRotatedButton) {
+    	  LLog.i(TAG, "mActivity.getRequestedOrientation():" + mActivity.getRequestedOrientation());
+    	  if (mActivity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+    		  mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    	  } else if(mActivity.getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
+    		  mActivity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    	  }
       }
     }
   }
@@ -304,8 +319,7 @@ public class MovieControllerOverlay extends FrameLayout implements
 
   @Override
   protected boolean fitSystemWindows(Rect insets) {
-    // We don't set the paddings of this View, otherwise,
-    // the content will get cropped outside window
+    // We don't set the paddings of this View, otherwise, the content will get cropped outside window
     mWindowInsets.set(insets);
     return true;
   }
@@ -334,6 +348,7 @@ public class MovieControllerOverlay extends FrameLayout implements
 
     // Put the play/pause/next/ previous button in the center of the screen
     layoutCenteredView(playPauseReplayView, 0, 0, w, h);
+    layoutTopLeftView(playRotatedButton, 0, 0, w, h);
 
     if (mainView != null) {
       layoutCenteredView(mainView, 0, 0, w, h);
@@ -348,6 +363,14 @@ public class MovieControllerOverlay extends FrameLayout implements
     view.layout(cl, ct, cl + cw, ct + ch);
   }
 
+  private void layoutTopLeftView(View view, int l, int t, int r, int b) {
+	    int cw = view.getMeasuredWidth();
+	    int ch = view.getMeasuredHeight();
+	    int cl = Math.round(mActivity.getResources().getDimension(R.dimen.video_rotate_button_padding));
+	    int ct =  cl;
+	    view.layout(cl, ct, cl + cw, ct + ch);
+}
+  
   @Override
   protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
     super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -362,17 +385,14 @@ public class MovieControllerOverlay extends FrameLayout implements
     timeBar.setVisibility(View.VISIBLE);
     playPauseReplayView.setImageResource(
         state == State.PAUSED ? R.drawable.ic_vidcontrol_play :
-          state == State.PLAYING ? R.drawable.ic_vidcontrol_pause :
-            R.drawable.ic_vidcontrol_reload);
-    playPauseReplayView.setVisibility(
-        (state != State.LOADING && state != State.ERROR &&
-                !(state == State.ENDED && !canReplay))
-        ? View.VISIBLE : View.GONE);
+          state == State.PLAYING ? R.drawable.ic_vidcontrol_pause :R.drawable.ic_vidcontrol_reload);
+    playPauseReplayView.setVisibility((state != State.LOADING && state != State.ERROR &&
+                !(state == State.ENDED && !canReplay)) ? View.VISIBLE : View.GONE);
+    playRotatedButton.setVisibility(playPauseReplayView.getVisibility());
     requestLayout();
   }
 
   // TimeBar listener
-
   public void onScrubbingStart() {
     cancelHiding();
     listener.onSeekStart();

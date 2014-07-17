@@ -105,8 +105,7 @@ public class GlobalSettingsActivity extends FragmentActivity implements LetoolCo
 	}
 
 	@Override
-	public void pushContentFragment(Fragment newFragment, Fragment oldFragment,
-			boolean backup) {
+	public void pushContentFragment(Fragment newFragment, Fragment oldFragment, boolean backup) {
 
 	}
 

@@ -15,8 +15,7 @@ import android.view.View;
 
 
 /**
- * The time bar view, which includes the current and total time, the progress bar,
- * and the scrubber.
+ * The time bar view, which includes the current and total time, the progress bar,and the scrubber.
  */
 public class TimeBar extends View {
 

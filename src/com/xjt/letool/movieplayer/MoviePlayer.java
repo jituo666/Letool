@@ -19,7 +19,6 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.VideoView;
 
 
@@ -37,7 +36,7 @@ import com.xjt.letool.utils.LetoolUtils;
 
 public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, ControllerOverlay.Listener {
     @SuppressWarnings("unused")
-    private static final String TAG = "MoviePlayer";
+    private static final String TAG = MoviePlayer.class.getSimpleName();
 
     private static final String KEY_VIDEO_POSITION = "video-position";
     private static final String KEY_RESUMEABLE_TIME = "resumeable-timeout";
@@ -54,7 +53,6 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
 
     private Activity mContext;
     private final VideoView mVideoView;
-    private final View mRootView;
     private final Bookmarker mBookmarker;
     private final Uri mUri;
     private final Handler mHandler = new Handler();
@@ -64,10 +62,9 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
     private long mResumeableTime = Long.MAX_VALUE;
     private int mVideoPosition = 0;
     private boolean mHasPaused = false;
-    // If the time bar is being dragged.
-    private boolean mDragging;
-    // If the time bar is visible.
-    private boolean mShowing;
+
+    private boolean mTimeBarDragging;
+    private boolean mTimeBarShowing;
 
     private final Runnable mPlayingChecker = new Runnable() {
         @Override
@@ -89,13 +86,11 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
     };
 
     public MoviePlayer(View rootView, final MoviePlayActivity movieActivity, Uri videoUri, Bundle savedInstance, boolean canReplay) {
-        
+
     	mContext = movieActivity;
-        mRootView = rootView;
         mVideoView = (VideoView) rootView.findViewById(R.id.surface_view);
         mBookmarker = new Bookmarker(movieActivity);
         mUri = videoUri;
-
         mController = new MovieControllerOverlay(mContext);
         ((ViewGroup)rootView).addView(mController.getView());
         mController.setListener(this);
@@ -154,7 +149,7 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
         });*/
 
         // Hide system UI by default
-        showSystemUi(false);
+        //showSystemUi(false);
 
         mAudioBecomingNoisyReceiver = new AudioBecomingNoisyReceiver();
         mAudioBecomingNoisyReceiver.register();
@@ -177,17 +172,6 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
                 startVideo();
             }
         }
-    }
-
-    private void showSystemUi(boolean visible) {
-    	if(!visible) {
-    		mContext.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    	} else {
-    		final WindowManager.LayoutParams attrs = mContext.getWindow().getAttributes();
-			attrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
-			mContext.getWindow().setAttributes(attrs);
-			mContext.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-    	}
     }
 
     public void onSaveInstanceState(Bundle outState) {
@@ -221,15 +205,6 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
         builder.show();
     }
 
-    public void onPause() {
-        mHasPaused = true;
-        mHandler.removeCallbacksAndMessages(null);
-        mVideoPosition = mVideoView.getCurrentPosition();
-        mBookmarker.setBookmark(mUri, mVideoPosition, mVideoView.getDuration());
-        mVideoView.suspend();
-        mResumeableTime = System.currentTimeMillis() + RESUMEABLE_TIMEOUT;
-    }
-
     public void onResume() {
         if (mHasPaused) {
             mVideoView.seekTo(mVideoPosition);
@@ -241,6 +216,17 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
         }
         mHandler.post(mProgressChecker);
     }
+    
+    public void onPause() {
+        mHasPaused = true;
+        mHandler.removeCallbacksAndMessages(null);
+        mVideoPosition = mVideoView.getCurrentPosition();
+        mBookmarker.setBookmark(mUri, mVideoPosition, mVideoView.getDuration());
+        mVideoView.suspend();
+        mResumeableTime = System.currentTimeMillis() + RESUMEABLE_TIMEOUT;
+    }
+
+
 
     public void onDestroy() {
         mVideoView.stopPlayback();
@@ -251,7 +237,7 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
     // second by mProgressChecker and also from places where the time bar needs
     // to be updated immediately.
     private int setProgress() {
-        if (mDragging || !mShowing) {
+        if (mTimeBarDragging || !mTimeBarShowing) {
             return 0;
         }
         int position = mVideoView.getCurrentPosition();
@@ -317,7 +303,7 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
 
     @Override
     public void onSeekStart() {
-        mDragging = true;
+        mTimeBarDragging = true;
     }
 
     @Override
@@ -327,22 +313,22 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
 
     @Override
     public void onSeekEnd(int time) {
-        mDragging = false;
+        mTimeBarDragging = false;
         mVideoView.seekTo(time);
         setProgress();
     }
 
     @Override
     public void onShown() {
-        mShowing = true;
+        mTimeBarShowing = true;
         setProgress();
-        showSystemUi(true);
+        //showSystemUi(true);
     }
 
     @Override
     public void onHidden() {
-        mShowing = false;
-        showSystemUi(false);
+        mTimeBarShowing = false;
+        //showSystemUi(false);
     }
 
     @Override
@@ -352,7 +338,6 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
 
     // Below are key events passed from MovieActivity.
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-
         // Some headsets will fire off 7-10 events on a single click
         if (event.getRepeatCount() > 0) {
             return isMediaKey(keyCode);
@@ -379,8 +364,7 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
                 return true;
             case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
             case KeyEvent.KEYCODE_MEDIA_NEXT:
-                // TODO: Handle next / previous accordingly, for now we're
-                // just consuming the events.
+                // TODO: Handle next / previous accordingly, for now we're just consuming the events.
                 return true;
         }
         return false;
