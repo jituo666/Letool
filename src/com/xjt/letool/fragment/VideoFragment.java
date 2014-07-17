@@ -6,7 +6,7 @@ import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
 import com.xjt.letool.activities.LocalMediaBrowseActivity;
-import com.xjt.letool.activities.MovieActivity;
+import com.xjt.letool.activities.MoviePlayActivity;
 import com.xjt.letool.common.EyePosition;
 import com.xjt.letool.common.Future;
 import com.xjt.letool.common.LLog;
@@ -580,10 +580,9 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         Context c = mLetoolContext.getAppContext();
         try {
         	Intent intent = new Intent();
-        	intent.setClass(c, MovieActivity.class);
+        	intent.setClass(c, MoviePlayActivity.class);
             intent.setDataAndType(Uri.parse(item.getFilePath()), "video/*");
             intent.putExtra(Intent.EXTRA_TITLE, "");
-            intent.putExtra(MovieActivity.KEY_TREAT_UP_AS_BACK, true);
         	c.startActivity(intent);
         } catch (ActivityNotFoundException e) {
             Toast.makeText(c, c.getString(R.string.app_name),Toast.LENGTH_SHORT).show();

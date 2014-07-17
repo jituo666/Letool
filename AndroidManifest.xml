@@ -36,7 +36,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.xjt.letool.activities.MovieActivity"
+            android:name="com.xjt.letool.activities.MoviePlayActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/MainTheme" >
         </activity>

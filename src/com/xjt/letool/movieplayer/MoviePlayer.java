@@ -1,6 +1,7 @@
 
 package com.xjt.letool.movieplayer;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,6 +19,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.VideoView;
 
 
@@ -27,15 +29,13 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
 import com.xjt.letool.R;
-import com.xjt.letool.activities.MovieActivity;
+import com.xjt.letool.activities.MoviePlayActivity;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.imagedata.blobcache.BlobCache;
 import com.xjt.letool.imagedata.blobcache.BlobCacheManager;
 import com.xjt.letool.utils.LetoolUtils;
 
-public class MoviePlayer implements
-        MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener,
-        ControllerOverlay.Listener {
+public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, ControllerOverlay.Listener {
     @SuppressWarnings("unused")
     private static final String TAG = "MoviePlayer";
 
@@ -52,7 +52,7 @@ public class MoviePlayer implements
     // If we resume the acitivty with in RESUMEABLE_TIMEOUT, we will keep playing.Otherwise, we pause the player.
     private static final long RESUMEABLE_TIMEOUT = 3 * 60 * 1000; // 3 mins
 
-    private Context mContext;
+    private Activity mContext;
     private final VideoView mVideoView;
     private final View mRootView;
     private final Bookmarker mBookmarker;
@@ -64,11 +64,8 @@ public class MoviePlayer implements
     private long mResumeableTime = Long.MAX_VALUE;
     private int mVideoPosition = 0;
     private boolean mHasPaused = false;
-    private int mLastSystemUiVis = 0;
-
     // If the time bar is being dragged.
     private boolean mDragging;
-
     // If the time bar is visible.
     private boolean mShowing;
 
@@ -83,13 +80,6 @@ public class MoviePlayer implements
         }
     };
 
-    private final Runnable mRemoveBackground = new Runnable() {
-        @Override
-        public void run() {
-            //mRootView.setBackground(null);
-        }
-    };
-
     private final Runnable mProgressChecker = new Runnable() {
         @Override
         public void run() {
@@ -98,9 +88,9 @@ public class MoviePlayer implements
         }
     };
 
-    public MoviePlayer(View rootView, final MovieActivity movieActivity,
-            Uri videoUri, Bundle savedInstance, boolean canReplay) {
-        mContext = movieActivity.getApplicationContext();
+    public MoviePlayer(View rootView, final MoviePlayActivity movieActivity, Uri videoUri, Bundle savedInstance, boolean canReplay) {
+        
+    	mContext = movieActivity;
         mRootView = rootView;
         mVideoView = (VideoView) rootView.findViewById(R.id.surface_view);
         mBookmarker = new Bookmarker(movieActivity);
@@ -190,14 +180,14 @@ public class MoviePlayer implements
     }
 
     private void showSystemUi(boolean visible) {
-        int flag = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-        if (!visible) {
-            flag |= View.SYSTEM_UI_FLAG_LOW_PROFILE | View.SYSTEM_UI_FLAG_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        }
-        //mVideoView.setSystemUiVisibility(flag);
+    	if(!visible) {
+    		mContext.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    	} else {
+    		final WindowManager.LayoutParams attrs = mContext.getWindow().getAttributes();
+			attrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
+			mContext.getWindow().setAttributes(attrs);
+			mContext.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+    	}
     }
 
     public void onSaveInstanceState(Bundle outState) {
@@ -207,26 +197,22 @@ public class MoviePlayer implements
 
     private void showResumeDialog(Context context, final int bookmark) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(R.string.app_name);
-        builder.setMessage(String.format(
-                context.getString(R.string.app_name),
-                LetoolUtils.formatDuration(context, bookmark / 1000)));
+        builder.setTitle(R.string.resume_playing_title);
+        builder.setMessage(String.format(context.getString(R.string.resume_playing_message), LetoolUtils.formatDuration(context, bookmark / 1000)));
         builder.setOnCancelListener(new OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
                 onCompletion();
             }
         });
-        builder.setPositiveButton(
-                R.string.app_name, new OnClickListener() {
+        builder.setPositiveButton(R.string.resume_playing_resume, new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mVideoView.seekTo(bookmark);
                 startVideo();
             }
         });
-        builder.setNegativeButton(
-                R.string.app_name, new OnClickListener() {
+        builder.setNegativeButton(R.string.resume_playing_restart, new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 startVideo();
@@ -248,7 +234,6 @@ public class MoviePlayer implements
         if (mHasPaused) {
             mVideoView.seekTo(mVideoPosition);
             mVideoView.resume();
-
             // If we have slept for too long, pause the play
             if (System.currentTimeMillis() > mResumeableTime) {
                 pauseVideo();
@@ -276,8 +261,7 @@ public class MoviePlayer implements
     }
 
     private void startVideo() {
-        // For streams that we expect to be slow to start up, show a
-        // progress spinner until playback starts.
+        // For streams that we expect to be slow to start up, show a progress spinner until playback starts.
         String scheme = mUri.getScheme();
         if ("http".equalsIgnoreCase(scheme) || "rtsp".equalsIgnoreCase(scheme)) {
             mController.showLoading();
@@ -307,8 +291,7 @@ public class MoviePlayer implements
     @Override
     public boolean onError(MediaPlayer player, int arg1, int arg2) {
         mHandler.removeCallbacksAndMessages(null);
-        // VideoView will show an error dialog if we return false, so no need
-        // to show more message.
+        // VideoView will show an error dialog if we return false, so no need to show more message.
         mController.showErrorMessage("");
         return false;
     }
@@ -411,9 +394,7 @@ public class MoviePlayer implements
         return keyCode == KeyEvent.KEYCODE_HEADSETHOOK
                 || keyCode == KeyEvent.KEYCODE_MEDIA_PREVIOUS
                 || keyCode == KeyEvent.KEYCODE_MEDIA_NEXT
-                || keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE
-                || keyCode == KeyEvent.KEYCODE_MEDIA_PLAY
-                || keyCode == KeyEvent.KEYCODE_MEDIA_PAUSE;
+                || keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE;
     }
 
     // We want to pause when the headset is unplugged.
@@ -436,8 +417,7 @@ public class MoviePlayer implements
 }
 
 class Bookmarker {
-    private static final String TAG = "Bookmarker";
-
+    private static final String TAG = Bookmarker.class.getSimpleName();
     private static final String BOOKMARK_CACHE_FILE = "bookmark";
     private static final int BOOKMARK_CACHE_MAX_ENTRIES = 100;
     private static final int BOOKMARK_CACHE_MAX_BYTES = 10 * 1024;
@@ -472,26 +452,18 @@ class Bookmarker {
 
     public Integer getBookmark(Uri uri) {
         try {
-            BlobCache cache = BlobCacheManager.getCache(mContext,
-                    BOOKMARK_CACHE_FILE, BOOKMARK_CACHE_MAX_ENTRIES,
+            BlobCache cache = BlobCacheManager.getCache(mContext,BOOKMARK_CACHE_FILE, BOOKMARK_CACHE_MAX_ENTRIES,
                     BOOKMARK_CACHE_MAX_BYTES, BOOKMARK_CACHE_VERSION);
-
             byte[] data = cache.lookup(uri.hashCode());
             if (data == null) return null;
-
-            DataInputStream dis = new DataInputStream(
-                    new ByteArrayInputStream(data));
-
-            String uriString = dis.readUTF(dis);
+            DataInputStream dis = new DataInputStream(new ByteArrayInputStream(data));
+            String uriString = DataInputStream.readUTF(dis);
             int bookmark = dis.readInt();
             int duration = dis.readInt();
-
             if (!uriString.equals(uri.toString())) {
                 return null;
             }
-
-            if ((bookmark < HALF_MINUTE) || (duration < TWO_MINUTES)
-                    || (bookmark > (duration - HALF_MINUTE))) {
+            if ((bookmark < HALF_MINUTE) || (duration < TWO_MINUTES) || (bookmark > (duration - HALF_MINUTE))) {
                 return null;
             }
             return Integer.valueOf(bookmark);

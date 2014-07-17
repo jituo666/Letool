@@ -63,6 +63,7 @@
     <drawable name="main_sliding_menu_bg">#ffe8e8e8</drawable>
     <drawable name="main_settings_block_bg">#ffe8e8e8</drawable>
 
+    <color name="darker_transparent">#C1000000</color>
     <color name="major_text_color">#ff252525</color>
     <color name="minor_text_color">#ff454545</color>
     <color name="common_white">#ffffff</color>

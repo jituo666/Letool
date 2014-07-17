@@ -72,7 +72,7 @@ public class MovieControllerOverlay extends FrameLayout implements
         new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
     background = new View(context);
-    background.setBackgroundColor(context.getResources().getColor(R.color.common_dark));
+    background.setBackgroundColor(context.getResources().getColor(R.color.darker_transparent));
     addView(background, matchParent);
 
     timeBar = new TimeBar(context, this);
@@ -85,7 +85,7 @@ public class MovieControllerOverlay extends FrameLayout implements
     spinner.setIndeterminate(true);
     loadingView.addView(spinner, wrapContent);
     TextView loadingText = createOverlayTextView(context);
-    loadingText.setText(R.string.loading);
+    loadingText.setText(R.string.loading_video);
     loadingView.addView(loadingText, wrapContent);
     addView(loadingView, wrapContent);
 

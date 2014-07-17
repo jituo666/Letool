@@ -36,6 +36,11 @@
         <item quantity="other">%1$d 项</item>
     </plurals>
 
+    <string name="loading_video">加载视频\u2026</string>
+    <string name="resume_playing_title">回复视频</string>
+    <string name="resume_playing_restart">重播</string>
+    <string name="resume_playing_message">从 %s 开始继续播放?</string>
+    <string name="resume_playing_resume">继续播放?</string>
     <string name="clear_cache_title">清理缓存</string>
     <string name="clear_cache_desc">当前缓存大小 %1$s，手机剩余存储 %2$s</string>
     <string name="clear_cache_finished">缓存已被清理</string>
