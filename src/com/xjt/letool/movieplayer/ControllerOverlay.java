@@ -1,39 +1,47 @@
+
 package com.xjt.letool.movieplayer;
 
 import android.view.View;
 
 public interface ControllerOverlay {
 
-  interface Listener {
-    void onPlayPause();
-    void onSeekStart();
-    void onSeekMove(int time);
-    void onSeekEnd(int time);
-    void onShown();
-    void onHidden();
-    void onReplay();
-  }
+    interface Listener {
 
-  void setListener(Listener listener);
+        void onPlayPause();
 
-  void setCanReplay(boolean canReplay);
+        void onSeekStart();
 
-  /**
-   * @return The overlay view that should be added to the player.
-   */
-  View getView();
+        void onSeekMove(int time);
 
-  void show();
+        void onSeekEnd(int time);
 
-  void showPlaying();
+        void onShown();
 
-  void showPaused();
+        void onHidden();
 
-  void showEnded();
+        void onReplay();
+    }
 
-  void showLoading();
+    void setListener(Listener listener);
 
-  void showErrorMessage(String message);
+    void setCanReplay(boolean canReplay);
 
-  void setTimes(int currentTime, int totalTime);
+    /**
+     * @return The overlay view that should be added to the player.
+     */
+    View getView();
+
+    void show();
+
+    void showPlaying();
+
+    void showPaused();
+
+    void showEnded();
+
+    void showLoading();
+
+    void showErrorMessage(String message);
+
+    void setTimes(int currentTime, int totalTime);
 }

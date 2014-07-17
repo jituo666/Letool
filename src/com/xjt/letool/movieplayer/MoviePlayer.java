@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.VideoView;
 
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
@@ -35,6 +34,7 @@ import com.xjt.letool.imagedata.blobcache.BlobCacheManager;
 import com.xjt.letool.utils.LetoolUtils;
 
 public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnCompletionListener, ControllerOverlay.Listener {
+
     @SuppressWarnings("unused")
     private static final String TAG = MoviePlayer.class.getSimpleName();
 
@@ -67,6 +67,7 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
     private boolean mTimeBarShowing;
 
     private final Runnable mPlayingChecker = new Runnable() {
+
         @Override
         public void run() {
             if (mVideoView.isPlaying()) {
@@ -78,6 +79,7 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
     };
 
     private final Runnable mProgressChecker = new Runnable() {
+
         @Override
         public void run() {
             int pos = setProgress();
@@ -87,12 +89,12 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
 
     public MoviePlayer(View rootView, final MoviePlayActivity movieActivity, Uri videoUri, Bundle savedInstance, boolean canReplay) {
 
-    	mContext = movieActivity;
+        mContext = movieActivity;
         mVideoView = (VideoView) rootView.findViewById(R.id.surface_view);
         mBookmarker = new Bookmarker(movieActivity);
         mUri = videoUri;
         mController = new MovieControllerOverlay(mContext);
-        ((ViewGroup)rootView).addView(mController.getView());
+        ((ViewGroup) rootView).addView(mController.getView());
         mController.setListener(this);
         mController.setCanReplay(canReplay);
 
@@ -100,6 +102,7 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
         mVideoView.setOnCompletionListener(this);
         mVideoView.setVideoURI(mUri);
         mVideoView.setOnTouchListener(new View.OnTouchListener() {
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 mController.show();
@@ -113,6 +116,7 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
         // frame. So, we hide the VideoView for a while to make sure the
         // video has been drawn on it.
         mVideoView.postDelayed(new Runnable() {
+
             @Override
             public void run() {
                 mVideoView.setVisibility(View.VISIBLE);
@@ -122,31 +126,31 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
         // When the user touches the screen or uses some hard key, the framework
         // will change system ui visibility from invisible to visible. We show
         // the media control and enable system UI (e.g. ActionBar) to be visible at this point
-/*        mVideoView.setOnSystemUiVisibilityChangeListener(
-                new View.OnSystemUiVisibilityChangeListener() {
-            @Override
-            public void onSystemUiVisibilityChange(int visibility) {
-                int diff = mLastSystemUiVis ^ visibility;
-                mLastSystemUiVis = visibility;
-                if ((diff & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) != 0
-                        && (visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0) {
-                    mController.show();
+        /*        mVideoView.setOnSystemUiVisibilityChangeListener(
+                        new View.OnSystemUiVisibilityChangeListener() {
+                    @Override
+                    public void onSystemUiVisibilityChange(int visibility) {
+                        int diff = mLastSystemUiVis ^ visibility;
+                        mLastSystemUiVis = visibility;
+                        if ((diff & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) != 0
+                                && (visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0) {
+                            mController.show();
 
-                    // We need to set the background to clear ghosting images
-                    // when ActionBar slides in. However, if we keep the background,
-                    // there will be one additional layer in HW composer, which is bad
-                    // to battery. As a solution, we remove the background when we
-                    // hide the action bar
-                    mHandler.removeCallbacks(mRemoveBackground);
-                    mRootView.setBackgroundColor(Color.BLACK);
-                } else {
-                    mHandler.removeCallbacks(mRemoveBackground);
+                            // We need to set the background to clear ghosting images
+                            // when ActionBar slides in. However, if we keep the background,
+                            // there will be one additional layer in HW composer, which is bad
+                            // to battery. As a solution, we remove the background when we
+                            // hide the action bar
+                            mHandler.removeCallbacks(mRemoveBackground);
+                            mRootView.setBackgroundColor(Color.BLACK);
+                        } else {
+                            mHandler.removeCallbacks(mRemoveBackground);
 
-                    // Wait for the slide out animation, one second should be enough
-                    mHandler.postDelayed(mRemoveBackground, 1000);
-                }
-            }
-        });*/
+                            // Wait for the slide out animation, one second should be enough
+                            mHandler.postDelayed(mRemoveBackground, 1000);
+                        }
+                    }
+                });*/
 
         // Hide system UI by default
         //showSystemUi(false);
@@ -184,12 +188,14 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
         builder.setTitle(R.string.resume_playing_title);
         builder.setMessage(String.format(context.getString(R.string.resume_playing_message), LetoolUtils.formatDuration(context, bookmark / 1000)));
         builder.setOnCancelListener(new OnCancelListener() {
+
             @Override
             public void onCancel(DialogInterface dialog) {
                 onCompletion();
             }
         });
         builder.setPositiveButton(R.string.resume_playing_resume, new OnClickListener() {
+
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mVideoView.seekTo(bookmark);
@@ -197,6 +203,7 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
             }
         });
         builder.setNegativeButton(R.string.resume_playing_restart, new OnClickListener() {
+
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 startVideo();
@@ -216,7 +223,7 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
         }
         mHandler.post(mProgressChecker);
     }
-    
+
     public void onPause() {
         mHasPaused = true;
         mHandler.removeCallbacksAndMessages(null);
@@ -225,8 +232,6 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
         mVideoView.suspend();
         mResumeableTime = System.currentTimeMillis() + RESUMEABLE_TIMEOUT;
     }
-
-
 
     public void onDestroy() {
         mVideoView.stopPlayback();
@@ -395,12 +400,14 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (mVideoView.isPlaying()) pauseVideo();
+            if (mVideoView.isPlaying())
+                pauseVideo();
         }
     }
 }
 
 class Bookmarker {
+
     private static final String TAG = Bookmarker.class.getSimpleName();
     private static final String BOOKMARK_CACHE_FILE = "bookmark";
     private static final int BOOKMARK_CACHE_MAX_ENTRIES = 100;
@@ -436,10 +443,11 @@ class Bookmarker {
 
     public Integer getBookmark(Uri uri) {
         try {
-            BlobCache cache = BlobCacheManager.getCache(mContext,BOOKMARK_CACHE_FILE, BOOKMARK_CACHE_MAX_ENTRIES,
+            BlobCache cache = BlobCacheManager.getCache(mContext, BOOKMARK_CACHE_FILE, BOOKMARK_CACHE_MAX_ENTRIES,
                     BOOKMARK_CACHE_MAX_BYTES, BOOKMARK_CACHE_VERSION);
             byte[] data = cache.lookup(uri.hashCode());
-            if (data == null) return null;
+            if (data == null)
+                return null;
             DataInputStream dis = new DataInputStream(new ByteArrayInputStream(data));
             String uriString = DataInputStream.readUTF(dis);
             int bookmark = dis.readInt();
