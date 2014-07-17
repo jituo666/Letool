@@ -366,8 +366,8 @@ public class MovieControllerOverlay extends FrameLayout implements ControllerOve
   private void layoutTopLeftView(View view, int l, int t, int r, int b) {
 	    int cw = view.getMeasuredWidth();
 	    int ch = view.getMeasuredHeight();
-	    int cl = Math.round(mActivity.getResources().getDimension(R.dimen.video_rotate_button_padding));
-	    int ct =  cl;
+	    int cl = r- cw;
+	    int ct =  Math.round(mActivity.getResources().getDimension(R.dimen.video_rotate_button_padding));
 	    view.layout(cl, ct, cl + cw, ct + ch);
 }
   
