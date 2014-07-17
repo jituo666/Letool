@@ -234,12 +234,13 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     }
 
     public void onLongTap(int thumbnailIndex) {
-        MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_GALLERY_LONG_PRESSED);
-        MediaSet set = mThumbnailSetAdapter.getMediaSet(thumbnailIndex);
-        if (set == null)
-            return;
-        mSelector.toggle(set.getPath());
-        mThumbnailView.invalidate();
+    	return;
+//        MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_GALLERY_LONG_PRESSED);
+//        MediaSet set = mThumbnailSetAdapter.getMediaSet(thumbnailIndex);
+//        if (set == null)
+//            return;
+//        mSelector.toggle(set.getPath());
+//        mThumbnailView.invalidate();
     }
 
     @Override
