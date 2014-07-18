@@ -55,7 +55,7 @@
     <string name="app_no_update">没有更新!</string>
     <string name="app_update_only_wifi">没有wifi连接， 只在wifi下更新</string>
     <string name="full_image_browse">大图浏览(%1$d/%2$d)</string>
-    <string name="full_image_browse_empty">该目录已没有图片！</string>
+    <string name="full_image_browse_empty">该目录已没有图片!</string>
     <string name="common_connect_timeout">链接超时</string>
     <string name="common_share_to">分享到</string>
     <string name="common_share">分享</string>
@@ -73,13 +73,18 @@
     <string name="common_ok">确定</string>
     <string name="common_close">关闭</string>
     <string name="common_recommend">提示</string>
-    <string name="common_error_nosdcard">没有检测到SD卡！</string>
-    <string name="common_error_nodcim">没有检测到有效的照片目录！</string>
+    <string name="common_error_nosdcard">没有检测到SD卡!</string>
+    <string name="common_error_nodcim">没有检测到有效的照片目录!</string>
     <string name="common_video_set">(%d个视频)</string>
+    <string name="common_error_no_photos">没有照片!</string>
+    <string name="common_error_no_picture">没有图片!</string>
+    <string name="common_error_no_movie">没有视频!</string>
+    <string name="common_error_no_video">没有视频!</string>
+
     <!-- popup menu -->
     <string name="popup_menu_select_mode">选择</string>
     <string name="popup_menu_take_picture">拍照</string>
-    <string name="share_app_install_tip">请选择安装QQ或者QQ空间的手机客户端！</string>
+    <string name="share_app_install_tip">请选择安装QQ或者QQ空间的手机客户端!</string>
 
     <!-- Text indicating the title of a media item in details window [CHAR LIMIT=14] -->
     <string name="title">标题</string>

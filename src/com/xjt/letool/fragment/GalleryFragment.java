@@ -1,7 +1,6 @@
 
 package com.xjt.letool.fragment;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import com.umeng.analytics.MobclickAgent;
@@ -27,6 +26,7 @@ import com.xjt.letool.view.BatchDeleteMediaListener.DeleteMediaProgressListener;
 import com.xjt.letool.view.DetailsHelper;
 import com.xjt.letool.view.GLBaseView;
 import com.xjt.letool.view.GLController;
+import com.xjt.letool.view.LetoolEmptyView;
 import com.xjt.letool.view.LetoolTopBar;
 import com.xjt.letool.view.LetoolDialog;
 import com.xjt.letool.view.ThumbnailView;
@@ -67,18 +67,15 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     private static final String TAG = GalleryFragment.class.getSimpleName();
 
     public static final String KEY_IS_EMPTY_ALBUM = "empty-album";
-
     private static final int MSG_LAYOUT_CONFIRMED = 0;
     private static final int MSG_PICK_ALBUM = 1;
 
     private static final int BIT_LOADING_RELOAD = 1;
-    private static final int BIT_LOADING_SYNC = 2;
     private static final int REQUEST_DO_ANIMATION = 1;
 
     private ViewGroup mNativeButtons;
     private LetoolContext mLetoolContext;
     private GLController mGLController;
-    //    private CommonLoadingPanel mLoadingInsie;
     private ThumbnailView mThumbnailView;
     private boolean mIsActive = false;
     private ThumbnailSetRenderer mThumbnailViewRenderer;
@@ -87,18 +84,17 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     private ThumbnailSetDataLoader mThumbnailSetAdapter;
     private MediaSet mMediaSet;
 
+    private LayoutInflater mLayoutInflater;
     private DetailsHelper mDetailsHelper;
     private MyDetailsSource mDetailsSource;
     private boolean mShowDetails;
     private EyePosition mEyePosition;
-    private WeakReference<Toast> mEmptyAlbumToast = null;
     // The eyes' position of the user, the origin is at the center of the device and the unit is in pixels.
     private float mX;
     private float mY;
     private float mZ;
 
     private int mLoadingBits = 0;
-    private boolean mShowedEmptyToastForSelf = false;
     private Handler mHandler;
 
     private final GLBaseView mRootPane = new GLBaseView() {
@@ -108,21 +104,21 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         @Override
         protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
             mEyePosition.resetPosition();
-            int paddingLeft =0, paddingRight =0,paddingTop = 0,paddingBottom=0;
+            int paddingLeft = 0, paddingRight = 0, paddingTop = 0, paddingBottom = 0;
             if (mLetoolContext.isImageBrwosing()) {
-    	        ViewConfigs.AlbumSetPage config = ViewConfigs.AlbumSetPage.get(mLetoolContext.getAppContext());
-    	        paddingLeft =config.paddingLeft; 
-    	        paddingRight =config.paddingRight;
-    	        paddingTop = config.paddingTop;
-    	        paddingBottom=config.paddingBottom;
+                ViewConfigs.AlbumSetPage config = ViewConfigs.AlbumSetPage.get(mLetoolContext.getAppContext());
+                paddingLeft = config.paddingLeft;
+                paddingRight = config.paddingRight;
+                paddingTop = config.paddingTop;
+                paddingBottom = config.paddingBottom;
             } else {
-            	ViewConfigs.VideoSetPage config = ViewConfigs.VideoSetPage.get(mLetoolContext.getAppContext());
-            	paddingLeft =config.paddingLeft; 
-    	        paddingRight =config.paddingRight;
-    	        paddingTop = config.paddingTop;
-    	        paddingBottom=config.paddingBottom;
+                ViewConfigs.VideoSetPage config = ViewConfigs.VideoSetPage.get(mLetoolContext.getAppContext());
+                paddingLeft = config.paddingLeft;
+                paddingRight = config.paddingRight;
+                paddingTop = config.paddingTop;
+                paddingBottom = config.paddingBottom;
             }
-            
+
             LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
             int thumbnailViewLeft = left + paddingLeft;
             int thumbnailViewRight = right - left - paddingRight;
@@ -168,44 +164,21 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         mLoadingBits &= ~loadingBit;
         if (mLoadingBits == 0 && mIsActive) {
             if (mThumbnailSetAdapter.size() == 0) {
+                showEmptyView(mLetoolContext.isImageBrwosing() ? R.string.common_error_no_picture : R.string.common_error_no_video);
                 return;
             }
         }
-        // Hide the empty album toast if we are in the root instance of
-        // AlbumSetPage and the album is no longer empty (for instance,
-        // after a sync is completed and web albums have been synced)
-        if (mShowedEmptyToastForSelf) {
-            mShowedEmptyToastForSelf = false;
-            hideEmptyAlbumToast();
-        }
     }
 
-    private void showEmptyAlbumToast(int toastLength) {
-        Toast toast;
-        if (mEmptyAlbumToast != null) {
-            toast = mEmptyAlbumToast.get();
-            if (toast != null) {
-                toast.show();
-                return;
-            }
-        }
-        toast = Toast.makeText(mLetoolContext.getAppContext(), R.string.empty_album, toastLength);
-        mEmptyAlbumToast = new WeakReference<Toast>(toast);
-        toast.show();
-    }
-
-    private void hideEmptyAlbumToast() {
-        if (mEmptyAlbumToast != null) {
-            Toast toast = mEmptyAlbumToast.get();
-            if (toast != null)
-                toast.cancel();
-        }
+    private void showEmptyView(int resId) {
+        LetoolEmptyView emptyView = (LetoolEmptyView) mLayoutInflater.inflate(R.layout.local_empty_view, null);
+        emptyView.updataView(R.drawable.ic_launcher, resId);
+        mLetoolContext.setMainView(emptyView);
     }
 
     public void onSingleTapUp(int thumbnailIndex) {
         if (!mIsActive)
             return;
-
         if (mSelector.inSelectionMode()) {
             MediaSet targetSet = mThumbnailSetAdapter.getMediaSet(thumbnailIndex);
             if (targetSet == null)
@@ -234,13 +207,13 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     }
 
     public void onLongTap(int thumbnailIndex) {
-    	return;
-//        MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_GALLERY_LONG_PRESSED);
-//        MediaSet set = mThumbnailSetAdapter.getMediaSet(thumbnailIndex);
-//        if (set == null)
-//            return;
-//        mSelector.toggle(set.getPath());
-//        mThumbnailView.invalidate();
+        return;
+        //        MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_GALLERY_LONG_PRESSED);
+        //        MediaSet set = mThumbnailSetAdapter.getMediaSet(thumbnailIndex);
+        //        if (set == null)
+        //            return;
+        //        mSelector.toggle(set.getPath());
+        //        mThumbnailView.invalidate();
     }
 
     @Override
@@ -254,8 +227,9 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         super.onCreate(savedInstanceState);
         LLog.i(TAG, "onCreate");
         mLetoolContext = (LetoolContext) getActivity();
+        mLetoolContext.setMainView(mRootPane);
         mGLController = mLetoolContext.getGLController();
-
+        mLayoutInflater = getActivity().getLayoutInflater();
         //mLoadingInsie = (CommonLoadingPanel) rootView.findViewById(R.id.loading);
         //        mLoadingInsie.setVisibility(View.VISIBLE);
         mHandler = new SynchronizedHandler(mGLController) {
@@ -287,11 +261,11 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         mSelector.setSelectionListener(this);
         ThumbnailLayout layout = null;
         if (mLetoolContext.isImageBrwosing()) {
-	        ViewConfigs.AlbumSetPage config = ViewConfigs.AlbumSetPage.get(mLetoolContext.getAppContext());
-	        layout = new ThumbnailSetContractLayout(config.albumSetSpec);
+            ViewConfigs.AlbumSetPage config = ViewConfigs.AlbumSetPage.get(mLetoolContext.getAppContext());
+            layout = new ThumbnailSetContractLayout(config.albumSetSpec);
         } else {
-        	ViewConfigs.VideoSetPage config = ViewConfigs.VideoSetPage.get(mLetoolContext.getAppContext());
- 	        layout = new ThumbnailSetContractLayout(config.videoSetSpec);
+            ViewConfigs.VideoSetPage config = ViewConfigs.VideoSetPage.get(mLetoolContext.getAppContext());
+            layout = new ThumbnailSetContractLayout(config.videoSetSpec);
         }
         mThumbnailView = new ThumbnailView(mLetoolContext, layout);
         mThumbnailView.setBackgroundColor(
@@ -328,8 +302,8 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
 
     private void initializeData() {
         mMediaSet = new LocalAlbumSet(new MediaPath(mLetoolContext.getDataManager()
-        		.getTopSetPath(mLetoolContext.isImageBrwosing()?DataManager.INCLUDE_LOCAL_IMAGE_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_ONLY), -1000),
-                (LetoolApp) getActivity().getApplication(),mLetoolContext.isImageBrwosing());
+                .getTopSetPath(mLetoolContext.isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_ONLY), -1000),
+                (LetoolApp) getActivity().getApplication(), mLetoolContext.isImageBrwosing());
         mSelector.setSourceMediaSet(mMediaSet);
         mThumbnailSetAdapter = new ThumbnailSetDataLoader(mLetoolContext, mMediaSet);
         mThumbnailSetAdapter.setLoadingListener(new MyLoadingListener());
@@ -343,12 +317,12 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         topBar.setTitleText(R.string.app_name);
         mNativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);
         mNativeButtons.setVisibility(View.VISIBLE);
-        
+
         TextView naviToGallery = (TextView) mNativeButtons.findViewById(R.id.navi_to_gallery);
-        naviToGallery.setText(mLetoolContext.isImageBrwosing()?R.string.common_gallery:R.string.common_video);
+        naviToGallery.setText(mLetoolContext.isImageBrwosing() ? R.string.common_gallery : R.string.common_video);
         naviToGallery.setEnabled(false);
         TextView naviToPhoto = (TextView) mNativeButtons.findViewById(R.id.navi_to_photo);
-        naviToPhoto.setText(mLetoolContext.isImageBrwosing()?R.string.common_photo:R.string.common_record);
+        naviToPhoto.setText(mLetoolContext.isImageBrwosing() ? R.string.common_photo : R.string.common_record);
         naviToPhoto.setEnabled(true);
         naviToPhoto.setOnClickListener(this);
 
@@ -398,7 +372,6 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         mGLController.lockRenderThread();
         try {
             mIsActive = true;
-            mGLController.setContentPane(mRootPane);
             mThumbnailSetAdapter.resume();
             mThumbnailViewRenderer.resume();
             mEyePosition.resume();
@@ -431,7 +404,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
 
             super.onActivityResult(requestCode, resultCode, data);
             if (data != null && data.getBooleanExtra(KEY_IS_EMPTY_ALBUM, false)) {
-                showEmptyAlbumToast(Toast.LENGTH_SHORT);
+                showEmptyView(R.string.common_error_no_picture);
             }
             switch (requestCode) {
                 case REQUEST_DO_ANIMATION: {
@@ -568,14 +541,14 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
             dlg.setMessage(R.string.common_delete_tip);
             dlg.setDividerVisible(true);
             dlg.show();
-        } else if (v.getId() == R.id.enter_selection_indicate) {
+        } else if (v.getId() == R.id.selection_finished) {
             MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_SELECT_OK);
             mSelector.leaveSelectionMode();
         } else if (v.getId() == R.id.navi_to_photo) {
-            Fragment f = mLetoolContext.isImageBrwosing()?new PhotoFragment():new VideoFragment();
+            Fragment f = mLetoolContext.isImageBrwosing() ? new PhotoFragment() : new VideoFragment();
             Bundle data = new Bundle();
             data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
-            		.getTopSetPath(mLetoolContext.isImageBrwosing()?DataManager.INCLUDE_LOCAL_IMAGE_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
+                    .getTopSetPath(mLetoolContext.isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
             data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, true);
             f.setArguments(data);
             mLetoolContext.pushContentFragment(f, this, false);
@@ -585,27 +558,27 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     private void pickAlbum(int thumbnailIndex) {
         if (!mIsActive)
             return;
-        MediaSet targetSet = mThumbnailSetAdapter.getMediaSet(thumbnailIndex);
-        if (targetSet == null)
+        MediaSet albumData = mThumbnailSetAdapter.getMediaSet(thumbnailIndex);
+        if (albumData == null)
             return; // Content is dirty, we shall reload soon
-        if (targetSet.getTotalMediaItemCount() == 0) {
-            showEmptyAlbumToast(Toast.LENGTH_SHORT);
+        if (albumData.getTotalMediaItemCount() == 0) {
+            Toast.makeText(getActivity(),
+                    mLetoolContext.isImageBrwosing() ? R.string.common_error_no_photos : R.string.common_error_no_video
+                    , Toast.LENGTH_SHORT).show();
             return;
         }
-        hideEmptyAlbumToast();
-        MediaPath mediaPath = targetSet.getPath();
-        Fragment f = mLetoolContext.isImageBrwosing()?new PhotoFragment():new VideoFragment();
+        MediaPath mediaPath = albumData.getPath();
+        Fragment f = mLetoolContext.isImageBrwosing() ? new PhotoFragment() : new VideoFragment();
         Bundle data = new Bundle();
         data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
-        		.getTopSetPath(mLetoolContext.isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
-        data.putString(LocalMediaActivity.KEY_ALBUM_TITLE, targetSet.getName());
+                .getTopSetPath(mLetoolContext.isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
+        data.putString(LocalMediaActivity.KEY_ALBUM_TITLE, albumData.getName());
         data.putInt(LocalMediaActivity.KEY_ALBUM_ID, mediaPath.getIdentity());
         data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, false);
         f.setArguments(data);
         mLetoolContext.pushContentFragment(f, this, true);
 
     }
-
 
     @Override
     public void onSelectionModeChange(int mode) {

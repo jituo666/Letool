@@ -57,8 +57,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
     // sort them by the timestamp of the latest image/video in each of the
     // album.
     //
-    // The order of columns below is important: it must match to the index in
-    // MediaStore.
+    // The order of columns below is important: it must match to the index in MediaStore.
     private static final String[] PROJECTION_BUCKET = {
             ImageColumns.BUCKET_ID, ImageColumns.BUCKET_DISPLAY_NAME
     };
@@ -67,11 +66,9 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
     // "WHERE" parameter to insert a "GROUP BY" clause into the SQL statement.
     // The template for "WHERE" parameter is like:
     // SELECT ... FROM ... WHERE (%s)
-    // and we make it look like:
-    // SELECT ... FROM ... WHERE (1) GROUP BY 1,(2)
+    // and we make it look like: SELECT ... FROM ... WHERE (1) GROUP BY 1,(2)
     // The "(1)" means true. The "1,(2)" means the first two columns specified
-    // after SELECT. Note that because there is a ")" in the template, we use
-    // "(2" to match it.
+    // after SELECT. Note that because there is a ")" in the template, we use "(2" to match it.
     private static final String BUCKET_GROUP_BY = "1) GROUP BY 1,(2";
     private static final String BUCKET_ORDER_BY = "MAX(datetaken) DESC";
 
@@ -93,11 +90,11 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
         mHandler = new Handler(application.getMainLooper());
         mIsImage = isImage;
         if (isImage) {
-        	mBaseUri = mWatchUriImage;
-        	mNotifierMedia = new DataNotifier(this, mWatchUriImage, application);
+            mBaseUri = mWatchUriImage;
+            mNotifierMedia = new DataNotifier(this, mWatchUriImage, application);
         } else {
-        	mBaseUri = mWatchUriVideo;
-        	mNotifierMedia = new DataNotifier(this, mWatchUriVideo, application);
+            mBaseUri = mWatchUriVideo;
+            mNotifierMedia = new DataNotifier(this, mWatchUriVideo, application);
         }
         mName = application.getResources().getString(R.string.set_label_local_albums);
     }
@@ -121,8 +118,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
         Uri uri = mBaseUri;
 
         LLog.v("DebugLoadingTime", "start quering media provider");
-        Cursor cursor = mApplication.getContentResolver().query(uri,
-                PROJECTION_BUCKET, BUCKET_GROUP_BY, null, BUCKET_ORDER_BY);
+        Cursor cursor = mApplication.getContentResolver().query(uri, PROJECTION_BUCKET, BUCKET_GROUP_BY, null, BUCKET_ORDER_BY);
         if (cursor == null) {
             LLog.w(TAG, "cannot open local database: " + uri);
             return new BucketEntry[0];
@@ -168,8 +164,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
         @Override
         @SuppressWarnings("unchecked")
         public ArrayList<MediaSet> run(JobContext jc) {
-            // Note: it will be faster if we only select media_type and bucket_id.
-            // need to test the performance if that is worth
+            // Note: it will be faster if we only select media_type and bucket_id. need to test the performance if that is worth
             BucketEntry[] entries = loadBucketEntries(jc);
             if (jc.isCancelled())
                 return null;
@@ -191,16 +186,16 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
 
     private MediaSet getLocalAlbum(DataManager manager, int id, String name, boolean mIsImage) {
         synchronized (DataManager.LOCK) {
-            if (mIsImage)  {
-                    return new LocalAlbum(new MediaPath(PATH_IMAGE, id), mApplication, new int[] {
-                            id
-                    }, true, name);
-	        } else {
-	                    return new LocalAlbum(new MediaPath(PATH_VIDEO, id), mApplication, new int[] {
-	                            id
-	                    }, false, name);
-	
-	        }
+            if (mIsImage) {
+                return new LocalAlbum(new MediaPath(PATH_IMAGE, id), mApplication, new int[] {
+                        id
+                }, true, name);
+            } else {
+                return new LocalAlbum(new MediaPath(PATH_VIDEO, id), mApplication, new int[] {
+                        id
+                }, false, name);
+
+            }
         }
     }
 
@@ -276,7 +271,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
 
     // For debug only. Fake there is a ContentObserver.onChange() event.
     void fakeChange() {
-    	mNotifierMedia.fakeChange();
+        mNotifierMedia.fakeChange();
     }
 
     private static class BucketEntry {

@@ -74,6 +74,10 @@
     <string name="common_recommend">Recommend</string>
     <string name="common_error_nosdcard">No SDcard！</string>
     <string name="common_error_nodcim">No valid photoes directories！</string>
+    <string name="common_error_no_photos">No photo found！</string>
+    <string name="common_error_no_picture">No picture found！</string>
+    <string name="common_error_no_movie">No movie found！</string>
+    <string name="common_error_no_video">No video found！</string>
     <string name="common_video_set">(%d Video(s))</string>
     <!-- popup menu -->
     <string name="popup_menu_select_mode">Select</string>

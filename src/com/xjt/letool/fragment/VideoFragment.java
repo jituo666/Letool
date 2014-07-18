@@ -8,7 +8,6 @@ import com.xjt.letool.R;
 import com.xjt.letool.activities.LocalMediaActivity;
 import com.xjt.letool.activities.MoviePlayActivity;
 import com.xjt.letool.common.EyePosition;
-import com.xjt.letool.common.Future;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
 import com.xjt.letool.metadata.DataManager;
@@ -35,6 +34,7 @@ import com.xjt.letool.view.DetailsHelper;
 import com.xjt.letool.view.GLBaseView;
 import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.LetoolBottomBar;
+import com.xjt.letool.view.LetoolEmptyView;
 import com.xjt.letool.view.LetoolTopBar;
 import com.xjt.letool.view.LetoolDialog;
 import com.xjt.letool.view.LetoolTopBar.OnActionModeListener;
@@ -76,7 +76,6 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     private static final String TAG = VideoFragment.class.getSimpleName();
 
     private static final int BIT_LOADING_RELOAD = 1;
-    private static final int BIT_LOADING_SYNC = 2;
     private static final int MSG_LAYOUT_CONFIRMED = 0;
     private static final int MSG_PICK_PHOTO = 1;
 
@@ -90,8 +89,6 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     private MediaSet mVideoData;
     private ThumbnailDataLoader mVideoDataLoader;
     private int mLoadingBits = 0;
-    private Future<Integer> mSyncTask = null; // synchronize data
-    private boolean mInitialSynced = false;
 
     // views
     private GLController mGLController;
@@ -103,8 +100,8 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
 
     private String mAlbumTitle;
     private boolean mIsCameraSource = false;
-    private boolean mHasSDCard = false;
-    private boolean mHasDCIM = false;
+    private boolean mIsSDCardMountedCorreclty = false;
+    private boolean mHasDefaultDCIMDirectory = false;
     private boolean mGetContent;
     private SynchronizedHandler mHandler;
     protected ContractSelector mSelector;
@@ -167,8 +164,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         mLoadingBits &= ~loadTaskBit;
         if (mLoadingBits == 0 && mIsActive) {
             if (mVideoDataLoader.size() == 0) {
-                Toast.makeText(getActivity(), R.string.empty_album, Toast.LENGTH_LONG).show();
-                showEmptyView(R.string.common_error_nodcim);
+                showEmptyView(R.string.common_error_no_movie);
             }
         }
     }
@@ -229,9 +225,11 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         super.onCreate(savedInstanceState);
         LLog.i(TAG, "onCreate");
         mLetoolContext = (LetoolContext) getActivity();
+        mLetoolContext.setMainView(mRootPane);
         mGLController = mLetoolContext.getGLController();
         mLayoutInflater = getActivity().getLayoutInflater();
-        mHasSDCard = StorageUtils.externalStorageAvailable();
+        mIsSDCardMountedCorreclty = StorageUtils.externalStorageAvailable();
+        mHasDefaultDCIMDirectory = MediaSetUtils.MY_ALBUM_BUCKETS.length > 0;
         initializeData();
         initializeViews();
         mHandler = new SynchronizedHandler(mGLController) {
@@ -253,10 +251,10 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             }
         };
         mEyePosition = new EyePosition(mLetoolContext.getAppContext(), this);
-        if (!mHasSDCard) {
+        if (!mIsSDCardMountedCorreclty) {
             showEmptyView(R.string.common_error_nosdcard);
             return;
-        } else if (mIsCameraSource && !mHasDCIM) {
+        } else if (mIsCameraSource && !mHasDefaultDCIMDirectory) {
             showEmptyView(R.string.common_error_nodcim);
             return;
         }
@@ -271,9 +269,9 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
                 mVideoDataPath = new MediaPath(data.getString(LocalMediaActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]);
                 mVideoData = new LocalAlbum(mVideoDataPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.MY_ALBUM_BUCKETS, mLetoolContext.isImageBrwosing(),
                         getString(R.string.common_photo));
-                mHasDCIM = true;
+                mHasDefaultDCIMDirectory = true;
             } else {
-                mHasDCIM = false;
+                mHasDefaultDCIMDirectory = false;
                 return;
             }
         } else {
@@ -367,8 +365,8 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     }
 
     private void showEmptyView(int resId) {
-        //TODO
-        View emptyView = mLayoutInflater.inflate(R.layout.letool_fullmage_bar, null);
+        LetoolEmptyView emptyView = (LetoolEmptyView)mLayoutInflater.inflate(R.layout.local_empty_view, null);
+        emptyView.updataView(R.drawable.ic_launcher, resId);
         mLetoolContext.setMainView(emptyView);
     }
 
@@ -382,24 +380,20 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     public void onResume() {
         super.onResume();
         mGLController.onResume();
-        if (!mHasSDCard || mIsCameraSource && !mHasDCIM) {
+        if (!mIsSDCardMountedCorreclty || mIsCameraSource && !mHasDefaultDCIMDirectory) {
             return;
         }
         LLog.i(TAG, "onResume" + System.currentTimeMillis());
         mGLController.lockRenderThread();
         try {
             mIsActive = true;
-            mGLController.setContentPane(mRootPane);
             // Set the reload bit here to prevent it exit this page in clearLoadingBit().
             setLoadingBit(BIT_LOADING_RELOAD);
             mVideoDataLoader.resume();
             mRender.resume();
             mRender.setPressedIndex(-1);
             mEyePosition.resume();
-            if (!mInitialSynced) {
-                setLoadingBit(BIT_LOADING_SYNC);
-                // mSyncTask = mVideoData.requestSync(this);
-            }
+
         } finally {
             mGLController.unlockRenderThread();
         }
@@ -410,7 +404,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         super.onPause();
         LLog.i(TAG, "onPause");
         mGLController.onPause();
-        if (!mHasSDCard || mIsCameraSource && !mHasDCIM) {
+        if (!mIsSDCardMountedCorreclty || mIsCameraSource && !mHasDefaultDCIMDirectory) {
             return;
         }
         mGLController.lockRenderThread();
@@ -420,11 +414,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             mRender.pause();
             DetailsHelper.pause();
             mEyePosition.resume();
-            if (mSyncTask != null) {
-                mSyncTask.cancel();
-                mSyncTask = null;
-                clearLoadingBit(BIT_LOADING_SYNC);
-            }
+
         } finally {
             mGLController.unlockRenderThread();
         }
@@ -469,21 +459,15 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
 
     @Override
     public void onClick(View v) {
+        if (!mIsSDCardMountedCorreclty)
+            return;
         if (v.getId() == R.id.action_navi) {
-            if (!mIsActive && !(mIsCameraSource && !mHasDCIM)) {
-                return;
-            }
             if (mIsCameraSource) {
                 mLetoolContext.getLetoolSlidingMenu().toggle();
             } else {
                 mLetoolContext.popContentFragment();
             }
-            return;
-        }
-        if (!mIsActive) {
-            return;
-        }
-        if (v.getId() == R.id.operation_delete) {
+        } else if (v.getId() == R.id.operation_delete) {
 
             MobclickAgent.onEvent(mLetoolContext.getAppContext(),
                     StatConstants.EVENT_KEY_PHOTO_DELETE);
@@ -530,7 +514,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             f.setArguments(data);
             mLetoolContext.pushContentFragment(f, this, false);
         }
-        else if (v.getId() == R.id.enter_selection_indicate) {
+        else if (v.getId() == R.id.selection_finished) {
             MobclickAgent.onEvent(mLetoolContext.getAppContext(),
                     StatConstants.EVENT_KEY_SELECT_OK);
             mSelector.leaveSelectionMode();

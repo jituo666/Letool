@@ -63,8 +63,8 @@ public class LocalAlbum extends MediaSet {
             } else {
                 mWhereClause = ImageColumns.BUCKET_ID + subWhere;
             }
-            mOrderClause = ImageColumns.DATE_TAKEN + " DESC ";
             mBaseUri = Images.Media.EXTERNAL_CONTENT_URI;
+            mOrderClause = ImageColumns.DATE_TAKEN + " DESC ";
             mProjection = LocalImage.PROJECTION;
             mItemPath = LocalImage.ITEM_PATH;
         } else {
@@ -73,11 +73,12 @@ public class LocalAlbum extends MediaSet {
             } else {
                 mWhereClause = VideoColumns.BUCKET_ID + subWhere;
             }
-            mOrderClause = VideoColumns.DATE_TAKEN + " DESC ";
             mBaseUri = Video.Media.EXTERNAL_CONTENT_URI;
+            mOrderClause = VideoColumns.DATE_TAKEN + " DESC ";
             mProjection = LocalVideo.PROJECTION;
             mItemPath = LocalVideo.ITEM_PATH;
         }
+        // mWhereClause += " and 1=2 ";
         mNotifier = new DataNotifier(this, mBaseUri, application);
     }
 

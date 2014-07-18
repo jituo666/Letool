@@ -45,7 +45,6 @@ public class ThumbnailView extends GLBaseView {
     private final Rect mTempRect = new Rect(); // to prevent allocating memory
     private boolean mDownInScrolling;
     private ViewScrollerHelper mScroller;
-    private final ViewPaper mPaper = new ViewPaper();
     private GestureDetector mGestureDetector;
     private UIListener mUIListener;
     private SynchronizedHandler mHandler;
@@ -226,7 +225,6 @@ public class ThumbnailView extends GLBaseView {
                 mScroller.forceFinished();
                 break;
             case MotionEvent.ACTION_UP:
-                mPaper.onRelease();
                 invalidate();
                 break;
         }
