@@ -6,7 +6,6 @@ import com.xjt.letool.common.LLog;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.view.Gravity;
