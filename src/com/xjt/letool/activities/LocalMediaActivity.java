@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.xjt.letool.LetoolApp;
@@ -56,6 +57,7 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.local_browse_image);
         if (getIntent().hasExtra(KEY_IS_IMAGE)) {
         	mIsImage = getIntent().getBooleanExtra(KEY_IS_IMAGE, true);

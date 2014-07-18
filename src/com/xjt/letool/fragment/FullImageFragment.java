@@ -121,7 +121,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
     private boolean mStartInFilmstrip;
     private int mTotalCount = 0;
 
-    private static final long DEFERRED_UPDATE_MS = 250;
+    private static final long DEFERRED_UPDATE_MS = 0;
     private boolean mDeferredUpdateWaiting = false;
     private long mDeferUpdateUntil = Long.MAX_VALUE;
 
@@ -164,16 +164,14 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
         mFullImageView.setWantPictureCenterCallbacks(false);
         mHandler.removeMessages(MSG_ON_CAMERA_CENTER);
         mHandler.removeMessages(MSG_ON_PICTURE_CENTER);
-        mHandler.sendEmptyMessage(mIsCameraSource ? MSG_ON_CAMERA_CENTER
-                : MSG_ON_PICTURE_CENTER);
+        mHandler.sendEmptyMessage(mIsCameraSource ? MSG_ON_CAMERA_CENTER : MSG_ON_PICTURE_CENTER);
     }
 
     private void requestDeferredUpdate() {
         mDeferUpdateUntil = SystemClock.uptimeMillis() + DEFERRED_UPDATE_MS;
         if (!mDeferredUpdateWaiting) {
             mDeferredUpdateWaiting = true;
-            mHandler.sendEmptyMessageDelayed(MSG_UPDATE_DEFERRED,
-                    DEFERRED_UPDATE_MS);
+            mHandler.sendEmptyMessageDelayed(MSG_UPDATE_DEFERRED, DEFERRED_UPDATE_MS);
         }
     }
 
@@ -201,7 +199,6 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
         if (mShowBars)
             return;
         mShowBars = true;
-        mOrientationManager.unlockOrientation();
         mLetoolContext.getLetoolTopBar().setVisible(View.VISIBLE, withAnim);
         mLetoolContext.getLetoolBottomBar().setVisible(View.VISIBLE, withAnim);
 
