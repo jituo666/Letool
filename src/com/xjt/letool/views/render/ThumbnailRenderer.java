@@ -11,7 +11,6 @@ import com.xjt.letool.views.opengl.ColorTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.opengl.Texture;
 
-
 public class ThumbnailRenderer extends AbstractThumbnailRender {
 
     private static final String TAG = ThumbnailRenderer.class.getSimpleName();
@@ -108,16 +107,15 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
         ThumbnailDataWindow.AlbumEntry entry = mDataWindow.get(index);
 
         int renderRequestFlags = 0;
-
-        Texture content = entry.bitmapTexture;
-        if (content == null) {
-            content = mWaitLoadingTexture;
-            entry.isWaitDisplayed = true;
+        if (entry != null) {
+            Texture content = entry.bitmapTexture;
+            if (content == null) {
+                content = mWaitLoadingTexture;
+                entry.isWaitDisplayed = true;
+            }
+            drawContent(canvas, content, width, height, entry.rotation);
+            renderRequestFlags |= renderOverlay(canvas, index, entry, width, height);
         }
-
-        drawContent(canvas, content, width, height, entry.rotation);
-        //
-        renderRequestFlags |= renderOverlay(canvas, index, entry, width, height);
         return renderRequestFlags;
     }
 

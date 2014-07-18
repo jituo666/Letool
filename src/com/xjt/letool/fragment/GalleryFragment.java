@@ -21,6 +21,7 @@ import com.xjt.letool.selectors.ContractSelectListener;
 import com.xjt.letool.selectors.ContractSelector;
 import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.LetoolUtils;
+import com.xjt.letool.utils.StorageUtils;
 import com.xjt.letool.view.BatchDeleteMediaListener;
 import com.xjt.letool.view.BatchDeleteMediaListener.DeleteMediaProgressListener;
 import com.xjt.letool.view.DetailsHelper;
@@ -77,6 +78,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     private LetoolContext mLetoolContext;
     private GLController mGLController;
     private ThumbnailView mThumbnailView;
+    private boolean mIsSDCardMountedCorreclty = false;
     private boolean mIsActive = false;
     private ThumbnailSetRenderer mThumbnailViewRenderer;
 
@@ -230,6 +232,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         mLetoolContext.setMainView(mRootPane);
         mGLController = mLetoolContext.getGLController();
         mLayoutInflater = getActivity().getLayoutInflater();
+
         //mLoadingInsie = (CommonLoadingPanel) rootView.findViewById(R.id.loading);
         //        mLoadingInsie.setVisibility(View.VISIBLE);
         mHandler = new SynchronizedHandler(mGLController) {
@@ -355,6 +358,10 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LLog.i(TAG, "onCreateView");
         initBars();
+        mIsSDCardMountedCorreclty = StorageUtils.externalStorageAvailable();
+        if (!mIsSDCardMountedCorreclty) {
+            showEmptyView(R.string.common_error_nosdcard);
+        }
         return null;
     }
 

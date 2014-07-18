@@ -1,7 +1,6 @@
 
 package com.xjt.letool.views.render;
 
-
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.adapters.ThumbnailSetDataWindow;
 import com.xjt.letool.adapters.ThumbnailSetDataWindow.AlbumSetEntry;
@@ -119,17 +118,15 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         return ((texture instanceof UploadedBitmapTexture) && ((UploadedBitmapTexture) texture).isUploading()) ? null : texture;
     }
 
-    private static Texture checkContentTexture(Texture texture) {
-        return ((texture instanceof TiledTexture) && !((TiledTexture) texture).isReady()) ? null : texture;
-    }
-
     @Override
     public int renderThumbnail(GLESCanvas canvas, int index, int pass, int width, int height) {
         AlbumSetEntry entry = mDataWindow.get(index);
         int renderRequestFlags = 0;
-        renderRequestFlags |= renderContent(canvas, entry, width, height - mLabelSpec.labelHeight);
-        renderRequestFlags |= renderLabel(canvas, entry, width, height);
-        renderRequestFlags |= renderOverlay(canvas, entry, index, width, height - mLabelSpec.labelHeight);
+        if (entry != null) {
+            renderRequestFlags |= renderContent(canvas, entry, width, height - mLabelSpec.labelHeight);
+            renderRequestFlags |= renderLabel(canvas, entry, width, height);
+            renderRequestFlags |= renderOverlay(canvas, entry, index, width, height - mLabelSpec.labelHeight);
+        }
         return renderRequestFlags;
     }
 
@@ -142,7 +139,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         }
         drawContent(canvas, content, width, height, entry.rotation);
         if (!mLetoolContext.isImageBrwosing())
-        	drawVideoOverlay(canvas, width, height);
+            drawVideoOverlay(canvas, width, height);
         return renderRequestFlags;
     }
 

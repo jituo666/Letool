@@ -225,8 +225,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         mLetoolContext.setMainView(mRootPane);
         mGLController = mLetoolContext.getGLController();
         mLayoutInflater = getActivity().getLayoutInflater();
-        mIsSDCardMountedCorreclty = StorageUtils.externalStorageAvailable();
-        mHasDefaultDCIMDirectory = MediaSetUtils.MY_ALBUM_BUCKETS.length > 0;
+
         initializeData();
         initializeViews();
         mHandler = new SynchronizedHandler(mGLController) {
@@ -248,13 +247,6 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
             }
         };
         mEyePosition = new EyePosition(mLetoolContext.getAppContext(), this);
-        if (!mIsSDCardMountedCorreclty) {
-            showEmptyView(R.string.common_error_nosdcard);
-            return;
-        } else if (mIsCameraSource && !mHasDefaultDCIMDirectory) {
-            showEmptyView(R.string.common_error_nodcim);
-            return;
-        }
     }
 
     private void initializeData() {
@@ -358,6 +350,14 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LLog.i(TAG, "onCreateView" + System.currentTimeMillis());
         initBars();
+
+        mIsSDCardMountedCorreclty = StorageUtils.externalStorageAvailable();
+        mHasDefaultDCIMDirectory = MediaSetUtils.MY_ALBUM_BUCKETS.length > 0;
+        if (!mIsSDCardMountedCorreclty) {
+            showEmptyView(R.string.common_error_nosdcard);
+        } else if (mIsCameraSource && !mHasDefaultDCIMDirectory) {
+            showEmptyView(R.string.common_error_nodcim_photo);
+        }
         return null;
     }
 

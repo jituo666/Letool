@@ -73,7 +73,8 @@
     <string name="common_close">Close</string>
     <string name="common_recommend">Recommend</string>
     <string name="common_error_nosdcard">No SDcard！</string>
-    <string name="common_error_nodcim">No valid photoes directories！</string>
+    <string name="common_error_nodcim_photo">No valid photos directories！</string>
+    <string name="common_error_nodcim_video">No valid videos directories！</string>
     <string name="common_error_no_photos">No photo found！</string>
     <string name="common_error_no_picture">No picture found！</string>
     <string name="common_error_no_movie">No movie found！</string>
