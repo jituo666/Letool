@@ -1,7 +1,6 @@
 
 package com.xjt.letool.view;
 
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.nineoldandroids.animation.ObjectAnimator;
 import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
@@ -19,7 +19,7 @@ import com.xjt.letool.stat.StatConstants;
 
 public class LetoolSlidingMenu {
 
-    private static final String TAG = "LetoolSlidingMenu";
+    private static final String TAG = LetoolSlidingMenu.class.getSimpleName();
 
     private FragmentManager mFragmentManager;
     private Fragment mFragment;
@@ -64,10 +64,9 @@ public class LetoolSlidingMenu {
         int distance = Math.round(mContext.getResources().getDimension(R.dimen.letool_action_bar_height) / 12);
         ObjectAnimator anim = null;
         if (expand) {
-            anim = ObjectAnimator.ofFloat(tip, "x", tip.getX(), tip.getX() - distance).setDuration(300);
-
+            anim = ObjectAnimator.ofFloat(tip, "x", tip.getLeft(), tip.getLeft() - distance).setDuration(300);
         } else {
-            anim = ObjectAnimator.ofFloat(tip, "x", tip.getX(), tip.getX() + distance).setDuration(300);
+            anim = ObjectAnimator.ofFloat(tip, "x", tip.getLeft(), tip.getLeft() + distance).setDuration(300);
         }
         anim.start();
     }
