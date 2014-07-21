@@ -17,7 +17,6 @@ public class MediaSetUtils {
     public static final String IMPORTED = "Imported";
     public static final String DOWNLOAD = "download";
     public static final Comparator<MediaSet> NAME_COMPARATOR = new NameComparator();
-    public static int[] MY_ALBUM_BUCKETS = new int[0];
 
     public static final int DOWNLOAD_BUCKET_ID = LetoolUtils.getBucketId(
             Environment.getExternalStorageDirectory().toString() + "/"
@@ -28,6 +27,8 @@ public class MediaSetUtils {
     public static final int SNAPSHOT_BUCKET_ID = LetoolUtils.getBucketId(
             Environment.getExternalStorageDirectory().toString() +
                     "/Pictures/Screenshots");
+
+    private static int[] MY_ALBUM_BUCKETS = new int[0]; // 这个静态的东西是有问题的...
 
     public static void initializeMyAlbumBuckets() {
         //common
@@ -51,6 +52,10 @@ public class MediaSetUtils {
         for (int i = 0; i < list.size(); i++) {
             MY_ALBUM_BUCKETS[i] = list.get(i).intValue();
         }
+    }
+
+    public static int[] getBucketsIds() {
+        return MY_ALBUM_BUCKETS;
     }
 
     private static ArrayList<Integer> recurseCamerDir(String dirPath) {

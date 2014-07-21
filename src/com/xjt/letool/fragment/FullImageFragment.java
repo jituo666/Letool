@@ -451,9 +451,9 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
         } else {
         	boolean isImage = mLetoolContext.isImageBrwosing();
             mMediaSet = new LocalAlbum(new MediaPath(
-                    data.getString(LocalMediaActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]),
+                    data.getString(LocalMediaActivity.KEY_MEDIA_PATH), MediaSetUtils.getBucketsIds()[0]),
                     (LetoolApp) getActivity().getApplication(),
-                    MediaSetUtils.MY_ALBUM_BUCKETS, isImage, getString(isImage?R.string.common_picture:R.string.common_record));
+                    MediaSetUtils.getBucketsIds(), isImage, getString(isImage?R.string.common_picture:R.string.common_record));
         }
         mStartInFilmstrip = data.getBoolean(KEY_START_IN_FILMSTRIP, false);
         mCurrentIndex = data.getInt(KEY_INDEX_HINT, 0);

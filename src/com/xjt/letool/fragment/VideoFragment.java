@@ -256,10 +256,10 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         Bundle data = getArguments();
         mIsCameraSource = data.getBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE);
         if (mIsCameraSource) {
-            if (MediaSetUtils.MY_ALBUM_BUCKETS.length > 0) {
+            if (MediaSetUtils.getBucketsIds().length > 0) {
                 mAlbumTitle = getString(R.string.common_photo);
-                mVideoDataPath = new MediaPath(data.getString(LocalMediaActivity.KEY_MEDIA_PATH), MediaSetUtils.MY_ALBUM_BUCKETS[0]);
-                mVideoData = new LocalAlbum(mVideoDataPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.MY_ALBUM_BUCKETS, mLetoolContext.isImageBrwosing(),
+                mVideoDataPath = new MediaPath(data.getString(LocalMediaActivity.KEY_MEDIA_PATH), MediaSetUtils.getBucketsIds()[0]);
+                mVideoData = new LocalAlbum(mVideoDataPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.getBucketsIds(), mLetoolContext.isImageBrwosing(),
                         getString(R.string.common_photo));
                 mHasDefaultDCIMDirectory = true;
             } else {
@@ -354,7 +354,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         LLog.i(TAG, "onCreateView" + System.currentTimeMillis());
         initBars();
         mIsSDCardMountedCorreclty = StorageUtils.externalStorageAvailable();
-        mHasDefaultDCIMDirectory = MediaSetUtils.MY_ALBUM_BUCKETS.length > 0;
+        mHasDefaultDCIMDirectory = MediaSetUtils.getBucketsIds().length > 0;
         if (!mIsSDCardMountedCorreclty) {
             mLetoolContext.showEmptyView(R.string.common_error_nosdcard);
         } else if (mIsCameraSource && !mHasDefaultDCIMDirectory) {
