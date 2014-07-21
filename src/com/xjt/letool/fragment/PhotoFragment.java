@@ -162,7 +162,9 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         if (mLoadingBits == 0 && mIsActive) {
             if (mAlbumDataSetLoader.size() == 0) {
                 LLog.i(TAG, " clearLoadingBit mAlbumDataSetLoader.size():" + mAlbumDataSetLoader.size());
-                showEmptyView(R.string.common_error_no_photos);
+                mLetoolContext.showEmptyView(R.string.common_error_no_photos);
+            } else {
+                mLetoolContext.hideEmptyView();
             }
         }
     }
@@ -222,7 +224,6 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         super.onCreate(savedInstanceState);
         LLog.i(TAG, "onCreate");
         mLetoolContext = (LetoolContext) getActivity();
-        mLetoolContext.setMainView(mRootPane);
         mGLController = mLetoolContext.getGLController();
         mLayoutInflater = getActivity().getLayoutInflater();
 
@@ -354,17 +355,13 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         mIsSDCardMountedCorreclty = StorageUtils.externalStorageAvailable();
         mHasDefaultDCIMDirectory = MediaSetUtils.MY_ALBUM_BUCKETS.length > 0;
         if (!mIsSDCardMountedCorreclty) {
-            showEmptyView(R.string.common_error_nosdcard);
+            mLetoolContext.showEmptyView(R.string.common_error_nosdcard);
         } else if (mIsCameraSource && !mHasDefaultDCIMDirectory) {
-            showEmptyView(R.string.common_error_nodcim_photo);
+            mLetoolContext.showEmptyView(R.string.common_error_nodcim_photo);
+        } else {
+            mLetoolContext.hideEmptyView();
         }
         return null;
-    }
-
-    private void showEmptyView(int resId) {
-        LetoolEmptyView emptyView = (LetoolEmptyView)mLayoutInflater.inflate(R.layout.local_empty_view, null);
-        emptyView.updataView(R.drawable.ic_launcher, resId);
-        mLetoolContext.setMainView(emptyView);
     }
 
     @Override
@@ -383,6 +380,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         }
 
         mIsActive = true;
+        mGLController.setContentPane(mRootPane);
         mGLController.onResume();
         mGLController.lockRenderThread();
         try {

@@ -96,9 +96,11 @@ public class ThumbnailSetDataLoader {
     }
 
     public void pause() {
-        mReloadTask.terminate();
-        mReloadTask = null;
-        mSource.removeContentListener(mSourceListener);
+        if (mReloadTask != null) {
+            mReloadTask.terminate();
+            mReloadTask = null;
+            mSource.removeContentListener(mSourceListener);
+        }
     }
 
     public void resume() {

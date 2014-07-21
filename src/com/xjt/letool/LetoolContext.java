@@ -46,9 +46,8 @@ public interface LetoolContext {
     public OrientationManager getOrientationManager();
 
     //
-    public void setMainView(GLBaseView view);
-
-    public void setMainView(View view);
+    public void showEmptyView(int resId);
+    public void hideEmptyView();
 
     public void pushContentFragment(Fragment newFragment, Fragment oldFragment, boolean backup);
 

@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
@@ -28,11 +29,10 @@ import com.xjt.letool.imagedata.utils.LetoolBitmapPool;
 import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaSetUtils;
-import com.xjt.letool.utils.StorageUtils;
-import com.xjt.letool.view.GLBaseView;
 import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.GLRootView;
 import com.xjt.letool.view.LetoolBottomBar;
+import com.xjt.letool.view.LetoolEmptyView;
 import com.xjt.letool.view.LetoolSlidingMenu;
 import com.xjt.letool.view.LetoolTopBar;
 
@@ -124,23 +124,24 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
         super.onDestroy();
     }
 
-    public void setMainView(GLBaseView view) {
-        LLog.i(TAG, "---------setMainView GLBaseView:");
-        mGLESView.setContentPane(view);
-        //mGLESView.setVisibility(View.VISIBLE);
+    @Override
+    public void showEmptyView(int resId) {
+        //        LLog.i(TAG, "---------setMainView View:");
+        LetoolEmptyView emptyView = (LetoolEmptyView) LayoutInflater.from(getAppContext()).inflate(R.layout.local_empty_view, null);
+        emptyView.updataView(R.drawable.ic_launcher, resId);
+        //
         ViewGroup normalView = (ViewGroup) mMainView.findViewById(R.id.normal_root_view);
-        normalView.setVisibility(View.GONE);
+        LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        normalView.removeAllViews();
+        normalView.addView(emptyView, lp);
+        normalView.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void setMainView(View view) {
-        LLog.i(TAG, "---------setMainView View:");
-        //mGLESView.setVisibility(View.INVISIBLE);
+    public void hideEmptyView() {
         ViewGroup normalView = (ViewGroup) mMainView.findViewById(R.id.normal_root_view);
-        LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
         normalView.removeAllViews();
-        normalView.addView(view,lp);
-        normalView.setVisibility(View.VISIBLE);
+        normalView.setVisibility(View.GONE);
     }
 
     public void pushContentFragment(Fragment newFragment, Fragment oldFragment, boolean backup) {

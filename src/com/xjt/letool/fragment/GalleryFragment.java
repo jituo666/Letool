@@ -27,7 +27,6 @@ import com.xjt.letool.view.BatchDeleteMediaListener.DeleteMediaProgressListener;
 import com.xjt.letool.view.DetailsHelper;
 import com.xjt.letool.view.GLBaseView;
 import com.xjt.letool.view.GLController;
-import com.xjt.letool.view.LetoolEmptyView;
 import com.xjt.letool.view.LetoolTopBar;
 import com.xjt.letool.view.LetoolDialog;
 import com.xjt.letool.view.ThumbnailView;
@@ -86,7 +85,6 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     private ThumbnailSetDataLoader mThumbnailSetAdapter;
     private MediaSet mMediaSet;
 
-    private LayoutInflater mLayoutInflater;
     private DetailsHelper mDetailsHelper;
     private MyDetailsSource mDetailsSource;
     private boolean mShowDetails;
@@ -166,16 +164,12 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         mLoadingBits &= ~loadingBit;
         if (mLoadingBits == 0 && mIsActive) {
             if (mThumbnailSetAdapter.size() == 0) {
-                showEmptyView(mLetoolContext.isImageBrwosing() ? R.string.common_error_no_picture : R.string.common_error_no_video);
+                mLetoolContext.showEmptyView(mLetoolContext.isImageBrwosing() ? R.string.common_error_no_picture : R.string.common_error_no_video);
                 return;
+            } else {
+                mLetoolContext.hideEmptyView();
             }
         }
-    }
-
-    private void showEmptyView(int resId) {
-        LetoolEmptyView emptyView = (LetoolEmptyView) mLayoutInflater.inflate(R.layout.local_empty_view, null);
-        emptyView.updataView(R.drawable.ic_launcher, resId);
-        mLetoolContext.setMainView(emptyView);
     }
 
     public void onSingleTapUp(int thumbnailIndex) {
@@ -229,9 +223,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         super.onCreate(savedInstanceState);
         LLog.i(TAG, "onCreate");
         mLetoolContext = (LetoolContext) getActivity();
-        mLetoolContext.setMainView(mRootPane);
         mGLController = mLetoolContext.getGLController();
-        mLayoutInflater = getActivity().getLayoutInflater();
 
         //mLoadingInsie = (CommonLoadingPanel) rootView.findViewById(R.id.loading);
         //        mLoadingInsie.setVisibility(View.VISIBLE);
@@ -360,7 +352,9 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         initBars();
         mIsSDCardMountedCorreclty = StorageUtils.externalStorageAvailable();
         if (!mIsSDCardMountedCorreclty) {
-            showEmptyView(R.string.common_error_nosdcard);
+            mLetoolContext.showEmptyView(R.string.common_error_nosdcard);
+        } else {
+            mLetoolContext.hideEmptyView();
         }
         return null;
     }
@@ -375,6 +369,9 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     public void onResume() {
         super.onResume();
         LLog.i(TAG, "onResume");
+        if (!mIsSDCardMountedCorreclty) 
+            return;
+        mGLController.setContentPane(mRootPane);
         mGLController.onResume();
         mGLController.lockRenderThread();
         try {
@@ -411,7 +408,9 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
 
             super.onActivityResult(requestCode, resultCode, data);
             if (data != null && data.getBooleanExtra(KEY_IS_EMPTY_ALBUM, false)) {
-                showEmptyView(R.string.common_error_no_picture);
+                mLetoolContext.showEmptyView(R.string.common_error_no_picture);
+            } else {
+                mLetoolContext.hideEmptyView();
             }
             switch (requestCode) {
                 case REQUEST_DO_ANIMATION: {
@@ -513,6 +512,8 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
 
     @Override
     public void onClick(View v) {
+        if (!mIsSDCardMountedCorreclty)
+            return;
         if (v.getId() == R.id.action_navi) {
             mLetoolContext.getLetoolSlidingMenu().toggle();
         } else if (v.getId() == R.id.operation_delete) {

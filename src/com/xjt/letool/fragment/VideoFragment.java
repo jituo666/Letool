@@ -34,7 +34,6 @@ import com.xjt.letool.view.DetailsHelper;
 import com.xjt.letool.view.GLBaseView;
 import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.LetoolBottomBar;
-import com.xjt.letool.view.LetoolEmptyView;
 import com.xjt.letool.view.LetoolTopBar;
 import com.xjt.letool.view.LetoolDialog;
 import com.xjt.letool.view.LetoolTopBar.OnActionModeListener;
@@ -164,7 +163,9 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         mLoadingBits &= ~loadTaskBit;
         if (mLoadingBits == 0 && mIsActive) {
             if (mVideoDataLoader.size() == 0) {
-                showEmptyView(R.string.common_error_no_movie);
+                mLetoolContext.showEmptyView(R.string.common_error_no_movie);
+            } else {
+                mLetoolContext.hideEmptyView();
             }
         }
     }
@@ -225,7 +226,6 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         super.onCreate(savedInstanceState);
         LLog.i(TAG, "onCreate");
         mLetoolContext = (LetoolContext) getActivity();
-        mLetoolContext.setMainView(mRootPane);
         mGLController = mLetoolContext.getGLController();
         mLayoutInflater = getActivity().getLayoutInflater();
 
@@ -356,17 +356,13 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         mIsSDCardMountedCorreclty = StorageUtils.externalStorageAvailable();
         mHasDefaultDCIMDirectory = MediaSetUtils.MY_ALBUM_BUCKETS.length > 0;
         if (!mIsSDCardMountedCorreclty) {
-            showEmptyView(R.string.common_error_nosdcard);
+            mLetoolContext.showEmptyView(R.string.common_error_nosdcard);
         } else if (mIsCameraSource && !mHasDefaultDCIMDirectory) {
-            showEmptyView(R.string.common_error_nodcim_video);
+            mLetoolContext.showEmptyView(R.string.common_error_nodcim_video);
+        } else {
+            mLetoolContext.hideEmptyView();
         }
         return null;
-    }
-
-    private void showEmptyView(int resId) {
-        LetoolEmptyView emptyView = (LetoolEmptyView)mLayoutInflater.inflate(R.layout.local_empty_view, null);
-        emptyView.updataView(R.drawable.ic_launcher, resId);
-        mLetoolContext.setMainView(emptyView);
     }
 
     @Override
@@ -378,11 +374,13 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     @Override
     public void onResume() {
         super.onResume();
-        mGLController.onResume();
         if (!mIsSDCardMountedCorreclty || mIsCameraSource && !mHasDefaultDCIMDirectory) {
             return;
         }
         LLog.i(TAG, "onResume" + System.currentTimeMillis());
+
+        mGLController.setContentPane(mRootPane);
+        mGLController.onResume();
         mGLController.lockRenderThread();
         try {
             mIsActive = true;

@@ -8,7 +8,6 @@ import com.xjt.letool.common.OrientationManager;
 import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.fragment.SettingFragment;
 import com.xjt.letool.metadata.DataManager;
-import com.xjt.letool.view.GLBaseView;
 import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.LetoolBottomBar;
 import com.xjt.letool.view.LetoolSlidingMenu;
@@ -19,7 +18,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
 import android.view.ViewGroup;
 
 public class GlobalSettingsActivity extends FragmentActivity implements LetoolContext {
@@ -96,12 +94,7 @@ public class GlobalSettingsActivity extends FragmentActivity implements LetoolCo
     }
 
     @Override
-    public void setMainView(GLBaseView view) {
-
-    }
-
-    @Override
-    public void setMainView(View view) {
+    public void showEmptyView(int resId) {
 
     }
 
@@ -113,6 +106,12 @@ public class GlobalSettingsActivity extends FragmentActivity implements LetoolCo
     @Override
     public void popContentFragment() {
 
+    }
+
+    @Override
+    public void hideEmptyView() {
+        // TODO Auto-generated method stub
+        
     }
 
 }
