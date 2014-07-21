@@ -62,8 +62,11 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -210,11 +213,23 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         if (item == null)
             return;
         List<MenuItem> items = new ArrayList<MenuItem>();
-        addMenuItem(items,POP_UP_MENU_ITEM_SELECT, R.drawable.ic_action_accept, R.string.common_detail);
-        addMenuItem(items,POP_UP_MENU_ITEM_CAMERA, R.drawable.ic_action_camera, R.string.common_delete);
+        addMenuItem(items, POP_UP_MENU_ITEM_SELECT, R.drawable.ic_action_accept, R.string.common_detail);
+        addMenuItem(items, POP_UP_MENU_ITEM_CAMERA, R.drawable.ic_action_camera, R.string.common_delete);
         final LetoolDialog dlg = new LetoolDialog(getActivity());
         dlg.setTitle(item.getName());
-        dlg.setListAdapter(new MenuItemAdapter(getActivity(),items));
+        ListView listView = dlg.setListAdapter(new MenuItemAdapter(getActivity(), items));
+        listView.setOnItemClickListener(new OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                if (position == POP_UP_MENU_ITEM_SELECT) {
+
+                } else if (position == POP_UP_MENU_ITEM_CAMERA) {
+
+                }
+
+            }
+        });
         dlg.setCanceledOnTouchOutside(true);
         dlg.show();
     }
@@ -262,7 +277,8 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             if (MediaSetUtils.getBucketsIds().length > 0) {
                 mAlbumTitle = getString(R.string.common_photo);
                 mVideoDataPath = new MediaPath(data.getString(LocalMediaActivity.KEY_MEDIA_PATH), MediaSetUtils.getBucketsIds()[0]);
-                mVideoData = new LocalAlbum(mVideoDataPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.getBucketsIds(), mLetoolContext.isImageBrwosing(),
+                mVideoData = new LocalAlbum(mVideoDataPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.getBucketsIds(),
+                        mLetoolContext.isImageBrwosing(),
                         getString(R.string.common_photo));
                 mHasDefaultDCIMDirectory = true;
             } else {
@@ -332,7 +348,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             naviToPhoto.setText(R.string.common_record);
             naviToPhoto.setEnabled(false);
             TextView naviToGallery = (TextView) nativeButtons.findViewById(R.id.navi_to_gallery);
-            naviToGallery.setText(mLetoolContext.isImageBrwosing()?R.string.common_gallery:R.string.common_video);
+            naviToGallery.setText(mLetoolContext.isImageBrwosing() ? R.string.common_gallery : R.string.common_video);
             naviToGallery.setEnabled(true);
             naviToGallery.setOnClickListener(this);
         } else {
@@ -508,7 +524,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             GalleryFragment f = new GalleryFragment();
             Bundle data = new Bundle();
             data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
-            		.getTopSetPath(mLetoolContext.isImageBrwosing()?DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
+                    .getTopSetPath(mLetoolContext.isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
             f.setArguments(data);
             mLetoolContext.pushContentFragment(f, this, false);
         }
@@ -555,18 +571,18 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     }
 
     private void playVideo(int videoIndex) {
-    	MediaItem item = mVideoDataLoader.get(videoIndex);
+        MediaItem item = mVideoDataLoader.get(videoIndex);
         if (item == null)
             return;
         Context c = mLetoolContext.getAppContext();
         try {
-        	Intent intent = new Intent();
-        	intent.setClass(c, MoviePlayActivity.class);
+            Intent intent = new Intent();
+            intent.setClass(c, MoviePlayActivity.class);
             intent.setDataAndType(Uri.parse(item.getFilePath()), "video/*");
             intent.putExtra(Intent.EXTRA_TITLE, "");
-        	c.startActivity(intent);
+            c.startActivity(intent);
         } catch (ActivityNotFoundException e) {
-            Toast.makeText(c, c.getString(R.string.app_name),Toast.LENGTH_SHORT).show();
+            Toast.makeText(c, c.getString(R.string.app_name), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -591,7 +607,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         }
     }
 
-    public void addMenuItem(List<MenuItem> items,int itemId, int iconRes, int titleRes) {
+    public void addMenuItem(List<MenuItem> items, int itemId, int iconRes, int titleRes) {
         MenuItem item = new MenuItem();
         item.setItemId(itemId);
         item.setIcon(getResources().getDrawable(iconRes));
@@ -599,9 +615,9 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         items.add(item);
     }
 
-
     static class ViewHolder {
-        ImageView icon;
+
+        //ImageView icon;
         TextView title;
     }
 
@@ -617,7 +633,6 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             if (convertView == null) {
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.popup_menu_item, null);
                 holder = new ViewHolder();
-                holder.icon = (ImageView) convertView.findViewById(R.id.icon);
                 holder.title = (TextView) convertView.findViewById(R.id.title);
                 convertView.setTag(holder);
             } else {
@@ -625,14 +640,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             }
 
             MenuItem item = getItem(position);
-            if (item.getIcon() != null) {
-                holder.icon.setImageDrawable(item.getIcon());
-                holder.icon.setVisibility(View.VISIBLE);
-            } else {
-                holder.icon.setVisibility(View.GONE);
-            }
             holder.title.setText(item.getTitle());
-
             return convertView;
         }
     }
