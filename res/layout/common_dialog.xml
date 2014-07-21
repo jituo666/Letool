@@ -52,7 +52,8 @@
         android:id="@+id/btn_panel"
         android:layout_width="match_parent"
         android:layout_height="42dp"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/ok_btn"
@@ -64,7 +65,8 @@
             android:singleLine="true"
             android:text="@string/common_ok"
             android:textColor="@color/common_black"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:visibility="gone" />
 
         <View
             android:id="@+id/btn_divider"

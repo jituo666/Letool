@@ -127,7 +127,6 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
 
     @Override
     public void showEmptyView(int resId) {
-        //        LLog.i(TAG, "---------setMainView View:");
         LetoolEmptyView emptyView = (LetoolEmptyView) LayoutInflater.from(getAppContext()).inflate(R.layout.local_empty_view, null);
         emptyView.updataView(R.drawable.ic_launcher, resId);
         //

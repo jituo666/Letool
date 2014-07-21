@@ -1,4 +1,3 @@
-
 package com.xjt.letool.view;
 
 import android.app.Dialog;
@@ -20,11 +19,13 @@ public class LetoolDialog extends Dialog {
 
     TextView mTitleView;
     TextView mMessage;
+    View mButtonPanel;
 
     public LetoolDialog(Context context) {
         super(context, R.style.MyDialog);
         setContentView(R.layout.common_dialog);
         mTitleView = (TextView) findViewById(R.id.title);
+        mButtonPanel = findViewById(R.id.btn_panel);
         setCanceledOnTouchOutside(false);
 
     }
@@ -49,7 +50,7 @@ public class LetoolDialog extends Dialog {
         mMessage.setVisibility(View.VISIBLE);
     }
 
-    public void setDividerVisible(boolean visible) {
+    private void setDividerVisible(boolean visible) {
         View v = findViewById(R.id.btn_divider);
         v.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
@@ -62,6 +63,7 @@ public class LetoolDialog extends Dialog {
     }
 
     public void setOkBtn(int title, View.OnClickListener clickListener) {
+        mButtonPanel.setVisibility(View.VISIBLE);
         TextView okBtn = (TextView) findViewById(R.id.ok_btn);
         okBtn.setVisibility(View.VISIBLE);
         if (clickListener != null) {
@@ -73,6 +75,8 @@ public class LetoolDialog extends Dialog {
     }
 
     public void setCancelBtn(int title, View.OnClickListener clickListener) {
+        setDividerVisible(true);
+        mButtonPanel.setVisibility(View.VISIBLE);
         TextView cancelBtn = (TextView) findViewById(R.id.cancel_btn);
         cancelBtn.setVisibility(View.VISIBLE);
         cancelBtn.setText(title);

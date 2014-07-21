@@ -24,7 +24,7 @@ public interface LetoolApp {
 
     public ThreadPool getThreadPool();
 
-    public Context getAndroidContext();
+    public Context getAppContext();
 
     public Looper getMainLooper();
 

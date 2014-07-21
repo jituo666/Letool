@@ -314,7 +314,6 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
             dlg.setOkBtn(R.string.common_ok, cdl);
             dlg.setCancelBtn(R.string.common_cancel, cdl);
             dlg.setMessage(R.string.common_delete_cur_tip);
-            dlg.setDividerVisible(true);
             dlg.show();
 
         }

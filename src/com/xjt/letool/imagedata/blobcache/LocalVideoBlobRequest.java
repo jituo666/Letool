@@ -11,8 +11,7 @@ import com.xjt.letool.metadata.MediaPath;
 public class LocalVideoBlobRequest extends BlobCacheRequest {
     private String mLocalFilePath;
 
-    public LocalVideoBlobRequest(LetoolApp application, MediaPath path, long timeModified,
-            int type, String localFilePath) {
+    public LocalVideoBlobRequest(LetoolApp application, MediaPath path, long timeModified, int type, String localFilePath) {
         super(application, path, timeModified, type, MediaItem.getTargetSize(type));
         mLocalFilePath = localFilePath;
     }

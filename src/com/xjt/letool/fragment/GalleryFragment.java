@@ -545,9 +545,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
             dlg.setTitle(R.string.common_recommend);
             dlg.setOkBtn(R.string.common_ok, cdl);
             dlg.setCancelBtn(R.string.common_cancel, cdl);
-            dlg.setDividerVisible(true);
             dlg.setMessage(R.string.common_delete_tip);
-            dlg.setDividerVisible(true);
             dlg.show();
         } else if (v.getId() == R.id.selection_finished) {
             MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_SELECT_OK);

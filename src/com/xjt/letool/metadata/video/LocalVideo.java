@@ -195,7 +195,7 @@ public class LocalVideo extends LocalMediaItem {
         MediaDetails details = super.getDetails();
         int s = durationInSec;
         if (s > 0) {
-            details.addDetail(MediaDetails.INDEX_DURATION, LetoolUtils.formatDuration(mApplication.getAndroidContext(), durationInSec));
+            details.addDetail(MediaDetails.INDEX_DURATION, LetoolUtils.formatDuration(mApplication.getAppContext(), durationInSec));
         }
         return details;
     }

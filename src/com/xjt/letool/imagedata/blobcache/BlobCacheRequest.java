@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.xjt.letool.LetoolApp;
-import com.xjt.letool.R;
 import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.ThreadPool.Job;

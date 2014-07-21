@@ -47,6 +47,7 @@ import com.xjt.letool.views.render.ThumbnailVideoRenderer;
 import com.xjt.letool.views.utils.ViewConfigs;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
@@ -61,6 +62,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -109,8 +112,6 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     private float mX;
     private float mY;
     private float mZ;
-
-    private LayoutInflater mLayoutInflater;
 
     private final GLBaseView mRootPane = new GLBaseView() {
 
@@ -205,14 +206,17 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     }
 
     public void onLongTap(int videoIndex) {
-        MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_PHOTO_LONG_PRESSED);
-        if (mGetContent)
-            return;
         MediaItem item = mVideoDataLoader.get(videoIndex);
         if (item == null)
             return;
-        mSelector.toggle(item.getPath());
-        mThumbnailView.invalidate();
+        List<MenuItem> items = new ArrayList<MenuItem>();
+        addMenuItem(items,POP_UP_MENU_ITEM_SELECT, R.drawable.ic_action_accept, R.string.common_detail);
+        addMenuItem(items,POP_UP_MENU_ITEM_CAMERA, R.drawable.ic_action_camera, R.string.common_delete);
+        final LetoolDialog dlg = new LetoolDialog(getActivity());
+        dlg.setTitle(item.getName());
+        dlg.setListAdapter(new MenuItemAdapter(getActivity(),items));
+        dlg.setCanceledOnTouchOutside(true);
+        dlg.show();
     }
 
     @Override
@@ -227,7 +231,6 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         LLog.i(TAG, "onCreate");
         mLetoolContext = (LetoolContext) getActivity();
         mGLController = mLetoolContext.getGLController();
-        mLayoutInflater = getActivity().getLayoutInflater();
 
         initializeData();
         initializeViews();
@@ -410,7 +413,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             mVideoDataLoader.pause();
             mRender.pause();
             DetailsHelper.pause();
-            mEyePosition.resume();
+            mEyePosition.pause();
 
         } finally {
             mGLController.unlockRenderThread();
@@ -497,9 +500,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             dlg.setTitle(R.string.common_recommend);
             dlg.setOkBtn(R.string.common_ok, cdl);
             dlg.setCancelBtn(R.string.common_cancel, cdl);
-            dlg.setDividerVisible(true);
             dlg.setMessage(R.string.common_delete_tip);
-            dlg.setDividerVisible(true);
             dlg.show();
 
         }
@@ -523,8 +524,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         popup.setOnItemSelectedListener(this);
         popup.add(POP_UP_MENU_ITEM_SELECT, R.drawable.ic_action_accept, R.string.popup_menu_select_mode);
         popup.add(POP_UP_MENU_ITEM_CAMERA, R.drawable.ic_action_camera, R.string.popup_menu_take_picture);
-        //popup.show(mMore);
-
+        popup.show(null);
     }
 
     @Override
@@ -591,4 +591,49 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         }
     }
 
+    public void addMenuItem(List<MenuItem> items,int itemId, int iconRes, int titleRes) {
+        MenuItem item = new MenuItem();
+        item.setItemId(itemId);
+        item.setIcon(getResources().getDrawable(iconRes));
+        item.setTitle(getString(titleRes));
+        items.add(item);
+    }
+
+
+    static class ViewHolder {
+        ImageView icon;
+        TextView title;
+    }
+
+    private class MenuItemAdapter extends ArrayAdapter<MenuItem> {
+
+        public MenuItemAdapter(Context context, List<MenuItem> objects) {
+            super(context, 0, objects);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder;
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.popup_menu_item, null);
+                holder = new ViewHolder();
+                holder.icon = (ImageView) convertView.findViewById(R.id.icon);
+                holder.title = (TextView) convertView.findViewById(R.id.title);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            MenuItem item = getItem(position);
+            if (item.getIcon() != null) {
+                holder.icon.setImageDrawable(item.getIcon());
+                holder.icon.setVisibility(View.VISIBLE);
+            } else {
+                holder.icon.setVisibility(View.GONE);
+            }
+            holder.title.setText(item.getTitle());
+
+            return convertView;
+        }
+    }
 }

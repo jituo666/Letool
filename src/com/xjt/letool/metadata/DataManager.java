@@ -182,7 +182,7 @@ public class DataManager {
 
     public void broadcastLocalDeletion() {
         LocalBroadcastManager manager = LocalBroadcastManager.getInstance(
-                mApplication.getAndroidContext());
+                mApplication.getAppContext());
         Intent intent = new Intent(ACTION_DELETE_PICTURE);
         manager.sendBroadcast(intent);
     }

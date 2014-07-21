@@ -495,9 +495,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
             dlg.setTitle(R.string.common_recommend);
             dlg.setOkBtn(R.string.common_ok, cdl);
             dlg.setCancelBtn(R.string.common_cancel, cdl);
-            dlg.setDividerVisible(true);
             dlg.setMessage(R.string.common_delete_tip);
-            dlg.setDividerVisible(true);
             dlg.show();
 
         } else if (v.getId() == R.id.navi_to_gallery) {

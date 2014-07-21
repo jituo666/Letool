@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-
 /**
  * This activity plays a video from a specified URI.
  * The client of this activity can pass a logo bitmap in the intent (KEY_LOGO_BITMAP)

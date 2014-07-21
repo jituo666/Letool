@@ -54,8 +54,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
     //
     // The goal of the query (used in loadSubMediaSets()) is to find all albums,
     // that is, all unique values for (BUCKET_ID, MEDIA_TYPE). In the meantime
-    // sort them by the timestamp of the latest image/video in each of the
-    // album.
+    // sort them by the timestamp of the latest image/video in each of the album.
     //
     // The order of columns below is important: it must match to the index in MediaStore.
     private static final String[] PROJECTION_BUCKET = {
