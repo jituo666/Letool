@@ -174,7 +174,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         mLoadingBits &= ~loadTaskBit;
         if (mLoadingBits == 0 && mIsActive) {
             if (mVideoDataLoader.size() == 0) {
-                mLetoolContext.showEmptyView(R.string.common_error_no_movie);
+                mLetoolContext.showEmptyView(mIsCameraSource ?R.string.common_error_no_movie:R.string.common_error_no_video);
             } else {
                 mLetoolContext.hideEmptyView();
             }
