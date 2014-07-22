@@ -40,7 +40,7 @@ import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.view.LetoolDialog;
 import com.xjt.letool.view.DetailsHelper;
 import com.xjt.letool.view.LetoolTopBar.OnActionModeListener;
-import com.xjt.letool.view.SingleDeleteMediaListener.DeleteMediaProgressListener;
+import com.xjt.letool.view.SingleDeleteMediaListener.SingleDeleteMediaProgressListener;
 import com.xjt.letool.view.DetailsHelper.CloseListener;
 import com.xjt.letool.view.FullImageView;
 import com.xjt.letool.view.GLBaseView;
@@ -284,7 +284,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
                     StatConstants.EVENT_KEY_FULL_IMAGE_DELETE);
             SingleDeleteMediaListener cdl = new SingleDeleteMediaListener(
                     getActivity(), mCurrentPhoto.getPath(), mLetoolContext.getDataManager(),
-                    new DeleteMediaProgressListener() {
+                    new SingleDeleteMediaProgressListener() {
 
                         @Override
                         public void onConfirmDialogDismissed(boolean confirmed) {

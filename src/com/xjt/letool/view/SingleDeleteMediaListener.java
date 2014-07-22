@@ -20,17 +20,17 @@ import com.xjt.letool.metadata.MediaPath;
  */
 public class SingleDeleteMediaListener implements OnClickListener{
 
-    DeleteMediaProgressListener progressListener;
+    SingleDeleteMediaProgressListener progressListener;
     DataManager manager;
     Context context;
     MediaPath mPath;
 
-    public interface DeleteMediaProgressListener {
+    public interface SingleDeleteMediaProgressListener {
 
         public void onConfirmDialogDismissed(boolean confirmed);
     }
 
-    public SingleDeleteMediaListener(Activity c, MediaPath p, DataManager m, DeleteMediaProgressListener l) {
+    public SingleDeleteMediaListener(Activity c, MediaPath p, DataManager m, SingleDeleteMediaProgressListener l) {
         context = c;
         manager = m;
         mPath = p;

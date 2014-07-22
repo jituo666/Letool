@@ -11,6 +11,7 @@ import com.xjt.letool.common.EyePosition;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
 import com.xjt.letool.metadata.DataManager;
+import com.xjt.letool.metadata.MediaDetails;
 import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.MediaSet;
@@ -22,20 +23,22 @@ import com.xjt.letool.selectors.ContractSelectListener;
 import com.xjt.letool.selectors.ContractSelector;
 import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.surpport.MenuItem;
-import com.xjt.letool.surpport.PopupMenu;
-import com.xjt.letool.surpport.PopupMenu.OnMenuItemClickListener;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.RelativePosition;
 import com.xjt.letool.utils.StorageUtils;
 import com.xjt.letool.utils.Utils;
 import com.xjt.letool.view.BatchDeleteMediaListener;
 import com.xjt.letool.view.BatchDeleteMediaListener.DeleteMediaProgressListener;
+import com.xjt.letool.view.SingleDeleteMediaListener.SingleDeleteMediaProgressListener;
+import com.xjt.letool.view.DetailsHelper.CloseListener;
+import com.xjt.letool.view.DetailsHelper.DetailsSource;
 import com.xjt.letool.view.DetailsHelper;
 import com.xjt.letool.view.GLBaseView;
 import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.LetoolBottomBar;
 import com.xjt.letool.view.LetoolTopBar;
 import com.xjt.letool.view.LetoolDialog;
+import com.xjt.letool.view.SingleDeleteMediaListener;
 import com.xjt.letool.view.LetoolTopBar.OnActionModeListener;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.views.layout.ThumbnailContractLayout;
@@ -76,7 +79,7 @@ import android.widget.Toast;
  * @Comments:null
  */
 public class VideoFragment extends Fragment implements EyePosition.EyePositionListener, ContractSelectListener, OnActionModeListener,
-        LayoutListener, OnMenuItemClickListener {
+        LayoutListener {
 
     private static final String TAG = VideoFragment.class.getSimpleName();
 
@@ -84,8 +87,8 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     private static final int MSG_LAYOUT_CONFIRMED = 0;
     private static final int MSG_PICK_PHOTO = 1;
 
-    private static final int POP_UP_MENU_ITEM_SELECT = 0;
-    private static final int POP_UP_MENU_ITEM_CAMERA = 1;
+    private static final int POP_UP_MENU_ITEM_DETAIL = 0;
+    private static final int POP_UP_MENU_ITEM_DELETE = 1;
 
     private LetoolContext mLetoolContext;
 
@@ -107,7 +110,6 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     private boolean mIsCameraSource = false;
     private boolean mIsSDCardMountedCorreclty = false;
     private boolean mHasDefaultDCIMDirectory = false;
-    private boolean mGetContent;
     private SynchronizedHandler mHandler;
     protected ContractSelector mSelector;
     private EyePosition mEyePosition; // The eyes' position of the user, the origin is at the center of the device and the unit is in pixels.
@@ -115,6 +117,10 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     private float mX;
     private float mY;
     private float mZ;
+
+    private boolean mShowDetails;
+    private DetailsHelper mDetailsHelper;
+    private int mLongPressedIndex = 0;
 
     private final GLBaseView mRootPane = new GLBaseView() {
 
@@ -133,6 +139,9 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             // Set the mThumbnailView as a reference point to the open animation
             mOpenCenter.setReferencePosition(0, thumbnailViewTop);
             mThumbnailView.layout(thumbnailViewLeft, thumbnailViewTop, thumbnailViewRight, thumbnailViewBottom);
+            if (mShowDetails) {
+                mDetailsHelper.layout(thumbnailViewLeft, thumbnailViewTop, thumbnailViewRight, thumbnailViewBottom);
+            }
             LetoolUtils.setViewPointMatrix(mMatrix, (right - left) / 2, (bottom - top) / 2, -mUserDistance);
         }
 
@@ -212,9 +221,10 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         MediaItem item = mVideoDataLoader.get(videoIndex);
         if (item == null)
             return;
+        mLongPressedIndex = videoIndex;
         List<MenuItem> items = new ArrayList<MenuItem>();
-        addMenuItem(items, POP_UP_MENU_ITEM_SELECT, R.drawable.ic_action_accept, R.string.common_detail);
-        addMenuItem(items, POP_UP_MENU_ITEM_CAMERA, R.drawable.ic_action_camera, R.string.common_delete);
+        addMenuItem(items, POP_UP_MENU_ITEM_DETAIL, R.string.common_detail);
+        addMenuItem(items, POP_UP_MENU_ITEM_DELETE, R.string.common_delete);
         final LetoolDialog dlg = new LetoolDialog(getActivity());
         dlg.setTitle(item.getName());
         ListView listView = dlg.setListAdapter(new MenuItemAdapter(getActivity(), items));
@@ -222,12 +232,12 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
 
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                if (position == POP_UP_MENU_ITEM_SELECT) {
-
-                } else if (position == POP_UP_MENU_ITEM_CAMERA) {
-
+                if (position == POP_UP_MENU_ITEM_DETAIL) {
+                    showDetails();
+                } else if (position == POP_UP_MENU_ITEM_DELETE) {
+                    delete();
                 }
-
+                dlg.dismiss();
             }
         });
         dlg.setCanceledOnTouchOutside(true);
@@ -428,6 +438,8 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             mIsActive = false;
             mVideoDataLoader.pause();
             mRender.pause();
+            if (mShowDetails)
+                hideDetails();
             DetailsHelper.pause();
             mEyePosition.pause();
 
@@ -535,14 +547,6 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         }
     }
 
-    public void showPopupMenu() {
-        PopupMenu popup = new PopupMenu(this.getActivity());
-        popup.setOnItemSelectedListener(this);
-        popup.add(POP_UP_MENU_ITEM_SELECT, R.drawable.ic_action_accept, R.string.popup_menu_select_mode);
-        popup.add(POP_UP_MENU_ITEM_CAMERA, R.drawable.ic_action_camera, R.string.popup_menu_take_picture);
-        popup.show(null);
-    }
-
     @Override
     public void onSelectionModeChange(int mode) {
         switch (mode) {
@@ -588,29 +592,80 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
 
     // -----------------------------------------------details-----------------------------------------------------------------------
 
-    @Override
-    public void onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()) {
-            case POP_UP_MENU_ITEM_SELECT:
-                MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_MENU_SELECT);
-                if (mSelector != null) {
-                    mSelector.enterSelectionMode();
-                }
-                break;
-            case POP_UP_MENU_ITEM_CAMERA:
-                MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_MENU_CAMERA);
-                Intent it = new Intent();
-                it.setAction(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
-                startActivity(it);
-                break;
+    
+    private void delete() {
+        MediaItem item = mVideoDataLoader.get(mLongPressedIndex);
+        SingleDeleteMediaListener cdl = new SingleDeleteMediaListener(getActivity(), item.getPath(), mLetoolContext.getDataManager(),
+                new SingleDeleteMediaProgressListener() {
+                    @Override
+                    public void onConfirmDialogDismissed(boolean confirmed) {
+                        if (confirmed) {
+//                            mTotalCount = mMediaSet.getMediaCount();
+//                            if (mTotalCount > 0) {
+//                                updateActionBarMessage(getString(R.string.full_image_browse, Math.min(mLongPressedIndex + 1,mTotalCount),mTotalCount));
+//                            } else {
+//                                // not medias
+//                                Toast.makeText(getActivity(),
+//                                        R.string.full_image_browse_empty,
+//                                        Toast.LENGTH_SHORT).show();
+//                                getActivity().finish();
+//                                return;
+//                            }
+                        }
+                    }
 
+                });
+
+        final LetoolDialog dlg = new LetoolDialog(getActivity());
+        dlg.setTitle(R.string.common_recommend);
+        dlg.setOkBtn(R.string.common_ok, cdl);
+        dlg.setCancelBtn(R.string.common_cancel, cdl);
+        dlg.setMessage(R.string.common_delete_cur_tip);
+        dlg.show();
+    }
+    private class MyDetailsSource implements DetailsSource {
+
+        public MyDetailsSource( ) {
+        }
+        @Override
+        public MediaDetails getDetails() {
+            MediaItem item = mVideoDataLoader.get(mLongPressedIndex);
+                return item.getDetails();
+        }
+
+        @Override
+        public int size() {
+            return mVideoData != null ? mVideoData.getAllMediaItems() : 1;
+        }
+
+        @Override
+        public int setIndex() {
+            return mLongPressedIndex;
         }
     }
 
-    public void addMenuItem(List<MenuItem> items, int itemId, int iconRes, int titleRes) {
+    private void showDetails( ) {
+        mShowDetails = true;
+        if (mDetailsHelper == null) {
+            mDetailsHelper = new DetailsHelper(mLetoolContext, mRootPane,new MyDetailsSource());
+            mDetailsHelper.setCloseListener(new CloseListener() {
+                @Override
+                public void onClose() {
+                    hideDetails();
+                }
+            });
+        }
+        mDetailsHelper.show();
+    }
+
+    private void hideDetails() {
+        mShowDetails = false;
+        mDetailsHelper.hide();
+    }
+
+    public void addMenuItem(List<MenuItem> items, int itemId, int titleRes) {
         MenuItem item = new MenuItem();
         item.setItemId(itemId);
-        item.setIcon(getResources().getDrawable(iconRes));
         item.setTitle(getString(titleRes));
         items.add(item);
     }
