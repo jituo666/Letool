@@ -107,8 +107,6 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     private float mY;
     private float mZ;
 
-    private LayoutInflater mLayoutInflater;
-
     private final GLBaseView mRootPane = new GLBaseView() {
 
         private final float mMatrix[] = new float[16];
@@ -225,7 +223,6 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         LLog.i(TAG, "onCreate");
         mLetoolContext = (LetoolContext) getActivity();
         mGLController = mLetoolContext.getGLController();
-        mLayoutInflater = getActivity().getLayoutInflater();
 
         initializeData();
         initializeViews();
@@ -351,13 +348,33 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         LLog.i(TAG, "onCreateView" + System.currentTimeMillis());
         initBars();
-
         mIsSDCardMountedCorreclty = StorageUtils.externalStorageAvailable();
         mHasDefaultDCIMDirectory = MediaSetUtils.getBucketsIds().length > 0;
         if (!mIsSDCardMountedCorreclty) {
             mLetoolContext.showEmptyView(R.string.common_error_nosdcard);
         } else if (mIsCameraSource && !mHasDefaultDCIMDirectory) {
             mLetoolContext.showEmptyView(R.string.common_error_nodcim_photo);
+            final LetoolDialog dlg = new LetoolDialog(getActivity());
+            dlg.setTitle(R.string.common_recommend);
+            dlg.setOkBtn(R.string.common_ok, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dlg.dismiss();
+                    Intent it = new Intent();
+                    it.setClass(getActivity(),LocalMediaActivity.class);
+                    it.putExtra(LocalMediaActivity.KEY_IS_PHOTODIR, true);
+                    startActivity(it);
+                    getActivity().finish();
+                }
+            });
+            dlg.setCancelBtn(R.string.common_cancel, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dlg.dismiss();
+                }
+            });
+            dlg.setMessage(R.string.common_delete_tip);
+            dlg.show();
         } else {
             mLetoolContext.hideEmptyView();
         }

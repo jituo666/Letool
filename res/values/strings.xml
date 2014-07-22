@@ -19,6 +19,7 @@
     <string name="common_photo">Photos</string>
     <string name="common_video">Videos</string>
     <string name="common_gallery">Gallery</string>
+    <string name="photo_dir_settings">Photo Directories</string>
     <string name="common_settings">Settings</string>
     <string name="common_exit">Exit</string>
     <string name="sliding_menu_title_hide_list">Hide List</string>

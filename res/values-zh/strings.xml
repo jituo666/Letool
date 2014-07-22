@@ -22,6 +22,8 @@
     <string name="common_video">视频</string>
     <string name="common_settings">设置</string>
     <string name="common_exit">退出</string>
+    
+    <string name="photo_dir_settings">照片目录设置</string>
     <string name="sliding_menu_title_hide_list">隐藏列表</string>
     <string name="sliding_menu_title_about">关于</string>
     <string name="sliding_menu_title_home">主页</string>

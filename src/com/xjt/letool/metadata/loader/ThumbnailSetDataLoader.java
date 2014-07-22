@@ -338,17 +338,23 @@ public class ThumbnailSetDataLoader {
 
         @Override
         public void run() {
+
+            LLog.i(TAG, "===========:updateLoading run");
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
             boolean updateComplete = false;
             while (mActive) {
                 synchronized (this) {
                     if (mActive && !mDirty && updateComplete) {
-                        if (!mSource.isLoading())
+                        if (!mSource.isLoading()) {
+                            LLog.i(TAG, "===========:updateLoading1");
                             updateLoading(false);
+                        }
                         Utils.waitWithoutInterrupt(this);
                         continue;
                     }
                 }
+
+                LLog.i(TAG, "===========:updateLoading2");
                 mDirty = false;
                 updateLoading(true);
                 long version = mSource.reload();
@@ -356,6 +362,8 @@ public class ThumbnailSetDataLoader {
                 updateComplete = info == null;
                 if (updateComplete)
                     continue;
+
+                LLog.i(TAG, "===========:updateLoading3");
                 if (info.version != version) {
                     info.version = version;
                     info.size = mSource.getSubMediaSetCount();

@@ -2,6 +2,7 @@
 package com.xjt.letool.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.OrientationManager;
 import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.fragment.GalleryFragment;
+import com.xjt.letool.fragment.ListViewFragment;
 import com.xjt.letool.fragment.PhotoFragment;
 import com.xjt.letool.fragment.SlidingMenuFragment;
 import com.xjt.letool.fragment.VideoFragment;
@@ -45,6 +47,7 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
     public static final String KEY_ALBUM_ID = "album_id";
     public static final String KEY_IS_CAMERA_SOURCE = "is_camera_source";
     public static final String KEY_IS_IMAGE = "is_image";
+    public static final String KEY_IS_PHOTODIR = "is_photo_dir";
 
     private LetoolTopBar mTopBar;
     private LetoolBottomBar mBottomBar;
@@ -55,6 +58,7 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
     private OrientationManager mOrientationManager;
     private boolean mWaitingForExit = false;
     public boolean mIsImage = true;
+    public boolean mIsDirSetting = false;
 
     @Override
     protected void onCreate(Bundle b) {
@@ -64,6 +68,7 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
         if (getIntent().hasExtra(KEY_IS_IMAGE)) {
             mIsImage = getIntent().getBooleanExtra(KEY_IS_IMAGE, true);
         }
+        mIsDirSetting = getIntent().getBooleanExtra(KEY_IS_PHOTODIR, false);
         mTopBar = new LetoolTopBar(this, (ViewGroup) findViewById(R.id.letool_top_bar_container));
         mBottomBar = new LetoolBottomBar(this, (ViewGroup) findViewById(R.id.letool_bottom_bar_container));
         mSlidingMenu = new LetoolSlidingMenu(this, getSupportFragmentManager(), findViewById(R.id.letool_top_bar_container));
@@ -74,23 +79,33 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
     }
 
     private void startFirstFragment() {
-        Fragment fragment = null;
-        MediaSetUtils.initializeMyAlbumBuckets();
-        if (MediaSetUtils.getBucketsIds().length <= 0) {
-            fragment = new GalleryFragment();
-            Bundle data = new Bundle();
-            data.putString(LocalMediaActivity.KEY_MEDIA_PATH, getDataManager()
-                    .getTopSetPath(isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
-            fragment.setArguments(data);
-        } else {
 
-            fragment = mIsImage ? new PhotoFragment() : new VideoFragment();
+        Fragment fragment = null;
+        if (mIsDirSetting) {
+            fragment = new ListViewFragment();
             Bundle data = new Bundle();
             data.putString(LocalMediaActivity.KEY_MEDIA_PATH, getDataManager()
                     .getTopSetPath(isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
             data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, true);
             fragment.setArguments(data);
+        } else {
+            MediaSetUtils.initializeMyAlbumBuckets();
+            if (MediaSetUtils.getBucketsIds().length <= 0) {
+                fragment = new GalleryFragment();
+                Bundle data = new Bundle();
+                data.putString(LocalMediaActivity.KEY_MEDIA_PATH, getDataManager()
+                        .getTopSetPath(isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
+                fragment.setArguments(data);
+            } else {
 
+                fragment = mIsImage ? new PhotoFragment() : new VideoFragment();
+                Bundle data = new Bundle();
+                data.putString(LocalMediaActivity.KEY_MEDIA_PATH, getDataManager()
+                        .getTopSetPath(isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
+                data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, true);
+                fragment.setArguments(data);
+
+            }
         }
         pushContentFragment(fragment, null, false);
     }
@@ -166,6 +181,14 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
 
     @Override
     public void onBackPressed() {
+        if (mIsDirSetting) {
+            super.onBackPressed();
+            Intent it = new Intent();
+            it.setClass(this,LocalMediaActivity.class);
+            it.putExtra(LocalMediaActivity.KEY_IS_PHOTODIR, false);
+            startActivity(it);
+            return;
+        }
         if (getLetoolTopBar().getActionBarMode() == LetoolTopBar.ACTION_BAR_MODE_SELECTION) {
             getLetoolTopBar().exitSelection();
             return;
@@ -209,7 +232,7 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         LLog.i(TAG, "onKeyDown menu1:" + keyCode);
-        if (keyCode == KeyEvent.KEYCODE_MENU) {
+        if (keyCode == KeyEvent.KEYCODE_MENU && !mIsDirSetting) {
             if (getLetoolTopBar().getActionBarMode() == LetoolTopBar.ACTION_BAR_MODE_SELECTION) {
                 return true;
             } else if (getSupportFragmentManager().getBackStackEntryCount() == 0) {

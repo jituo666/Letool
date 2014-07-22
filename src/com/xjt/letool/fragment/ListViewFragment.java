@@ -42,6 +42,7 @@ import com.xjt.letool.views.utils.ViewConfigs;
 import com.xjt.letool.LetoolApp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -53,7 +54,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -61,9 +61,9 @@ import android.widget.Toast;
  * @Date 9:40:26 PM Apr 20, 2014
  * @Comments:null
  */
-public class GalleryFragment extends Fragment implements OnActionModeListener, EyePosition.EyePositionListener, ContractSelectListener, LayoutListener {
+public class ListViewFragment extends Fragment implements OnActionModeListener, EyePosition.EyePositionListener, ContractSelectListener, LayoutListener {
 
-    private static final String TAG = GalleryFragment.class.getSimpleName();
+    private static final String TAG = ListViewFragment.class.getSimpleName();
 
     public static final String KEY_IS_EMPTY_ALBUM = "empty-album";
     private static final int MSG_LAYOUT_CONFIRMED = 0;
@@ -162,7 +162,6 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     private void clearLoadingBit(int loadingBit) {
         mLoadingBits &= ~loadingBit;
         if (mLoadingBits == 0 && mIsActive) {
-            LLog.i(TAG, "---++--------:" + mThumbnailSetAdapter.size());
             if (mThumbnailSetAdapter.size() == 0) {
                 mLetoolContext.showEmptyView(mLetoolContext.isImageBrwosing() ? R.string.common_error_no_picture : R.string.common_error_no_video);
                 return;
@@ -275,22 +274,22 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
 
             @Override
             public void onDown(int index) {
-                GalleryFragment.this.onDown(index);
+                ListViewFragment.this.onDown(index);
             }
 
             @Override
             public void onUp(boolean followedByLongPress) {
-                GalleryFragment.this.onUp(followedByLongPress);
+                ListViewFragment.this.onUp(followedByLongPress);
             }
 
             @Override
             public void onSingleTapUp(int thumbnailIndex) {
-                GalleryFragment.this.onSingleTapUp(thumbnailIndex);
+                ListViewFragment.this.onSingleTapUp(thumbnailIndex);
             }
 
             @Override
             public void onLongTap(int thumbnailIndex) {
-                GalleryFragment.this.onLongTap(thumbnailIndex);
+                ListViewFragment.this.onLongTap(thumbnailIndex);
             }
         });
     }
@@ -308,18 +307,10 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     private void initBars() {
         LetoolTopBar topBar = mLetoolContext.getLetoolTopBar();
         topBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_BROWSE, this);
-        topBar.setTitleIcon(R.drawable.ic_drawer);
-        topBar.setTitleText(R.string.app_name);
+        topBar.setTitleIcon(R.drawable.ic_action_previous_item);
+        topBar.setTitleText(R.string.common_settings);
         mNativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);
-        mNativeButtons.setVisibility(View.VISIBLE);
-
-        TextView naviToGallery = (TextView) mNativeButtons.findViewById(R.id.navi_to_gallery);
-        naviToGallery.setText(mLetoolContext.isImageBrwosing() ? R.string.common_gallery : R.string.common_video);
-        naviToGallery.setEnabled(false);
-        TextView naviToPhoto = (TextView) mNativeButtons.findViewById(R.id.navi_to_photo);
-        naviToPhoto.setText(mLetoolContext.isImageBrwosing() ? R.string.common_photo : R.string.common_record);
-        naviToPhoto.setEnabled(true);
-        naviToPhoto.setOnClickListener(this);
+        mNativeButtons.setVisibility(View.GONE);
 
     }
 
@@ -376,7 +367,6 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         mGLController.lockRenderThread();
         try {
             mIsActive = true;
-            setLoadingBit(BIT_LOADING_RELOAD);
             mThumbnailSetAdapter.resume();
             mThumbnailViewRenderer.resume();
             mEyePosition.resume();
@@ -399,6 +389,29 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         } finally {
             mGLController.unlockRenderThread();
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        mGLController.lockRenderThread();
+        try {
+
+            super.onActivityResult(requestCode, resultCode, data);
+            if (data != null && data.getBooleanExtra(KEY_IS_EMPTY_ALBUM, false)) {
+                mLetoolContext.showEmptyView(R.string.common_error_no_picture);
+            } else {
+                mLetoolContext.hideEmptyView();
+            }
+            switch (requestCode) {
+                case REQUEST_DO_ANIMATION: {
+                    mThumbnailView.startRisingAnimation();
+                }
+            }
+        } finally {
+            mGLController.unlockRenderThread();
+        }
+
     }
 
     @Override
@@ -485,9 +498,12 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         if (!mIsSDCardMountedCorreclty)
             return;
         if (v.getId() == R.id.action_navi) {
-            mLetoolContext.getLetoolSlidingMenu().toggle();
+            Intent it = new Intent();
+            it.setClass(getActivity(),LocalMediaActivity.class);
+            it.putExtra(LocalMediaActivity.KEY_IS_PHOTODIR, false);
+            startActivity(it);
+            getActivity().finish();
         } else if (v.getId() == R.id.operation_delete) {
-
             MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_GALLERY_DELETE);
             int count = mSelector.getSelectedCount();
             if (count <= 0) {
