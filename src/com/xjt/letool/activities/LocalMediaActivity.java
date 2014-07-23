@@ -78,7 +78,7 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
 
         Fragment fragment = null;
 
-        MediaSetUtils.initializeMyAlbumBuckets();
+        MediaSetUtils.initializeMyAlbumBuckets(this);
         if (MediaSetUtils.getBucketsIds().length <= 0) {
             fragment = new GalleryFragment();
             Bundle data = new Bundle();

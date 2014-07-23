@@ -28,6 +28,7 @@ import com.umeng.update.UpdateResponse;
 import com.umeng.update.UpdateStatus;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
+import com.xjt.letool.activities.CameraSourceSettingActivity;
 import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.imagedata.blobcache.BlobCacheManager;
 import com.xjt.letool.settings.LetoolPreference;
@@ -46,6 +47,7 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
 
     private static final String TAG = SettingFragment.class.getSimpleName();
 
+    private LetoolPreference mCameraSource;
     private LetoolPreference mClearCache;
     private LetoolPreference mVersionCheck;
     private LetoolPreference mAuthorDesc;
@@ -83,10 +85,12 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
     private void initViews() {
         String x = getString(R.string.clear_cache_desc, getCacheSize(), StringUtils.formatBytes(StorageUtils.getExternalStorageAvailableSize()));
         mClearCache.setSettingItemText(getString(R.string.clear_cache_title), x);
+        mCameraSource.setSettingItemText(getString(R.string.camera_source_dirs), getString(R.string.camera_source_dirs_desc));
         mVersionCheck.setSettingItemText(getString(R.string.version_update_check_title), getVersion());
         mAuthorDesc.setSettingItemText(getString(R.string.author_title), getString(R.string.author_desc));
         mQQGroup.setSettingItemText(getString(R.string.app_communication_platfrom), getString(R.string.app_QQ_group));
         mAuthorDesc.setOnClickListener(this);
+        mCameraSource.setOnClickListener(this);
         mClearCache.setOnClickListener(this);
         mVersionCheck.setOnClickListener(this);
         mQQGroup.setOnClickListener(this);
@@ -96,6 +100,7 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.app_settings, container, false);
         initBrowseActionBar();
+        mCameraSource = (LetoolPreference) rootView.findViewById(R.id.camera_source);
         mClearCache = (LetoolPreference) rootView.findViewById(R.id.clear_cache);
         mVersionCheck = (LetoolPreference) rootView.findViewById(R.id.version_update_check);
         mAuthorDesc = (LetoolPreference) rootView.findViewById(R.id.author_desc);
@@ -106,7 +111,12 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.action_navi) {
+        if (v.getId() == R.id.camera_source) {
+            Intent it = new Intent();
+            it.setClass(getActivity(),CameraSourceSettingActivity.class);
+            startActivity(it);
+            getActivity().finish();
+        }  else if (v.getId() == R.id.action_navi) {
             getActivity().finish();
         } else if (v.getId() == R.id.clear_cache) {
             MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_CLEAR_CAHCE);

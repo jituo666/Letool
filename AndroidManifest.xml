@@ -36,7 +36,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.xjt.letool.activities.ImageListActivity"
+            android:name="com.xjt.letool.activities.CameraSourceSettingActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/MainTheme" >

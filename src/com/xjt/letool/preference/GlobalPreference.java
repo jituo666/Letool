@@ -8,6 +8,7 @@ public class GlobalPreference {
     private static SharedPreferences sPrefs = null;
     private static final String PREFS_KEY_APP_UPDATE = "last_app_update_time";
     private static final String PREFS_KEY_APP_CHECK_UPDATE = "last_app_update_check_time";
+    private static final String PREFS_KEY_PHOTO_DIRS = "photo_dirs";
 
     private static SharedPreferences initSharedPreferences(Context ctx) {
         if (sPrefs == null) {
@@ -34,5 +35,15 @@ public class GlobalPreference {
     public static void setAppUpdateTime(Context ctx, long defTime) {
         SharedPreferences prefs = initSharedPreferences(ctx);
         SharedPreferencesCompat.apply(prefs.edit().putLong(PREFS_KEY_APP_UPDATE, defTime));
+    }
+    
+    public static String getPhotoDirs(Context ctx) {
+        SharedPreferences prefs = initSharedPreferences(ctx);
+        return prefs.getString(PREFS_KEY_PHOTO_DIRS, "");
+    }
+
+    public static void setPhotoDirs(Context ctx, String dirs) {
+        SharedPreferences prefs = initSharedPreferences(ctx);
+        SharedPreferencesCompat.apply(prefs.edit().putString(PREFS_KEY_PHOTO_DIRS, dirs));
     }
 }

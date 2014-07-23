@@ -65,16 +65,17 @@ public class SlidingMenuFragment extends Fragment {
     private FragmentManager mFragmentManager;
 
     private void initIntentDatas() {
-    	mIntents = new ArrayList<Intent>();
-    	Intent itImage = new Intent(getActivity(),LocalMediaActivity.class);
-    	itImage.putExtra(LocalMediaActivity.KEY_IS_IMAGE, true);
-    	mIntents.add(itImage);
-    	Intent itVideo = new Intent(getActivity(),LocalMediaActivity.class);
-    	itVideo.putExtra(LocalMediaActivity.KEY_IS_IMAGE, false);
-    	mIntents.add(itVideo);
-    	Intent itSetting = new Intent(getActivity(),GlobalSettingsActivity.class);
-    	mIntents.add(itSetting);
+        mIntents = new ArrayList<Intent>();
+        Intent itImage = new Intent(getActivity(), LocalMediaActivity.class);
+        itImage.putExtra(LocalMediaActivity.KEY_IS_IMAGE, true);
+        mIntents.add(itImage);
+        Intent itVideo = new Intent(getActivity(), LocalMediaActivity.class);
+        itVideo.putExtra(LocalMediaActivity.KEY_IS_IMAGE, false);
+        mIntents.add(itVideo);
+        Intent itSetting = new Intent(getActivity(), GlobalSettingsActivity.class);
+        mIntents.add(itSetting);
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,21 +111,21 @@ public class SlidingMenuFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 
-                    if (position < 2) {
-                    	mLetoolContext.getLetoolSlidingMenu().toggle();
-                    	if (mIntents.get(position).hasExtra(LocalMediaActivity.KEY_IS_IMAGE)
-                    			&& mLetoolContext.isImageBrwosing() == mIntents.get(position).getBooleanExtra(LocalMediaActivity.KEY_IS_IMAGE, true))
-                    	{
-                    		return;
-                    	}
-                    	getActivity().startActivity(mIntents.get(position));
-                        getActivity().finish();
-                    } else if (position == 2) {
-                    	mLetoolContext.getLetoolSlidingMenu().toggle();
-                    	getActivity().startActivity(mIntents.get(position));
-                    } else if (position == 3){
-                        getActivity().finish();
+                if (position < 2) {
+                    mLetoolContext.getLetoolSlidingMenu().toggle();
+                    if (mIntents.get(position).hasExtra(LocalMediaActivity.KEY_IS_IMAGE)
+                            && mLetoolContext.isImageBrwosing() == mIntents.get(position).getBooleanExtra(LocalMediaActivity.KEY_IS_IMAGE, true))
+                    {
+                        return;
                     }
+                    getActivity().startActivity(mIntents.get(position));
+                    getActivity().finish();
+                } else if (position == 2) {
+                    mLetoolContext.getLetoolSlidingMenu().toggle();
+                    getActivity().startActivityForResult(mIntents.get(position), 100);
+                } else if (position == 3) {
+                    getActivity().finish();
+                }
 
             }
         });

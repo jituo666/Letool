@@ -26,6 +26,7 @@
     <string name="sliding_menu_title_about">About</string>
     <string name="sliding_menu_title_home">Home Page</string>
     
+    <string name="common_save">Save</string>
     <string name="common_loading">Loading</string>
 
     <!--
@@ -43,6 +44,8 @@
     <string name="resume_playing_restart">Start over</string>
     <string name="resume_playing_message">Resume playing from %s ?</string>
     <string name="resume_playing_resume">Resume playing</string>
+    <string name="camera_source_dirs">Camera source</string>
+    <string name="camera_source_dirs_desc">Set camera source</string>
     <string name="clear_cache_title">Clear cache</string>
     <string name="clear_cache_desc">Cache size %1$s，Photo Space %2$s</string>
     <string name="clear_cache_finished">Caches Cleared!</string>

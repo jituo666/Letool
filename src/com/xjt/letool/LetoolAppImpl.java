@@ -34,7 +34,6 @@ public class LetoolAppImpl extends Application implements LetoolApp {
     public void onCreate() {
         super.onCreate();
         LetoolUtils.initialize(this);
-        MediaSetUtils.initializeMyAlbumBuckets();
         MobclickAgent.updateOnlineConfig(this);
         initImageLoader(this);
     }

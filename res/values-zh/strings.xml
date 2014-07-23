@@ -23,6 +23,7 @@
     <string name="common_settings">设置</string>
     <string name="common_exit">退出</string>
     <string name="common_loading">加载中</string>
+    <string name="common_save">保存</string>
     <string name="photo_dir_settings">照片目录设置</string>
     <string name="sliding_menu_title_hide_list">隐藏列表</string>
     <string name="sliding_menu_title_about">关于</string>
@@ -43,6 +44,9 @@
     <string name="resume_playing_restart">重播</string>
     <string name="resume_playing_message">从 %s 开始继续播放?</string>
     <string name="resume_playing_resume">继续播放?</string>
+    
+    <string name="camera_source_dirs">照片目录设置</string>
+    <string name="camera_source_dirs_desc">设置您的照片路径</string>
     <string name="clear_cache_title">清理缓存</string>
     <string name="clear_cache_desc">当前缓存大小 %1$s，手机剩余存储 %2$s</string>
     <string name="clear_cache_finished">缓存已被清理</string>
