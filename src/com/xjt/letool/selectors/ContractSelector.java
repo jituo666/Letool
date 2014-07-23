@@ -37,8 +37,7 @@ public class ContractSelector {
         mTotal = -1;
     }
 
-    // Whether we will leave selection mode automatically once the number of
-    // selected items is down to zero.
+    // Whether we will leave selection mode automatically once the number of selected items is down to zero.
     public void setAutoLeaveSelectionMode(boolean enable) {
         mAutoLeave = enable;
     }
