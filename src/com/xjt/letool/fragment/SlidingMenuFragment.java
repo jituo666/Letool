@@ -23,7 +23,7 @@ import android.widget.TextView;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 import com.xjt.letool.activities.LocalMediaActivity;
-import com.xjt.letool.activities.GlobalSettingsActivity;
+import com.xjt.letool.activities.SettingsActivity;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
@@ -72,7 +72,8 @@ public class SlidingMenuFragment extends Fragment {
         Intent itVideo = new Intent(getActivity(), LocalMediaActivity.class);
         itVideo.putExtra(LocalMediaActivity.KEY_IS_IMAGE, false);
         mIntents.add(itVideo);
-        Intent itSetting = new Intent(getActivity(), GlobalSettingsActivity.class);
+        Intent itSetting = new Intent(getActivity(), SettingsActivity.class);
+        itSetting.putExtra(SettingsActivity.KEY_FROM_TIP, false);
         mIntents.add(itSetting);
     }
 

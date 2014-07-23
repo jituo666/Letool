@@ -48,7 +48,7 @@
             android:theme="@style/MainTheme" >
         </activity>
         <activity
-            android:name="com.xjt.letool.activities.GlobalSettingsActivity"
+            android:name="com.xjt.letool.activities.SettingsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/MainTheme" >
         </activity>

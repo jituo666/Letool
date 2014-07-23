@@ -4,8 +4,10 @@ package com.xjt.letool.activities;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
+import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.OrientationManager;
 import com.xjt.letool.common.ThreadPool;
+import com.xjt.letool.fragment.CameraSourceSettingFragment;
 import com.xjt.letool.fragment.SettingFragment;
 import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.view.GLController;
@@ -20,15 +22,19 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.ViewGroup;
 
-public class GlobalSettingsActivity extends FragmentActivity implements LetoolContext {
+public class SettingsActivity extends FragmentActivity implements LetoolContext {
 
-    private static final String TAG = GlobalSettingsActivity.class.getSimpleName();
+    private static final String TAG = SettingsActivity.class.getSimpleName();
+
+    public static final String KEY_SOURCE_TYPE = "source_type";
+    public static final String KEY_FROM_TIP = "from_tip";
 
     private LetoolTopBar mTopBar;
     private LetoolSlidingMenu mSlidingMenu;
+    private boolean mIsFromTip;
 
     private void startFirstFragment() {
-        Fragment fragment = new SettingFragment();
+        Fragment fragment = mIsFromTip ? new CameraSourceSettingFragment():new SettingFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.local_image_browse_main_view, fragment);
         ft.commit();
@@ -37,7 +43,8 @@ public class GlobalSettingsActivity extends FragmentActivity implements LetoolCo
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
-        setContentView(R.layout.local_media_main);
+        setContentView(R.layout.local_settings);
+        mIsFromTip = getIntent().getBooleanExtra(KEY_FROM_TIP, false);
         mTopBar = new LetoolTopBar(this, (ViewGroup) findViewById(R.id.letool_top_bar_container));
         mSlidingMenu = new LetoolSlidingMenu(this, getSupportFragmentManager(), findViewById(R.id.letool_top_bar_container));
         startFirstFragment();
@@ -85,7 +92,7 @@ public class GlobalSettingsActivity extends FragmentActivity implements LetoolCo
 
     @Override
     public boolean isImageBrwosing() {
-        return false;
+        return mIsFromTip;
     }
 
     @Override
@@ -100,18 +107,26 @@ public class GlobalSettingsActivity extends FragmentActivity implements LetoolCo
 
     @Override
     public void pushContentFragment(Fragment newFragment, Fragment oldFragment, boolean backup) {
-
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        if (oldFragment != null) {
+            ft.remove(oldFragment);
+            if (backup)
+                ft.addToBackStack(null);
+        }
+        LLog.i(TAG, " add :" + newFragment.getClass().getSimpleName());
+        ft.add(R.id.local_image_browse_main_view, newFragment, newFragment.getClass().getSimpleName());
+        ft.commit();
     }
 
     @Override
     public void popContentFragment() {
-
+        LLog.i(TAG, " popBackStack :" + getSupportFragmentManager().getBackStackEntryCount());
+        getSupportFragmentManager().popBackStack();
     }
 
     @Override
     public void hideEmptyView() {
-        // TODO Auto-generated method stub
-        
+
     }
 
 }

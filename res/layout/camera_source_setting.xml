@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-
+<!-- 
     <RelativeLayout
         android:id="@+id/action_bar_normal"
         style="@style/MyWidget.ActionBarPanel" >
@@ -47,7 +47,7 @@
             android:text="@string/photo_dir_settings"
             android:textColor="@color/major_text_color"
             android:textSize="@dimen/letool_action_bar_text_size" />
-    </RelativeLayout>
+    </RelativeLayout> -->
 
     <ListView
         android:id="@android:id/list"

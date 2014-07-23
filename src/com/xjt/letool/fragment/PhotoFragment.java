@@ -7,6 +7,7 @@ import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
 import com.xjt.letool.activities.CameraSourceSettingActivity;
 import com.xjt.letool.activities.LocalMediaActivity;
+import com.xjt.letool.activities.SettingsActivity;
 import com.xjt.letool.common.EyePosition;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
@@ -362,7 +363,8 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                 public void onClick(View v) {
                     dlg.dismiss();
                     Intent it = new Intent();
-                    it.setClass(getActivity(),CameraSourceSettingActivity.class);
+                    it.setClass(getActivity(),SettingsActivity.class);
+                    it.putExtra(SettingsActivity.KEY_FROM_TIP, true);
                     startActivity(it);
                     getActivity().finish();
                 }
