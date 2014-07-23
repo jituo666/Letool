@@ -65,7 +65,7 @@ public class BatchDeleteMediaListener implements OnClickListener {
         protected void onPreExecute() {
             super.onPreExecute();
             dialog = new ProgressDialog(context);
-            dialog.setTitle(context.getString(R.string.common_delete));
+            dialog.setTitle(context.getString(R.string.common_video));
             dialog.setMessage(context.getString(R.string.common_delete_waiting));
             dialog.setIndeterminate(true);
             dialog.setCancelable(true);

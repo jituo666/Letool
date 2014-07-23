@@ -25,6 +25,8 @@
     <string name="sliding_menu_title_hide_list">Hide List</string>
     <string name="sliding_menu_title_about">About</string>
     <string name="sliding_menu_title_home">Home Page</string>
+    
+    <string name="common_loading">Loading</string>
 
     <!--
          String indicating how many media item(s) is(are) selected

@@ -36,12 +36,17 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.xjt.letool.activities.ImageListActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainTheme" >
+        </activity>
+        <activity
             android:name="com.xjt.letool.activities.MoviePlayActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/MainTheme" >
         </activity>
-
         <activity
             android:name="com.xjt.letool.activities.GlobalSettingsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

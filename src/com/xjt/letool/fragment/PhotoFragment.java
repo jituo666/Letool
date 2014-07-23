@@ -5,6 +5,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
+import com.xjt.letool.activities.ImageListActivity;
 import com.xjt.letool.activities.LocalMediaActivity;
 import com.xjt.letool.common.EyePosition;
 import com.xjt.letool.common.LLog;
@@ -361,8 +362,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                 public void onClick(View v) {
                     dlg.dismiss();
                     Intent it = new Intent();
-                    it.setClass(getActivity(),LocalMediaActivity.class);
-                    it.putExtra(LocalMediaActivity.KEY_IS_PHOTODIR, true);
+                    it.setClass(getActivity(),ImageListActivity.class);
                     startActivity(it);
                     getActivity().finish();
                 }

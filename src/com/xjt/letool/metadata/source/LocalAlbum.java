@@ -93,9 +93,12 @@ public class LocalAlbum extends MediaSet {
         long time = System.currentTimeMillis();
         ArrayList<MediaItem> list = new ArrayList<MediaItem>();
         LetoolUtils.assertNotInRenderThread();
-        if (mAlbumCursor == null)
-            return list;
-
+        if (mAlbumCursor == null) {
+            getAllMediaItems();
+        }
+        if (mAlbumCursor == null) {
+            return null;
+        }
         if (mAlbumCursor.moveToPosition(start)) {
             int i = 0;
             do {
