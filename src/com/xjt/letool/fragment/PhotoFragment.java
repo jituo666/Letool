@@ -5,7 +5,6 @@ import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
-import com.xjt.letool.activities.CameraSourceSettingActivity;
 import com.xjt.letool.activities.LocalMediaActivity;
 import com.xjt.letool.activities.SettingsActivity;
 import com.xjt.letool.common.EyePosition;
@@ -365,8 +364,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                     Intent it = new Intent();
                     it.setClass(getActivity(),SettingsActivity.class);
                     it.putExtra(SettingsActivity.KEY_FROM_TIP, true);
-                    startActivity(it);
-                    getActivity().finish();
+                    startActivityForResult(it,LocalMediaActivity.REQUEST_CODE_SETTINGS);
                 }
             });
             dlg.setCancelBtn(R.string.common_cancel, new View.OnClickListener() {

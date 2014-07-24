@@ -1,3 +1,4 @@
+
 package com.xjt.letool.metadata.video;
 
 import android.content.ContentResolver;
@@ -22,11 +23,11 @@ import com.xjt.letool.metadata.image.LocalMediaItem;
 import com.xjt.letool.metadata.source.LocalAlbum;
 import com.xjt.letool.utils.LetoolUtils;
 
-// LocalVideo represents a video in the local storage.
 public class LocalVideo extends LocalMediaItem {
-    private static final String TAG = "LocalVideo";
-    public static final String ITEM_PATH = "/local/video/item/*";
 
+    private static final String TAG = "LocalVideo";
+
+    public static final String ITEM_PATH = "/local/video/item/*";
     // Must preserve order between these indices and the order of the terms in the following PROJECTION array.
     private static final int INDEX_ID = 0;
     private static final int INDEX_CAPTION = 1;
@@ -139,16 +140,14 @@ public class LocalVideo extends LocalMediaItem {
     }
 
     @Override
-    public Job<Bitmap> requestImage(int type, int index, long dateTaken,DataBaseCache loader) {
-        return new LocalThumbRequest(loader, type, index, dateTaken,filePath);
+    public Job<Bitmap> requestImage(int type, int index, long dateTaken, DataBaseCache loader) {
+        return new LocalThumbRequest(loader, type, index, dateTaken, filePath);
     }
 
     @Override
     public Job<Bitmap> requestImage(int type) {
         return new LocalVideoBlobRequest(mApplication, getPath(), dateModifiedInSec, type, filePath);
     }
-
-    
 
     @Override
     public Job<BitmapRegionDecoder> requestLargeImage() {
@@ -166,7 +165,9 @@ public class LocalVideo extends LocalMediaItem {
         LetoolUtils.assertNotInRenderThread();
         Uri baseUri = Video.Media.EXTERNAL_CONTENT_URI;
         mApplication.getContentResolver().delete(baseUri, "_id=?",
-                new String[] { String.valueOf(id) });
+                new String[] {
+                    String.valueOf(id)
+                });
     }
 
     @Override
@@ -195,7 +196,7 @@ public class LocalVideo extends LocalMediaItem {
         MediaDetails details = super.getDetails();
         int s = durationInSec;
         if (s > 0) {
-            details.addDetail(MediaDetails.INDEX_DURATION, LetoolUtils.formatDuration(mApplication.getAppContext(), durationInSec));
+            details.addDetail(MediaDetails.INDEX_DURATION, LetoolUtils.formatDuration(mApplication.getActivityContext(), durationInSec));
         }
         return details;
     }
@@ -219,8 +220,8 @@ public class LocalVideo extends LocalMediaItem {
     public Job<ETC1Texture> requestImage(int type, int extra) {
         return null;
     }
-    
+
     public long getDuration() {
-    	return durationInSec;
+        return durationInSec;
     }
 }

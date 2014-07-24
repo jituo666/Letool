@@ -1,6 +1,7 @@
 
 package com.xjt.letool.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -46,6 +47,8 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
     public static final String KEY_ALBUM_ID = "album_id";
     public static final String KEY_IS_CAMERA_SOURCE = "is_camera_source";
     public static final String KEY_IS_IMAGE = "is_image";
+    
+    public static final int REQUEST_CODE_SETTINGS = 100;
 
     private LetoolTopBar mTopBar;
     private LetoolBottomBar mBottomBar;
@@ -208,6 +211,17 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
                 }
             }
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            Intent it = new Intent();
+            it.setClass(this, LocalMediaActivity.class);
+            startActivity(it);
+            finish();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -278,11 +279,9 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
                     result += "|";
                 }
             }
-            if (result.length() > 0)
-                GlobalPreference.setPhotoDirs(getActivity(), result);
-            Intent it = new Intent();
-            it.setClass(getActivity(), LocalMediaActivity.class);
-            startActivity(it);
+            GlobalPreference.setPhotoDirs(getActivity(), result);
+            //
+            getActivity().setResult(Activity.RESULT_OK);
             getActivity().finish();
         } else if (v.getId() == R.id.checked) {
             MediaDir m = imageUrls.get(((Integer) v.getTag()));

@@ -34,7 +34,7 @@ public class SettingsActivity extends FragmentActivity implements LetoolContext 
     private boolean mIsFromTip;
 
     private void startFirstFragment() {
-        Fragment fragment = mIsFromTip ? new CameraSourceSettingFragment():new SettingFragment();
+        Fragment fragment = mIsFromTip ? new CameraSourceSettingFragment() : new SettingFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add(R.id.local_image_browse_main_view, fragment);
         ft.commit();
@@ -43,11 +43,20 @@ public class SettingsActivity extends FragmentActivity implements LetoolContext 
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
-        setContentView(R.layout.local_settings);
+        setContentView(R.layout.app_settings);
         mIsFromTip = getIntent().getBooleanExtra(KEY_FROM_TIP, false);
         mTopBar = new LetoolTopBar(this, (ViewGroup) findViewById(R.id.letool_top_bar_container));
         mSlidingMenu = new LetoolSlidingMenu(this, getSupportFragmentManager(), findViewById(R.id.letool_top_bar_container));
         startFirstFragment();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            popContentFragment();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override

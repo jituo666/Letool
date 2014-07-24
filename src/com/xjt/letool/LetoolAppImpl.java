@@ -60,14 +60,14 @@ public class LetoolAppImpl extends Application implements LetoolApp {
 
         synchronized (mLock) {
             if (mImageCacheService == null) {
-                mImageCacheService = new BlobCacheService(getAppContext());
+                mImageCacheService = new BlobCacheService(getActivityContext());
             }
             return mImageCacheService;
         }
     }
 
     @Override
-    public Context getAppContext() {
+    public Context getActivityContext() {
         return this;
     }
 

@@ -28,11 +28,8 @@ import com.umeng.update.UpdateResponse;
 import com.umeng.update.UpdateStatus;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
-import com.xjt.letool.activities.CameraSourceSettingActivity;
-import com.xjt.letool.activities.LocalMediaActivity;
 import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.imagedata.blobcache.BlobCacheManager;
-import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.settings.LetoolPreference;
 import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.StorageUtils;
@@ -100,7 +97,7 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.app_settings, container, false);
+        View rootView = inflater.inflate(R.layout.app_settings_list, container, false);
         initBrowseActionBar();
         mCameraSource = (LetoolPreference) rootView.findViewById(R.id.camera_source);
         mClearCache = (LetoolPreference) rootView.findViewById(R.id.clear_cache);

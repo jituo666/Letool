@@ -301,8 +301,8 @@ public class ThumbnailView extends GLBaseView {
         mScroller = new ViewScrollerHelper(activity.getAppContext());
         mHandler = new SynchronizedHandler(activity.getGLController());
         mLayout = layout;
-        int w = Math.round(activity.getResources().getDimension(R.dimen.common_scroll_bar_width));
-        int h = Math.round(activity.getResources().getDimension(R.dimen.common_scroll_bar_height));
+        int w = Math.round(activity.getAppContext().getResources().getDimension(R.dimen.common_scroll_bar_width));
+        int h = Math.round(activity.getAppContext().getResources().getDimension(R.dimen.common_scroll_bar_height));
         if (ThumbnailLayout.WIDE) {
             mScrollBar = new ScrollBarView(activity.getAppContext(), h, w);
         } else {

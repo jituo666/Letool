@@ -3,7 +3,6 @@ package com.xjt.letool;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.os.Looper;
 import android.support.v4.app.Fragment;
 
 import com.xjt.letool.common.OrientationManager;
@@ -22,10 +21,6 @@ import com.xjt.letool.view.LetoolTopBar;
 public interface LetoolContext {
 
     public Context getAppContext();
-
-    public Looper getMainLooper();
-
-    public Resources getResources();
 
     //
     public DataManager getDataManager();

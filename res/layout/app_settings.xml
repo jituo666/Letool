@@ -2,57 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/main_screen_bg"
+    android:background="@drawable/main_action_bar_bg"
     android:orientation="vertical" >
 
-    <View
+    <FrameLayout
+        android:id="@+id/letool_top_bar_container"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@android:color/transparent" />
+        android:layout_height="@dimen/letool_action_bar_height"
+        android:layout_gravity="top"
+        android:orientation="horizontal" >
+    </FrameLayout>
 
-    <include
-        android:id="@+id/camera_source"
-        layout="@layout/app_settings_list_item" />
-
-    <View
+    <FrameLayout
+        android:id="@+id/local_image_browse_main_view"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@drawable/common_list_divider" />
-
-    <include
-        android:id="@+id/clear_cache"
-        layout="@layout/app_settings_list_item" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@drawable/common_list_divider" />
-
-    <include
-        android:id="@+id/version_update_check"
-        layout="@layout/app_settings_list_item" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@drawable/common_list_divider" />
-
-    <include
-        android:id="@+id/author_desc"
-        layout="@layout/app_settings_list_item" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@drawable/common_list_divider" />
-
-    <include
-        android:id="@+id/app_about"
-        layout="@layout/app_settings_list_item" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@drawable/common_list_divider" />
+        android:layout_height="match_parent"
+        android:background="@drawable/main_screen_bg"
+        android:orientation="vertical" >
+    </FrameLayout>
 
 </LinearLayout>
