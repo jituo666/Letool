@@ -21,7 +21,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -30,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -58,11 +58,11 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
     private static final String TAG = CameraSourceSettingFragment.class.getSimpleName();
 
     protected ImageLoader imageLoader = ImageLoader.getInstance();
-    protected AbsListView listView;
+    protected ListView listView;
     DisplayImageOptions options;
     protected boolean pauseOnScroll = false;
     protected boolean pauseOnFling = true;
-    private ArrayList<MediaDir> imageUrls;
+    private ArrayList<MediaDir> mMediaDirList = new ArrayList<MediaDir>();;
     private Button mSave;
     private String mSavePhotodirs;
     private ItemAdapter mItemAdapter;
@@ -112,7 +112,20 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
         mLayoutInflater = inflater;
         View rootView = inflater.inflate(R.layout.camera_source_setting, container, false);
         initBrowseActionBar();
-        listView = (ListView) rootView.findViewById(android.R.id.list);
+        listView = (ListView) rootView.findViewById(R.id.camera_source_list);
+        mItemAdapter = new ItemAdapter();
+        listView.setAdapter(mItemAdapter);
+        listView.setOnItemClickListener(new OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                File parentFile = new File(mItemAdapter.getItem(position).filePath).getParentFile();
+                if (parentFile == null) {
+                    parentFile = new File("/");
+                }
+                Toast.makeText(getActivity(), parentFile.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
         mSave = (Button) rootView.findViewById(R.id.save);
         mSave.setOnClickListener(this);
         new LoadMeidaTask().execute();
@@ -143,12 +156,12 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
 
         @Override
         public int getCount() {
-            return imageUrls.size();
+            return mMediaDirList.size();
         }
 
         @Override
-        public Object getItem(int position) {
-            return position;
+        public MediaDir getItem(int position) {
+            return mMediaDirList.get(position);
         }
 
         @Override
@@ -172,14 +185,15 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
                 holder = (ViewHolder) view.getTag();
             }
 
-            MediaDir m = imageUrls.get(position);
-            imageLoader.displayImage("file://" + m.dir, holder.image, options, animateFirstListener);
-            File parentFile = new File(m.dir).getParentFile();
+            MediaDir m = mMediaDirList.get(position);
+            imageLoader.displayImage("file://" + m.filePath, holder.image, options, animateFirstListener);
+            File parentFile = new File(m.filePath).getParentFile();
             if (parentFile == null) {
                 parentFile = new File("/");
             }
             holder.textPath.setText(parentFile.toString());
-            holder.textCount.setText(String.valueOf(m.mediaCount));
+            String format = getResources().getQuantityString(R.plurals.number_of_items, m.mediaCount);
+            holder.textCount.setText(String.format(format, m.mediaCount));
             holder.checkBox.setChecked(m.isChecked);
             holder.checkBox.setOnClickListener(CameraSourceSettingFragment.this);
             holder.checkBox.setTag(Integer.valueOf(position));
@@ -206,14 +220,14 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
 
     private class MediaDir {
 
-        public MediaDir(int c, String d, boolean checked) {
+        public MediaDir(int c, String p, boolean checked) {
             mediaCount = c;
-            dir = d;
+            filePath = p;
             isChecked = checked;
         }
 
         int mediaCount;
-        String dir;
+        String filePath;
         boolean isChecked;
 
     }
@@ -226,7 +240,7 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            imageUrls = new ArrayList<MediaDir>();
+            mMediaDirList = new ArrayList<MediaDir>();
             mDataSet = new LocalSimpleAlbumSet((LetoolApp) mLetoolContext.getActivityContext().getApplicationContext(), true);
             dialog = new ProgressDialog(getActivity());
             dialog.setTitle(getString(R.string.common_recommend));
@@ -242,8 +256,8 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
             for (MediaSet s : r) {
                 int count = s.getAllMediaItems();
                 String path = s.getCoverMediaItem().getFilePath();
-                String dir = path.substring(0, path.lastIndexOf("/"));
-                imageUrls.add(new MediaDir(count, path, mSavePhotodirs.contains(dir + "|")));
+                String filePath = path.substring(0, path.lastIndexOf("/"));
+                mMediaDirList.add(new MediaDir(count, path, mSavePhotodirs.contains(filePath + "|")));
             }
             return null;
         }
@@ -254,16 +268,8 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
             if (dialog.isShowing()) {
                 dialog.dismiss();
             }
-            LLog.i(TAG, "---------LoadMeidaTask:" + imageUrls.size());
-            mItemAdapter = new ItemAdapter();
-            ((ListView) listView).setAdapter(mItemAdapter);
-            listView.setOnItemClickListener(new OnItemClickListener() {
-
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    // startImagePagerActivity(position);
-                }
-            });
+            mItemAdapter.notifyDataSetChanged();
+            LLog.i(TAG, "---------LoadMeidaTask:" + mMediaDirList.size());
         }
 
     }
@@ -272,10 +278,10 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
     public void onClick(View v) {
         String result = "";
         if (v.getId() == R.id.save) {
-            for (MediaDir m : imageUrls) {
-                File parentFile = new File(m.dir).getParentFile();
+            for (MediaDir m : mMediaDirList) {
+                File parentFile = new File(m.filePath).getParentFile();
                 if (m.isChecked && parentFile != null) {
-                    result += new File(m.dir).getParentFile().toString();
+                    result += new File(m.filePath).getParentFile().toString();
                     result += "|";
                 }
             }
@@ -284,7 +290,7 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
             getActivity().setResult(Activity.RESULT_OK);
             getActivity().finish();
         } else if (v.getId() == R.id.checked) {
-            MediaDir m = imageUrls.get(((Integer) v.getTag()));
+            MediaDir m = mMediaDirList.get(((Integer) v.getTag()));
             m.isChecked = !m.isChecked;
             mItemAdapter.notifyDataSetChanged();
         } else if (v.getId() == R.id.action_navi) {

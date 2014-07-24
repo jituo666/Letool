@@ -61,8 +61,7 @@
     <style name="MyWidget.ListViewItem">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/letool_sliding_menu_item_height</item>
-        <item name="android:paddingLeft">@dimen/letool_sliding_menu_side_padding</item>
-        <item name="android:paddingRight">@dimen/letool_sliding_menu_side_padding</item>
+        <item name="android:padding">@dimen/letool_sliding_menu_side_padding</item>
         <item name="android:background">@drawable/common_item_bkg</item>
     </style>
 

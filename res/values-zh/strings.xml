@@ -25,8 +25,8 @@
     <string name="sliding_menu_title_about">关于</string>
     <string name="sliding_menu_title_home">主页</string>
 
-    <plurals name="number_of_items_selected">
-        <item quantity="other">%1$d 项</item>
+    <plurals name="number_of_items">
+        <item quantity="other"> %1$d 张</item>
     </plurals>
 
     <string name="loading_video">加载视频\u2026</string>

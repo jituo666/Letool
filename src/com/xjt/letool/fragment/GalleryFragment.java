@@ -327,7 +327,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
         actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_SELECTION, this);
         actionBar.setContractSelectionManager(mSelector);
-        String format = getResources().getQuantityString(R.plurals.number_of_items_selected, 0);
+        String format = getResources().getQuantityString(R.plurals.number_of_items, 0);
         actionBar.setTitleText(String.format(format, 0));
     }
 
@@ -580,7 +580,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     @Override
     public void onSelectionChange(MediaPath path, boolean selected) {
         int count = mSelector.getSelectedCount();
-        String format = getResources().getQuantityString(R.plurals.number_of_items_selected, count);
+        String format = getResources().getQuantityString(R.plurals.number_of_items, count);
         mLetoolContext.getLetoolTopBar().setTitleText(String.format(format, count));
     }
 

@@ -24,11 +24,12 @@
     <string name="common_save">Save</string>
     <string name="common_loading">Loading</string>
 
-    <plurals name="number_of_items_selected">
+    <plurals name="number_of_items">
         <item quantity="zero">%1$d item</item>
         <item quantity="one">%1$d item</item>
         <item quantity="other">%1$d items</item>
     </plurals>
+
 
     <string name="loading_video">Loading video\u2026</string>
     <string name="resume_playing_title">Resume video</string>
