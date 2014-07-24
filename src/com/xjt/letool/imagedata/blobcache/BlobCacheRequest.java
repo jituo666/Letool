@@ -25,8 +25,6 @@ public abstract class BlobCacheRequest implements Job<Bitmap> {
     private int mTargetSize;
     private long mTimeModified;
 
-    //    private static Bitmap bitmap;
-
     public BlobCacheRequest(LetoolApp application, MediaPath path, long timeModified, int type, int targetSize) {
         mApplication = application;
         mPath = path;
@@ -42,10 +40,7 @@ public abstract class BlobCacheRequest implements Job<Bitmap> {
 
     @Override
     public Bitmap run(JobContext jc) {
-        //        if (bitmap == null || bitmap.isRecycled()) {
-        //            bitmap = BitmapFactory.decodeResource(mApplication.getResources(), R.drawable.sliding_menu_logo_bg);
-        //        }
-        BlobCacheService cacheService = mApplication.getBolbCacheService();
+        BlobCacheService cacheService = mApplication.getBlobCacheService();
         BytesBuffer buffer = MediaItem.getBytesBufferPool().get();
         try {
             boolean found = cacheService.getImageData(mPath, mTimeModified, mType, buffer);

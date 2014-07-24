@@ -17,6 +17,7 @@ import com.xjt.letool.views.utils.UIListener;
 import com.xjt.letool.views.utils.ViewScrollerHelper;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Rect;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -296,17 +297,18 @@ public class ThumbnailView extends GLBaseView {
 
     ////////////////////////////////////////////////////////////Layout////////////////////////////////////////////////////////////////////
 
-    public ThumbnailView(LetoolContext activity, ThumbnailLayout layout) {
-        mGestureDetector = new GestureDetector(activity.getAppContext(), new MyGestureListener());
-        mScroller = new ViewScrollerHelper(activity.getAppContext());
-        mHandler = new SynchronizedHandler(activity.getGLController());
+    public ThumbnailView(LetoolContext context, ThumbnailLayout layout) {
+        Context cxt = context.getActivityContext();
+        mGestureDetector = new GestureDetector(cxt, new MyGestureListener());
+        mScroller = new ViewScrollerHelper(cxt);
+        mHandler = new SynchronizedHandler(context.getGLController());
         mLayout = layout;
-        int w = Math.round(activity.getAppContext().getResources().getDimension(R.dimen.common_scroll_bar_width));
-        int h = Math.round(activity.getAppContext().getResources().getDimension(R.dimen.common_scroll_bar_height));
+        int w = Math.round(cxt.getResources().getDimension(R.dimen.common_scroll_bar_width));
+        int h = Math.round(cxt.getResources().getDimension(R.dimen.common_scroll_bar_height));
         if (ThumbnailLayout.WIDE) {
-            mScrollBar = new ScrollBarView(activity.getAppContext(), h, w);
+            mScrollBar = new ScrollBarView(cxt, h, w);
         } else {
-            mScrollBar = new ScrollBarView(activity.getAppContext(), w, h);
+            mScrollBar = new ScrollBarView(cxt, w, h);
         }
         mScrollBar.setVisibility(View.INVISIBLE);
         addComponent(mScrollBar);

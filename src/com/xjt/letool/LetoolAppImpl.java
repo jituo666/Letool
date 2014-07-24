@@ -9,7 +9,6 @@ import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.imagedata.blobcache.BlobCacheService;
 import com.xjt.letool.metadata.DataManager;
-import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.utils.LetoolUtils;
 
 import android.app.Application;
@@ -56,34 +55,29 @@ public class LetoolAppImpl extends Application implements LetoolApp {
     }
 
     @Override
-    public BlobCacheService getBolbCacheService() {
+    public BlobCacheService getBlobCacheService() {
 
         synchronized (mLock) {
             if (mImageCacheService == null) {
-                mImageCacheService = new BlobCacheService(getActivityContext());
+                mImageCacheService = new BlobCacheService(this);
             }
             return mImageCacheService;
         }
     }
 
     @Override
-    public Context getActivityContext() {
+    public Context getAppContext() {
         return this;
     }
 
     public static void initImageLoader(Context context) {
-        // This configuration tuning is custom. You can tune every option, you may tune some of them,
-        // or you can create default configuration by
-        //  ImageLoaderConfiguration.createDefault(this);
-        // method.
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
                 .threadPriority(Thread.NORM_PRIORITY - 2)
                 .denyCacheImageMultipleSizesInMemory()
                 .discCacheFileNameGenerator(new Md5FileNameGenerator())
                 .tasksProcessingOrder(QueueProcessingType.LIFO)
-                .writeDebugLogs() // Remove for release app
+                //.writeDebugLogs() // Remove for release app
                 .build();
-        // Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(config);
     }
 }

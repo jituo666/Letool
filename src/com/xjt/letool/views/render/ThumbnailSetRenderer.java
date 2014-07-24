@@ -67,12 +67,12 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
     }
 
     public ThumbnailSetRenderer(LetoolContext activity, ThumbnailView thumbnailView, ContractSelector selector) {
-        super(activity.getAppContext());
+        super(activity.getActivityContext());
         mLetoolContext = activity;
         mThumbnailView = thumbnailView;
         mPlaceholderColor = 0xFFE8E8E8;
         mMediaSelector = selector;
-        mLabelSpec = ViewConfigs.AlbumSetPage.get(activity.getAppContext()).labelSpec;
+        mLabelSpec = ViewConfigs.AlbumSetPage.get(activity.getActivityContext()).labelSpec;
 
         mWaitLoadingTexture = new ColorTexture(mPlaceholderColor);
         mWaitLoadingTexture.setSize(1, 1);

@@ -31,7 +31,7 @@ public class DialogDetailsView implements DetailsViewContainer {
     @SuppressWarnings("unused")
     private static final String TAG = DialogDetailsView.class.getSimpleName();
 
-    private final LetoolContext mActivity;
+    private final LetoolContext mLetoolContext;
     private DetailsAdapter mAdapter;
     private MediaDetails mDetails;
     private final DetailsSource mSource;
@@ -39,8 +39,8 @@ public class DialogDetailsView implements DetailsViewContainer {
     private LetoolDialog mDialog;
     private CloseListener mListener;
 
-    public DialogDetailsView(LetoolContext activity, DetailsSource source) {
-        mActivity = activity;
+    public DialogDetailsView(LetoolContext context, DetailsSource source) {
+        mLetoolContext = context;
         mSource = source;
     }
 
@@ -72,9 +72,9 @@ public class DialogDetailsView implements DetailsViewContainer {
 
     private void setDetails(MediaDetails details) {
         mAdapter = new DetailsAdapter(details);
-        String title = String.format(mActivity.getAppContext().getString(R.string.details_title), mIndex + 1, mSource.size());
+        String title = String.format(mLetoolContext.getActivityContext().getString(R.string.details_title), mIndex + 1, mSource.size());
 
-        mDialog = new LetoolDialog(mActivity.getAppContext());
+        mDialog = new LetoolDialog(mLetoolContext.getActivityContext());
         mDialog.setListAdapter(mAdapter);
         mDialog.setTitle(title);
         mDialog.setOkBtn(R.string.common_close, new View.OnClickListener() {
@@ -110,7 +110,7 @@ public class DialogDetailsView implements DetailsViewContainer {
         private int mHeightIndex = -1;
 
         public DetailsAdapter(MediaDetails details) {
-            Context context = mActivity.getAppContext();
+            Context context = mLetoolContext.getActivityContext();
             mItems = new ArrayList<PropertyData>(details.size());
             mLocationIndex = -1;
             setDetails(context, details);
@@ -125,7 +125,7 @@ public class DialogDetailsView implements DetailsViewContainer {
                     case MediaDetails.INDEX_LOCATION: {
                         double[] latlng = (double[]) detail.getValue();
                         mLocationIndex = mItems.size();
-                        value = DetailsHelper.resolveAddress(mActivity, latlng, this);
+                        value = DetailsHelper.resolveAddress(mLetoolContext, latlng, this);
                         break;
                     }
                     case MediaDetails.INDEX_SIZE: {
@@ -258,7 +258,7 @@ public class DialogDetailsView implements DetailsViewContainer {
         public View getView(int position, View convertView, ViewGroup parent) {
             final View v;
             if (convertView == null) {
-                v = LayoutInflater.from(mActivity.getAppContext()).inflate(R.layout.details_list_item, parent, false);
+                v = LayoutInflater.from(mLetoolContext.getActivityContext()).inflate(R.layout.details_list_item, parent, false);
             } else {
                 v = convertView;
             }
@@ -281,7 +281,7 @@ public class DialogDetailsView implements DetailsViewContainer {
             if (width == 0 || height == 0)
                 return;
             // Update the resolution with the new width and height
-            Context context = mActivity.getAppContext();
+            Context context = mLetoolContext.getActivityContext();
             String widthString = String.format(mDefaultLocale, "%s: %d",
                     DetailsHelper.getDetailsName(
                             context, MediaDetails.INDEX_WIDTH), width);

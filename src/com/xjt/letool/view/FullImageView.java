@@ -212,16 +212,16 @@ public class FullImageView extends GLBaseView {
 
     private Context mContext;
 
-    public FullImageView(LetoolContext activity) {
-        mTileView = new TileImageView(activity);
+    public FullImageView(LetoolContext context) {
+        mTileView = new TileImageView(context);
         addComponent(mTileView);
-        mContext = activity.getAppContext();
+        mContext = context.getActivityContext();
         mPlaceholderColor = mContext.getResources().getColor(R.color.photo_placeholder);
         mEdgeView = new EdgeView(mContext);
         addComponent(mEdgeView);
         mNoThumbnailText = StringTexture.newInstance(mContext.getString(R.string.no_thumbnail), DEFAULT_TEXT_SIZE, Color.WHITE);
 
-        mHandler = new MyHandler(activity.getGLController());
+        mHandler = new MyHandler(context.getGLController());
 
         mGestureListener = new MyGestureListener();
         mGestureRecognizer = new GestureRecognizer(mContext, mGestureListener);

@@ -52,7 +52,7 @@ import com.xjt.letool.view.SingleDeleteMediaListener;
 import com.xjt.letool.views.opengl.GLESCanvas;
 
 import com.xjt.letool.activities.LocalMediaActivity;
-import com.xjt.letool.adapters.PhotoDataAdapter;
+import com.xjt.letool.adapters.FullImageDataAdapter;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.OrientationManager;
 import com.xjt.letool.common.SynchronizedHandler;
@@ -338,12 +338,12 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
             }
         }
 
-        PhotoDataAdapter pda = new PhotoDataAdapter(mLetoolContext, mFullImageView,
+        FullImageDataAdapter pda = new FullImageDataAdapter(mLetoolContext, mFullImageView,
                 mMediaSet, mCurrentPhoto.getPath(), mCurrentIndex);
         mModel = pda;
         mFullImageView.setModel(mModel);
 
-        pda.setDataListener(new PhotoDataAdapter.DataListener() {
+        pda.setDataListener(new FullImageDataAdapter.DataListener() {
 
             @Override
             public void onPhotoChanged(int index, MediaItem item) {
@@ -578,10 +578,10 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
 
     private void showShareDialog() {
 
-        final ShareManager shareManager = new ShareManager(mLetoolContext.getAppContext());
+        final ShareManager shareManager = new ShareManager(mLetoolContext.getActivityContext());
         final List<ShareTo> shareToList = shareManager.getShareToList();
         if (shareToList.size() <= 0) {
-            Toast.makeText(mLetoolContext.getAppContext(), R.string.share_app_install_tip,
+            Toast.makeText(mLetoolContext.getActivityContext(), R.string.share_app_install_tip,
                     Toast.LENGTH_SHORT).show();
             return;
         }

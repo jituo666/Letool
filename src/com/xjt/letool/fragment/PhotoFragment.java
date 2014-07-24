@@ -202,7 +202,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     }
 
     public void onLongTap(int thumbnailIndex) {
-        MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_PHOTO_LONG_PRESSED);
+        MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_PHOTO_LONG_PRESSED);
         if (mGetContent)
             return;
         MediaItem item = mAlbumDataSetLoader.get(thumbnailIndex);
@@ -245,7 +245,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                 }
             }
         };
-        mEyePosition = new EyePosition(mLetoolContext.getAppContext(), this);
+        mEyePosition = new EyePosition(mLetoolContext.getActivityContext(), this);
     }
 
     private void initializeData() {
@@ -277,7 +277,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     private void initializeViews() {
         mSelector = new ContractSelector(mLetoolContext, false);
         mSelector.setSelectionListener(this);
-        mConfig = ViewConfigs.AlbumPage.get(mLetoolContext.getAppContext());
+        mConfig = ViewConfigs.AlbumPage.get(mLetoolContext.getActivityContext());
         ThumbnailLayout layout;
         layout = new ThumbnailContractLayout(mConfig.albumSpec);
         mThumbnailView = new ThumbnailView(mLetoolContext, layout);
@@ -481,7 +481,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
             }
         } else  if (v.getId() == R.id.operation_delete) {
 
-            MobclickAgent.onEvent(mLetoolContext.getAppContext(),
+            MobclickAgent.onEvent(mLetoolContext.getActivityContext(),
                     StatConstants.EVENT_KEY_PHOTO_DELETE);
             int count = mSelector.getSelectedCount();
             if (count <= 0) {
@@ -523,7 +523,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
             f.setArguments(data);
             mLetoolContext.pushContentFragment(f, this, false);
         } else if (v.getId() == R.id.selection_finished) {
-            MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_SELECT_OK);
+            MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SELECT_OK);
             mSelector.leaveSelectionMode();
         }
     }
@@ -590,13 +590,13 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     public void onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case POP_UP_MENU_ITEM_SELECT:
-                MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_MENU_SELECT);
+                MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_MENU_SELECT);
                 if (mSelector != null) {
                     mSelector.enterSelectionMode();
                 }
                 break;
             case POP_UP_MENU_ITEM_CAMERA:
-                MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_MENU_CAMERA);
+                MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_MENU_CAMERA);
                 Intent it = new Intent();
                 it.setAction(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
                 startActivity(it);

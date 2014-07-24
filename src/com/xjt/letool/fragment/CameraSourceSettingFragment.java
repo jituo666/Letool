@@ -1,6 +1,7 @@
 
 package com.xjt.letool.fragment;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -175,9 +176,11 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
 
             MediaDir m = imageUrls.get(position);
             imageLoader.displayImage("file://" + m.dir, holder.image, options, animateFirstListener);
-            String path = m.dir;
-            String dir = path.substring(0, path.lastIndexOf("/"));
-            holder.textPath.setText(dir);
+            File parentFile = new File(m.dir).getParentFile();
+            if ( parentFile == null) {
+                parentFile = new File("/");
+            }
+            holder.textPath.setText(parentFile.toString());
             holder.textCount.setText(String.valueOf(m.mediaCount));
             holder.checkBox.setChecked(m.isChecked);
             holder.checkBox.setOnClickListener(CameraSourceSettingFragment.this);
@@ -226,7 +229,7 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
         protected void onPreExecute() {
             super.onPreExecute();
             imageUrls = new ArrayList<MediaDir>();
-            mDataSet = new LocalSimpleAlbumSet((LetoolApp) mLetoolContext.getAppContext().getApplicationContext(), true);
+            mDataSet = new LocalSimpleAlbumSet((LetoolApp) mLetoolContext.getActivityContext().getApplicationContext(), true);
             dialog = new ProgressDialog(getActivity());
             dialog.setTitle(getString(R.string.common_recommend));
             dialog.setMessage(getString(R.string.common_loading));
@@ -257,7 +260,6 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
             mItemAdapter = new ItemAdapter();
             ((ListView) listView).setAdapter(mItemAdapter);
             listView.setOnItemClickListener(new OnItemClickListener() {
-
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     // startImagePagerActivity(position);
@@ -272,10 +274,9 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
         String result = "";
         if (v.getId() == R.id.save) {
             for (MediaDir m : imageUrls) {
-                if (m.isChecked) {
-                    String path = m.dir;
-                    String dir = path.substring(0, path.lastIndexOf("/"));
-                    result += dir;
+                File parentFile = new File(m.dir).getParentFile();
+                if (m.isChecked && parentFile != null) {
+                    result += new File(m.dir).getParentFile().toString();
                     result += "|";
                 }
             }

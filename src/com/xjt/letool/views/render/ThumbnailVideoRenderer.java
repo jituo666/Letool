@@ -66,12 +66,12 @@ public class ThumbnailVideoRenderer extends AbstractThumbnailRender {
     }
 
     public ThumbnailVideoRenderer(LetoolContext activity, ThumbnailView thumbnailView, ContractSelector selector) {
-        super(activity.getAppContext());
+        super(activity.getActivityContext());
         mActivity = activity;
         mThumbnailView = thumbnailView;
         mPlaceholderColor = 0xFFE8E8E8;
         mMediaSelector = selector;
-        mLabelSpec = ViewConfigs.VideoPage.get(activity.getAppContext()).labelSpec;
+        mLabelSpec = ViewConfigs.VideoPage.get(activity.getActivityContext()).labelSpec;
 
         mWaitLoadingTexture = new ColorTexture(mPlaceholderColor);
         mWaitLoadingTexture.setSize(1, 1);

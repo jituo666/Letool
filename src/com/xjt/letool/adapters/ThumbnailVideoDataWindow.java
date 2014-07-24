@@ -76,17 +76,17 @@ public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChanged
         private BitmapLoader coverLoader;
     }
 
-    public ThumbnailVideoDataWindow(LetoolContext fragment, ThumbnailDataLoader source, ThumbnailVideoRenderer.LabelSpec labelSpec, int cacheSize) {
+    public ThumbnailVideoDataWindow(LetoolContext context, ThumbnailDataLoader source, ThumbnailVideoRenderer.LabelSpec labelSpec, int cacheSize) {
         source.setDataChangedListener(this);
         mSource = source;
         mData = new VideoEntry[cacheSize];
         mSize = source.size();
-        mThreadPool = fragment.getThreadPool();
-        mContext = fragment.getAppContext();
-        mLabelMaker = new VideoLabelMaker(fragment.getAppContext(), labelSpec);
-        mLoadingText = fragment.getAppContext().getString(R.string.loading);
+        mThreadPool = context.getThreadPool();
+        mContext = context.getActivityContext();
+        mLabelMaker = new VideoLabelMaker(context.getActivityContext(), labelSpec);
+        mLoadingText = context.getActivityContext().getString(R.string.loading);
 
-        mHandler = new SynchronizedHandler(fragment.getGLController()) {
+        mHandler = new SynchronizedHandler(context.getGLController()) {
 
             @Override
             public void handleMessage(Message message) {

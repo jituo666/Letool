@@ -85,7 +85,7 @@ public class SettingsActivity extends FragmentActivity implements LetoolContext 
     }
 
     @Override
-    public Context getAppContext() {
+    public Context getActivityContext() {
         return this;
     }
 

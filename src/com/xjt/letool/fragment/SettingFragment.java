@@ -148,7 +148,7 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
                 }
             });
             UmengUpdateAgent.update(context);
-            progressDialog.setMessage(mLetoolContext.getAppContext().getString(R.string.common_update_checking));
+            progressDialog.setMessage(mLetoolContext.getActivityContext().getString(R.string.common_update_checking));
             progressDialog.setIndeterminate(true);
             progressDialog.setCancelable(true);
             progressDialog.show();
@@ -157,7 +157,7 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
                 copyQQToClipBoard();
         } else if (v.getId() == R.id.app_about) {
             if (!joinQQGroup("pan68pjSBp1edKE0a6mUIUogCS4U-qZW")) {
-                Toast.makeText(mLetoolContext.getAppContext(), R.string.app_QQ_group_failed, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mLetoolContext.getActivityContext(), R.string.app_QQ_group_failed, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -167,7 +167,7 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
     private void copyQQToClipBoard() {
         ClipboardManager cmb = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
         cmb.setText("2518545630");
-        Toast.makeText(mLetoolContext.getAppContext(), R.string.app_QQ_to_clipboard, Toast.LENGTH_SHORT).show();
+        Toast.makeText(mLetoolContext.getActivityContext(), R.string.app_QQ_to_clipboard, Toast.LENGTH_SHORT).show();
     }
 
     /****************
@@ -233,7 +233,7 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
 
         @Override
         protected Void doInBackground(Void... arg0) {
-            BlobCacheManager.clearCachedFiles(mLetoolContext.getAppContext());
+            BlobCacheManager.clearCachedFiles(mLetoolContext.getActivityContext());
             return null;
         }
 

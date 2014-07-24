@@ -127,14 +127,14 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
         try {
             while (cursor.moveToNext()) {
                 int bucketId = cursor.getInt(INDEX_BUCKET_ID);
-                boolean isCamera = false;
+                boolean isCameraSource = false;
                 for (int id : MediaSetUtils.getBucketsIds()) {
                     if (id == bucketId) {
-                        isCamera = true;
+                        isCameraSource = true;
                         break;
                     }
                 }
-                if (isCamera)
+                if (isCameraSource)
                     continue;
                 BucketEntry entry = new BucketEntry(bucketId, cursor.getString(INDEX_BUCKET_NAME));
                 if (!buffer.contains(entry)) {

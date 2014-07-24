@@ -275,7 +275,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
                 }
             }
         };
-        mEyePosition = new EyePosition(mLetoolContext.getAppContext(), this);
+        mEyePosition = new EyePosition(mLetoolContext.getActivityContext(), this);
     }
 
     private void initializeData() {
@@ -308,7 +308,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     private void initializeViews() {
         mSelector = new ContractSelector(mLetoolContext, false);
         mSelector.setSelectionListener(this);
-        mConfig = ViewConfigs.VideoPage.get(mLetoolContext.getAppContext());
+        mConfig = ViewConfigs.VideoPage.get(mLetoolContext.getActivityContext());
         ThumbnailLayout layout;
         layout = new ThumbnailContractLayout(mConfig.videoSpec);
         mThumbnailView = new ThumbnailView(mLetoolContext, layout);
@@ -495,7 +495,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             }
         } else if (v.getId() == R.id.operation_delete) {
 
-            MobclickAgent.onEvent(mLetoolContext.getAppContext(),
+            MobclickAgent.onEvent(mLetoolContext.getActivityContext(),
                     StatConstants.EVENT_KEY_PHOTO_DELETE);
             int count = mSelector.getSelectedCount();
             if (count <= 0) {
@@ -539,7 +539,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             mLetoolContext.pushContentFragment(f, this, false);
         }
         else if (v.getId() == R.id.selection_finished) {
-            MobclickAgent.onEvent(mLetoolContext.getAppContext(),
+            MobclickAgent.onEvent(mLetoolContext.getActivityContext(),
                     StatConstants.EVENT_KEY_SELECT_OK);
             mSelector.leaveSelectionMode();
         }
@@ -576,7 +576,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         MediaItem item = mVideoDataLoader.get(videoIndex);
         if (item == null)
             return;
-        Context c = mLetoolContext.getAppContext();
+        Context c = mLetoolContext.getActivityContext();
         try {
             Intent intent = new Intent();
             intent.setClass(c, MoviePlayActivity.class);

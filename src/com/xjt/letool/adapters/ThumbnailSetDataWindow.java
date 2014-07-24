@@ -86,8 +86,8 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         mSize = source.size();
         mThreadPool = c.getThreadPool();
         mLetoolContext = c;
-        mLabelMaker = new AlbumLabelMaker(c.getAppContext(), labelSpec);
-        mLoadingText = c.getAppContext().getString(R.string.loading);
+        mLabelMaker = new AlbumLabelMaker(c.getActivityContext(), labelSpec);
+        mLoadingText = c.getActivityContext().getString(R.string.loading);
 
         mHandler = new SynchronizedHandler(c.getGLController()) {
 
@@ -404,7 +404,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         @Override
         protected Future<Bitmap> submitBitmapTask(FutureListener<Bitmap> l) {
         	String label = mLetoolContext.isImageBrwosing() ? "(" + String.valueOf(mTotalCount) + ")":
-        		mLetoolContext.getAppContext().getString(R.string.common_video_set,mTotalCount);
+        		mLetoolContext.getActivityContext().getString(R.string.common_video_set,mTotalCount);
             return mThreadPool.submit(mLabelMaker.requestLabel(mTitle,label ), l);
         }
 

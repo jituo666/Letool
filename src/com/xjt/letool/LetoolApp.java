@@ -20,11 +20,11 @@ public interface LetoolApp {
 
     public DataManager getDataManager();
 
-    public BlobCacheService getBolbCacheService();
+    public BlobCacheService getBlobCacheService();
 
     public ThreadPool getThreadPool();
 
-    public Context getActivityContext();
+    public Context getAppContext();
 
     public Looper getMainLooper();
 

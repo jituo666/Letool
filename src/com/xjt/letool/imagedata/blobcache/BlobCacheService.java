@@ -1,3 +1,4 @@
+
 package com.xjt.letool.imagedata.blobcache;
 
 import android.content.Context;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public class BlobCacheService {
+
     @SuppressWarnings("unused")
     private static final String TAG = BlobCacheService.class.getSimpleName();
 
@@ -23,18 +25,16 @@ public class BlobCacheService {
     private BlobCache mCache;
 
     public BlobCacheService(Context context) {
-        mCache = BlobCacheManager.getCache(context, IMAGE_CACHE_FILE,
-                IMAGE_CACHE_MAX_ENTRIES, IMAGE_CACHE_MAX_BYTES, IMAGE_CACHE_VERSION);
+        mCache = BlobCacheManager.getCache(context, IMAGE_CACHE_FILE, IMAGE_CACHE_MAX_ENTRIES,
+                IMAGE_CACHE_MAX_BYTES, IMAGE_CACHE_VERSION);
     }
 
     /**
      * Gets the cached image data for the given <code>path</code>,
      *  <code>timeModified</code> and <code>type</code>.
-     *
      * The image data will be stored in <code>buffer.data</code>, started from
      * <code>buffer.offset</code> for <code>buffer.length</code> bytes. If the
      * buffer.data is not big enough, a new byte array will be allocated and returned.
-     *
      * @return true if the image data is found; false if not found.
      */
     public boolean getImageData(MediaPath path, long timeModified, int type, BytesBuffer buffer) {
@@ -45,7 +45,8 @@ public class BlobCacheService {
             request.key = cacheKey;
             request.buffer = buffer.data;
             synchronized (mCache) {
-                if (!mCache.lookup(request)) return false;
+                if (!mCache.lookup(request))
+                    return false;
             }
             if (isSameKey(key, request.buffer)) {
                 buffer.data = request.buffer;

@@ -2,7 +2,6 @@
 package com.xjt.letool;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.support.v4.app.Fragment;
 
 import com.xjt.letool.common.OrientationManager;
@@ -20,13 +19,13 @@ import com.xjt.letool.view.LetoolTopBar;
  */
 public interface LetoolContext {
 
-    public Context getAppContext();
+    public Context getActivityContext();
 
     //
     public DataManager getDataManager();
 
     public boolean isImageBrwosing();
-    
+
     public ThreadPool getThreadPool();
 
     public GLController getGLController();
@@ -40,6 +39,7 @@ public interface LetoolContext {
 
     //
     public void showEmptyView(int resId);
+
     public void hideEmptyView();
 
     public void pushContentFragment(Fragment newFragment, Fragment oldFragment, boolean backup);

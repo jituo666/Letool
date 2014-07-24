@@ -36,9 +36,9 @@ import com.xjt.letool.common.ThreadPool;
 import com.xjt.letool.common.ThreadPool.Job;
 import com.xjt.letool.common.ThreadPool.JobContext;
 
-public class PhotoDataAdapter implements FullImageFragment.Model {
+public class FullImageDataAdapter implements FullImageFragment.Model {
     @SuppressWarnings("unused")
-    private static final String TAG = PhotoDataAdapter.class.getSimpleName();
+    private static final String TAG = FullImageDataAdapter.class.getSimpleName();
 
     private static final int MSG_LOAD_START = 1;
     private static final int MSG_LOAD_FINISH = 2;
@@ -154,7 +154,7 @@ public class PhotoDataAdapter implements FullImageFragment.Model {
     // can find the item. If mItemPath is null, then we use the mCurrentIndex to
     // find the image being viewed. cameraIndex is the index of the camera
     // preview. If cameraIndex < 0, there is no camera preview.
-    public PhotoDataAdapter(LetoolContext activity, FullImageView view, MediaSet mediaSet, MediaPath itemPath, int indexHint) {
+    public FullImageDataAdapter(LetoolContext activity, FullImageView view, MediaSet mediaSet, MediaPath itemPath, int indexHint) {
         mSource = Utils.checkNotNull(mediaSet);
         mPhotoView = Utils.checkNotNull(view);
         mItemPath = Utils.checkNotNull(itemPath);

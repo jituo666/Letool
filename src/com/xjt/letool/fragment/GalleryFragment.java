@@ -105,13 +105,13 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
             mEyePosition.resetPosition();
             int paddingLeft = 0, paddingRight = 0, paddingTop = 0, paddingBottom = 0;
             if (mLetoolContext.isImageBrwosing()) {
-                ViewConfigs.AlbumSetPage config = ViewConfigs.AlbumSetPage.get(mLetoolContext.getAppContext());
+                ViewConfigs.AlbumSetPage config = ViewConfigs.AlbumSetPage.get(mLetoolContext.getActivityContext());
                 paddingLeft = config.paddingLeft;
                 paddingRight = config.paddingRight;
                 paddingTop = config.paddingTop;
                 paddingBottom = config.paddingBottom;
             } else {
-                ViewConfigs.VideoSetPage config = ViewConfigs.VideoSetPage.get(mLetoolContext.getAppContext());
+                ViewConfigs.VideoSetPage config = ViewConfigs.VideoSetPage.get(mLetoolContext.getActivityContext());
                 paddingLeft = config.paddingLeft;
                 paddingRight = config.paddingRight;
                 paddingTop = config.paddingTop;
@@ -204,7 +204,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
 
     public void onLongTap(int thumbnailIndex) {
         return;
-        //        MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_GALLERY_LONG_PRESSED);
+        //        MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_GALLERY_LONG_PRESSED);
         //        MediaSet set = mThumbnailSetAdapter.getMediaSet(thumbnailIndex);
         //        if (set == null)
         //            return;
@@ -247,7 +247,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         };
         initializeViews();
         initializeData();
-        mEyePosition = new EyePosition(mLetoolContext.getAppContext(), this);
+        mEyePosition = new EyePosition(mLetoolContext.getActivityContext(), this);
         //mThumbnailView.startRisingAnimation();
     }
 
@@ -256,10 +256,10 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         mSelector.setSelectionListener(this);
         ThumbnailLayout layout = null;
         if (mLetoolContext.isImageBrwosing()) {
-            ViewConfigs.AlbumSetPage config = ViewConfigs.AlbumSetPage.get(mLetoolContext.getAppContext());
+            ViewConfigs.AlbumSetPage config = ViewConfigs.AlbumSetPage.get(mLetoolContext.getActivityContext());
             layout = new ThumbnailSetContractLayout(config.albumSetSpec);
         } else {
-            ViewConfigs.VideoSetPage config = ViewConfigs.VideoSetPage.get(mLetoolContext.getAppContext());
+            ViewConfigs.VideoSetPage config = ViewConfigs.VideoSetPage.get(mLetoolContext.getActivityContext());
             layout = new ThumbnailSetContractLayout(config.videoSetSpec);
         }
         mThumbnailView = new ThumbnailView(mLetoolContext, layout);
@@ -518,7 +518,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
             dlg.setMessage(R.string.common_delete_tip);
             dlg.show();
         } else if (v.getId() == R.id.selection_finished) {
-            MobclickAgent.onEvent(mLetoolContext.getAppContext(), StatConstants.EVENT_KEY_SELECT_OK);
+            MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SELECT_OK);
             mSelector.leaveSelectionMode();
         } else if (v.getId() == R.id.navi_to_photo) {
             Fragment f = mLetoolContext.isImageBrwosing() ? new PhotoFragment() : new VideoFragment();

@@ -43,7 +43,7 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
     private static final String TAG = LocalMediaActivity.class.getSimpleName();
 
     public static final String KEY_ALBUM_TITLE = "album_title";
-    public static final String KEY_MEDIA_PATH = "media-path";
+    public static final String KEY_MEDIA_PATH = "media_path";
     public static final String KEY_ALBUM_ID = "album_id";
     public static final String KEY_IS_CAMERA_SOURCE = "is_camera_source";
     public static final String KEY_IS_IMAGE = "is_image";
@@ -133,7 +133,7 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
 
     @Override
     public void showEmptyView(int resId) {
-        LetoolEmptyView emptyView = (LetoolEmptyView) LayoutInflater.from(getAppContext()).inflate(R.layout.local_empty_view, null);
+        LetoolEmptyView emptyView = (LetoolEmptyView) LayoutInflater.from(this).inflate(R.layout.local_empty_view, null);
         emptyView.updataView(R.drawable.ic_launcher, resId);
         //
         ViewGroup normalView = (ViewGroup) mMainView.findViewById(R.id.normal_root_view);
@@ -259,7 +259,7 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
     }
 
     @Override
-    public Context getAppContext() {
+    public Context getActivityContext() {
         return this;
     }
 

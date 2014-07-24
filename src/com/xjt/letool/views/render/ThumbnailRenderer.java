@@ -48,7 +48,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
     }
 
     public ThumbnailRenderer(LetoolContext context, ThumbnailView slotView, ContractSelector selector) {
-        super(context.getAppContext());
+        super(context.getActivityContext());
         mFragment = context;
         mThumbnailView = slotView;
         mMediaSelector = selector;
