@@ -1,9 +1,9 @@
-package com.xjt.letool.surpport;
+package com.xjt.letool.views.utils;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 
-public class MenuItem {
+public class ActionItem {
 
     private int itemId;
     private String title;

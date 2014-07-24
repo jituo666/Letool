@@ -21,9 +21,6 @@ import com.xjt.letool.metadata.source.LocalAlbum;
 import com.xjt.letool.selectors.ContractSelectListener;
 import com.xjt.letool.selectors.ContractSelector;
 import com.xjt.letool.stat.StatConstants;
-import com.xjt.letool.surpport.MenuItem;
-import com.xjt.letool.surpport.PopupMenu;
-import com.xjt.letool.surpport.PopupMenu.OnMenuItemClickListener;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.RelativePosition;
 import com.xjt.letool.utils.StorageUtils;
@@ -68,7 +65,7 @@ import android.widget.Toast;
  * @Comments:null
  */
 public class PhotoFragment extends Fragment implements EyePosition.EyePositionListener, ContractSelectListener, OnActionModeListener,
-        LayoutListener, OnMenuItemClickListener {
+        LayoutListener {
 
     private static final String TAG = PhotoFragment.class.getSimpleName();
 
@@ -528,13 +525,6 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         }
     }
 
-    public void showPopupMenu() {
-        PopupMenu popup = new PopupMenu(this.getActivity());
-        popup.setOnItemSelectedListener(this);
-        popup.add(POP_UP_MENU_ITEM_SELECT, R.drawable.ic_action_accept, R.string.popup_menu_select_mode);
-        popup.add(POP_UP_MENU_ITEM_CAMERA, R.drawable.ic_action_camera, R.string.popup_menu_take_picture);
-        //popup.show(mMore);
-    }
 
     @Override
     public void onSelectionModeChange(int mode) {
@@ -582,27 +572,6 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         data.putInt(FullImageFragment.KEY_INDEX_HINT, index);
         fragment.setArguments(data);
         mLetoolContext.pushContentFragment(fragment, this, true);
-    }
-
-    // -----------------------------------------------details-----------------------------------------------------------------------
-
-    @Override
-    public void onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()) {
-            case POP_UP_MENU_ITEM_SELECT:
-                MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_MENU_SELECT);
-                if (mSelector != null) {
-                    mSelector.enterSelectionMode();
-                }
-                break;
-            case POP_UP_MENU_ITEM_CAMERA:
-                MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_MENU_CAMERA);
-                Intent it = new Intent();
-                it.setAction(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
-                startActivity(it);
-                break;
-
-        }
     }
 
 }

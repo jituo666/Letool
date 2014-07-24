@@ -18,7 +18,6 @@ import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.metadata.loader.DataLoadingListener;
 import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.metadata.source.LocalAlbum;
-import com.xjt.letool.surpport.MenuItem;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.RelativePosition;
 import com.xjt.letool.utils.StorageUtils;
@@ -41,6 +40,7 @@ import com.xjt.letool.views.layout.ThumbnailLayout.LayoutListener;
 import com.xjt.letool.views.opengl.FadeTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.render.ThumbnailVideoRenderer;
+import com.xjt.letool.views.utils.ActionItem;
 import com.xjt.letool.views.utils.ViewConfigs;
 
 import java.util.ArrayList;
@@ -206,7 +206,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         if (item == null)
             return;
         mLongPressedIndex = videoIndex;
-        List<MenuItem> items = new ArrayList<MenuItem>();
+        List<ActionItem> items = new ArrayList<ActionItem>();
         addMenuItem(items, POP_UP_MENU_ITEM_DETAIL, R.string.common_detail);
         addMenuItem(items, POP_UP_MENU_ITEM_DELETE, R.string.common_delete);
         final LetoolDialog dlg = new LetoolDialog(getActivity());
@@ -568,8 +568,8 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         mDetailsHelper.hide();
     }
 
-    public void addMenuItem(List<MenuItem> items, int itemId, int titleRes) {
-        MenuItem item = new MenuItem();
+    public void addMenuItem(List<ActionItem> items, int itemId, int titleRes) {
+        ActionItem item = new ActionItem();
         item.setItemId(itemId);
         item.setTitle(getString(titleRes));
         items.add(item);
@@ -579,9 +579,9 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         TextView title;
     }
 
-    private class MenuItemAdapter extends ArrayAdapter<MenuItem> {
+    private class MenuItemAdapter extends ArrayAdapter<ActionItem> {
 
-        public MenuItemAdapter(Context context, List<MenuItem> objects) {
+        public MenuItemAdapter(Context context, List<ActionItem> objects) {
             super(context, 0, objects);
         }
 
@@ -589,7 +589,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.popup_menu_item, null);
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.common_action_item, null);
                 holder = new ViewHolder();
                 holder.title = (TextView) convertView.findViewById(R.id.title);
                 convertView.setTag(holder);
@@ -597,7 +597,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            MenuItem item = getItem(position);
+            ActionItem item = getItem(position);
             holder.title.setText(item.getTitle());
             return convertView;
         }
