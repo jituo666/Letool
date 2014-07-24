@@ -357,7 +357,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
             mLetoolContext.showEmptyView(R.string.common_error_nodcim_photo);
             final LetoolDialog dlg = new LetoolDialog(getActivity());
             dlg.setTitle(R.string.common_recommend);
-            dlg.setOkBtn(R.string.common_ok, new View.OnClickListener() {
+            dlg.setOkBtn(R.string.common_settings, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     dlg.dismiss();
@@ -373,7 +373,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                     dlg.dismiss();
                 }
             });
-            dlg.setMessage(R.string.common_delete_tip);
+            dlg.setMessage(R.string.camera_source_dirs_tip);
             dlg.show();
         } else {
             mLetoolContext.hideEmptyView();

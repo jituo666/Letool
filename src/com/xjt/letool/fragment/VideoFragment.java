@@ -1,7 +1,6 @@
 
 package com.xjt.letool.fragment;
 
-import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
@@ -19,16 +18,11 @@ import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.metadata.loader.DataLoadingListener;
 import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.metadata.source.LocalAlbum;
-import com.xjt.letool.selectors.ContractSelectListener;
-import com.xjt.letool.selectors.ContractSelector;
-import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.surpport.MenuItem;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.RelativePosition;
 import com.xjt.letool.utils.StorageUtils;
 import com.xjt.letool.utils.Utils;
-import com.xjt.letool.view.BatchDeleteMediaListener;
-import com.xjt.letool.view.BatchDeleteMediaListener.DeleteMediaProgressListener;
 import com.xjt.letool.view.SingleDeleteMediaListener.SingleDeleteMediaProgressListener;
 import com.xjt.letool.view.DetailsHelper.CloseListener;
 import com.xjt.letool.view.DetailsHelper.DetailsSource;
@@ -60,7 +54,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,7 +69,7 @@ import android.widget.Toast;
  * @Date 9:48:35 AM Apr 19, 2014
  * @Comments:null
  */
-public class VideoFragment extends Fragment implements EyePosition.EyePositionListener, ContractSelectListener, OnActionModeListener,
+public class VideoFragment extends Fragment implements EyePosition.EyePositionListener, OnActionModeListener,
         LayoutListener {
 
     private static final String TAG = VideoFragment.class.getSimpleName();
@@ -109,7 +102,6 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     private boolean mIsSDCardMountedCorreclty = false;
     private boolean mHasDefaultDCIMDirectory = false;
     private SynchronizedHandler mHandler;
-    protected ContractSelector mSelector;
     private EyePosition mEyePosition; // The eyes' position of the user, the origin is at the center of the device and the unit is in pixels.
     private float mUserDistance; // in pixel
     private float mX;
@@ -202,17 +194,11 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         if (!mIsActive)
             return;
 
-        if (mSelector.inSelectionMode()) {
-            MediaItem item = mVideoDataLoader.get(videoIndex);
-            if (item == null)
-                return; // Item not ready yet, ignore the click
-            mSelector.toggle(item.getPath());
-            mThumbnailView.invalidate();
-        } else { // Render transition in pressed state
+
             mRender.setPressedIndex(videoIndex);
             mRender.setPressedUp();
             mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_PICK_PHOTO, videoIndex, 0), FadeTexture.DURATION);
-        }
+
     }
 
     public void onLongTap(int videoIndex) {
@@ -306,8 +292,6 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     }
 
     private void initializeViews() {
-        mSelector = new ContractSelector(mLetoolContext, false);
-        mSelector.setSelectionListener(this);
         mConfig = ViewConfigs.VideoPage.get(mLetoolContext.getActivityContext());
         ThumbnailLayout layout;
         layout = new ThumbnailContractLayout(mConfig.videoSpec);
@@ -335,7 +319,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
                 VideoFragment.this.onLongTap(videoIndex);
             }
         });
-        mRender = new ThumbnailVideoRenderer(mLetoolContext, mThumbnailView, mSelector);
+        mRender = new ThumbnailVideoRenderer(mLetoolContext, mThumbnailView);
         layout.setRenderer(mRender);
         layout.setLayoutListener(this);
         mThumbnailView.setThumbnailRenderer(mRender);
@@ -366,14 +350,6 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         }
         LetoolBottomBar bottomBar = mLetoolContext.getLetoolBottomBar();
         bottomBar.setVisible(View.GONE, false);
-    }
-
-    private void initSelectionBar() {
-        LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
-        actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_SELECTION, this);
-        actionBar.setContractSelectionManager(mSelector);
-        String format = getResources().getQuantityString(R.plurals.number_of_items_selected, 0);
-        actionBar.setTitleText(String.format(format, 0));
     }
 
     @Override
@@ -493,44 +469,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             } else {
                 mLetoolContext.popContentFragment();
             }
-        } else if (v.getId() == R.id.operation_delete) {
-
-            MobclickAgent.onEvent(mLetoolContext.getActivityContext(),
-                    StatConstants.EVENT_KEY_PHOTO_DELETE);
-            int count = mSelector.getSelectedCount();
-            if (count <= 0) {
-                Toast t = Toast.makeText(getActivity(),
-                        R.string.common_selection_tip, Toast.LENGTH_SHORT);
-                t.setGravity(Gravity.CENTER, 0, 0);
-                t.show();
-                return;
-            }
-            BatchDeleteMediaListener cdl = new BatchDeleteMediaListener(
-                    getActivity(), mLetoolContext.getDataManager(),
-                    new DeleteMediaProgressListener() {
-
-                        @Override
-                        public void onConfirmDialogDismissed(boolean confirmed) {
-                            if (confirmed) {
-                                mSelector.leaveSelectionMode();
-                            }
-                        }
-
-                        @Override
-                        public ArrayList<MediaPath> onGetDeleteItem() {
-                            return mSelector.getSelected(false);
-                        }
-
-                    });
-            final LetoolDialog dlg = new LetoolDialog(getActivity());
-            dlg.setTitle(R.string.common_recommend);
-            dlg.setOkBtn(R.string.common_ok, cdl);
-            dlg.setCancelBtn(R.string.common_cancel, cdl);
-            dlg.setMessage(R.string.common_delete_tip);
-            dlg.show();
-
-        }
-        else if (v.getId() == R.id.navi_to_gallery) {
+        } else if (v.getId() == R.id.navi_to_gallery) {
             GalleryFragment f = new GalleryFragment();
             Bundle data = new Bundle();
             data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
@@ -538,38 +477,6 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             f.setArguments(data);
             mLetoolContext.pushContentFragment(f, this, false);
         }
-        else if (v.getId() == R.id.selection_finished) {
-            MobclickAgent.onEvent(mLetoolContext.getActivityContext(),
-                    StatConstants.EVENT_KEY_SELECT_OK);
-            mSelector.leaveSelectionMode();
-        }
-    }
-
-    @Override
-    public void onSelectionModeChange(int mode) {
-        switch (mode) {
-            case ContractSelector.ENTER_SELECTION_MODE: {
-                initSelectionBar();
-                mRootPane.invalidate();
-                break;
-            }
-            case ContractSelector.LEAVE_SELECTION_MODE: {
-                initBars();
-                mRootPane.invalidate();
-                break;
-            }
-            case ContractSelector.SELECT_ALL_MODE: {
-                mRootPane.invalidate();
-                break;
-            }
-        }
-    }
-
-    @Override
-    public void onSelectionChange(MediaPath path, boolean selected) {
-        int count = mSelector.getSelectedCount();
-        String format = getResources().getQuantityString(R.plurals.number_of_items_selected, count);
-        mLetoolContext.getLetoolTopBar().setTitleText(String.format(format, count));
     }
 
     private void playVideo(int videoIndex) {

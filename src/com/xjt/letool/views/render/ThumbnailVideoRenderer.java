@@ -31,8 +31,6 @@ public class ThumbnailVideoRenderer extends AbstractThumbnailRender {
     private int mPressedIndex = -1;
     private boolean mAnimatePressedUp;
     private MediaPath mHighlightItemPath = null;
-    private boolean mInSelectionMode;
-    private ContractSelector mMediaSelector;
 
     private LabelSpec mLabelSpec;
 
@@ -65,12 +63,11 @@ public class ThumbnailVideoRenderer extends AbstractThumbnailRender {
         }
     }
 
-    public ThumbnailVideoRenderer(LetoolContext activity, ThumbnailView thumbnailView, ContractSelector selector) {
+    public ThumbnailVideoRenderer(LetoolContext activity, ThumbnailView thumbnailView) {
         super(activity.getActivityContext());
         mActivity = activity;
         mThumbnailView = thumbnailView;
         mPlaceholderColor = 0xFFE8E8E8;
-        mMediaSelector = selector;
         mLabelSpec = ViewConfigs.VideoPage.get(activity.getActivityContext()).labelSpec;
 
         mWaitLoadingTexture = new ColorTexture(mPlaceholderColor);
@@ -169,12 +166,6 @@ public class ThumbnailVideoRenderer extends AbstractThumbnailRender {
             }
         } else if ((mHighlightItemPath != null)) {
             drawSelectedFrame(canvas, width, height);
-        } else if (mInSelectionMode) {
-            if (mMediaSelector.isItemSelected(entry.setPath)) {
-                drawSelectedFrame(canvas, width, height);
-            } else {
-                drawPreSelectedFrame(canvas, width, height);
-            }
         }
         return renderRequestFlags;
     }
@@ -183,7 +174,6 @@ public class ThumbnailVideoRenderer extends AbstractThumbnailRender {
 
     @Override
     public void prepareDrawing() {
-        mInSelectionMode = mMediaSelector.inSelectionMode();
     }
 
     public void pause() {

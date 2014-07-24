@@ -18,6 +18,7 @@ import java.lang.reflect.Field;
 public class ApiHelper {
 
     public static interface VERSION_CODES {
+
         public static final int GINGERBREAD_MR1 = 10;
         public static final int HONEYCOMB = 11;
         public static final int HONEYCOMB_MR1 = 12;
@@ -116,8 +117,7 @@ public class ApiHelper {
     public static final boolean HAS_MEDIA_MUXER = Build.VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR2;
     public static final boolean HAS_DISPLAY_LISTENER = Build.VERSION.SDK_INT >= VERSION_CODES.JELLY_BEAN_MR1;
 
-    public static int getIntFieldIfExists(Class<?> klass, String fieldName,
-            Class<?> obj, int defaultVal) {
+    public static int getIntFieldIfExists(Class<?> klass, String fieldName, Class<?> obj, int defaultVal) {
         try {
             Field f = klass.getDeclaredField(fieldName);
             return f.getInt(obj);
@@ -135,8 +135,7 @@ public class ApiHelper {
         }
     }
 
-    private static boolean hasMethod(String className, String methodName,
-            Class<?>... parameterTypes) {
+    private static boolean hasMethod(String className, String methodName, Class<?>... parameterTypes) {
         try {
             Class<?> klass = Class.forName(className);
             klass.getDeclaredMethod(methodName, parameterTypes);
@@ -146,8 +145,7 @@ public class ApiHelper {
         }
     }
 
-    private static boolean hasMethod(
-            Class<?> klass, String methodName, Class<?>... paramTypes) {
+    private static boolean hasMethod(Class<?> klass, String methodName, Class<?>... paramTypes) {
         try {
             klass.getDeclaredMethod(methodName, paramTypes);
             return true;

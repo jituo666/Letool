@@ -114,12 +114,11 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
             CameraSourceSettingFragment f = new CameraSourceSettingFragment();
             mLetoolContext.pushContentFragment(f, this, true);
         }  else if (v.getId() == R.id.action_navi) {
-            getActivity().finish();
+            mLetoolContext.popContentFragment();
         } else if (v.getId() == R.id.clear_cache) {
             MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_CLEAR_CAHCE);
             new ClearCacheTask().execute();
         } else if (v.getId() == R.id.version_update_check) {
-
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
             MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_UPDATE_CHECK);
             final Context context = getActivity();

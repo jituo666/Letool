@@ -12,7 +12,6 @@ import java.util.Locale;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -42,7 +41,6 @@ import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListene
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
-import com.xjt.letool.activities.LocalMediaActivity;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.metadata.source.LocalSimpleAlbumSet;
@@ -177,7 +175,7 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
             MediaDir m = imageUrls.get(position);
             imageLoader.displayImage("file://" + m.dir, holder.image, options, animateFirstListener);
             File parentFile = new File(m.dir).getParentFile();
-            if ( parentFile == null) {
+            if (parentFile == null) {
                 parentFile = new File("/");
             }
             holder.textPath.setText(parentFile.toString());
@@ -260,6 +258,7 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
             mItemAdapter = new ItemAdapter();
             ((ListView) listView).setAdapter(mItemAdapter);
             listView.setOnItemClickListener(new OnItemClickListener() {
+
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     // startImagePagerActivity(position);
@@ -289,11 +288,7 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
             m.isChecked = !m.isChecked;
             mItemAdapter.notifyDataSetChanged();
         } else if (v.getId() == R.id.action_navi) {
-            if (mLetoolContext.isImageBrwosing()) {
-                getActivity().finish();
-            } else {
-                mLetoolContext.popContentFragment();
-            }
+            mLetoolContext.popContentFragment();
         }
     }
 

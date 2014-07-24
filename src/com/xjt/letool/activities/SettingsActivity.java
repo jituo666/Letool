@@ -130,7 +130,11 @@ public class SettingsActivity extends FragmentActivity implements LetoolContext 
     @Override
     public void popContentFragment() {
         LLog.i(TAG, " popBackStack :" + getSupportFragmentManager().getBackStackEntryCount());
-        getSupportFragmentManager().popBackStack();
+        if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+            finish();
+        } else {
+            getSupportFragmentManager().popBackStack();
+        }
     }
 
     @Override
