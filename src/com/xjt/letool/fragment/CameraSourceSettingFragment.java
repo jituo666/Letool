@@ -102,7 +102,7 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
         LetoolTopBar topBar = mLetoolContext.getLetoolTopBar();
         topBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_SETTINGS, CameraSourceSettingFragment.this);
         topBar.setTitleIcon(R.drawable.ic_action_previous_item);
-        topBar.setTitleText(R.string.photo_dir_settings);
+        topBar.setTitleText(R.string.camera_source_dirs_title);
         ViewGroup nativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);
         nativeButtons.setVisibility(View.GONE);
     }

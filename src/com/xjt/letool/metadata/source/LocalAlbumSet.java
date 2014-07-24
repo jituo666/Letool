@@ -10,7 +10,6 @@ import android.provider.MediaStore.Images.ImageColumns;
 import android.provider.MediaStore.Video;
 
 import com.xjt.letool.LetoolApp;
-import com.xjt.letool.R;
 import com.xjt.letool.common.Future;
 import com.xjt.letool.common.FutureListener;
 import com.xjt.letool.common.LLog;
@@ -26,14 +25,12 @@ import com.xjt.letool.utils.Utils;
 
 import java.util.ArrayList;
 
-// LocalAlbumSet lists all image or video albums in the local storage.
-// The path should be "/local/image", "local/video" or "/local/all"
 public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<MediaSet>> {
 
     public static final String PATH_IMAGE = "/local/image/";
     public static final String PATH_VIDEO = "/local/video/";
 
-    private static final String TAG = "LocalAlbumSet";
+    private static final String TAG = LocalAlbumSet.class.getSimpleName();
     // The indices should match the following projections.
     private static final int INDEX_BUCKET_ID = 0;
     private static final int INDEX_BUCKET_NAME = 1;
@@ -72,7 +69,6 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
     private static final String BUCKET_ORDER_BY = "MAX(datetaken) DESC";
 
     private final LetoolApp mApplication;
-    //private final int mType;
     private ArrayList<MediaSet> mAlbums = new ArrayList<MediaSet>();
     private final DataNotifier mNotifierMedia;
     private final String mName;
@@ -95,7 +91,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
             mBaseUri = mWatchUriVideo;
             mNotifierMedia = new DataNotifier(this, mWatchUriVideo, application);
         }
-        mName = application.getResources().getString(R.string.set_label_local_albums);
+        mName = "Albums";
     }
 
     @Override
@@ -161,7 +157,6 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
     private class AlbumsLoader implements ThreadPool.Job<ArrayList<MediaSet>> {
 
         @Override
-        @SuppressWarnings("unchecked")
         public ArrayList<MediaSet> run(JobContext jc) {
             // Note: it will be faster if we only select media_type and bucket_id. need to test the performance if that is worth
             BucketEntry[] entries = loadBucketEntries(jc);
@@ -227,12 +222,12 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
         return ++MediaObject.sVersionSerial;
     }
 
-    @Override
+
     // synchronized on this function for
     // 1. Prevent calling reload() concurrently.
     // 2. Prevent calling onFutureDone() and reload() concurrently
+    @Override
     public synchronized long reload() {
-        // "|" is used instead of "||" because we want to clear both flags.
         if (mNotifierMedia.isDirty()) {
             if (mLoadTask != null)
                 mLoadTask.cancel();
