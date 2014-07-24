@@ -1,7 +1,3 @@
-/*
- * Copyright (C) 2012 Tapas Mobile Ltd.  All Rights Reserved.
- */
-
 package com.xjt.letool.preference;
 
 import android.content.SharedPreferences;

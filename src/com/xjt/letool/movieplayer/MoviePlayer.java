@@ -123,38 +123,6 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
             }
         }, BLACK_TIMEOUT);
 
-        // When the user touches the screen or uses some hard key, the framework
-        // will change system ui visibility from invisible to visible. We show
-        // the media control and enable system UI (e.g. ActionBar) to be visible at this point
-        /*        mVideoView.setOnSystemUiVisibilityChangeListener(
-                        new View.OnSystemUiVisibilityChangeListener() {
-                    @Override
-                    public void onSystemUiVisibilityChange(int visibility) {
-                        int diff = mLastSystemUiVis ^ visibility;
-                        mLastSystemUiVis = visibility;
-                        if ((diff & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) != 0
-                                && (visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0) {
-                            mController.show();
-
-                            // We need to set the background to clear ghosting images
-                            // when ActionBar slides in. However, if we keep the background,
-                            // there will be one additional layer in HW composer, which is bad
-                            // to battery. As a solution, we remove the background when we
-                            // hide the action bar
-                            mHandler.removeCallbacks(mRemoveBackground);
-                            mRootView.setBackgroundColor(Color.BLACK);
-                        } else {
-                            mHandler.removeCallbacks(mRemoveBackground);
-
-                            // Wait for the slide out animation, one second should be enough
-                            mHandler.postDelayed(mRemoveBackground, 1000);
-                        }
-                    }
-                });*/
-
-        // Hide system UI by default
-        //showSystemUi(false);
-
         mAudioBecomingNoisyReceiver = new AudioBecomingNoisyReceiver();
         mAudioBecomingNoisyReceiver.register();
 

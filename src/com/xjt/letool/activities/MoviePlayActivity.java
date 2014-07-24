@@ -14,12 +14,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-/**
- * This activity plays a video from a specified URI.
- * The client of this activity can pass a logo bitmap in the intent (KEY_LOGO_BITMAP)
- * to set the action bar logo so the playback process looks more seamlessly integrated with
- * the original activity.
- */
+
 public class MoviePlayActivity extends Activity {
     @SuppressWarnings("unused")
     private static final String TAG = MoviePlayActivity.class.getSimpleName();
@@ -31,10 +26,9 @@ public class MoviePlayActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.movie_view);
+        setContentView(R.layout.movie_play_view);
         View rootView = findViewById(R.id.movie_view_root);
         Intent intent = getIntent();
-        initializeActionBar(intent);
         mFinishOnCompletion = intent.getBooleanExtra(MediaStore.EXTRA_FINISH_ON_COMPLETION, true);
         mMoviePlayer = new MoviePlayer(rootView, this, intent.getData(), savedInstanceState, !mFinishOnCompletion) {
             @Override
@@ -63,46 +57,6 @@ public class MoviePlayActivity extends Activity {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mMoviePlayer.onSaveInstanceState(outState);
-    }
-    
-    private void initializeActionBar(Intent intent) {
-/*        mUri = intent.getData();
-        final ActionBar actionBar = getActionBar();
-        Bitmap logo = intent.getParcelableExtra(KEY_LOGO_BITMAP);
-        if (logo != null) {
-            actionBar.setLogo(new BitmapDrawable(getResources(), logo));
-        }
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_HOME_AS_UP,ActionBar.DISPLAY_HOME_AS_UP);
-
-        String title = intent.getStringExtra(Intent.EXTRA_TITLE);
-        if (title != null) {
-            actionBar.setTitle(title);
-        } else {
-            // Displays the filename as title, reading the filename from the
-            // interface: {@link android.provider.OpenableColumns#DISPLAY_NAME}.
-            AsyncQueryHandler queryHandler =
-                    new AsyncQueryHandler(getContentResolver()) {
-                @Override
-                protected void onQueryComplete(int token, Object cookie,
-                        Cursor cursor) {
-                    try {
-                        if ((cursor != null) && cursor.moveToFirst()) {
-                            String displayName = cursor.getString(0);
-
-                            // Just show empty title if other apps don't set
-                            // DISPLAY_NAME
-                            actionBar.setTitle((displayName == null) ? "" :
-                                    displayName);
-                        }
-                    } finally {
-                        Utils.closeSilently(cursor);
-                    }
-                }
-            };
-            queryHandler.startQuery(0, null, mUri,
-                    new String[] {OpenableColumns.DISPLAY_NAME}, null, null,
-                    null);
-        }*/
     }
 
     @Override
