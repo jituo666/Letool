@@ -5,6 +5,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 8:18:24 PM Jul 24, 2014
+ * @Comments:null
+ */
 public class GlobalPreference {
 
     private static SharedPreferences sPrefs = null;

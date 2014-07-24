@@ -38,6 +38,11 @@ import com.xjt.letool.view.LetoolEmptyView;
 import com.xjt.letool.view.LetoolSlidingMenu;
 import com.xjt.letool.view.LetoolTopBar;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 8:16:18 PM Jul 24, 2014
+ * @Comments:null
+ */
 public class LocalMediaActivity extends FragmentActivity implements LetoolContext {
 
     private static final String TAG = LocalMediaActivity.class.getSimpleName();

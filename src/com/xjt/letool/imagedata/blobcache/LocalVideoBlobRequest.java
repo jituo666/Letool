@@ -8,6 +8,11 @@ import com.xjt.letool.imagedata.utils.BitmapUtils;
 import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaPath;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 8:19:00 PM Jul 24, 2014
+ * @Comments:null
+ */
 public class LocalVideoBlobRequest extends BlobCacheRequest {
     private String mLocalFilePath;
 

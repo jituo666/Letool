@@ -11,6 +11,11 @@ import com.xjt.letool.views.opengl.ColorTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
 import com.xjt.letool.views.opengl.Texture;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 8:17:20 PM Jul 24, 2014
+ * @Comments:null
+ */
 public class ThumbnailRenderer extends AbstractThumbnailRender {
 
     private static final String TAG = ThumbnailRenderer.class.getSimpleName();

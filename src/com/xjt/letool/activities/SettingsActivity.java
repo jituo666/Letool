@@ -22,6 +22,11 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.ViewGroup;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 8:16:31 PM Jul 24, 2014
+ * @Comments:null
+ */
 public class SettingsActivity extends FragmentActivity implements LetoolContext {
 
     private static final String TAG = SettingsActivity.class.getSimpleName();

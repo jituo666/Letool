@@ -14,6 +14,11 @@ import com.xjt.letool.imagedata.utils.BitmapDecodeUtils;
 import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaPath;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 8:18:56 PM Jul 24, 2014
+ * @Comments:null
+ */
 public class LocalImageBlobRequest extends BlobCacheRequest {
 
     private static final String TAG = LocalImageBlobRequest.class.getSimpleName();

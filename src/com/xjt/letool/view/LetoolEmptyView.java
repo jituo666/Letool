@@ -10,6 +10,11 @@ import android.widget.TextView;
 
 import com.xjt.letool.R;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 8:17:56 PM Jul 24, 2014
+ * @Comments:null
+ */
 public class LetoolEmptyView extends RelativeLayout {
 
     private ImageView mImageView;

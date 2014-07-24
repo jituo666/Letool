@@ -5,6 +5,11 @@ import android.graphics.Rect;
 
 import com.xjt.letool.common.LLog;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 8:17:32 PM Jul 24, 2014
+ * @Comments:null
+ */
 public class ThumbnailSetContractLayout extends ThumbnailLayout {
 
     private static final String TAG = ThumbnailSetContractLayout.class.getSimpleName();

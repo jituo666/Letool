@@ -16,6 +16,11 @@ import com.xjt.letool.views.opengl.UploadedBitmapTexture;
 import com.xjt.letool.views.utils.AlbumLabelMaker;
 import com.xjt.letool.views.utils.ViewConfigs;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 8:17:16 PM Jul 24, 2014
+ * @Comments:null
+ */
 public class ThumbnailSetRenderer extends AbstractThumbnailRender {
 
     private static final String TAG = ThumbnailSetRenderer.class.getSimpleName();

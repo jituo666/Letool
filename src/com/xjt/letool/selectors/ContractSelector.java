@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 8:18:36 PM Jul 24, 2014
+ * @Comments:null
+ */
 public class ContractSelector {
 
     @SuppressWarnings("unused")

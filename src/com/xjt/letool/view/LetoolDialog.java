@@ -9,6 +9,11 @@ import android.widget.TextView;
 
 import com.xjt.letool.R;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 8:17:51 PM Jul 24, 2014
+ * @Comments:null
+ */
 public class LetoolDialog extends Dialog {
 
     private static final String TAG = LetoolDialog.class.getSimpleName();

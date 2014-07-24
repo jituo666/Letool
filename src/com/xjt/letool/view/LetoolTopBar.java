@@ -13,6 +13,11 @@ import android.widget.TextView;
 import com.xjt.letool.R;
 import com.xjt.letool.selectors.ContractSelector;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 8:18:06 PM Jul 24, 2014
+ * @Comments:null
+ */
 public class LetoolTopBar {
 
     public static final int ACTION_BAR_MODE_NONE = -1;

@@ -15,6 +15,11 @@ import android.view.Window;
 import android.view.WindowManager;
 
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 8:16:26 PM Jul 24, 2014
+ * @Comments:null
+ */
 public class MoviePlayActivity extends Activity {
     @SuppressWarnings("unused")
     private static final String TAG = MoviePlayActivity.class.getSimpleName();

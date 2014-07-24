@@ -19,6 +19,11 @@ import com.xjt.letool.imagedata.utils.BytesBufferPool.BytesBuffer;
 import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaPath;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 8:18:48 PM Jul 24, 2014
+ * @Comments:null
+ */
 public abstract class ETCCacheRequest implements Job<ETC1Texture> {
 
     private static final String TAG = ETCCacheRequest.class.getSimpleName();

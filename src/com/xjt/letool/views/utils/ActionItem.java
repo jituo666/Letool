@@ -3,6 +3,11 @@ package com.xjt.letool.views.utils;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 8:16:51 PM Jul 24, 2014
+ * @Comments:null
+ */
 public class ActionItem {
 
     private int itemId;

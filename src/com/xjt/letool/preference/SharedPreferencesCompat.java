@@ -7,6 +7,11 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 8:18:28 PM Jul 24, 2014
+ * @Comments:null
+ */
 public class SharedPreferencesCompat {
     private static Method sApplyMethod;
     private static Method sGetStringSetMethod;

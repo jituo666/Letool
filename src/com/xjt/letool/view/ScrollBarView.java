@@ -9,6 +9,11 @@ import com.xjt.letool.R;
 import com.xjt.letool.views.opengl.ColorTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 8:18:12 PM Jul 24, 2014
+ * @Comments:null
+ */
 public class ScrollBarView extends GLBaseView {
 
     @SuppressWarnings("unused")

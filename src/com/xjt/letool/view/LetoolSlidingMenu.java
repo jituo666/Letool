@@ -17,6 +17,11 @@ import com.xjt.letool.common.LLog;
 import com.xjt.letool.fragment.SlidingMenuFragment;
 import com.xjt.letool.stat.StatConstants;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 8:18:01 PM Jul 24, 2014
+ * @Comments:null
+ */
 public class LetoolSlidingMenu {
 
     private static final String TAG = LetoolSlidingMenu.class.getSimpleName();

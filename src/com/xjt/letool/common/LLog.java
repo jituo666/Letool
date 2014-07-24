@@ -1,6 +1,11 @@
 
 package com.xjt.letool.common;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 8:19:24 PM Jul 24, 2014
+ * @Comments:null
+ */
 public class LLog {
 
     private static final String TAG = "letooltag:";

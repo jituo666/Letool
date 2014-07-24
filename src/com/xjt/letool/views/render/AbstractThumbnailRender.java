@@ -12,6 +12,11 @@ import com.xjt.letool.views.opengl.NinePatchTexture;
 import com.xjt.letool.views.opengl.ResourceTexture;
 import com.xjt.letool.views.opengl.Texture;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 8:17:02 PM Jul 24, 2014
+ * @Comments:null
+ */
 public abstract class AbstractThumbnailRender implements ThumbnailView.Renderer {
 
 	private final ResourceTexture mVideoOverlay;

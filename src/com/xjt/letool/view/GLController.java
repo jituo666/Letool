@@ -7,6 +7,11 @@ import com.xjt.letool.views.opengl.GLESCanvas;
 import android.content.Context;
 import android.graphics.Matrix;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 8:17:47 PM Jul 24, 2014
+ * @Comments:null
+ */
 public interface GLController {
     // Listener will be called when GL is idle AND before each frame. Mainly used for uploading textures.
     public static interface OnGLIdleListener {
