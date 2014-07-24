@@ -231,7 +231,7 @@ public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChanged
                 || entry.duration != duration;
     }
 
-    private void updateAlbumSetEntry(VideoEntry entry, int thumbnailIndex) {
+    private void updateVideoEntry(VideoEntry entry, int thumbnailIndex) {
         MediaItem item = mSource.get(thumbnailIndex);
         entry.item = item;
         entry.setPath = (item == null) ? null : item.getPath();
@@ -266,7 +266,7 @@ public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChanged
 
     private void prepareSlotContent(int thumbnailIndex) {
         VideoEntry entry = new VideoEntry();
-        updateAlbumSetEntry(entry, thumbnailIndex);
+        updateVideoEntry(entry, thumbnailIndex);
         mData[thumbnailIndex % mData.length] = entry;
     }
 
@@ -320,7 +320,7 @@ public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChanged
         }
 
         VideoEntry entry = mData[index % mData.length];
-        updateAlbumSetEntry(entry, index);
+        updateVideoEntry(entry, index);
         updateAllImageRequests();
         if (mListener != null && isActiveSlot(index)) {
             mListener.onContentChanged();
@@ -359,8 +359,7 @@ public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChanged
     }
 
     private static int identifyCacheFlag(MediaSet set) {
-        if (set == null || (set.getSupportedOperations()
-                & MediaSet.SUPPORT_CACHE) == 0) {
+        if (set == null || (set.getSupportedOperations() & MediaSet.SUPPORT_CACHE) == 0) {
             return MediaSet.CACHE_FLAG_NO;
         }
 

@@ -37,7 +37,7 @@ import com.xjt.letool.common.ThreadPool.Job;
 import com.xjt.letool.common.ThreadPool.JobContext;
 
 public class FullImageDataAdapter implements FullImageFragment.Model {
-    @SuppressWarnings("unused")
+
     private static final String TAG = FullImageDataAdapter.class.getSimpleName();
 
     private static final int MSG_LOAD_START = 1;
@@ -167,7 +167,6 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
         mUploader = new TiledTexture.Uploader(activity.getGLController());
 
         mMainHandler = new SynchronizedHandler(activity.getGLController()) {
-            @SuppressWarnings("unchecked")
             @Override
             public void handleMessage(Message message) {
                 switch (message.what) {
