@@ -31,7 +31,6 @@ import com.xjt.letool.view.DetailsHelper;
 import com.xjt.letool.view.GLBaseView;
 import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.LetoolBottomBar;
-import com.xjt.letool.view.LetoolEmptyView;
 import com.xjt.letool.view.LetoolTopBar;
 import com.xjt.letool.view.LetoolDialog;
 import com.xjt.letool.view.LetoolTopBar.OnActionModeListener;
@@ -50,7 +49,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -361,6 +359,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                     it.setClass(getActivity(), SettingsActivity.class);
                     it.putExtra(SettingsActivity.KEY_FROM_TIP, true);
                     startActivityForResult(it, LocalMediaActivity.REQUEST_CODE_SETTINGS);
+                    getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
                 }
             });
             dlg.setCancelBtn(R.string.common_cancel, new View.OnClickListener() {

@@ -52,7 +52,7 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
     public static final String KEY_ALBUM_ID = "album_id";
     public static final String KEY_IS_CAMERA_SOURCE = "is_camera_source";
     public static final String KEY_IS_IMAGE = "is_image";
-    
+
     public static final int REQUEST_CODE_SETTINGS = 100;
 
     private LetoolTopBar mTopBar;

@@ -9,11 +9,11 @@ import android.widget.TextView;
 import com.xjt.letool.R;
 
 @SuppressWarnings("static-access")
-public class CommonLoadingPanel extends RelativeLayout {
+public class LetoolLoadingView extends RelativeLayout {
     private TextView mMsgInsizeView;
     private TextView mMsgBelowView;
 
-    public CommonLoadingPanel(Context context, AttributeSet attrs) {
+    public LetoolLoadingView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initViews(context);
     }

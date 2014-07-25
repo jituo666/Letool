@@ -1,3 +1,4 @@
+
 package com.xjt.letool.activities;
 
 import com.xjt.letool.R;
@@ -14,13 +15,13 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-
 /**
  * @Author Jituo.Xuan
  * @Date 8:16:26 PM Jul 24, 2014
  * @Comments:null
  */
 public class MoviePlayActivity extends Activity {
+
     @SuppressWarnings("unused")
     private static final String TAG = MoviePlayActivity.class.getSimpleName();
     public static final String KEY_LOGO_BITMAP = "logo-bitmap";
@@ -36,6 +37,7 @@ public class MoviePlayActivity extends Activity {
         Intent intent = getIntent();
         mFinishOnCompletion = intent.getBooleanExtra(MediaStore.EXTRA_FINISH_ON_COMPLETION, true);
         mMoviePlayer = new MoviePlayer(rootView, this, intent.getData(), savedInstanceState, !mFinishOnCompletion) {
+
             @Override
             public void onCompletion() {
                 if (mFinishOnCompletion) {
@@ -44,7 +46,7 @@ public class MoviePlayActivity extends Activity {
             }
         };
         if (intent.hasExtra(MediaStore.EXTRA_SCREEN_ORIENTATION)) {
-            int orientation = intent.getIntExtra(MediaStore.EXTRA_SCREEN_ORIENTATION,ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+            int orientation = intent.getIntExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             if (orientation != getRequestedOrientation()) {
                 setRequestedOrientation(orientation);
             }
@@ -69,25 +71,30 @@ public class MoviePlayActivity extends Activity {
         ((AudioManager) getSystemService(AUDIO_SERVICE)).requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN_TRANSIENT);
         super.onStart();
     }
-    
+
     @Override
     public void onResume() {
         mMoviePlayer.onResume();
         super.onResume();
     }
-    
+
     @Override
     public void onPause() {
         mMoviePlayer.onPause();
         super.onPause();
     }
-    
+
     @Override
     protected void onStop() {
         ((AudioManager) getSystemService(AUDIO_SERVICE)).abandonAudioFocus(null);
         super.onStop();
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_left_in, R.anim.slide_right_out);
+    }
 
     @Override
     public void onDestroy() {

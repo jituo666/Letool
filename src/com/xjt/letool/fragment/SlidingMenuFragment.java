@@ -120,10 +120,12 @@ public class SlidingMenuFragment extends Fragment {
                         return;
                     }
                     getActivity().startActivity(mIntents.get(position));
+                    getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
                     getActivity().finish();
                 } else if (position == 2) {
                     mLetoolContext.getLetoolSlidingMenu().toggle();
                     getActivity().startActivityForResult(mIntents.get(position), 100);
+                    getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
                 } else if (position == 3) {
                     getActivity().finish();
                 }

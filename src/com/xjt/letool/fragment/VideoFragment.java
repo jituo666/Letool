@@ -488,6 +488,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             intent.setDataAndType(Uri.parse(item.getFilePath()), "video/*");
             intent.putExtra(Intent.EXTRA_TITLE, "");
             c.startActivity(intent);
+            getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
         } catch (ActivityNotFoundException e) {
             Toast.makeText(c, c.getString(R.string.app_name), Toast.LENGTH_SHORT).show();
         }

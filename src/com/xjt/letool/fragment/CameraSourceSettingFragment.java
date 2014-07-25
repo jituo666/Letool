@@ -46,7 +46,7 @@ import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.metadata.source.LocalSimpleAlbumSet;
 import com.xjt.letool.preference.GlobalPreference;
 import com.xjt.letool.utils.StorageUtils;
-import com.xjt.letool.view.CommonLoadingPanel;
+import com.xjt.letool.view.LetoolLoadingView;
 import com.xjt.letool.view.LetoolEmptyView;
 import com.xjt.letool.view.LetoolTopBar;
 import com.xjt.letool.view.LetoolTopBar.OnActionModeListener;
@@ -71,7 +71,7 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
     private ItemAdapter mItemAdapter;
     private LetoolContext mLetoolContext;
     private LayoutInflater mLayoutInflater;
-    private CommonLoadingPanel mLoadingPanel;
+    private LetoolLoadingView mLoadingPanel;
     private LetoolEmptyView mEmptyView;
     private boolean mHasSdCard = true;
 
@@ -134,7 +134,7 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
                 t.show();
             }
         });
-        mLoadingPanel = (CommonLoadingPanel) rootView.findViewById(R.id.loading);
+        mLoadingPanel = (LetoolLoadingView) rootView.findViewById(R.id.loading);
         mSave = (Button) rootView.findViewById(R.id.save);
         mSave.setOnClickListener(this);
         mHasSdCard = StorageUtils.externalStorageAvailable();

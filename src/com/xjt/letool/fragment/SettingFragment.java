@@ -183,6 +183,7 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
         // 此Flag可根据具体产品需要自定义，如设置，则在加群界面按返回，返回手Q主界面，不设置，按返回会返回到呼起产品界面    //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         try {
             startActivity(intent);
+            getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
             return true;
         } catch (Exception e) {
             // 未安装手Q或安装的版本不支持
