@@ -6,7 +6,7 @@ import com.xjt.letool.adapters.ThumbnailSetDataWindow;
 import com.xjt.letool.adapters.ThumbnailSetDataWindow.AlbumSetEntry;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.loader.ThumbnailSetDataLoader;
-import com.xjt.letool.selectors.ContractSelector;
+import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.views.opengl.ColorTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
@@ -38,7 +38,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
     private boolean mAnimatePressedUp;
     private MediaPath mHighlightItemPath = null;
     private boolean mInSelectionMode;
-    private ContractSelector mMediaSelector;
+    private SelectionManager mMediaSelector;
 
     private LabelSpec mLabelSpec;
 
@@ -71,7 +71,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         }
     }
 
-    public ThumbnailSetRenderer(LetoolContext activity, ThumbnailView thumbnailView, ContractSelector selector) {
+    public ThumbnailSetRenderer(LetoolContext activity, ThumbnailView thumbnailView, SelectionManager selector) {
         super(activity.getActivityContext());
         mLetoolContext = activity;
         mThumbnailView = thumbnailView;

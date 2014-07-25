@@ -32,7 +32,7 @@ import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.metadata.source.LocalAlbum;
-import com.xjt.letool.selectors.ContractSelector;
+import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.share.ShareManager;
 import com.xjt.letool.share.ShareManager.ShareTo;
 import com.xjt.letool.stat.StatConstants;
@@ -102,7 +102,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
     public static final String ACTION_NEXTGEN_EDIT = "action_nextgen_edit";
     public static final String ACTION_SIMPLE_EDIT = "action_simple_edit";
 
-    private ContractSelector mSelectionManager;
+    private SelectionManager mSelectionManager;
 
     private GLController mGLController;
     private FullImageView mFullImageView;
@@ -430,7 +430,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
     }
 
     private void initViews() {
-        mSelectionManager = new ContractSelector(mLetoolContext, false);
+        mSelectionManager = new SelectionManager(mLetoolContext, false);
         mFullImageView = new FullImageView(mLetoolContext);
         mFullImageView.setListener(this);
         mRootPane.addComponent(mFullImageView);

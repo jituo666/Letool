@@ -17,8 +17,8 @@ import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.metadata.loader.DataLoadingListener;
 import com.xjt.letool.metadata.loader.ThumbnailSetDataLoader;
 import com.xjt.letool.metadata.source.LocalAlbumSet;
-import com.xjt.letool.selectors.ContractSelectListener;
-import com.xjt.letool.selectors.ContractSelector;
+import com.xjt.letool.selectors.SelectionListener;
+import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.StorageUtils;
@@ -61,7 +61,7 @@ import android.widget.Toast;
  * @Date 9:40:26 PM Apr 20, 2014
  * @Comments:null
  */
-public class GalleryFragment extends Fragment implements OnActionModeListener, EyePosition.EyePositionListener, ContractSelectListener, LayoutListener {
+public class GalleryFragment extends Fragment implements OnActionModeListener, EyePosition.EyePositionListener, SelectionListener, LayoutListener {
 
     private static final String TAG = GalleryFragment.class.getSimpleName();
 
@@ -79,7 +79,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     private boolean mIsActive = false;
     private ThumbnailSetRenderer mThumbnailViewRenderer;
 
-    private ContractSelector mSelector;
+    private SelectionManager mSelector;
     private ThumbnailSetDataLoader mThumbnailSetAdapter;
     private MediaSet mMediaSet;
 
@@ -251,7 +251,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     }
 
     private void initializeViews() {
-        mSelector = new ContractSelector(mLetoolContext, true);
+        mSelector = new SelectionManager(mLetoolContext, true);
         mSelector.setSelectionListener(this);
         ThumbnailLayout layout = null;
         if (mLetoolContext.isImageBrwosing()) {
@@ -560,18 +560,18 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     @Override
     public void onSelectionModeChange(int mode) {
         switch (mode) {
-            case ContractSelector.ENTER_SELECTION_MODE: {
+            case SelectionManager.ENTER_SELECTION_MODE: {
                 initSelectionActionBar();
                 mRootPane.invalidate();
                 break;
             }
-            case ContractSelector.LEAVE_SELECTION_MODE: {
+            case SelectionManager.LEAVE_SELECTION_MODE: {
 
                 initBars();
                 mRootPane.invalidate();
                 break;
             }
-            case ContractSelector.SELECT_ALL_MODE: {
+            case SelectionManager.SELECT_ALL_MODE: {
                 mRootPane.invalidate();
                 break;
             }

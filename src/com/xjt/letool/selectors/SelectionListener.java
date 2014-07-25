@@ -8,7 +8,7 @@ import com.xjt.letool.metadata.MediaPath;
  * @Date 8:18:33 PM Jul 24, 2014
  * @Comments:null
  */
-public interface ContractSelectListener {
+public interface SelectionListener {
 
     public void onSelectionModeChange(int mode);
 

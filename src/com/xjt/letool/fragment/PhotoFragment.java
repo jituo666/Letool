@@ -18,8 +18,8 @@ import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.metadata.loader.DataLoadingListener;
 import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.metadata.source.LocalAlbum;
-import com.xjt.letool.selectors.ContractSelectListener;
-import com.xjt.letool.selectors.ContractSelector;
+import com.xjt.letool.selectors.SelectionListener;
+import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.RelativePosition;
@@ -64,7 +64,7 @@ import android.widget.Toast;
  * @Date 9:48:35 AM Apr 19, 2014
  * @Comments:null
  */
-public class PhotoFragment extends Fragment implements EyePosition.EyePositionListener, ContractSelectListener, OnActionModeListener,
+public class PhotoFragment extends Fragment implements EyePosition.EyePositionListener, SelectionListener, OnActionModeListener,
         LayoutListener {
 
     private static final String TAG = PhotoFragment.class.getSimpleName();
@@ -95,7 +95,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     private boolean mHasDefaultDCIMDirectory = false;
     private boolean mGetContent;
     private SynchronizedHandler mHandler;
-    protected ContractSelector mSelector;
+    protected SelectionManager mSelector;
     private EyePosition mEyePosition; // The eyes' position of the user, the origin is at the center of the device and the unit is in pixels.
     private float mUserDistance; // in pixel
     private float mX;
@@ -270,7 +270,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     }
 
     private void initializeViews() {
-        mSelector = new ContractSelector(mLetoolContext, false);
+        mSelector = new SelectionManager(mLetoolContext, false);
         mSelector.setSelectionListener(this);
         mConfig = ViewConfigs.AlbumPage.get(mLetoolContext.getActivityContext());
         ThumbnailLayout layout;
@@ -531,17 +531,17 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     @Override
     public void onSelectionModeChange(int mode) {
         switch (mode) {
-            case ContractSelector.ENTER_SELECTION_MODE: {
+            case SelectionManager.ENTER_SELECTION_MODE: {
                 initSelectionBar();
                 mRootPane.invalidate();
                 break;
             }
-            case ContractSelector.LEAVE_SELECTION_MODE: {
+            case SelectionManager.LEAVE_SELECTION_MODE: {
                 initBars();
                 mRootPane.invalidate();
                 break;
             }
-            case ContractSelector.SELECT_ALL_MODE: {
+            case SelectionManager.SELECT_ALL_MODE: {
                 mRootPane.invalidate();
                 break;
             }

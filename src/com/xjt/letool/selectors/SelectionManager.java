@@ -16,7 +16,7 @@ import java.util.Set;
  * @Date 8:18:36 PM Jul 24, 2014
  * @Comments:null
  */
-public class ContractSelector {
+public class SelectionManager {
 
     @SuppressWarnings("unused")
     private static final String TAG = "SelectionManager";
@@ -27,7 +27,7 @@ public class ContractSelector {
 
     private Set<MediaPath> mClickedSet;
     private MediaSet mSourceMediaSet;
-    private ContractSelectListener mListener;
+    private SelectionListener mListener;
     private DataManager mDataManager;
     private boolean mInverseSelection;
     private boolean mIsAlbumSet;
@@ -35,7 +35,7 @@ public class ContractSelector {
     private boolean mAutoLeave = false;
     private int mTotal;
 
-    public ContractSelector(LetoolContext activity, boolean isAlbumSet) {
+    public SelectionManager(LetoolContext activity, boolean isAlbumSet) {
         mDataManager = activity.getDataManager();
         mClickedSet = new HashSet<MediaPath>();
         mIsAlbumSet = isAlbumSet;
@@ -47,7 +47,7 @@ public class ContractSelector {
         mAutoLeave = enable;
     }
 
-    public void setSelectionListener(ContractSelectListener listener) {
+    public void setSelectionListener(SelectionListener listener) {
         mListener = listener;
     }
 

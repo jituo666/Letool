@@ -1,3 +1,4 @@
+
 package com.xjt.letool.adapters;
 
 import android.content.Context;
@@ -101,7 +102,7 @@ public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChanged
     }
 
     public VideoEntry get(int thumbnailIndex) {
-        if (!isActiveSlot(thumbnailIndex)) {
+        if (!isActiveThumbnail(thumbnailIndex)) {
             Utils.fail("invalid thumbnail: %s outsides (%s, %s)", thumbnailIndex, mActiveStart, mActiveEnd);
         }
         return mData[thumbnailIndex % mData.length];
@@ -111,7 +112,7 @@ public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChanged
         return mSize;
     }
 
-    public boolean isActiveSlot(int thumbnailIndex) {
+    public boolean isActiveThumbnail(int thumbnailIndex) {
         return thumbnailIndex >= mActiveStart && thumbnailIndex < mActiveEnd;
     }
 
@@ -125,7 +126,7 @@ public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChanged
             }
             mSource.setActiveWindow(contentStart, contentEnd);
             for (int i = contentStart; i < contentEnd; ++i) {
-                prepareSlotContent(i);
+                prepareThumbnailContent(i);
             }
         } else {
             for (int i = mContentStart; i < contentStart; ++i) {
@@ -136,10 +137,10 @@ public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChanged
             }
             mSource.setActiveWindow(contentStart, contentEnd);
             for (int i = contentStart, n = mContentStart; i < n; ++i) {
-                prepareSlotContent(i);
+                prepareThumbnailContent(i);
             }
             for (int i = mContentEnd; i < contentEnd; ++i) {
-                prepareSlotContent(i);
+                prepareThumbnailContent(i);
             }
         }
 
@@ -148,7 +149,6 @@ public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChanged
     }
 
     public void setActiveWindow(int start, int end) {
-        //LLog.i(TAG, "tart:" + start + " end :" + end);
         if (!(start <= end && end - start <= mData.length && end <= mSize)) {
             Utils.fail("start = %s, end = %s, length = %s, size = %s", start, end, mData.length, mSize);
         }
@@ -207,9 +207,7 @@ public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChanged
     }
 
     private static long getDataVersion(MediaObject object) {
-        return object == null
-                ? MediaSet.INVALID_DATA_VERSION
-                : object.getDataVersion();
+        return object == null ? MediaSet.INVALID_DATA_VERSION : object.getDataVersion();
     }
 
     private void freeSlotContent(int thumbnailIndex) {
@@ -226,9 +224,8 @@ public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChanged
     }
 
     private boolean isLabelChanged(
-            VideoEntry entry, String title,  long duration ) {
-        return !Utils.equals(entry.title, title)
-                || entry.duration != duration;
+            VideoEntry entry, String title, long duration) {
+        return !Utils.equals(entry.title, title) || entry.duration != duration;
     }
 
     private void updateVideoEntry(VideoEntry entry, int thumbnailIndex) {
@@ -236,7 +233,7 @@ public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChanged
         entry.item = item;
         entry.setPath = (item == null) ? null : item.getPath();
         String title = (item == null) ? "" : Utils.ensureNotNull(item.getName());
-        long duration = (item == null) ? 0:((LocalVideo)item).getDuration();
+        long duration = (item == null) ? 0 : ((LocalVideo) item).getDuration();
         if (isLabelChanged(entry, title, duration)) {
             entry.title = title;
             entry.duration = duration;
@@ -264,7 +261,7 @@ public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChanged
         }
     }
 
-    private void prepareSlotContent(int thumbnailIndex) {
+    private void prepareThumbnailContent(int thumbnailIndex) {
         VideoEntry entry = new VideoEntry();
         updateVideoEntry(entry, thumbnailIndex);
         mData[thumbnailIndex % mData.length] = entry;
@@ -276,7 +273,6 @@ public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChanged
         loader.startLoad();
         return loader.isRequestInProgress();
     }
-
 
     private void updateAllImageRequests() {
         mActiveRequestCount = 0;
@@ -322,7 +318,7 @@ public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChanged
         VideoEntry entry = mData[index % mData.length];
         updateVideoEntry(entry, index);
         updateAllImageRequests();
-        if (mListener != null && isActiveSlot(index)) {
+        if (mListener != null && isActiveThumbnail(index)) {
             mListener.onContentChanged();
         }
     }
@@ -348,7 +344,7 @@ public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChanged
         mIsActive = true;
         TiledTexture.prepareResources();
         for (int i = mContentStart, n = mContentEnd; i < n; ++i) {
-            prepareSlotContent(i);
+            prepareThumbnailContent(i);
         }
         updateAllImageRequests();
     }
@@ -368,14 +364,14 @@ public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChanged
 
     private class AlbumLabelLoader extends BitmapLoader implements EntryUpdater {
 
-        private final int mSlotIndex;
+        private final int mThumbnailIndex;
         private final String mTitle;
         private final String mDuration;
 
         public AlbumLabelLoader(int thumbnailIndex, String title, long duration) {
-            mSlotIndex = thumbnailIndex;
+            mThumbnailIndex = thumbnailIndex;
             mTitle = title;
-            mDuration = StringUtils.formatTime(mContext,duration);
+            mDuration = StringUtils.formatTime(mContext, duration);
         }
 
         @Override
@@ -394,12 +390,12 @@ public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChanged
             if (bitmap == null)
                 return; // Error or recycled
 
-            VideoEntry entry = mData[mSlotIndex % mData.length];
+            VideoEntry entry = mData[mThumbnailIndex % mData.length];
             BitmapTexture texture = new BitmapTexture(bitmap);
             texture.setOpaque(false);
             entry.labelTexture = texture;
 
-            if (isActiveSlot(mSlotIndex)) {
+            if (isActiveThumbnail(mThumbnailIndex)) {
                 --mActiveRequestCount;
                 if (mActiveRequestCount == 0)
                     requestNonactiveImages();
@@ -435,42 +431,42 @@ public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChanged
         updateAllImageRequests();
     }
 
-        private class AlbumCoverLoader extends BitmapLoader implements EntryUpdater {
-    
-            private MediaItem mMediaItem;
-            private final int mSlotIndex;
-    
-            public AlbumCoverLoader(int thumbnailIndex, MediaItem item) {
-                mSlotIndex = thumbnailIndex;
-                mMediaItem = item;
-            }
-    
-            @Override
-            protected Future<Bitmap> submitBitmapTask(FutureListener<Bitmap> l) {
-                return mThreadPool.submit(mMediaItem.requestImage(MediaItem.TYPE_MICROTHUMBNAIL), l);
-            }
-    
-            @Override
-            protected void onLoadComplete(Bitmap bitmap) {
-                mHandler.obtainMessage(MSG_UPDATE_ALBUM_ENTRY, this).sendToTarget();
-            }
-    
-            @Override
-            public void updateEntry() {
-                Bitmap bitmap = getBitmap();
-                if (bitmap == null)
-                    return; // error or recycled
-    
-                VideoEntry entry = mData[mSlotIndex % mData.length];
-                entry.bitmapTexture = new BitmapTexture(bitmap);
-    
-                if (isActiveSlot(mSlotIndex)) {
-                    --mActiveRequestCount;
-                    if (mActiveRequestCount == 0)
-                        requestNonactiveImages();
-                    if (mListener != null)
-                        mListener.onContentChanged();
-                }
+    private class AlbumCoverLoader extends BitmapLoader implements EntryUpdater {
+
+        private MediaItem mMediaItem;
+        private final int mThumbnailIndex;
+
+        public AlbumCoverLoader(int thumbnailIndex, MediaItem item) {
+            mThumbnailIndex = thumbnailIndex;
+            mMediaItem = item;
+        }
+
+        @Override
+        protected Future<Bitmap> submitBitmapTask(FutureListener<Bitmap> l) {
+            return mThreadPool.submit(mMediaItem.requestImage(MediaItem.TYPE_MICROTHUMBNAIL), l);
+        }
+
+        @Override
+        protected void onLoadComplete(Bitmap bitmap) {
+            mHandler.obtainMessage(MSG_UPDATE_ALBUM_ENTRY, this).sendToTarget();
+        }
+
+        @Override
+        public void updateEntry() {
+            Bitmap bitmap = getBitmap();
+            if (bitmap == null)
+                return; // error or recycled
+
+            VideoEntry entry = mData[mThumbnailIndex % mData.length];
+            entry.bitmapTexture = new BitmapTexture(bitmap);
+
+            if (isActiveThumbnail(mThumbnailIndex)) {
+                --mActiveRequestCount;
+                if (mActiveRequestCount == 0)
+                    requestNonactiveImages();
+                if (mListener != null)
+                    mListener.onContentChanged();
             }
         }
+    }
 }

@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.xjt.letool.R;
-import com.xjt.letool.selectors.ContractSelector;
+import com.xjt.letool.selectors.SelectionManager;
 
 /**
  * @Author Jituo.Xuan
@@ -65,7 +65,7 @@ public class LetoolTopBar {
     private OnActionModeListener mOnActionModeListener;
     private int mCurActionBarMode;
     private boolean mIsExpand = false;
-    private ContractSelector mConractSelectionManager;
+    private SelectionManager mConractSelectionManager;
 
     public LetoolTopBar(FragmentActivity activity, ViewGroup barContainer) {
         mActivity = activity;
@@ -115,7 +115,7 @@ public class LetoolTopBar {
             actionBarNaviText.setText(titleId);
     }
 
-    public void setContractSelectionManager(ContractSelector selector) {
+    public void setContractSelectionManager(SelectionManager selector) {
         mConractSelectionManager = selector;
         mIsExpand = false;
     }

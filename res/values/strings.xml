@@ -21,7 +21,7 @@
     <string name="camera_source_dirs">Camera source</string>
     <string name="camera_source_dirs_desc">Set photo and video source directories</string>
     <string name="camera_source_dirs_title">Camera source</string>
-    <string name="camera_source_dirs_tip">By default, the photos or videos is read from the default directory [/DCIM/Camera], but photos or videos may not in this directory as the phone compatibility issues, this situation, you can own set one or more directories as the photos or videos directory</string>
+    <string name="camera_source_dirs_tip">By default, photos or videos is read from the directory [/DCIM/Camera], but photos or videos may not in this directory as the phone compatibility issues, this situation, you can own set one or more directories as the photos or videos directory.</string>
     <string name="clear_cache_title">Clear cache</string>
     <string name="clear_cache_desc">Cache size %1$s，Available space %2$s</string>
     <string name="clear_cache_finished">Caches Cleared!</string>

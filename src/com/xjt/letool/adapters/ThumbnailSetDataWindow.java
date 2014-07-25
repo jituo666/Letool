@@ -57,7 +57,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
     private BitmapTexture mLoadingLabel;
     private LetoolContext mLetoolContext;
 
-    private int mSlotWidth;
+    private int mThumbnailWidth;
 
     public static class AlbumSetEntry {
 
@@ -104,7 +104,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
     }
 
     public AlbumSetEntry get(int thumbnailIndex) {
-        if (!isActiveSlot(thumbnailIndex)) {
+        if (!isActiveThumbnail(thumbnailIndex)) {
             Utils.fail("invalid thumbnail: %s outsides (%s, %s)", thumbnailIndex, mActiveStart, mActiveEnd);
         }
         return mData[thumbnailIndex % mData.length];
@@ -114,7 +114,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         return mSize;
     }
 
-    public boolean isActiveSlot(int thumbnailIndex) {
+    public boolean isActiveThumbnail(int thumbnailIndex) {
         return thumbnailIndex >= mActiveStart && thumbnailIndex < mActiveEnd;
     }
 
@@ -335,7 +335,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         AlbumSetEntry entry = mData[index % mData.length];
         updateAlbumSetEntry(entry, index);
         updateAllImageRequests();
-        if (mListener != null && isActiveSlot(index)) {
+        if (mListener != null && isActiveThumbnail(index)) {
             mListener.onContentChanged();
         }
     }
@@ -391,12 +391,12 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
 
     private class AlbumLabelLoader extends BitmapLoader implements EntryUpdater {
 
-        private final int mSlotIndex;
+        private final int mThumbnailIndex;
         private final String mTitle;
         private final int mTotalCount;
 
         public AlbumLabelLoader(int thumbnailIndex, String title, int totalCount) {
-            mSlotIndex = thumbnailIndex;
+            mThumbnailIndex = thumbnailIndex;
             mTitle = title;
             mTotalCount = totalCount;
         }
@@ -419,12 +419,12 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
             if (bitmap == null)
                 return; // Error or recycled
 
-            AlbumSetEntry entry = mData[mSlotIndex % mData.length];
+            AlbumSetEntry entry = mData[mThumbnailIndex % mData.length];
             BitmapTexture texture = new BitmapTexture(bitmap);
             texture.setOpaque(false);
             entry.labelTexture = texture;
 
-            if (isActiveSlot(mSlotIndex)) {
+            if (isActiveThumbnail(mThumbnailIndex)) {
                 --mActiveRequestCount;
                 if (mActiveRequestCount == 0)
                     requestNonactiveImages();
@@ -436,12 +436,12 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
     }
 
     public void onThumbnailSizeChanged(int width, int height) {
-        if (mSlotWidth == width)
+        if (mThumbnailWidth == width)
             return;
 
-        mSlotWidth = width;
+        mThumbnailWidth = width;
         mLoadingLabel = null;
-        mLabelMaker.setLabelWidth(mSlotWidth);
+        mLabelMaker.setLabelWidth(mThumbnailWidth);
 
         if (!mIsActive)
             return;
@@ -463,10 +463,10 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         private class AlbumCoverLoader extends BitmapLoader implements EntryUpdater {
     
             private MediaItem mMediaItem;
-            private final int mSlotIndex;
+            private final int mThumbnailIndex;
     
             public AlbumCoverLoader(int thumbnailIndex, MediaItem item) {
-                mSlotIndex = thumbnailIndex;
+                mThumbnailIndex = thumbnailIndex;
                 mMediaItem = item;
             }
     
@@ -486,10 +486,10 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
                 if (bitmap == null)
                     return; // error or recycled
     
-                AlbumSetEntry entry = mData[mSlotIndex % mData.length];
+                AlbumSetEntry entry = mData[mThumbnailIndex % mData.length];
                 entry.bitmapTexture = new BitmapTexture(bitmap);
     
-                if (isActiveSlot(mSlotIndex)) {
+                if (isActiveThumbnail(mThumbnailIndex)) {
                     --mActiveRequestCount;
                     if (mActiveRequestCount == 0)
                         requestNonactiveImages();

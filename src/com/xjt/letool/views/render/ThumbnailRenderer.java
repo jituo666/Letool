@@ -5,7 +5,7 @@ import com.xjt.letool.LetoolContext;
 import com.xjt.letool.adapters.ThumbnailDataWindow;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
-import com.xjt.letool.selectors.ContractSelector;
+import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.views.opengl.ColorTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
@@ -30,7 +30,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
 
     private int mPressedIndex = -1;
     private boolean mAnimatePressedUp;
-    private ContractSelector mMediaSelector;
+    private SelectionManager mMediaSelector;
     private boolean mInSelectionMode;
     private LetoolContext mFragment;
 
@@ -52,7 +52,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
         }
     }
 
-    public ThumbnailRenderer(LetoolContext context, ThumbnailView slotView, ContractSelector selector) {
+    public ThumbnailRenderer(LetoolContext context, ThumbnailView slotView, SelectionManager selector) {
         super(context.getActivityContext());
         mFragment = context;
         mThumbnailView = slotView;

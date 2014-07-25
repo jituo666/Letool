@@ -6,7 +6,7 @@ import com.xjt.letool.adapters.ThumbnailVideoDataWindow;
 import com.xjt.letool.adapters.ThumbnailVideoDataWindow.VideoEntry;
 import com.xjt.letool.metadata.MediaPath;
 import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
-import com.xjt.letool.selectors.ContractSelector;
+import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.views.opengl.ColorTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
