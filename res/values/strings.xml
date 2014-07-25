@@ -74,9 +74,6 @@
     <string name="common_error_no_video">No video file found！</string>
     <string name="common_video_set">(%d Video(s))</string>
     <string name="common_error_no_dirs">No picture or video directory!</string>
-    <!-- popup menu -->
-    <string name="popup_menu_select_mode">Select</string>
-    <string name="popup_menu_take_picture">Camera</string>
     <string name="share_app_install_tip">Please install QQ </string>
 
     <!-- Text indicating the title of a media item in details window [CHAR LIMIT=14] -->
