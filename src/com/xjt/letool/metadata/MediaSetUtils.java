@@ -7,6 +7,7 @@ import android.os.Environment;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.preference.GlobalPreference;
 import com.xjt.letool.utils.LetoolUtils;
+import com.xjt.letool.utils.UtilStorage;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -38,31 +39,31 @@ public class MediaSetUtils {
                 MY_ALBUM_BUCKETS = new int[dirs.length];
                 int i = 0;
                 for (String s : dirs) {
-                    LLog.i(TAG, " ------saved dir:" + s);
+                    LLog.i(TAG, " ------initializeMyAlbumBuckets dir:" + s);
                     MY_ALBUM_BUCKETS[i++] = LetoolUtils.getBucketId(s);
                 }
             }
         } else {
-            //          ArrayList<Integer> list = new ArrayList<Integer>();
-            //          if (UtilStorage.getInstance().getExternalSdCardPath() != null) {
-            //              list.addAll(recurseCamerDir(UtilStorage.getInstance().getExternalSdCardPath().toString() + "/DCIM/"));
-            //              list.addAll(recurseCamerDir(UtilStorage.getInstance().getExternalSdCardPath().toString() + "/Camera/"));
-            //              list.addAll(recurseCamerDir(UtilStorage.getInstance().getExternalSdCardPath().toString() + "/Photo/"));
-            //          }
-            //          if (UtilStorage.getInstance().getInnerSdCardPath() != null) {
-            //              list.addAll(recurseCamerDir(UtilStorage.getInstance().getInnerSdCardPath().toString() + "/DCIM/"));
-            //              list.addAll(recurseCamerDir(UtilStorage.getInstance().getInnerSdCardPath().toString() + "/Camera/"));
-            //              list.addAll(recurseCamerDir(UtilStorage.getInstance().getInnerSdCardPath().toString() + "/Photo/"));
-            //          }
-            //          if (list.size() == 0) {
-            //              list.addAll(recurseCamerDir(Environment.getExternalStorageDirectory().toString() + "/DCIM/"));
-            //              list.addAll(recurseCamerDir(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath().toString()));
-            //          }
-            //
-            //          MY_ALBUM_BUCKETS = new int[list.size()];
-            //          for (int i = 0; i < list.size(); i++) {
-            //              MY_ALBUM_BUCKETS[i] = list.get(i).intValue();
-            //          }
+            ArrayList<Integer> list = new ArrayList<Integer>();
+            if (UtilStorage.getInstance().getExternalSdCardPath() != null) {
+                list.addAll(recurseCamerDir(UtilStorage.getInstance().getExternalSdCardPath().toString() + "/DCIM/"));
+                list.addAll(recurseCamerDir(UtilStorage.getInstance().getExternalSdCardPath().toString() + "/Camera/"));
+                list.addAll(recurseCamerDir(UtilStorage.getInstance().getExternalSdCardPath().toString() + "/Photo/"));
+            }
+            if (UtilStorage.getInstance().getInnerSdCardPath() != null) {
+                list.addAll(recurseCamerDir(UtilStorage.getInstance().getInnerSdCardPath().toString() + "/DCIM/"));
+                list.addAll(recurseCamerDir(UtilStorage.getInstance().getInnerSdCardPath().toString() + "/Camera/"));
+                list.addAll(recurseCamerDir(UtilStorage.getInstance().getInnerSdCardPath().toString() + "/Photo/"));
+            }
+            if (list.size() == 0) {
+                list.addAll(recurseCamerDir(Environment.getExternalStorageDirectory().toString() + "/DCIM/"));
+                list.addAll(recurseCamerDir(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath().toString()));
+            }
+
+            MY_ALBUM_BUCKETS = new int[list.size()];
+            for (int i = 0; i < list.size(); i++) {
+                MY_ALBUM_BUCKETS[i] = list.get(i).intValue();
+            }
         }
         //common
 

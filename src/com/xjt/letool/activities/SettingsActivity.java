@@ -21,6 +21,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 /**
  * @Author Jituo.Xuan
@@ -48,6 +49,7 @@ public class SettingsActivity extends FragmentActivity implements LetoolContext 
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.app_settings);
         mIsFromTip = getIntent().getBooleanExtra(KEY_FROM_TIP, false);
         mTopBar = new LetoolTopBar(this, (ViewGroup) findViewById(R.id.letool_top_bar_container));

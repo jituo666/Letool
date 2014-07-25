@@ -9,11 +9,8 @@
     <!-- Displayed in the title of those albums that are being loaded -->
     <string name="loading">加载中\u2026</string>
     <string name="no_thumbnail">无缩略图</string>
-    <string name="unknown">位置</string>
-    <!-- =========================================================================================================================== -->
-    <string name="sliding_menu_title_hide_list">隐藏列表</string>
-    <string name="sliding_menu_title_about">关于</string>
-    <string name="sliding_menu_title_home">主页</string>
+    <string name="unknown">未知</string>
+    <!-- each ui strings -->
     <string name="loading_video">加载视频\u2026</string>
     <string name="resume_playing_title">恢复视频</string>
     <string name="resume_playing_restart">重播</string>

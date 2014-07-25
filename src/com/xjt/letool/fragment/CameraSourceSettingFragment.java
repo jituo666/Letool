@@ -18,6 +18,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -123,7 +124,9 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
                 if (parentFile == null) {
                     parentFile = new File("/");
                 }
-                Toast.makeText(getActivity(), parentFile.toString(), Toast.LENGTH_LONG).show();
+                Toast t = Toast.makeText(getActivity(), parentFile.toString(), Toast.LENGTH_LONG);
+                t.setGravity(Gravity.CENTER, 0, 0);
+                t.show();
             }
         });
         mSave = (Button) rootView.findViewById(R.id.save);

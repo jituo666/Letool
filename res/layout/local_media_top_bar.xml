@@ -8,7 +8,7 @@
         android:layout_width="48dp"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:background="@drawable/common_item_bkg"
+        android:background="@drawable/common_list_item_bkg"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingRight="2dp" >
