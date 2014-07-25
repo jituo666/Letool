@@ -277,6 +277,12 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
         @Override
         protected void onPostExecute(Void v) {
             super.onPostExecute(v);
+            if (mMediaDirList.size() == 0) {
+                mEmptyView.updataView(R.drawable.ic_launcher, R.string.common_error_no_video);
+                mEmptyView.setVisibility(View.VISIBLE);
+                mListView.setVisibility(View.GONE);
+                return;
+            }
             mLoadingPanel.setVisibility(View.GONE);
             mListView.setVisibility(View.VISIBLE);
             mItemAdapter.notifyDataSetChanged();

@@ -68,11 +68,12 @@
     <string name="common_error_nosdcard">No SDcard！</string>
     <string name="common_error_nodcim_photo">No valid photos directories！</string>
     <string name="common_error_nodcim_video">No valid videos directories！</string>
-    <string name="common_error_no_photos">No photo found！</string>
-    <string name="common_error_no_picture">No picture found！</string>
-    <string name="common_error_no_movie">No movie found！</string>
-    <string name="common_error_no_video">No video found！</string>
+    <string name="common_error_no_photos">No photo list found！</string>
+    <string name="common_error_no_picture">No picture list found！</string>
+    <string name="common_error_no_movie">No movie file found！</string>
+    <string name="common_error_no_video">No video file found！</string>
     <string name="common_video_set">(%d Video(s))</string>
+    <string name="common_error_no_dirs">No picture or video directory!</string>
     <!-- popup menu -->
     <string name="popup_menu_select_mode">Select</string>
     <string name="popup_menu_take_picture">Camera</string>
