@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="ContentDescription" severity="ignore" />
+    <issue id="DefaultLocale" severity="ignore" />
+    <issue id="DisableBaselineAlignment">
+
+    </issue>
+    <issue id="DuplicateIncludedIds">
+    </issue>
+    <issue id="HandlerLeak">
+    </issue>
+    <issue id="HardcodedText">
+    </issue>
+    <issue id="InefficientWeight">
+    </issue>
+    <issue id="MissingTranslation">
+    </issue>
+    <issue id="ProtectedPermissons">
+    </issue>
+    <issue id="PxUsage" severity="ignore" />
+    <issue id="ScrollViewSize">
+    </issue>
+    <issue id="SdCardPath">
+    </issue>
+    <issue id="SetJavaScriptEnabled">
+    </issue>
+    <issue id="SpUsage" severity="ignore" />
+    <issue id="TypographyDashes" severity="ignore" />
+    <issue id="TypographyEllipsis" severity="ignore" />
+    <issue id="TypographyOther" severity="ignore" />
+    <issue id="UnusedResources">
+    </issue>
+    <issue id="UseSparseArrays">
+    </issue>
+    <issue id="UselessLeaf">
+    </issue>
+    <issue id="UselessParent">
+    </issue>
+    <issue id="WorldReadableFiles">
+    </issue>
+</lint>

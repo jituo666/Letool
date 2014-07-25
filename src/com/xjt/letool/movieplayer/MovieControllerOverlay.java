@@ -101,7 +101,6 @@ public class MovieControllerOverlay extends FrameLayout implements ControllerOve
 
         playRotatedButton = new ImageView(activity);
         playRotatedButton.setImageResource(R.drawable.ic_action_screen_rotation);
-        //playRotatedButton.setBackgroundResource(R.drawable.ic_action_screen_rotation);
         playRotatedButton.setScaleType(ScaleType.CENTER);
         playRotatedButton.setFocusable(true);
         playRotatedButton.setClickable(true);
