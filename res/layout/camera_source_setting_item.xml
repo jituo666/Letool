@@ -5,8 +5,8 @@
 
     <ImageView
         android:id="@+id/image"
-        android:layout_width="@dimen/letool_sliding_menu_icon_size"
-        android:layout_height="@dimen/letool_sliding_menu_icon_size"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="2dp"

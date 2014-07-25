@@ -70,7 +70,6 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     private static final int MSG_PICK_ALBUM = 1;
 
     private static final int BIT_LOADING_RELOAD = 1;
-    private static final int REQUEST_DO_ANIMATION = 1;
 
     private ViewGroup mNativeButtons;
     private LetoolContext mLetoolContext;

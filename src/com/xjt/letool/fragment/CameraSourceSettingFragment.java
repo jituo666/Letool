@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Locale;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -46,6 +45,7 @@ import com.xjt.letool.common.LLog;
 import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.metadata.source.LocalSimpleAlbumSet;
 import com.xjt.letool.preference.GlobalPreference;
+import com.xjt.letool.view.CommonLoadingPanel;
 import com.xjt.letool.view.LetoolTopBar;
 import com.xjt.letool.view.LetoolTopBar.OnActionModeListener;
 
@@ -59,7 +59,7 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
     private static final String TAG = CameraSourceSettingFragment.class.getSimpleName();
 
     protected ImageLoader imageLoader = ImageLoader.getInstance();
-    protected ListView listView;
+    protected ListView mListView;
     DisplayImageOptions options;
     protected boolean pauseOnScroll = false;
     protected boolean pauseOnFling = true;
@@ -69,6 +69,8 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
     private ItemAdapter mItemAdapter;
     private LetoolContext mLetoolContext;
     private LayoutInflater mLayoutInflater;
+    private CommonLoadingPanel mLoadingPanel;
+    
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,7 +84,7 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
                 .considerExifParams(true)
-                .displayer(new RoundedBitmapDisplayer(20))
+                .displayer(new RoundedBitmapDisplayer(2))
                 .build();
     }
 
@@ -113,10 +115,10 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
         mLayoutInflater = inflater;
         View rootView = inflater.inflate(R.layout.camera_source_setting, container, false);
         initBrowseActionBar();
-        listView = (ListView) rootView.findViewById(R.id.camera_source_list);
+        mListView = (ListView) rootView.findViewById(R.id.camera_source_list);
         mItemAdapter = new ItemAdapter();
-        listView.setAdapter(mItemAdapter);
-        listView.setOnItemClickListener(new OnItemClickListener() {
+        mListView.setAdapter(mItemAdapter);
+        mListView.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -129,6 +131,7 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
                 t.show();
             }
         });
+        mLoadingPanel = (CommonLoadingPanel) rootView.findViewById(R.id.loading);
         mSave = (Button) rootView.findViewById(R.id.save);
         mSave.setOnClickListener(this);
         new LoadMeidaTask().execute();
@@ -142,7 +145,7 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
     }
 
     private void applyScrollListener() {
-        listView.setOnScrollListener(new PauseOnScrollListener(imageLoader, pauseOnScroll, pauseOnFling));
+        mListView.setOnScrollListener(new PauseOnScrollListener(imageLoader, pauseOnScroll, pauseOnFling));
     }
 
     class ItemAdapter extends BaseAdapter {
@@ -238,19 +241,14 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
     private class LoadMeidaTask extends AsyncTask<Void, Void, Void> {
 
         LocalSimpleAlbumSet mDataSet;
-        ProgressDialog dialog;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             mMediaDirList = new ArrayList<MediaDir>();
             mDataSet = new LocalSimpleAlbumSet((LetoolApp) mLetoolContext.getActivityContext().getApplicationContext(), true);
-            dialog = new ProgressDialog(getActivity());
-            dialog.setTitle(getString(R.string.common_recommend));
-            dialog.setMessage(getString(R.string.common_loading));
-            dialog.setIndeterminate(true);
-            dialog.setCancelable(true);
-            dialog.show();
+            mLoadingPanel.setVisibility(View.VISIBLE);
+            mListView.setVisibility(View.GONE);
         }
 
         @Override
@@ -268,9 +266,8 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
         @Override
         protected void onPostExecute(Void v) {
             super.onPostExecute(v);
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
+            mLoadingPanel.setVisibility(View.GONE);
+            mListView.setVisibility(View.VISIBLE);
             mItemAdapter.notifyDataSetChanged();
             LLog.i(TAG, "---------LoadMeidaTask:" + mMediaDirList.size());
         }

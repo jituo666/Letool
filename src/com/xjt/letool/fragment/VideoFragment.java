@@ -207,8 +207,8 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             return;
         mLongPressedIndex = videoIndex;
         List<ActionItem> items = new ArrayList<ActionItem>();
-        addMenuItem(items, POP_UP_MENU_ITEM_DETAIL, R.string.common_detail);
-        addMenuItem(items, POP_UP_MENU_ITEM_DELETE, R.string.common_delete);
+        addMenuItem(items, POP_UP_MENU_ITEM_DETAIL, R.string.show_details);
+        addMenuItem(items, POP_UP_MENU_ITEM_DELETE, R.string.delete_video);
         final LetoolDialog dlg = new LetoolDialog(getActivity());
         dlg.setTitle(item.getName());
         ListView listView = dlg.setListAdapter(new MenuItemAdapter(getActivity(), items));
