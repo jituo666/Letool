@@ -482,52 +482,53 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
 
     @Override
     public void onClick(View v) {
-        if (!mIsSDCardMountedCorreclty)
-            return;
         if (v.getId() == R.id.action_navi) {
             mLetoolContext.getLetoolSlidingMenu().toggle();
-        } else if (v.getId() == R.id.operation_delete) {
-
-            MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_GALLERY_DELETE);
-            int count = mSelector.getSelectedCount();
-            if (count <= 0) {
-                Toast t = Toast.makeText(getActivity(), R.string.common_selection_tip, Toast.LENGTH_SHORT);
-                t.setGravity(Gravity.CENTER, 0, 0);
-                t.show();
+        } else {
+            if (!mIsSDCardMountedCorreclty)
                 return;
+            if (v.getId() == R.id.operation_delete) {
+                MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_GALLERY_DELETE);
+                int count = mSelector.getSelectedCount();
+                if (count <= 0) {
+                    Toast t = Toast.makeText(getActivity(), R.string.common_selection_tip, Toast.LENGTH_SHORT);
+                    t.setGravity(Gravity.CENTER, 0, 0);
+                    t.show();
+                    return;
+                }
+                BatchDeleteMediaListener cdl = new BatchDeleteMediaListener(getActivity(), mLetoolContext.getDataManager(),
+                        new DeleteMediaProgressListener() {
+
+                            @Override
+                            public void onConfirmDialogDismissed(boolean confirmed) {
+                                if (confirmed)
+                                    mSelector.leaveSelectionMode();
+                            }
+
+                            @Override
+                            public ArrayList<MediaPath> onGetDeleteItem() {
+                                return mSelector.getSelected(false);
+                            }
+
+                        });
+                final LetoolDialog dlg = new LetoolDialog(getActivity());
+                dlg.setTitle(R.string.common_recommend);
+                dlg.setOkBtn(R.string.common_ok, cdl);
+                dlg.setCancelBtn(R.string.common_cancel, cdl);
+                dlg.setMessage(R.string.common_delete_tip);
+                dlg.show();
+            } else if (v.getId() == R.id.selection_finished) {
+                MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SELECT_OK);
+                mSelector.leaveSelectionMode();
+            } else if (v.getId() == R.id.navi_to_photo) {
+                Fragment f = mLetoolContext.isImageBrwosing() ? new PhotoFragment() : new VideoFragment();
+                Bundle data = new Bundle();
+                data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
+                        .getTopSetPath(mLetoolContext.isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
+                data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, true);
+                f.setArguments(data);
+                mLetoolContext.pushContentFragment(f, this, false);
             }
-            BatchDeleteMediaListener cdl = new BatchDeleteMediaListener(getActivity(), mLetoolContext.getDataManager(),
-                    new DeleteMediaProgressListener() {
-
-                        @Override
-                        public void onConfirmDialogDismissed(boolean confirmed) {
-                            if (confirmed)
-                                mSelector.leaveSelectionMode();
-                        }
-
-                        @Override
-                        public ArrayList<MediaPath> onGetDeleteItem() {
-                            return mSelector.getSelected(false);
-                        }
-
-                    });
-            final LetoolDialog dlg = new LetoolDialog(getActivity());
-            dlg.setTitle(R.string.common_recommend);
-            dlg.setOkBtn(R.string.common_ok, cdl);
-            dlg.setCancelBtn(R.string.common_cancel, cdl);
-            dlg.setMessage(R.string.common_delete_tip);
-            dlg.show();
-        } else if (v.getId() == R.id.selection_finished) {
-            MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SELECT_OK);
-            mSelector.leaveSelectionMode();
-        } else if (v.getId() == R.id.navi_to_photo) {
-            Fragment f = mLetoolContext.isImageBrwosing() ? new PhotoFragment() : new VideoFragment();
-            Bundle data = new Bundle();
-            data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
-                    .getTopSetPath(mLetoolContext.isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
-            data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, true);
-            f.setArguments(data);
-            mLetoolContext.pushContentFragment(f, this, false);
         }
     }
 

@@ -461,15 +461,13 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
 
     @Override
     public void onClick(View v) {
-        if (!mIsSDCardMountedCorreclty)
-            return;
         if (v.getId() == R.id.action_navi) {
             if (mIsCameraSource) {
                 mLetoolContext.getLetoolSlidingMenu().toggle();
             } else {
                 mLetoolContext.popContentFragment();
             }
-        } else if (v.getId() == R.id.navi_to_gallery) {
+        } else if ( mIsSDCardMountedCorreclty && v.getId() == R.id.navi_to_gallery) {
             GalleryFragment f = new GalleryFragment();
             Bundle data = new Bundle();
             data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()

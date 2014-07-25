@@ -105,7 +105,7 @@ public class StorageUtils {
         } catch (Exception e) {
             // ignore
         }
-        return -1;
+        return 0;
     }
 
     /**
@@ -118,7 +118,7 @@ public class StorageUtils {
             long temp = (long) stat.getBlockSize() * (long) stat.getBlockCount();
             return temp == 0 ? -1 : temp;
         } else {
-            return -1;
+            return 0;
         }
     }
 
@@ -141,7 +141,7 @@ public class StorageUtils {
             StatFs stat = new StatFs(EXTRA_SDCARD_PATH);
             return (long) stat.getBlockSize() * (long) stat.getAvailableBlocks();
         } else {
-            return -1;
+            return 0;
         }
     }
 
@@ -154,7 +154,7 @@ public class StorageUtils {
             StatFs stat = new StatFs(EXTRA_SDCARD_PATH);
             return (long) stat.getBlockSize() * (long) stat.getBlockCount();
         } else {
-            return -1;
+            return 0;
         }
     }
 

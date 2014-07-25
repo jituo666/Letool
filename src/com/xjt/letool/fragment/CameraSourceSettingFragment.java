@@ -45,7 +45,9 @@ import com.xjt.letool.common.LLog;
 import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.metadata.source.LocalSimpleAlbumSet;
 import com.xjt.letool.preference.GlobalPreference;
+import com.xjt.letool.utils.StorageUtils;
 import com.xjt.letool.view.CommonLoadingPanel;
+import com.xjt.letool.view.LetoolEmptyView;
 import com.xjt.letool.view.LetoolTopBar;
 import com.xjt.letool.view.LetoolTopBar.OnActionModeListener;
 
@@ -70,7 +72,8 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
     private LetoolContext mLetoolContext;
     private LayoutInflater mLayoutInflater;
     private CommonLoadingPanel mLoadingPanel;
-    
+    private LetoolEmptyView mEmptyView;
+    private boolean mHasSdCard = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -134,6 +137,14 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
         mLoadingPanel = (CommonLoadingPanel) rootView.findViewById(R.id.loading);
         mSave = (Button) rootView.findViewById(R.id.save);
         mSave.setOnClickListener(this);
+        mHasSdCard = StorageUtils.externalStorageAvailable();
+        if (!mHasSdCard) {
+            mEmptyView = (LetoolEmptyView) rootView.findViewById(R.id.empty_view);
+            mEmptyView.updataView(R.drawable.ic_launcher, R.string.common_error_nosdcard);
+            mEmptyView.setVisibility(View.VISIBLE);
+            mListView.setVisibility(View.GONE);
+            return rootView;
+        }
         new LoadMeidaTask().execute();
         return rootView;
     }
@@ -278,6 +289,7 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
     public void onClick(View v) {
         String result = "";
         if (v.getId() == R.id.save) {
+            if (!mHasSdCard) return;
             for (MediaDir m : mMediaDirList) {
                 File parentFile = new File(m.filePath).getParentFile();
                 if (m.isChecked && parentFile != null) {

@@ -73,9 +73,6 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     private static final int MSG_LAYOUT_CONFIRMED = 0;
     private static final int MSG_PICK_PHOTO = 1;
 
-    private static final int POP_UP_MENU_ITEM_SELECT = 0;
-    private static final int POP_UP_MENU_ITEM_CAMERA = 1;
-
     private LetoolContext mLetoolContext;
 
     // photo data
@@ -158,7 +155,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         if (mLoadingBits == 0 && mIsActive) {
             if (mAlbumDataSetLoader.size() == 0) {
                 LLog.i(TAG, " clearLoadingBit mAlbumDataSetLoader.size():" + mAlbumDataSetLoader.size());
-                mLetoolContext.showEmptyView(mIsCameraSource ?R.string.common_error_no_photos:R.string.common_error_no_picture);
+                mLetoolContext.showEmptyView(mIsCameraSource ? R.string.common_error_no_photos : R.string.common_error_no_picture);
             } else {
                 mLetoolContext.hideEmptyView();
             }
@@ -252,7 +249,8 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
             if (MediaSetUtils.getBucketsIds().length > 0) {
                 mAlbumTitle = getString(R.string.common_photo);
                 mDataSetPath = new MediaPath(data.getString(LocalMediaActivity.KEY_MEDIA_PATH), MediaSetUtils.getBucketsIds()[0]);
-                mDataSet = new LocalAlbum(mDataSetPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.getBucketsIds(), mLetoolContext.isImageBrwosing(),
+                mDataSet = new LocalAlbum(mDataSetPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.getBucketsIds(),
+                        mLetoolContext.isImageBrwosing(),
                         getString(R.string.common_photo));
                 mIsSDCardMountedCorreclty = true;
             } else {
@@ -322,7 +320,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
             naviToPhoto.setText(R.string.common_photo);
             naviToPhoto.setEnabled(false);
             TextView naviToGallery = (TextView) nativeButtons.findViewById(R.id.navi_to_gallery);
-            naviToGallery.setText(mLetoolContext.isImageBrwosing()?R.string.common_gallery:R.string.common_movies);
+            naviToGallery.setText(mLetoolContext.isImageBrwosing() ? R.string.common_gallery : R.string.common_movies);
             naviToGallery.setEnabled(true);
             naviToGallery.setOnClickListener(this);
         } else {
@@ -355,16 +353,18 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
             final LetoolDialog dlg = new LetoolDialog(getActivity());
             dlg.setTitle(R.string.common_recommend);
             dlg.setOkBtn(R.string.common_settings, new View.OnClickListener() {
+
                 @Override
                 public void onClick(View v) {
                     dlg.dismiss();
                     Intent it = new Intent();
-                    it.setClass(getActivity(),SettingsActivity.class);
+                    it.setClass(getActivity(), SettingsActivity.class);
                     it.putExtra(SettingsActivity.KEY_FROM_TIP, true);
-                    startActivityForResult(it,LocalMediaActivity.REQUEST_CODE_SETTINGS);
+                    startActivityForResult(it, LocalMediaActivity.REQUEST_CODE_SETTINGS);
                 }
             });
             dlg.setCancelBtn(R.string.common_cancel, new View.OnClickListener() {
+
                 @Override
                 public void onClick(View v) {
                     dlg.dismiss();
@@ -468,63 +468,65 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
 
     @Override
     public void onClick(View v) {
-        if (!mIsSDCardMountedCorreclty)
-            return;
+
         if (v.getId() == R.id.action_navi) {
             if (mIsCameraSource) {
                 mLetoolContext.getLetoolSlidingMenu().toggle();
             } else {
                 mLetoolContext.popContentFragment();
             }
-        } else  if (v.getId() == R.id.operation_delete) {
-
-            MobclickAgent.onEvent(mLetoolContext.getActivityContext(),
-                    StatConstants.EVENT_KEY_PHOTO_DELETE);
-            int count = mSelector.getSelectedCount();
-            if (count <= 0) {
-                Toast t = Toast.makeText(getActivity(),
-                        R.string.common_selection_tip, Toast.LENGTH_SHORT);
-                t.setGravity(Gravity.CENTER, 0, 0);
-                t.show();
+        } else {
+            if (!mIsSDCardMountedCorreclty)
                 return;
-            }
-            BatchDeleteMediaListener cdl = new BatchDeleteMediaListener(
-                    getActivity(), mLetoolContext.getDataManager(),
-                    new DeleteMediaProgressListener() {
+            if (v.getId() == R.id.operation_delete) {
 
-                        @Override
-                        public void onConfirmDialogDismissed(boolean confirmed) {
-                            if (confirmed) {
-                                mSelector.leaveSelectionMode();
+                MobclickAgent.onEvent(mLetoolContext.getActivityContext(),
+                        StatConstants.EVENT_KEY_PHOTO_DELETE);
+                int count = mSelector.getSelectedCount();
+                if (count <= 0) {
+                    Toast t = Toast.makeText(getActivity(),
+                            R.string.common_selection_tip, Toast.LENGTH_SHORT);
+                    t.setGravity(Gravity.CENTER, 0, 0);
+                    t.show();
+                    return;
+                }
+                BatchDeleteMediaListener cdl = new BatchDeleteMediaListener(
+                        getActivity(), mLetoolContext.getDataManager(),
+                        new DeleteMediaProgressListener() {
+
+                            @Override
+                            public void onConfirmDialogDismissed(boolean confirmed) {
+                                if (confirmed) {
+                                    mSelector.leaveSelectionMode();
+                                }
                             }
-                        }
 
-                        @Override
-                        public ArrayList<MediaPath> onGetDeleteItem() {
-                            return mSelector.getSelected(false);
-                        }
+                            @Override
+                            public ArrayList<MediaPath> onGetDeleteItem() {
+                                return mSelector.getSelected(false);
+                            }
 
-                    });
-            final LetoolDialog dlg = new LetoolDialog(getActivity());
-            dlg.setTitle(R.string.common_recommend);
-            dlg.setOkBtn(R.string.common_ok, cdl);
-            dlg.setCancelBtn(R.string.common_cancel, cdl);
-            dlg.setMessage(R.string.common_delete_tip);
-            dlg.show();
+                        });
+                final LetoolDialog dlg = new LetoolDialog(getActivity());
+                dlg.setTitle(R.string.common_recommend);
+                dlg.setOkBtn(R.string.common_ok, cdl);
+                dlg.setCancelBtn(R.string.common_cancel, cdl);
+                dlg.setMessage(R.string.common_delete_tip);
+                dlg.show();
 
-        } else if (v.getId() == R.id.navi_to_gallery) {
-            GalleryFragment f = new GalleryFragment();
-            Bundle data = new Bundle();
-            data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
-            		.getTopSetPath(mLetoolContext.isImageBrwosing()?DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
-            f.setArguments(data);
-            mLetoolContext.pushContentFragment(f, this, false);
-        } else if (v.getId() == R.id.selection_finished) {
-            MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SELECT_OK);
-            mSelector.leaveSelectionMode();
+            } else if (v.getId() == R.id.navi_to_gallery) {
+                GalleryFragment f = new GalleryFragment();
+                Bundle data = new Bundle();
+                data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
+                        .getTopSetPath(mLetoolContext.isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
+                f.setArguments(data);
+                mLetoolContext.pushContentFragment(f, this, false);
+            } else if (v.getId() == R.id.selection_finished) {
+                MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SELECT_OK);
+                mSelector.leaveSelectionMode();
+            }
         }
     }
-
 
     @Override
     public void onSelectionModeChange(int mode) {
@@ -559,12 +561,12 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         Bundle data = new Bundle();
         if (mIsCameraSource) {
             data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
-            		.getTopSetPath(mLetoolContext.isImageBrwosing()?DataManager.INCLUDE_LOCAL_IMAGE_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
+                    .getTopSetPath(mLetoolContext.isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
             data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, true);
         } else {
             data.putInt(LocalMediaActivity.KEY_ALBUM_ID, mDataSet.getPath().getIdentity());
             data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
-            		.getTopSetPath(mLetoolContext.isImageBrwosing()?DataManager.INCLUDE_LOCAL_IMAGE_ONLY:DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
+                    .getTopSetPath(mLetoolContext.isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
             data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, false);
             data.putString(LocalMediaActivity.KEY_ALBUM_TITLE, mDataSet.getName());
         }
