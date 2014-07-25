@@ -337,10 +337,10 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             nativeButtons.setVisibility(View.VISIBLE);
             topBar.setTitleIcon(R.drawable.ic_drawer);
             TextView naviToPhoto = (TextView) nativeButtons.findViewById(R.id.navi_to_photo);
-            naviToPhoto.setText(R.string.common_record);
+            naviToPhoto.setText(R.string.common_video);
             naviToPhoto.setEnabled(false);
             TextView naviToGallery = (TextView) nativeButtons.findViewById(R.id.navi_to_gallery);
-            naviToGallery.setText(mLetoolContext.isImageBrwosing() ? R.string.common_gallery : R.string.common_video);
+            naviToGallery.setText(R.string.common_movies);
             naviToGallery.setEnabled(true);
             naviToGallery.setOnClickListener(this);
         } else {

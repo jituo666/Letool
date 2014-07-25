@@ -11,24 +11,9 @@
     <string name="no_thumbnail">无缩略图</string>
     <string name="unknown">位置</string>
     <!-- =========================================================================================================================== -->
-    <string name="app_name">牛图</string>
-    <string name="common_picture">图片</string>
-    <string name="common_photo">照片</string>
-    <string name="common_gallery">图库</string>
-    <string name="common_record">录像</string>
-    <string name="common_video">视频</string>
-    <string name="common_settings">设置</string>
-    <string name="common_exit">退出</string>
-    <string name="common_loading">加载中</string>
-    <string name="common_save">保存</string>
     <string name="sliding_menu_title_hide_list">隐藏列表</string>
     <string name="sliding_menu_title_about">关于</string>
     <string name="sliding_menu_title_home">主页</string>
-
-    <plurals name="number_of_items">
-        <item quantity="other"> %1$d 张</item>
-    </plurals>
-
     <string name="loading_video">加载视频\u2026</string>
     <string name="resume_playing_title">恢复视频</string>
     <string name="resume_playing_restart">重播</string>
@@ -53,6 +38,17 @@
     <string name="app_update_only_wifi">没有wifi连接， 只在wifi下更新</string>
     <string name="full_image_browse">大图浏览(%1$d/%2$d)</string>
     <string name="full_image_browse_empty">该目录已没有图片!</string>
+   <!-- common strings -->
+    <string name="app_name">牛图</string>
+    <string name="common_picture">图片</string>
+    <string name="common_photo">照片</string>
+    <string name="common_video">录像</string>
+    <string name="common_movies">视频</string>
+    <string name="common_gallery">图库</string>
+    <string name="common_settings">设置</string>
+    <string name="common_exit">退出</string>
+    <string name="common_save">保存</string>
+    <string name="common_loading">加载中</string>
     <string name="common_connect_timeout">链接超时</string>
     <string name="common_share_to">分享到</string>
     <string name="common_share">分享</string>
@@ -73,7 +69,7 @@
     <string name="common_error_nosdcard">没有检测到SD卡!</string>
     <string name="common_error_nodcim_photo">没有检测到照片目录!</string>
     <string name="common_error_nodcim_video">没有检测到视频目录!</string>
-    <string name="common_video_set">(%d个视频)</string>
+    <string name="common_video_set">(%d 个视频)</string>
     <string name="common_error_no_photos">没有照片!</string>
     <string name="common_error_no_picture">没有图片!</string>
     <string name="common_error_no_movie">没有视频!</string>
@@ -137,5 +133,9 @@
     <string name="details_title">第%1$d项,共%2$d项</string>
     <string name="close">关闭</string>
     <string name="test_channel_id">测试渠道</string>
+
+    <plurals name="number_of_items">
+        <item quantity="other"> %1$d 张</item>
+    </plurals>
 
 </resources>

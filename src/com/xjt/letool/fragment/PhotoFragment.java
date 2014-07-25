@@ -322,7 +322,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
             naviToPhoto.setText(R.string.common_photo);
             naviToPhoto.setEnabled(false);
             TextView naviToGallery = (TextView) nativeButtons.findViewById(R.id.navi_to_gallery);
-            naviToGallery.setText(mLetoolContext.isImageBrwosing()?R.string.common_gallery:R.string.common_video);
+            naviToGallery.setText(mLetoolContext.isImageBrwosing()?R.string.common_gallery:R.string.common_movies);
             naviToGallery.setEnabled(true);
             naviToGallery.setOnClickListener(this);
         } else {

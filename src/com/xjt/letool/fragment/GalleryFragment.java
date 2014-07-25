@@ -313,13 +313,14 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         mNativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);
         mNativeButtons.setVisibility(View.VISIBLE);
 
-        TextView naviToGallery = (TextView) mNativeButtons.findViewById(R.id.navi_to_gallery);
-        naviToGallery.setText(mLetoolContext.isImageBrwosing() ? R.string.common_gallery : R.string.common_video);
-        naviToGallery.setEnabled(false);
         TextView naviToPhoto = (TextView) mNativeButtons.findViewById(R.id.navi_to_photo);
-        naviToPhoto.setText(mLetoolContext.isImageBrwosing() ? R.string.common_photo : R.string.common_record);
+        naviToPhoto.setText(mLetoolContext.isImageBrwosing() ? R.string.common_photo : R.string.common_video);
         naviToPhoto.setEnabled(true);
         naviToPhoto.setOnClickListener(this);
+
+        TextView naviToGallery = (TextView) mNativeButtons.findViewById(R.id.navi_to_gallery);
+        naviToGallery.setText(mLetoolContext.isImageBrwosing() ? R.string.common_gallery : R.string.common_movies);
+        naviToGallery.setEnabled(false);
 
     }
 
@@ -369,7 +370,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     public void onResume() {
         super.onResume();
         LLog.i(TAG, "onResume");
-        if (!mIsSDCardMountedCorreclty) 
+        if (!mIsSDCardMountedCorreclty)
             return;
         mGLController.setContentPane(mRootPane);
         mGLController.onResume();

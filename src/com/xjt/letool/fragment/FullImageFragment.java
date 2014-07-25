@@ -448,11 +448,11 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
             LLog.i(TAG, " photo fragment onCreateView id:" + albumId + " albumTitle:" + albumTitle + " albumMediaPath:" + albumMediaPath + " mIsCameraSource:");
             mMediaSet = mLetoolContext.getDataManager().getMediaSet(new MediaPath(albumMediaPath, albumId));
         } else {
-        	boolean isImage = mLetoolContext.isImageBrwosing();
+            boolean isImage = mLetoolContext.isImageBrwosing();
             mMediaSet = new LocalAlbum(new MediaPath(
                     data.getString(LocalMediaActivity.KEY_MEDIA_PATH), MediaSetUtils.getBucketsIds()[0]),
                     (LetoolApp) getActivity().getApplication(),
-                    MediaSetUtils.getBucketsIds(), isImage, getString(isImage?R.string.common_picture:R.string.common_record));
+                    MediaSetUtils.getBucketsIds(), isImage, getString(isImage ? R.string.common_picture : R.string.common_video));
         }
         mStartInFilmstrip = data.getBoolean(KEY_START_IN_FILMSTRIP, false);
         mCurrentIndex = data.getInt(KEY_INDEX_HINT, 0);
