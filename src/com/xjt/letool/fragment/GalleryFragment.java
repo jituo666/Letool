@@ -167,7 +167,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         if (mLoadingBits == 0 && mIsActive) {
             LLog.i(TAG, "---++--------:" + mThumbnailSetAdapter.size());
             if (mThumbnailSetAdapter.size() == 0) {
-                mLetoolContext.showEmptyView(mLetoolContext.isImageBrwosing() ? R.string.common_error_no_picture : R.string.common_error_no_video);
+                mLetoolContext.showEmptyView(mLetoolContext.isImageBrwosing() ? R.string.common_error_no_gallery : R.string.common_error_no_movies);
                 return;
             } else {
                 mLetoolContext.hideEmptyView();
@@ -207,12 +207,6 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
 
     public void onLongTap(int thumbnailIndex) {
         return;
-        //        MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_GALLERY_LONG_PRESSED);
-        //        MediaSet set = mThumbnailSetAdapter.getMediaSet(thumbnailIndex);
-        //        if (set == null)
-        //            return;
-        //        mSelector.toggle(set.getPath());
-        //        mThumbnailView.invalidate();
     }
 
     @Override
@@ -228,8 +222,6 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         mLetoolContext = (LetoolContext) getActivity();
         mGLController = mLetoolContext.getGLController();
 
-        //mLoadingInsie = (CommonLoadingPanel) rootView.findViewById(R.id.loading);
-        //        mLoadingInsie.setVisibility(View.VISIBLE);
         mHandler = new SynchronizedHandler(mGLController) {
 
             @Override

@@ -23,7 +23,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
@@ -121,7 +123,7 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mLayoutInflater = inflater;
-        View rootView = inflater.inflate(R.layout.camera_source_setting, container, false);
+        final View rootView = inflater.inflate(R.layout.camera_source_setting, container, false);
         initBrowseActionBar();
         mListView = (ListView) rootView.findViewById(R.id.camera_source_list);
         mItemAdapter = new ItemAdapter();
@@ -147,10 +149,27 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
                 Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
                 Animation.RELATIVE_TO_SELF, -1.0f, Animation.RELATIVE_TO_SELF, 0.0f
                 );
-        animation.setDuration(100);
+        animation.setDuration(60);
         set.addAnimation(animation);
         LayoutAnimationController controller = new LayoutAnimationController(set, 0.5f);
         mListView.setLayoutAnimation(controller);
+        mListView.setLayoutAnimationListener(new AnimationListener() {
+
+            @Override
+            public void onAnimationEnd(Animation a) {
+                View v = rootView.findViewById(R.id.btn_panel);
+                v.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_bottom_in));
+                v.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation a) {
+            }
+
+            @Override
+            public void onAnimationStart(Animation a) {
+            }
+        });
 
         mLoadingPanel = (LetoolLoadingView) rootView.findViewById(R.id.loading);
         mSave = (Button) rootView.findViewById(R.id.save);

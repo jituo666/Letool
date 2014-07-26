@@ -52,7 +52,8 @@
     <string name="common_detail">Detail</string>
     <string name="common_delete">Delete</string>
     <string name="common_delete_tip">Are you sure to delete?</string>
-    <string name="common_delete_cur_tip">Are you sure to delete?</string>
+    <string name="common_delete_cur_pic_tip">Are you sure to delete picture ?</string>
+    <string name="common_delete_cur_video_tip">Are you sure to delete video ?</string>
     <string name="common_delete_waiting">"Deleting\u2026"</string>
     <string name="common_update_checking">"Checking\u2026"</string>
     <string name="common_selection_tip">Please select something</string>
@@ -67,8 +68,8 @@
     <string name="common_error_nodcim_photo">No valid photos directories！</string>
     <string name="common_error_nodcim_video">No valid videos directories！</string>
     <string name="common_error_no_photos">No photo list found！</string>
-    <string name="common_error_no_picture">No picture list found！</string>
-    <string name="common_error_no_movie">No movie file found！</string>
+    <string name="common_error_no_gallery">No picture list found！</string>
+    <string name="common_error_no_movies">No movie file found！</string>
     <string name="common_error_no_video">No video file found！</string>
     <string name="common_video_set">(%d Video(s))</string>
     <string name="common_error_no_dirs">No picture or video directory!</string>

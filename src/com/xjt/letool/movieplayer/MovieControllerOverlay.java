@@ -118,7 +118,7 @@ public class MovieControllerOverlay extends FrameLayout implements ControllerOve
             }
         };
 
-        hideAnimation = AnimationUtils.loadAnimation(activity, R.anim.player_out);
+        hideAnimation = AnimationUtils.loadAnimation(activity, R.anim.alpha_media_player_out);
         hideAnimation.setAnimationListener(this);
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);

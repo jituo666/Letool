@@ -154,7 +154,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         if (mLoadingBits == 0 && mIsActive) {
             if (mAlbumDataSetLoader.size() == 0) {
                 LLog.i(TAG, " clearLoadingBit mAlbumDataSetLoader.size():" + mAlbumDataSetLoader.size());
-                mLetoolContext.showEmptyView(mIsCameraSource ? R.string.common_error_no_photos : R.string.common_error_no_picture);
+                mLetoolContext.showEmptyView(mIsCameraSource ? R.string.common_error_no_photos : R.string.common_error_no_gallery);
             } else {
                 mLetoolContext.hideEmptyView();
             }

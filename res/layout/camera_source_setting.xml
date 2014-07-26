@@ -24,9 +24,11 @@
         android:visibility="gone" />
 
     <LinearLayout
+        android:id="@+id/btn_panel"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@drawable/main_action_bar_bg" >
+        android:background="@drawable/main_action_bar_bg"
+        android:visibility="gone" >
 
         <Button
             android:id="@+id/save"

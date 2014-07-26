@@ -167,7 +167,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         mLoadingBits &= ~loadTaskBit;
         if (mLoadingBits == 0 && mIsActive) {
             if (mVideoDataLoader.size() == 0) {
-                mLetoolContext.showEmptyView(mIsCameraSource ? R.string.common_error_no_movie : R.string.common_error_no_video);
+                mLetoolContext.showEmptyView(mIsCameraSource ? R.string.common_error_no_movies : R.string.common_error_no_video);
             } else {
                 mLetoolContext.hideEmptyView();
             }
@@ -250,7 +250,6 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             public void handleMessage(Message message) {
                 switch (message.what) {
                     case MSG_LAYOUT_CONFIRMED: {
-                        // mLoadingInsie.setVisibility(View.GONE);
                         break;
                     }
                     case MSG_PICK_PHOTO: {
@@ -263,7 +262,6 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             }
         };
         mEyePosition = new EyePosition(mLetoolContext.getActivityContext(), this);
-//        mThumbnailView.startScatteringAnimation(mOpenCenter);
         mThumbnailView.startRisingAnimation();
     }
 
@@ -516,7 +514,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         dlg.setTitle(R.string.common_recommend);
         dlg.setOkBtn(R.string.common_ok, cdl);
         dlg.setCancelBtn(R.string.common_cancel, cdl);
-        dlg.setMessage(R.string.common_delete_cur_tip);
+        dlg.setMessage(R.string.common_delete_cur_video_tip);
         dlg.show();
     }
 
