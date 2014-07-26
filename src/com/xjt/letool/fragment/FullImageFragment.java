@@ -589,7 +589,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
         shareData.add(mCurrentPhoto.getFilePath());
         final LetoolDialog dlg = new LetoolDialog(getActivity());
         dlg.setTitle(R.string.common_share_to);
-        dlg.setOkBtn(R.string.common_cancel, null);
+        dlg.setCancelBtn(R.string.common_cancel, null);
 
         ListView l = dlg.setListAdapter(new ShareToAdapter(shareToList));
         l.setOnItemClickListener(new AdapterView.OnItemClickListener() {

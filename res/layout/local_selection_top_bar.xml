@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/action_bar_selection"
     style="@style/MyWidget.ActionBarPanel"
+    android:background="@drawable/vpi__tab_unselected_holo"
     android:layout_marginLeft="4dp"
     android:layout_marginRight="8dp" >
 

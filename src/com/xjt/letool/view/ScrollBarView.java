@@ -34,8 +34,8 @@ public class ScrollBarView extends GLBaseView {
     public ScrollBarView(Context context, int gripWidth, int gripHeight) {
         TypedValue outValue = new TypedValue();
         context.getTheme().resolveAttribute(android.R.attr.scrollbarThumbHorizontal, outValue, true);
-        mGripTexture = new ColorTexture(context.getResources().getColor(R.color.common_blue));
-        mTrackTexture = new ColorTexture(0xFFdddddd);
+        mGripTexture = new ColorTexture(context.getResources().getColor(R.color.common_dark));
+        mTrackTexture = new ColorTexture(context.getResources().getColor(R.color.scroll_bar_track_color));
         mGripWidth = gripWidth;
         mGripHeight = gripHeight;
         mGripMajorPos = 0;

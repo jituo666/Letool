@@ -1,3 +1,4 @@
+
 package com.xjt.letool.view;
 
 import android.app.Dialog;
@@ -80,7 +81,10 @@ public class LetoolDialog extends Dialog {
     }
 
     public void setCancelBtn(int title, View.OnClickListener clickListener) {
-        setDividerVisible(true);
+
+        if (findViewById(R.id.ok_btn).getVisibility() == View.VISIBLE) {
+            setDividerVisible(true);
+        }
         mButtonPanel.setVisibility(View.VISIBLE);
         TextView cancelBtn = (TextView) findViewById(R.id.cancel_btn);
         cancelBtn.setVisibility(View.VISIBLE);

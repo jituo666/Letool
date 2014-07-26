@@ -166,7 +166,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         mLoadingBits &= ~loadTaskBit;
         if (mLoadingBits == 0 && mIsActive) {
             if (mVideoDataLoader.size() == 0) {
-                mLetoolContext.showEmptyView(mIsCameraSource ?R.string.common_error_no_movie:R.string.common_error_no_video);
+                mLetoolContext.showEmptyView(mIsCameraSource ? R.string.common_error_no_movie : R.string.common_error_no_video);
             } else {
                 mLetoolContext.hideEmptyView();
             }
@@ -194,10 +194,9 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         if (!mIsActive)
             return;
 
-
-            mRender.setPressedIndex(videoIndex);
-            mRender.setPressedUp();
-            mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_PICK_PHOTO, videoIndex, 0), FadeTexture.DURATION);
+        mRender.setPressedIndex(videoIndex);
+        mRender.setPressedUp();
+        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_PICK_PHOTO, videoIndex, 0), FadeTexture.DURATION);
 
     }
 
@@ -207,8 +206,8 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             return;
         mLongPressedIndex = videoIndex;
         List<ActionItem> items = new ArrayList<ActionItem>();
-        addMenuItem(items, POP_UP_MENU_ITEM_DETAIL, R.string.show_details);
-        addMenuItem(items, POP_UP_MENU_ITEM_DELETE, R.string.delete_video);
+        addMenuItem(items, POP_UP_MENU_ITEM_DETAIL, R.string.common_detail);
+        addMenuItem(items, POP_UP_MENU_ITEM_DELETE, R.string.common_delete);
         final LetoolDialog dlg = new LetoolDialog(getActivity());
         dlg.setTitle(item.getName());
         ListView listView = dlg.setListAdapter(new MenuItemAdapter(getActivity(), items));
@@ -224,7 +223,8 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
                 dlg.dismiss();
             }
         });
-        dlg.setCanceledOnTouchOutside(true);
+        dlg.setCancelBtn(R.string.common_cancel, null);
+        dlg.setCanceledOnTouchOutside(false);
         dlg.show();
     }
 
@@ -467,7 +467,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             } else {
                 mLetoolContext.popContentFragment();
             }
-        } else if ( mIsSDCardMountedCorreclty && v.getId() == R.id.navi_to_gallery) {
+        } else if (mIsSDCardMountedCorreclty && v.getId() == R.id.navi_to_gallery) {
             GalleryFragment f = new GalleryFragment();
             Bundle data = new Bundle();
             data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
@@ -496,25 +496,14 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
 
     // -----------------------------------------------details-----------------------------------------------------------------------
 
-    
     private void delete() {
         MediaItem item = mVideoDataLoader.get(mLongPressedIndex);
         SingleDeleteMediaListener cdl = new SingleDeleteMediaListener(getActivity(), item.getPath(), mLetoolContext.getDataManager(),
                 new SingleDeleteMediaProgressListener() {
+
                     @Override
                     public void onConfirmDialogDismissed(boolean confirmed) {
                         if (confirmed) {
-//                            mTotalCount = mMediaSet.getMediaCount();
-//                            if (mTotalCount > 0) {
-//                                updateActionBarMessage(getString(R.string.full_image_browse, Math.min(mLongPressedIndex + 1,mTotalCount),mTotalCount));
-//                            } else {
-//                                // not medias
-//                                Toast.makeText(getActivity(),
-//                                        R.string.full_image_browse_empty,
-//                                        Toast.LENGTH_SHORT).show();
-//                                getActivity().finish();
-//                                return;
-//                            }
                         }
                     }
 
@@ -527,14 +516,16 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         dlg.setMessage(R.string.common_delete_cur_tip);
         dlg.show();
     }
+
     private class MyDetailsSource implements DetailsSource {
 
-        public MyDetailsSource( ) {
+        public MyDetailsSource() {
         }
+
         @Override
         public MediaDetails getDetails() {
             MediaItem item = mVideoDataLoader.get(mLongPressedIndex);
-                return item.getDetails();
+            return item.getDetails();
         }
 
         @Override
@@ -548,11 +539,12 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         }
     }
 
-    private void showDetails( ) {
+    private void showDetails() {
         mShowDetails = true;
         if (mDetailsHelper == null) {
-            mDetailsHelper = new DetailsHelper(mLetoolContext, mRootPane,new MyDetailsSource());
+            mDetailsHelper = new DetailsHelper(mLetoolContext, mRootPane, new MyDetailsSource());
             mDetailsHelper.setCloseListener(new CloseListener() {
+
                 @Override
                 public void onClose() {
                     hideDetails();
@@ -575,6 +567,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     }
 
     static class ViewHolder {
+
         TextView title;
     }
 
