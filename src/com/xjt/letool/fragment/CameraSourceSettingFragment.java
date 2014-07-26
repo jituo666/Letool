@@ -21,6 +21,11 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -134,6 +139,19 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
                 t.show();
             }
         });
+        AnimationSet set = new AnimationSet(true);
+        Animation animation = new AlphaAnimation(0.0f, 1.0f);
+        animation.setDuration(50);
+        set.addAnimation(animation);
+        animation = new TranslateAnimation(
+                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+                Animation.RELATIVE_TO_SELF, -1.0f, Animation.RELATIVE_TO_SELF, 0.0f
+                );
+        animation.setDuration(100);
+        set.addAnimation(animation);
+        LayoutAnimationController controller = new LayoutAnimationController(set, 0.5f);
+        mListView.setLayoutAnimation(controller);
+
         mLoadingPanel = (LetoolLoadingView) rootView.findViewById(R.id.loading);
         mSave = (Button) rootView.findViewById(R.id.save);
         mSave.setOnClickListener(this);
@@ -295,7 +313,8 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
     public void onClick(View v) {
         String result = "";
         if (v.getId() == R.id.save) {
-            if (!mHasSdCard) return;
+            if (!mHasSdCard)
+                return;
             for (MediaDir m : mMediaDirList) {
                 File parentFile = new File(m.filePath).getParentFile();
                 if (m.isChecked && parentFile != null) {

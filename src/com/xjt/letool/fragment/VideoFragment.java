@@ -128,6 +128,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             mRender.setHighlightItemPath(null);
             // Set the mThumbnailView as a reference point to the open animation
             mOpenCenter.setReferencePosition(0, thumbnailViewTop);
+            mOpenCenter.setAbsolutePosition((right - left) / 2, (bottom - top) / 2);
             mThumbnailView.layout(thumbnailViewLeft, thumbnailViewTop, thumbnailViewRight, thumbnailViewBottom);
             if (mShowDetails) {
                 mDetailsHelper.layout(thumbnailViewLeft, thumbnailViewTop, thumbnailViewRight, thumbnailViewBottom);
@@ -262,6 +263,8 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             }
         };
         mEyePosition = new EyePosition(mLetoolContext.getActivityContext(), this);
+//        mThumbnailView.startScatteringAnimation(mOpenCenter);
+        mThumbnailView.startRisingAnimation();
     }
 
     private void initializeData() {

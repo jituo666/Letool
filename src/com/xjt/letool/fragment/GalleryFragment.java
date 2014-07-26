@@ -21,6 +21,7 @@ import com.xjt.letool.selectors.SelectionListener;
 import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.LetoolUtils;
+import com.xjt.letool.utils.RelativePosition;
 import com.xjt.letool.utils.StorageUtils;
 import com.xjt.letool.view.BatchDeleteMediaListener;
 import com.xjt.letool.view.BatchDeleteMediaListener.DeleteMediaProgressListener;
@@ -77,6 +78,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     private ThumbnailView mThumbnailView;
     private boolean mIsSDCardMountedCorreclty = false;
     private boolean mIsActive = false;
+    private RelativePosition mOpenCenter = new RelativePosition();
     private ThumbnailSetRenderer mThumbnailViewRenderer;
 
     private SelectionManager mSelector;
@@ -128,6 +130,8 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
                 mThumbnailViewRenderer.setHighlightItemPath(null);
             }
 
+            mOpenCenter.setReferencePosition(0, thumbnailViewTop);
+            mOpenCenter.setAbsolutePosition((right - left) / 2, (bottom - top) / 2);
             mThumbnailView.layout(thumbnailViewLeft, thumbnailViewTop, thumbnailViewRight, thumbnailViewBottom);
         }
 
@@ -247,7 +251,11 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         initializeViews();
         initializeData();
         mEyePosition = new EyePosition(mLetoolContext.getActivityContext(), this);
-        //mThumbnailView.startRisingAnimation();
+        if (mLetoolContext.isImageBrwosing())
+            mThumbnailView.startScatteringAnimation(mOpenCenter);
+        else {
+            mThumbnailView.startRisingAnimation();
+        }
     }
 
     private void initializeViews() {
