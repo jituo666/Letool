@@ -124,7 +124,6 @@
     <string name="flash_on">Flash On</string>
     <!-- String indicating camera flash is not used. [CHAR LIMIT=14] -->
     <string name="flash_off">Flash Off</string>
-    <string name="details">Detail</string>
     <string name="details_title">The %1$d,Total %2$d</string>
     <string name="close">Close</string>
     <string name="test_channel_id">test_channel_id</string>

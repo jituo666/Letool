@@ -117,7 +117,7 @@ public class BitmapDecodeUtils {
             // For an extremely wide image, e.g. 300x30000, we may got OOM when decoding it for TYPE_MICROTHUMBNAIL. So we add a max number of pixels limit here.
             final int MAX_PIXEL_COUNT = 640000; // 400 x 1600
             if ((w / options.inSampleSize) * (h / options.inSampleSize) > MAX_PIXEL_COUNT) {
-                options.inSampleSize = BitmapUtils.computeSampleSize(FloatMath.sqrt((float) MAX_PIXEL_COUNT / (w * h)));
+                options.inSampleSize = BitmapUtils.computeSampleSize(Math.sqrt((float) MAX_PIXEL_COUNT / (w * h)));
             }
         } else {
             // For screen nail, we only want to keep the longer side >= targetSize.

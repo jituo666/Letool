@@ -26,7 +26,7 @@ import com.xjt.letool.views.opengl.UploadedBitmapTexture;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class TileImageView extends GLBaseView {
+public class TiledImageView extends GLBaseView {
     public static final int SIZE_UNKNOWN = -1;
 
     @SuppressWarnings("unused")
@@ -138,7 +138,7 @@ public class TileImageView extends GLBaseView {
         return metrics.heightPixels > 2048 ||  metrics.widthPixels > 2048;
     }
 
-    public TileImageView(LetoolContext context) {
+    public TiledImageView(LetoolContext context) {
         mThreadPool = context.getThreadPool();
         mTileDecoder = mThreadPool.submit(new TileDecoder());
         if (sTileSize == 0) {
@@ -300,10 +300,10 @@ public class TileImageView extends GLBaseView {
         int height = (int) Math.ceil(Math.max(
                 Math.abs(sin * w + cos * h), Math.abs(sin * w - cos * h)));
 
-        int left = (int) FloatMath.floor(cX - width / (2f * scale));
-        int top = (int) FloatMath.floor(cY - height / (2f * scale));
-        int right = (int) FloatMath.ceil(left + width / scale);
-        int bottom = (int) FloatMath.ceil(top + height / scale);
+        int left = (int) Math.floor(cX - width / (2f * scale));
+        int top = (int) Math.floor(cY - height / (2f * scale));
+        int right = (int) Math.ceil(left + width / scale);
+        int bottom = (int) Math.ceil(top + height / scale);
 
         // align the rectangle to tile boundary
         int size = sTileSize << level;
@@ -554,7 +554,7 @@ public class TileImageView extends GLBaseView {
             int quota = UPLOAD_LIMIT;
             Tile tile = null;
             while (quota > 0) {
-                synchronized (TileImageView.this) {
+                synchronized (TiledImageView.this) {
                     tile = mUploadQueue.pop();
                 }
                 if (tile == null) break;
@@ -744,8 +744,8 @@ public class TileImageView extends GLBaseView {
         private CancelListener mNotifier = new CancelListener() {
             @Override
             public void onCancel() {
-                synchronized (TileImageView.this) {
-                    TileImageView.this.notifyAll();
+                synchronized (TiledImageView.this) {
+                    TiledImageView.this.notifyAll();
                 }
             }
         };
@@ -756,10 +756,10 @@ public class TileImageView extends GLBaseView {
             jc.setCancelListener(mNotifier);
             while (!jc.isCancelled()) {
                 Tile tile = null;
-                synchronized(TileImageView.this) {
+                synchronized(TiledImageView.this) {
                     tile = mDecodeQueue.pop();
                     if (tile == null && !jc.isCancelled()) {
-                        Utils.waitWithoutInterrupt(TileImageView.this);
+                        Utils.waitWithoutInterrupt(TiledImageView.this);
                     }
                 }
                 if (tile == null) continue;

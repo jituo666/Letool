@@ -11,11 +11,11 @@ import android.graphics.Rect;
 import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.imagedata.utils.LetoolBitmapPool;
-import com.xjt.letool.view.TileImageView;
+import com.xjt.letool.view.TiledImageView;
 import com.xjt.letool.views.opengl.ScreenNail;
 import com.xjt.letool.utils.Utils;
 
-public class TileImageViewAdapter implements TileImageView.TileSource {
+public class TileImageViewAdapter implements TiledImageView.TileSource {
     private static final String TAG = "TileImageViewAdapter";
     protected ScreenNail mScreenNail;
     protected boolean mOwnScreenNail;

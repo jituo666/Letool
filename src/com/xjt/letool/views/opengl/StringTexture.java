@@ -18,8 +18,7 @@ public class StringTexture extends CanvasTexture {
     private final TextPaint mPaint;
     private final FontMetricsInt mMetrics;
 
-    private StringTexture(String text, TextPaint paint,
-            FontMetricsInt metrics, int width, int height) {
+    private StringTexture(String text, TextPaint paint, FontMetricsInt metrics, int width, int height) {
         super(width, height);
         mText = text;
         mPaint = paint;
@@ -40,8 +39,7 @@ public class StringTexture extends CanvasTexture {
         return newInstance(text, getDefaultPaint(textSize, color));
     }
 
-    public static StringTexture newInstance(
-            String text, float textSize, int color,
+    public static StringTexture newInstance(String text, float textSize, int color,
             float lengthLimit, boolean isBold) {
         TextPaint paint = getDefaultPaint(textSize, color);
         if (isBold) {
@@ -56,7 +54,7 @@ public class StringTexture extends CanvasTexture {
 
     private static StringTexture newInstance(String text, TextPaint paint) {
         FontMetricsInt metrics = paint.getFontMetricsInt();
-        int width = (int) FloatMath.ceil(paint.measureText(text));
+        int width = (int) Math.ceil(paint.measureText(text));
         int height = metrics.bottom - metrics.top;
         // The texture size needs to be at least 1x1.
         if (width <= 0) width = 1;

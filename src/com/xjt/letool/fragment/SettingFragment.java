@@ -16,11 +16,13 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 import com.umeng.update.UmengUpdateListener;
@@ -52,7 +54,6 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
     private LetoolPreference mAuthorDesc;
     private LetoolPreference mQQGroup;
     private LetoolContext mLetoolContext;
-    
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -114,7 +115,7 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
         if (v.getId() == R.id.camera_source) {
             CameraSourceSettingFragment f = new CameraSourceSettingFragment();
             mLetoolContext.pushContentFragment(f, this, true);
-        }  else if (v.getId() == R.id.action_navi) {
+        } else if (v.getId() == R.id.action_navi) {
             mLetoolContext.popContentFragment();
         } else if (v.getId() == R.id.clear_cache) {
             if (StorageUtils.externalStorageAvailable()) {
@@ -194,7 +195,6 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
         }
     }
 
-
     private String getCacheSize() {
         try {
             return StringUtils.formatBytes(getFolderSize(getActivity().getApplication().getExternalCacheDir()));
@@ -237,6 +237,7 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
         @Override
         protected Void doInBackground(Void... arg0) {
             BlobCacheManager.clearCachedFiles(mLetoolContext.getActivityContext());
+            ImageLoader.getInstance().clearDiscCache();
             return null;
         }
 
@@ -248,9 +249,10 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
                 String x = getString(R.string.clear_cache_desc, getCacheSize(), StringUtils.formatBytes(StorageUtils.getExternalStorageAvailableSize()));
                 mClearCache.setSettingItemText(getString(R.string.clear_cache_title), x);
             }
-            Toast.makeText(getActivity(), R.string.clear_cache_finished, Toast.LENGTH_SHORT).show();
+            Toast t = Toast.makeText(getActivity(), R.string.clear_cache_finished, Toast.LENGTH_SHORT);
+            t.setGravity(Gravity.CENTER, 0, 0);
+            t.show();
         }
-
     }
 
     @Override

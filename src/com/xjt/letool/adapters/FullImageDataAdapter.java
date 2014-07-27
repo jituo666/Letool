@@ -823,8 +823,7 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
         updateScreenNailUploadQueue();
     }
 
-    private class FullImageListener
-            implements Runnable, FutureListener<BitmapRegionDecoder> {
+    private class FullImageListener implements Runnable, FutureListener<BitmapRegionDecoder> {
         private final MediaPath mPath;
         private Future<BitmapRegionDecoder> mFuture;
 
@@ -835,8 +834,7 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
         @Override
         public void onFutureDone(Future<BitmapRegionDecoder> future) {
             mFuture = future;
-            mMainHandler.sendMessage(
-                    mMainHandler.obtainMessage(MSG_RUN_OBJECT, this));
+            mMainHandler.sendMessage(mMainHandler.obtainMessage(MSG_RUN_OBJECT, this));
         }
 
         @Override

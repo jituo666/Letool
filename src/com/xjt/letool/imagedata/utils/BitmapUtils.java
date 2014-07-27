@@ -52,7 +52,7 @@ public class BitmapUtils {
     private static int computeInitialSampleSize(int w, int h, int minSideLength, int maxNumOfPixels) {
         if (maxNumOfPixels == UNCONSTRAINED && minSideLength == UNCONSTRAINED)
             return 1;
-        int lowerBound = (maxNumOfPixels == UNCONSTRAINED) ? 1 : (int) FloatMath.ceil(FloatMath.sqrt((float) (w * h) / maxNumOfPixels));
+        int lowerBound = (maxNumOfPixels == UNCONSTRAINED) ? 1 : (int) Math.ceil(Math.sqrt((float) (w * h) / maxNumOfPixels));
         if (minSideLength == UNCONSTRAINED) {
             return lowerBound;
         } else {
@@ -78,7 +78,7 @@ public class BitmapUtils {
     }
 
     // Find the max x that 1 / x <= scale.
-    public static int computeSampleSize(float scale) {
+    public static int computeSampleSize(double scale) {
         Utils.assertTrue(scale > 0);
         int initialSize = Math.max(1, (int) Math.ceil(1 / scale));
         return initialSize <= 8 ? Utils.nextPowerOf2(initialSize) : (initialSize + 7) / 8 * 8;

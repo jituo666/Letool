@@ -1,3 +1,4 @@
+
 package com.xjt.letool.view;
 
 import android.content.Context;
@@ -33,6 +34,8 @@ import com.xjt.letool.views.opengl.Texture;
 import com.xjt.letool.views.opengl.TiledScreenNail;
 import com.xjt.letool.views.utils.GestureRecognizer;
 
+import java.lang.ref.WeakReference;
+
 public class FullImageView extends GLBaseView {
 
     @SuppressWarnings("unused")
@@ -48,7 +51,7 @@ public class FullImageView extends GLBaseView {
         public int height;
     }
 
-    public interface Model extends TileImageView.TileSource {
+    public interface Model extends TiledImageView.TileSource {
 
         public int getCurrentIndex();
 
@@ -175,7 +178,7 @@ public class FullImageView extends GLBaseView {
     private Listener mListener;
     private Model mModel;
     private StringTexture mNoThumbnailText;
-    private TileImageView mTileView;
+    private TiledImageView mTileView;
     private EdgeView mEdgeView;
 
     private SynchronizedHandler mHandler;
@@ -213,7 +216,7 @@ public class FullImageView extends GLBaseView {
     private Context mContext;
 
     public FullImageView(LetoolContext context) {
-        mTileView = new TileImageView(context);
+        mTileView = new TiledImageView(context);
         addComponent(mTileView);
         mContext = context.getActivityContext();
         mPlaceholderColor = mContext.getResources().getColor(R.color.photo_placeholder);
@@ -221,7 +224,7 @@ public class FullImageView extends GLBaseView {
         addComponent(mEdgeView);
         mNoThumbnailText = StringTexture.newInstance(mContext.getString(R.string.no_thumbnail), DEFAULT_TEXT_SIZE, Color.WHITE);
 
-        mHandler = new MyHandler(context.getGLController());
+        mHandler = new MyHandler(context.getGLController(), this);
 
         mGestureListener = new MyGestureListener();
         mGestureRecognizer = new GestureRecognizer(mContext, mGestureListener);
@@ -277,29 +280,35 @@ public class FullImageView extends GLBaseView {
         mTileView.setModel(mModel);
     }
 
-    class MyHandler extends SynchronizedHandler {
+    static class MyHandler extends SynchronizedHandler {
 
-        public MyHandler(GLController root) {
+        WeakReference<FullImageView> mContext;
+
+        public MyHandler(GLController root, FullImageView fv) {
             super(root);
+            mContext = new WeakReference<FullImageView>(fv);
         }
 
         @Override
         public void handleMessage(Message message) {
+
+            FullImageView fv = mContext.get();
+            if (fv == null)
+                return;
             switch (message.what) {
                 case MSG_CANCEL_EXTRA_SCALING: {
-                    mGestureRecognizer.cancelScale();
-                    mPositionController.setExtraScalingRange(false);
-                    mCancelExtraScalingPending = false;
+                    fv.mGestureRecognizer.cancelScale();
+                    fv.mPositionController.setExtraScalingRange(false);
+                    fv.mCancelExtraScalingPending = false;
                     break;
                 }
                 case MSG_SWITCH_FOCUS: {
-                    switchFocus();
+                    fv.switchFocus();
                     break;
                 }
                 case MSG_CAPTURE_ANIMATION_DONE: {
-                    // message.arg1 is the offset parameter passed to
-                    // switchWithCaptureAnimation().
-                    captureAnimationDone(message.arg1);
+                    // message.arg1 is the offset parameter passed to switchWithCaptureAnimation().
+                    fv.captureAnimationDone(message.arg1);
                     break;
                 }
                 default:
@@ -1342,7 +1351,7 @@ public class FullImageView extends GLBaseView {
     }
 
     // Runs in main thread.
-    private void switchFocus() {
+    protected void switchFocus() {
         if (mHolding != 0)
             return;
         switch (switchPosition()) {
