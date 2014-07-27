@@ -49,7 +49,9 @@ import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
+import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaSet;
+import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.metadata.source.LocalSimpleAlbumSet;
 import com.xjt.letool.preference.GlobalPreference;
 import com.xjt.letool.utils.StorageUtils;
@@ -81,16 +83,21 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
     private LetoolLoadingView mLoadingPanel;
     private LetoolEmptyView mEmptyView;
     private boolean mHasSdCard = true;
+    private Toast mTipToast;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mLetoolContext = (LetoolContext) this.getActivity();
-        mSavePhotodirs = GlobalPreference.getPhotoDirs(getActivity());
+        if (GlobalPreference.getPhotoDirs(getActivity()).length() > 0)
+            mSavePhotodirs = GlobalPreference.getPhotoDirs(getActivity());
+        else {
+            mSavePhotodirs = MediaSetUtils.getBucketsDirs();
+        }
         options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.ic_launcher)
-                .showImageForEmptyUri(R.drawable.ic_launcher)
-                .showImageOnFail(R.drawable.ic_launcher)
+                .showImageOnLoading(R.drawable.ic_no_picture)
+                .showImageForEmptyUri(R.drawable.ic_no_picture)
+                .showImageOnFail(R.drawable.ic_no_picture)
                 .cacheInMemory(true)
                 .cacheOnDisc(true)
                 .considerExifParams(true)
@@ -136,9 +143,13 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
                 if (parentFile == null) {
                     parentFile = new File("/");
                 }
-                Toast t = Toast.makeText(getActivity(), parentFile.toString(), Toast.LENGTH_LONG);
-                t.setGravity(Gravity.CENTER, 0, 0);
-                t.show();
+                if (mTipToast != null) {
+                    mTipToast.cancel();
+                }
+                mTipToast = Toast.makeText(getActivity(), parentFile.toString(), Toast.LENGTH_LONG);
+                mTipToast.setGravity(Gravity.CENTER, 0, 0);
+                mTipToast.show();
+
             }
         });
         AnimationSet set = new AnimationSet(true);
@@ -175,8 +186,8 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
         mSave = (Button) rootView.findViewById(R.id.save);
         mSave.setOnClickListener(this);
         mHasSdCard = StorageUtils.externalStorageAvailable();
+        mEmptyView = (LetoolEmptyView) rootView.findViewById(R.id.empty_view);
         if (!mHasSdCard) {
-            mEmptyView = (LetoolEmptyView) rootView.findViewById(R.id.empty_view);
             mEmptyView.updataView(R.drawable.ic_launcher, R.string.common_error_nosdcard);
             mEmptyView.setVisibility(View.VISIBLE);
             mListView.setVisibility(View.GONE);
@@ -304,9 +315,15 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
             ArrayList<MediaSet> r = mDataSet.getAllAlbums();
             for (MediaSet s : r) {
                 int count = s.getAllMediaItems();
-                String path = s.getCoverMediaItem().getFilePath();
-                String filePath = path.substring(0, path.lastIndexOf("/"));
-                mMediaDirList.add(new MediaDir(count, path, mSavePhotodirs.contains(filePath + "|")));
+                if (count > 0) {
+                    String path = s.getCoverMediaItem().getFilePath();
+                    File parentfile = new File(path).getParentFile();
+                    if (parentfile == null) {
+                        parentfile = new File("/");
+                    }
+                    String filePath = parentfile.toString();
+                    mMediaDirList.add(new MediaDir(count, path, mSavePhotodirs.contains(filePath + "|")));
+                }
             }
             return null;
         }
@@ -314,15 +331,16 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
         @Override
         protected void onPostExecute(Void v) {
             super.onPostExecute(v);
+            mLoadingPanel.setVisibility(View.GONE);
             if (mMediaDirList.size() == 0) {
-                mEmptyView.updataView(R.drawable.ic_launcher, R.string.common_error_no_video);
+                mEmptyView.updataView(R.drawable.ic_launcher, R.string.common_error_no_dirs);
                 mEmptyView.setVisibility(View.VISIBLE);
                 mListView.setVisibility(View.GONE);
                 return;
+            } else {
+                mListView.setVisibility(View.VISIBLE);
+                mItemAdapter.notifyDataSetChanged();
             }
-            mLoadingPanel.setVisibility(View.GONE);
-            mListView.setVisibility(View.VISIBLE);
-            mItemAdapter.notifyDataSetChanged();
             LLog.i(TAG, "---------LoadMeidaTask:" + mMediaDirList.size());
         }
 

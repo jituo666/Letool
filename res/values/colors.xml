@@ -27,9 +27,11 @@
     <color name="major_text_color">#ff252525</color>
     <color name="minor_text_color">#ff656565</color>
     <color name="scroll_bar_track_color">#ffdddddd</color>
+    <color name="scroll_bar_grip_color">#ff3d5562</color>
     <color name="common_grey">#8496a0</color>
     <color name="common_dark">#3d5562</color>
     <color name="common_blue">#00d8ff</color>
     <color name="common_black">#222222</color>
 
+    <color name="navi_text_disabled_color">#727373</color>
 </resources>

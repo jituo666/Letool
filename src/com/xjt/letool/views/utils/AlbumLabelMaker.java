@@ -103,16 +103,16 @@ public class AlbumLabelMaker {
             // draw title
             if (jc.isCancelled())
                 return null;
-            int x = (mLabelWidth - mSpec.titleOffset) / 2 + BORDER_SIZE;
-            int y = mLabelHeight - mSpec.labelHeight * 2 / 3;
+            int x = (mLabelWidth - mSpec.titleOffset) / 2;
+            int y = mLabelHeight - mSpec.labelHeight * 2 / 3 + 2;
             mTitlePaint.setTextAlign(Paint.Align.CENTER);
             mTitle = TextUtils.ellipsize(mTitle, mTitlePaint, mLabelWidth - 2 * BORDER_SIZE, TextUtils.TruncateAt.END).toString();
             canvas.drawText(mTitle, x, y, mTitlePaint);
             if (jc.isCancelled())
                 return null;
             // draw count
-            x = (mLabelWidth - mSpec.countOffset) / 2 + BORDER_SIZE;
-            y = (mLabelHeight) / 2 + mSpec.countOffset;
+            x = (mLabelWidth - mSpec.countOffset) / 2;
+            y = (mLabelHeight) / 2 + mSpec.countOffset * 3 / 2;
             mCountPaint.setTextAlign(Paint.Align.CENTER);
             mCount = TextUtils.ellipsize(mCount, mCountPaint, mLabelWidth - 2 * BORDER_SIZE, TextUtils.TruncateAt.END).toString();
             canvas.drawText(mCount, x, y, mCountPaint);

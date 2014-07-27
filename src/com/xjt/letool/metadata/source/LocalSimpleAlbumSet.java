@@ -62,15 +62,6 @@ public class LocalSimpleAlbumSet {
         try {
             while (cursor.moveToNext()) {
                 int bucketId = cursor.getInt(INDEX_BUCKET_ID);
-//                boolean isCamera = false;
-//                for (int id : MediaSetUtils.getBucketsIds()) {
-//                    if (id == bucketId) {
-//                        isCamera = true;
-//                        break;
-//                    }
-//                }
-//                if (isCamera)
-//                    continue;
                 BucketEntry entry = new BucketEntry(bucketId, cursor.getString(INDEX_BUCKET_NAME));
                 if (!buffer.contains(entry)) {
                     buffer.add(entry);

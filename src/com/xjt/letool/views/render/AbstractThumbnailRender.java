@@ -19,16 +19,16 @@ import com.xjt.letool.views.opengl.Texture;
  */
 public abstract class AbstractThumbnailRender implements ThumbnailView.Renderer {
 
-	private final ResourceTexture mVideoOverlay;
-	private final ResourceTexture mVideoPlayIcon;
-    protected FadeOutTexture mFramePressedUp;
+    private final ResourceTexture mVideoOverlay;
+    protected ResourceTexture mVideoPlayIcon;
     protected final NinePatchTexture mFramePressed;
     protected final ResourceTexture mFramePreSelected;
     protected final ResourceTexture mFrameSelected;
+    private FadeOutTexture mFramePressedUp;
 
     protected AbstractThumbnailRender(Context context) {
-    	mVideoOverlay = new ResourceTexture(context, R.drawable.ic_video_thumb);
-    	mVideoPlayIcon = new ResourceTexture(context, R.drawable.ic_gallery_play);
+        mVideoOverlay = new ResourceTexture(context, R.drawable.ic_video_thumb);
+        mVideoPlayIcon = new ResourceTexture(context, R.drawable.ic_video_play);
         mFramePressed = new NinePatchTexture(context, R.drawable.grid_pressed);
         mFramePreSelected = new ResourceTexture(context, R.drawable.grid_preselected);
         mFrameSelected = new ResourceTexture(context, R.drawable.grid_selected);
@@ -63,7 +63,7 @@ public abstract class AbstractThumbnailRender implements ThumbnailView.Renderer 
         int s = Math.min(width, height) / 6;
         mVideoPlayIcon.draw(canvas, (width - s) / 2, (height - s) / 2, s, s);
     }
-    
+
     protected boolean isPressedUpFrameFinished() {
         if (mFramePressedUp != null) {
             if (mFramePressedUp.isAnimating()) {

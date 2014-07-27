@@ -222,7 +222,6 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
         return ++MediaObject.sVersionSerial;
     }
 
-
     // synchronized on this function for
     // 1. Prevent calling reload() concurrently.
     // 2. Prevent calling onFutureDone() and reload() concurrently

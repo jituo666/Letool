@@ -15,8 +15,8 @@
     <CheckBox
         android:id="@+id/checked"
         style="@style/MyCheckbox"
-        android:layout_width="36dp"
-        android:layout_height="28dp"
+        android:layout_width="40dp"
+        android:layout_height="30dp"
          android:layout_marginLeft="4dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true" />
@@ -24,7 +24,7 @@
     <TextView
         android:id="@+id/text_count"
         android:layout_width="match_parent"
-        android:layout_height="24dp"
+        android:layout_height="28dp"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="6dp"
         android:layout_marginRight="4dp"
@@ -40,7 +40,7 @@
     <TextView
         android:id="@+id/text_path"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="24dp"
         android:layout_alignLeft="@id/text_count"
         android:layout_alignWithParentIfMissing="true"
         android:layout_below="@id/text_count"

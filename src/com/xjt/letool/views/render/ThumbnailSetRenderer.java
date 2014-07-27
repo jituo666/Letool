@@ -2,6 +2,7 @@
 package com.xjt.letool.views.render;
 
 import com.xjt.letool.LetoolContext;
+import com.xjt.letool.R;
 import com.xjt.letool.adapters.ThumbnailSetDataWindow;
 import com.xjt.letool.adapters.ThumbnailSetDataWindow.AlbumSetEntry;
 import com.xjt.letool.metadata.MediaPath;
@@ -10,8 +11,8 @@ import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.view.ThumbnailView;
 import com.xjt.letool.views.opengl.ColorTexture;
 import com.xjt.letool.views.opengl.GLESCanvas;
+import com.xjt.letool.views.opengl.ResourceTexture;
 import com.xjt.letool.views.opengl.Texture;
-import com.xjt.letool.views.opengl.TiledTexture;
 import com.xjt.letool.views.opengl.UploadedBitmapTexture;
 import com.xjt.letool.views.utils.AlbumLabelMaker;
 import com.xjt.letool.views.utils.ViewConfigs;
@@ -78,7 +79,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         mPlaceholderColor = 0xFFE8E8E8;
         mMediaSelector = selector;
         mLabelSpec = ViewConfigs.AlbumSetPage.get(activity.getActivityContext()).labelSpec;
-
+        mVideoPlayIcon = new ResourceTexture(activity.getActivityContext(), R.drawable.ic_video_folder);
         mWaitLoadingTexture = new ColorTexture(mPlaceholderColor);
         mWaitLoadingTexture.setSize(1, 1);
     }

@@ -52,6 +52,7 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
     private LetoolPreference mAuthorDesc;
     private LetoolPreference mQQGroup;
     private LetoolContext mLetoolContext;
+    
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -116,8 +117,10 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
         }  else if (v.getId() == R.id.action_navi) {
             mLetoolContext.popContentFragment();
         } else if (v.getId() == R.id.clear_cache) {
-            MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_CLEAR_CAHCE);
-            new ClearCacheTask().execute();
+            if (StorageUtils.externalStorageAvailable()) {
+                MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_CLEAR_CAHCE);
+                new ClearCacheTask().execute();
+            }
         } else if (v.getId() == R.id.version_update_check) {
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
             MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_UPDATE_CHECK);

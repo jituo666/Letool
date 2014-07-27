@@ -124,7 +124,7 @@ public class SettingsActivity extends FragmentActivity implements LetoolContext 
     }
 
     @Override
-    public void showEmptyView(int resId) {
+    public void showEmptyView(int iconResIcon,int messageResId) {
 
     }
 

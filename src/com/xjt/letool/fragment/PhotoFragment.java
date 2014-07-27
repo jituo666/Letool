@@ -91,6 +91,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     private boolean mIsCameraSource = false;
     private boolean mIsSDCardMountedCorreclty = false;
     private boolean mHasDefaultDCIMDirectory = false;
+
     private boolean mGetContent;
     private SynchronizedHandler mHandler;
     protected SelectionManager mSelector;
@@ -154,7 +155,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         if (mLoadingBits == 0 && mIsActive) {
             if (mAlbumDataSetLoader.size() == 0) {
                 LLog.i(TAG, " clearLoadingBit mAlbumDataSetLoader.size():" + mAlbumDataSetLoader.size());
-                mLetoolContext.showEmptyView(mIsCameraSource ? R.string.common_error_no_photos : R.string.common_error_no_gallery);
+                mLetoolContext.showEmptyView(R.drawable.ic_no_picture, mIsCameraSource ? R.string.common_error_no_photos : R.string.common_error_no_gallery);
             } else {
                 mLetoolContext.hideEmptyView();
             }
@@ -252,9 +253,9 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                 mDataSet = new LocalAlbum(mDataSetPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.getBucketsIds(),
                         mLetoolContext.isImageBrwosing(),
                         getString(R.string.common_photo));
-                mIsSDCardMountedCorreclty = true;
+                mHasDefaultDCIMDirectory = true;
             } else {
-                mIsSDCardMountedCorreclty = false;
+                mHasDefaultDCIMDirectory = false;
                 return;
             }
         } else {
@@ -347,9 +348,9 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         mIsSDCardMountedCorreclty = StorageUtils.externalStorageAvailable();
         mHasDefaultDCIMDirectory = MediaSetUtils.getBucketsIds().length > 0;
         if (!mIsSDCardMountedCorreclty) {
-            mLetoolContext.showEmptyView(R.string.common_error_nosdcard);
+            mLetoolContext.showEmptyView(R.drawable.ic_launcher, R.string.common_error_nosdcard);
         } else if (mIsCameraSource && !mHasDefaultDCIMDirectory) {
-            mLetoolContext.showEmptyView(R.string.common_error_nodcim_photo);
+            mLetoolContext.showEmptyView(R.drawable.ic_no_picture, R.string.common_error_nodcim_photo);
             final LetoolDialog dlg = new LetoolDialog(getActivity());
             dlg.setTitle(R.string.common_recommend);
             dlg.setOkBtn(R.string.common_settings, new View.OnClickListener() {

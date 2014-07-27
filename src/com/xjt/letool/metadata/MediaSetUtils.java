@@ -27,24 +27,26 @@ public class MediaSetUtils {
     public static final int SNAPSHOT_BUCKET_ID = LetoolUtils.getBucketId(
             Environment.getExternalStorageDirectory().toString() + "/Pictures/Screenshots");
 
-    private static int[] MY_ALBUM_BUCKETS = new int[0]; // 这个静态的东西是有问题的...
+    private static int[] MY_ALBUM_BUCKETS_ID = new int[0]; // 这个静态的东西是有问题的...
+    private static String MY_ALBUM_BUCKETS_DIR = "";
 
     public static void initializeMyAlbumBuckets(Context context) {
         String saveCameraDirs = GlobalPreference.getPhotoDirs(context);
-        MY_ALBUM_BUCKETS = new int[0];
+        MY_ALBUM_BUCKETS_ID = new int[0];
         LLog.i(TAG, " ------initializeMyAlbumBuckets:" + saveCameraDirs);
         if (saveCameraDirs.length() > 0) {
             String dirs[] = saveCameraDirs.split("[|]");
             if (dirs.length > 0) {
-                MY_ALBUM_BUCKETS = new int[dirs.length];
+                MY_ALBUM_BUCKETS_ID = new int[dirs.length];
                 int i = 0;
                 for (String s : dirs) {
                     LLog.i(TAG, " ------initializeMyAlbumBuckets dir:" + s);
-                    MY_ALBUM_BUCKETS[i++] = LetoolUtils.getBucketId(s);
+                    MY_ALBUM_BUCKETS_ID[i++] = LetoolUtils.getBucketId(s);
                 }
             }
         } else {
             ArrayList<Integer> list = new ArrayList<Integer>();
+            MY_ALBUM_BUCKETS_DIR = "";
             if (UtilStorage.getInstance().getExternalSdCardPath() != null) {
                 list.addAll(recurseCamerDir(UtilStorage.getInstance().getExternalSdCardPath().toString() + "/DCIM/"));
                 list.addAll(recurseCamerDir(UtilStorage.getInstance().getExternalSdCardPath().toString() + "/Camera/"));
@@ -60,9 +62,9 @@ public class MediaSetUtils {
                 list.addAll(recurseCamerDir(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath().toString()));
             }
 
-            MY_ALBUM_BUCKETS = new int[list.size()];
+            MY_ALBUM_BUCKETS_ID = new int[list.size()];
             for (int i = 0; i < list.size(); i++) {
-                MY_ALBUM_BUCKETS[i] = list.get(i).intValue();
+                MY_ALBUM_BUCKETS_ID[i] = list.get(i).intValue();
             }
         }
         //common
@@ -70,7 +72,11 @@ public class MediaSetUtils {
     }
 
     public static int[] getBucketsIds() {
-        return MY_ALBUM_BUCKETS;
+        return MY_ALBUM_BUCKETS_ID;
+    }
+
+    public static String getBucketsDirs() {
+        return MY_ALBUM_BUCKETS_DIR;
     }
 
     private static ArrayList<Integer> recurseCamerDir(String dirPath) {
@@ -82,8 +88,11 @@ public class MediaSetUtils {
                 if (dir.isDirectory()) {
                     LLog.i(TAG, "-------------------" + dir.getAbsolutePath());
                     Integer i = LetoolUtils.getBucketId(dir.getAbsolutePath());
-                    if (!ret.contains(i))
+                    if (!ret.contains(i)) {
                         ret.add(i);
+                        MY_ALBUM_BUCKETS_DIR +=dir.getAbsolutePath();
+                        MY_ALBUM_BUCKETS_DIR += "|";
+                    }
 
                 }
             }

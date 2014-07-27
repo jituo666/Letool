@@ -132,6 +132,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
 
             mOpenCenter.setReferencePosition(0, thumbnailViewTop);
             mOpenCenter.setAbsolutePosition((right - left) / 2, (bottom - top) / 2);
+
             mThumbnailView.layout(thumbnailViewLeft, thumbnailViewTop, thumbnailViewRight, thumbnailViewBottom);
         }
 
@@ -167,7 +168,8 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         if (mLoadingBits == 0 && mIsActive) {
             LLog.i(TAG, "---++--------:" + mThumbnailSetAdapter.size());
             if (mThumbnailSetAdapter.size() == 0) {
-                mLetoolContext.showEmptyView(mLetoolContext.isImageBrwosing() ? R.string.common_error_no_gallery : R.string.common_error_no_movies);
+                mLetoolContext.showEmptyView(mLetoolContext.isImageBrwosing() ? R.drawable.ic_no_picture : R.drawable.ic_no_video,
+                        mLetoolContext.isImageBrwosing() ? R.string.common_error_no_gallery : R.string.common_error_no_movies);
                 return;
             } else {
                 mLetoolContext.hideEmptyView();
@@ -352,7 +354,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         initBars();
         mIsSDCardMountedCorreclty = StorageUtils.externalStorageAvailable();
         if (!mIsSDCardMountedCorreclty) {
-            mLetoolContext.showEmptyView(R.string.common_error_nosdcard);
+            mLetoolContext.showEmptyView(R.drawable.ic_launcher, R.string.common_error_nosdcard);
         } else {
             mLetoolContext.hideEmptyView();
         }

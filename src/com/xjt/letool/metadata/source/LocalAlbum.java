@@ -78,7 +78,7 @@ public class LocalAlbum extends MediaSet {
             mProjection = LocalVideo.PROJECTION;
             mItemPath = LocalVideo.ITEM_PATH;
         }
-        //mWhereClause += " = ";
+        //mWhereClause += " and 1=2 ";
         mNotifier = new DataNotifier(this, mBaseUri, application);
     }
 

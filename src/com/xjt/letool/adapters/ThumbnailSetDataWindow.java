@@ -1,5 +1,7 @@
+
 package com.xjt.letool.adapters;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Message;
 
@@ -290,7 +292,6 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         return loader.isRequestInProgress();
     }
 
-
     private void updateAllImageRequests() {
         mActiveRequestCount = 0;
         for (int i = mActiveStart, n = mActiveEnd; i < n; ++i) {
@@ -403,9 +404,10 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
 
         @Override
         protected Future<Bitmap> submitBitmapTask(FutureListener<Bitmap> l) {
-        	String label = mLetoolContext.isImageBrwosing() ? "(" + String.valueOf(mTotalCount) + ")":
-        		mLetoolContext.getActivityContext().getString(R.string.common_video_set,mTotalCount);
-            return mThreadPool.submit(mLabelMaker.requestLabel(mTitle,label ), l);
+            Context c = mLetoolContext.getActivityContext();
+            String label = mLetoolContext.isImageBrwosing() ? "(" + String.format(c.getResources().getQuantityString(R.plurals.number_of_items,mTotalCount),mTotalCount) + ")" :
+                    mLetoolContext.getActivityContext().getString(R.string.common_video_set, mTotalCount);
+            return mThreadPool.submit(mLabelMaker.requestLabel(mTitle, label), l);
         }
 
         @Override
@@ -460,42 +462,42 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
         updateAllImageRequests();
     }
 
-        private class AlbumCoverLoader extends BitmapLoader implements EntryUpdater {
-    
-            private MediaItem mMediaItem;
-            private final int mThumbnailIndex;
-    
-            public AlbumCoverLoader(int thumbnailIndex, MediaItem item) {
-                mThumbnailIndex = thumbnailIndex;
-                mMediaItem = item;
-            }
-    
-            @Override
-            protected Future<Bitmap> submitBitmapTask(FutureListener<Bitmap> l) {
-                return mThreadPool.submit(mMediaItem.requestImage(MediaItem.TYPE_MICROTHUMBNAIL), l);
-            }
-    
-            @Override
-            protected void onLoadComplete(Bitmap bitmap) {
-                mHandler.obtainMessage(MSG_UPDATE_ALBUM_ENTRY, this).sendToTarget();
-            }
-    
-            @Override
-            public void updateEntry() {
-                Bitmap bitmap = getBitmap();
-                if (bitmap == null)
-                    return; // error or recycled
-    
-                AlbumSetEntry entry = mData[mThumbnailIndex % mData.length];
-                entry.bitmapTexture = new BitmapTexture(bitmap);
-    
-                if (isActiveThumbnail(mThumbnailIndex)) {
-                    --mActiveRequestCount;
-                    if (mActiveRequestCount == 0)
-                        requestNonactiveImages();
-                    if (mListener != null)
-                        mListener.onContentChanged();
-                }
+    private class AlbumCoverLoader extends BitmapLoader implements EntryUpdater {
+
+        private MediaItem mMediaItem;
+        private final int mThumbnailIndex;
+
+        public AlbumCoverLoader(int thumbnailIndex, MediaItem item) {
+            mThumbnailIndex = thumbnailIndex;
+            mMediaItem = item;
+        }
+
+        @Override
+        protected Future<Bitmap> submitBitmapTask(FutureListener<Bitmap> l) {
+            return mThreadPool.submit(mMediaItem.requestImage(MediaItem.TYPE_MICROTHUMBNAIL), l);
+        }
+
+        @Override
+        protected void onLoadComplete(Bitmap bitmap) {
+            mHandler.obtainMessage(MSG_UPDATE_ALBUM_ENTRY, this).sendToTarget();
+        }
+
+        @Override
+        public void updateEntry() {
+            Bitmap bitmap = getBitmap();
+            if (bitmap == null)
+                return; // error or recycled
+
+            AlbumSetEntry entry = mData[mThumbnailIndex % mData.length];
+            entry.bitmapTexture = new BitmapTexture(bitmap);
+
+            if (isActiveThumbnail(mThumbnailIndex)) {
+                --mActiveRequestCount;
+                if (mActiveRequestCount == 0)
+                    requestNonactiveImages();
+                if (mListener != null)
+                    mListener.onContentChanged();
             }
         }
+    }
 }

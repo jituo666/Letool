@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/empty_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
         android:layout_centerInParent="true"
         android:src="@drawable/ic_launcher" />
 
@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/empty_image"
         android:gravity="center"
-        android:paddingTop="4dp"
+        android:paddingTop="6dp"
         android:textColor="@color/minor_text_color"
         android:textSize="18sp" />
 

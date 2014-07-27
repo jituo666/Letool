@@ -167,7 +167,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         mLoadingBits &= ~loadTaskBit;
         if (mLoadingBits == 0 && mIsActive) {
             if (mVideoDataLoader.size() == 0) {
-                mLetoolContext.showEmptyView(mIsCameraSource ? R.string.common_error_no_movies : R.string.common_error_no_video);
+                mLetoolContext.showEmptyView(R.drawable.ic_no_video, R.string.common_error_no_video);
             } else {
                 mLetoolContext.hideEmptyView();
             }
@@ -360,9 +360,9 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         mIsSDCardMountedCorreclty = StorageUtils.externalStorageAvailable();
         mHasDefaultDCIMDirectory = MediaSetUtils.getBucketsIds().length > 0;
         if (!mIsSDCardMountedCorreclty) {
-            mLetoolContext.showEmptyView(R.string.common_error_nosdcard);
+            mLetoolContext.showEmptyView(R.drawable.ic_launcher, R.string.common_error_nosdcard);
         } else if (mIsCameraSource && !mHasDefaultDCIMDirectory) {
-            mLetoolContext.showEmptyView(R.string.common_error_nodcim_video);
+            mLetoolContext.showEmptyView(R.drawable.ic_no_video, R.string.common_error_nodcim_video);
         } else {
             mLetoolContext.hideEmptyView();
         }

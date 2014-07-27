@@ -137,9 +137,9 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
     }
 
     @Override
-    public void showEmptyView(int resId) {
+    public void showEmptyView(int iconResIcon,int messageResId) {
         LetoolEmptyView emptyView = (LetoolEmptyView) LayoutInflater.from(this).inflate(R.layout.local_empty_view, null);
-        emptyView.updataView(R.drawable.ic_launcher, resId);
+        emptyView.updataView(iconResIcon, messageResId);
         //
         ViewGroup normalView = (ViewGroup) mMainView.findViewById(R.id.normal_root_view);
         LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
@@ -187,15 +187,7 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
         } else {
             Fragment f = getSupportFragmentManager().findFragmentByTag(SlidingMenuFragment.class.getSimpleName());
             if (f != null) {
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                Fragment aphaHolder = getSupportFragmentManager().findFragmentByTag(LetoolSlidingMenu.AlphaFragment.class.getSimpleName());
-                if (aphaHolder != null) {
-                    ft.setCustomAnimations(0, R.anim.alpha_sliding_menu_out);
-                    ft.remove(aphaHolder);
-                }
-                ft.setCustomAnimations(0, R.anim.slide_left_out);
-                ft.remove(f);
-                ft.commit();
+                mSlidingMenu.toggle();
             } else {
                 if (mWaitingForExit) {
                     if (mExitToast != null) {

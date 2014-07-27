@@ -38,7 +38,7 @@ public interface LetoolContext {
     public OrientationManager getOrientationManager();
 
     //
-    public void showEmptyView(int resId);
+    public void showEmptyView(int iconResIcon,int messageResId);
 
     public void hideEmptyView();
 
