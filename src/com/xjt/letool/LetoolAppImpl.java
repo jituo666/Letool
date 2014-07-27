@@ -33,7 +33,9 @@ public class LetoolAppImpl extends Application implements LetoolApp {
     public void onCreate() {
         super.onCreate();
         LetoolUtils.initialize(this);
+        // Umeng
         MobclickAgent.updateOnlineConfig(this);
+        //MobclickAgent.setCatchUncaughtExceptions(false);
         initImageLoader(this);
     }
 

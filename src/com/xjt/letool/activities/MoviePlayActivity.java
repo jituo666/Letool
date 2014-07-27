@@ -1,6 +1,7 @@
 
 package com.xjt.letool.activities;
 
+import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.R;
 import com.xjt.letool.movieplayer.MoviePlayer;
 
@@ -74,12 +75,14 @@ public class MoviePlayActivity extends Activity {
 
     @Override
     public void onResume() {
+        MobclickAgent.onResume(this);
         mMoviePlayer.onResume();
         super.onResume();
     }
 
     @Override
     public void onPause() {
+        MobclickAgent.onPause(this);
         mMoviePlayer.onPause();
         super.onPause();
     }

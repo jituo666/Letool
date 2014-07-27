@@ -45,6 +45,7 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
+import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
@@ -54,6 +55,7 @@ import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.metadata.source.LocalSimpleAlbumSet;
 import com.xjt.letool.preference.GlobalPreference;
+import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.StorageUtils;
 import com.xjt.letool.view.LetoolLoadingView;
 import com.xjt.letool.view.LetoolEmptyView;
@@ -200,7 +202,14 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
     @Override
     public void onResume() {
         super.onResume();
+        MobclickAgent.onPageStart(TAG);
         applyScrollListener();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(TAG);
     }
 
     private void applyScrollListener() {
@@ -363,6 +372,8 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
             //
             getActivity().setResult(Activity.RESULT_OK);
             getActivity().finish();
+
+            MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_CAMERA_SRC_SETTING_OK);
         } else if (v.getId() == R.id.checked) {
             MediaDir m = mMediaDirList.get(((Integer) v.getTag()));
             m.isChecked = !m.isChecked;

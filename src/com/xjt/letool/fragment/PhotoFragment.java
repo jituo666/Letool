@@ -389,6 +389,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     @Override
     public void onResume() {
         super.onResume();
+        MobclickAgent.onPageStart(TAG);
         LLog.i(TAG, "onResume mIsSDCardMountedCorreclty:" + mIsSDCardMountedCorreclty + " mIsCameraSource:" + mIsCameraSource
                 + " mHasDefaultDCIMDirectory:" + mHasDefaultDCIMDirectory);
         if (!mIsSDCardMountedCorreclty || (mIsCameraSource && !mHasDefaultDCIMDirectory)) {
@@ -413,6 +414,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     @Override
     public void onPause() {
         super.onPause();
+        MobclickAgent.onPageEnd(TAG);
         LLog.i(TAG, "onPause");
         if (!mIsActive) {
             return;
@@ -473,6 +475,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
 
         if (v.getId() == R.id.action_navi) {
             if (mIsCameraSource) {
+                MobclickAgent.onEvent(mLetoolContext.getActivityContext(),StatConstants.EVENT_KEY_SLIDE_MENU);
                 mLetoolContext.getLetoolSlidingMenu().toggle();
             } else {
                 mLetoolContext.popContentFragment();
@@ -481,13 +484,9 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
             if (!mIsSDCardMountedCorreclty)
                 return;
             if (v.getId() == R.id.operation_delete) {
-
-                MobclickAgent.onEvent(mLetoolContext.getActivityContext(),
-                        StatConstants.EVENT_KEY_PHOTO_DELETE);
                 int count = mSelector.getSelectedCount();
                 if (count <= 0) {
-                    Toast t = Toast.makeText(getActivity(),
-                            R.string.common_selection_tip, Toast.LENGTH_SHORT);
+                    Toast t = Toast.makeText(getActivity(), R.string.common_selection_tip, Toast.LENGTH_SHORT);
                     t.setGravity(Gravity.CENTER, 0, 0);
                     t.show();
                     return;
@@ -499,6 +498,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                             @Override
                             public void onConfirmDialogDismissed(boolean confirmed) {
                                 if (confirmed) {
+                                    MobclickAgent.onEvent(mLetoolContext.getActivityContext(),StatConstants.EVENT_KEY_PHOTO_DELETE);
                                     mSelector.leaveSelectionMode();
                                 }
                             }
@@ -517,6 +517,8 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                 dlg.show();
 
             } else if (v.getId() == R.id.navi_to_gallery) {
+                MobclickAgent.onEvent(mLetoolContext.getActivityContext(),mLetoolContext.isImageBrwosing() ?StatConstants.EVENT_KEY_CLICK_PICTURE:
+                    StatConstants.EVENT_KEY_CLICK_MOVIE);
                 GalleryFragment f = new GalleryFragment();
                 Bundle data = new Bundle();
                 data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()

@@ -1123,15 +1123,13 @@ public class FullImageView extends GLBaseView {
                         (outOfRange > 0 && mFilmMode)) {
                     stopExtraScalingIfNeeded();
 
-                    // Removing the touch down flag allows snapback to happen
-                    // for film mode change.
+                    // Removing the touch down flag allows snapback to happen for film mode change.
                     mHolding &= ~HOLD_TOUCH_DOWN;
                     setFilmMode(!mFilmMode);
                     if (mFilmMode) {
-                        MobclickAgent.onEvent(mContext, StatConstants.EVENT_KEY_FULL_IMAGE_Film_MODE);
+                        MobclickAgent.onEvent(mContext, StatConstants.EVENT_KEY_FULL_IMAGE_FilM_MODE);
                     }
-                    // We need to call onScaleEnd() before setting mModeChanged
-                    // to true.
+                    // We need to call onScaleEnd() before setting mModeChanged  to true.
                     onScaleEnd();
                     mModeChanged = true;
                     return true;

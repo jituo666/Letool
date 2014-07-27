@@ -1,6 +1,7 @@
 
 package com.xjt.letool.fragment;
 
+import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
@@ -18,6 +19,7 @@ import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.metadata.loader.DataLoadingListener;
 import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.metadata.source.LocalAlbum;
+import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.LetoolUtils;
 import com.xjt.letool.utils.RelativePosition;
 import com.xjt.letool.utils.StorageUtils;
@@ -202,6 +204,8 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     }
 
     public void onLongTap(int videoIndex) {
+
+        MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_PHOTO_LONG_PRESSED);
         MediaItem item = mVideoDataLoader.get(videoIndex);
         if (item == null)
             return;
@@ -378,6 +382,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     @Override
     public void onResume() {
         super.onResume();
+        MobclickAgent.onPageStart(TAG);
         if (!mIsSDCardMountedCorreclty || mIsCameraSource && !mHasDefaultDCIMDirectory) {
             return;
         }
@@ -404,6 +409,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     public void onPause() {
         super.onPause();
         LLog.i(TAG, "onPause");
+        MobclickAgent.onPageEnd(TAG);
         mGLController.onPause();
         if (!mIsSDCardMountedCorreclty || mIsCameraSource && !mHasDefaultDCIMDirectory) {
             return;
@@ -464,6 +470,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     public void onClick(View v) {
         if (v.getId() == R.id.action_navi) {
             if (mIsCameraSource) {
+                MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SLIDE_MENU);
                 mLetoolContext.getLetoolSlidingMenu().toggle();
             } else {
                 mLetoolContext.popContentFragment();
@@ -505,6 +512,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
                     @Override
                     public void onConfirmDialogDismissed(boolean confirmed) {
                         if (confirmed) {
+                            MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_VIDEO_DELETE);
                         }
                     }
 
@@ -514,7 +522,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         dlg.setTitle(R.string.common_recommend);
         dlg.setOkBtn(R.string.common_ok, cdl);
         dlg.setCancelBtn(R.string.common_cancel, cdl);
-        dlg.setMessage(R.string.common_delete_cur_video_tip);
+        dlg.setMessage(mIsCameraSource ? R.string.common_delete_cur_video_tip : R.string.common_delete_cur_movie_tip);
         dlg.show();
     }
 

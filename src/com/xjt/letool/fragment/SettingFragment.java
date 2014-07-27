@@ -113,6 +113,7 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.camera_source) {
+            MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_CAMERA_SRC_SETTING);
             CameraSourceSettingFragment f = new CameraSourceSettingFragment();
             mLetoolContext.pushContentFragment(f, this, true);
         } else if (v.getId() == R.id.action_navi) {
@@ -123,8 +124,8 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
                 new ClearCacheTask().execute();
             }
         } else if (v.getId() == R.id.version_update_check) {
-            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
             MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_UPDATE_CHECK);
+            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
             final Context context = getActivity();
             UmengUpdateAgent.setDefault();
             UmengUpdateAgent.setUpdateAutoPopup(false);
@@ -156,11 +157,15 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
             progressDialog.setCancelable(true);
             progressDialog.show();
         } else if (v.getId() == R.id.author_desc) {
-            if (ApiHelper.supportVersion(ApiHelper.VERSION_CODES.HONEYCOMB))
+            if (ApiHelper.supportVersion(ApiHelper.VERSION_CODES.HONEYCOMB)) {
+                MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_QQ_ADD);
                 copyQQToClipBoard();
+            }
         } else if (v.getId() == R.id.app_about) {
             if (!joinQQGroup("pan68pjSBp1edKE0a6mUIUogCS4U-qZW")) {
                 Toast.makeText(mLetoolContext.getActivityContext(), R.string.app_QQ_group_failed, Toast.LENGTH_SHORT).show();
+            } else {
+                MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_QQ_GROUP_ADD);
             }
         }
     }
@@ -256,13 +261,15 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(TAG);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(TAG);
     }
 
 }

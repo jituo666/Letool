@@ -44,7 +44,7 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class SlidingMenuFragment extends Fragment {
 
-    private static final String TAG = "SlidingMenuFragment";
+    private static final String TAG = SlidingMenuFragment.class.getSimpleName();
 
     public static final int SLIDING_MENU_PHOTO = 0;
     public static final int SLIDING_MENU_FOLDER = 1;
@@ -115,18 +115,24 @@ public class SlidingMenuFragment extends Fragment {
                 if (position < 2) {
                     mLetoolContext.getLetoolSlidingMenu().toggle();
                     if (mIntents.get(position).hasExtra(LocalMediaActivity.KEY_IS_IMAGE)
-                            && mLetoolContext.isImageBrwosing() == mIntents.get(position).getBooleanExtra(LocalMediaActivity.KEY_IS_IMAGE, true))
-                    {
+                            && mLetoolContext.isImageBrwosing() == mIntents.get(position).getBooleanExtra(LocalMediaActivity.KEY_IS_IMAGE, true)) {
                         return;
                     }
                     getActivity().startActivity(mIntents.get(position));
                     getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
                     getActivity().finish();
+                    if (position == 0) {
+                        MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SLIDE_MENU_PICTURE);
+                    } else if (position == 1) {
+                        MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SLIDE_MENU_VIDEO);
+                    }
                 } else if (position == 2) {
+                    MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SLIDE_MENU_SETTING);
                     mLetoolContext.getLetoolSlidingMenu().toggle();
                     getActivity().startActivityForResult(mIntents.get(position), 100);
                     getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
                 } else if (position == 3) {
+                    MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SLIDE_MENU_EXIT);
                     getActivity().finish();
                 }
 
@@ -192,11 +198,13 @@ public class SlidingMenuFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        MobclickAgent.onPageStart(TAG);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        MobclickAgent.onPageEnd(TAG);
     }
 
 }

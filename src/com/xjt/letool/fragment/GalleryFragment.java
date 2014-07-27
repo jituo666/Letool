@@ -208,6 +208,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     }
 
     public void onLongTap(int thumbnailIndex) {
+        MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_GALLERY_LONG_PRESSED);
         return;
     }
 
@@ -371,6 +372,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     public void onResume() {
         super.onResume();
         LLog.i(TAG, "onResume");
+        MobclickAgent.onPageStart(TAG);
         if (!mIsSDCardMountedCorreclty)
             return;
         mGLController.setContentPane(mRootPane);
@@ -391,6 +393,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     public void onPause() {
         super.onPause();
         LLog.i(TAG, "onPause");
+        MobclickAgent.onPageEnd(TAG);
         mGLController.onPause();
         mGLController.lockRenderThread();
         try {
@@ -485,12 +488,12 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.action_navi) {
+            MobclickAgent.onEvent(mLetoolContext.getActivityContext(),StatConstants.EVENT_KEY_SLIDE_MENU);
             mLetoolContext.getLetoolSlidingMenu().toggle();
         } else {
             if (!mIsSDCardMountedCorreclty)
                 return;
             if (v.getId() == R.id.operation_delete) {
-                MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_GALLERY_DELETE);
                 int count = mSelector.getSelectedCount();
                 if (count <= 0) {
                     Toast t = Toast.makeText(getActivity(), R.string.common_selection_tip, Toast.LENGTH_SHORT);
@@ -520,9 +523,10 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
                 dlg.setMessage(R.string.common_delete_tip);
                 dlg.show();
             } else if (v.getId() == R.id.selection_finished) {
-                MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SELECT_OK);
                 mSelector.leaveSelectionMode();
             } else if (v.getId() == R.id.navi_to_photo) {
+                MobclickAgent.onEvent(mLetoolContext.getActivityContext(),mLetoolContext.isImageBrwosing() ?StatConstants.EVENT_KEY_CLICK_PHOTO:
+                    StatConstants.EVENT_KEY_CLICK_VIDEO);
                 Fragment f = mLetoolContext.isImageBrwosing() ? new PhotoFragment() : new VideoFragment();
                 Bundle data = new Bundle();
                 data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()

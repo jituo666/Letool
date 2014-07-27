@@ -17,6 +17,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
@@ -31,6 +32,7 @@ import com.xjt.letool.imagedata.utils.LetoolBitmapPool;
 import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaSetUtils;
+import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.GLRootView;
 import com.xjt.letool.view.LetoolBottomBar;
@@ -109,6 +111,7 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
     @Override
     protected void onResume() {
         super.onResume();
+        MobclickAgent.onResume(this);
         if (mGLESView.getVisibility() == View.VISIBLE)
             mGLESView.onResume();
         getDataManager().resume();
@@ -118,12 +121,14 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
     @Override
     protected void onPause() {
         super.onPause();
+        MobclickAgent.onPause(this);
         if (mGLESView.getVisibility() == View.VISIBLE)
             mGLESView.onPause();
         getDataManager().pause();
         mOrientationManager.pause();
         LetoolBitmapPool.getInstance().clear();
         MediaItem.getBytesBufferPool().clear();
+        
     }
 
     @Override
@@ -228,6 +233,7 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
             if (getLetoolTopBar().getActionBarMode() == LetoolTopBar.ACTION_BAR_MODE_SELECTION) {
                 return true;
             } else if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                MobclickAgent.onEvent(this, StatConstants.EVENT_KEY_HARD_MENU_MENU);
                 mSlidingMenu.toggle();
                 return true;
             }

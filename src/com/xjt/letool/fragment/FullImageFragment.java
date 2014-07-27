@@ -267,21 +267,16 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
         if (v.getId() == R.id.action_navi) {
             mLetoolContext.popContentFragment();
         } else if (v.getId() == R.id.action_share) {
-            MobclickAgent.onEvent(getActivity(),
-                    StatConstants.EVENT_KEY_FULL_IMAGE_SHARE);
+            MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_FULL_IMAGE_SHARE);
             showShareDialog();
         } else if (v.getId() == R.id.action_detail) {
-            MobclickAgent.onEvent(getActivity(),
-                    StatConstants.EVENT_KEY_FULL_IMAGE_DETAIL);
+            MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_FULL_IMAGE_DETAIL);
             if (mShowDetails) {
                 hideDetails();
             } else {
                 showDetails();
             }
         } else if (v.getId() == R.id.action_delete) {
-
-            MobclickAgent.onEvent(getActivity(),
-                    StatConstants.EVENT_KEY_FULL_IMAGE_DELETE);
             SingleDeleteMediaListener cdl = new SingleDeleteMediaListener(
                     getActivity(), mCurrentPhoto.getPath(), mLetoolContext.getDataManager(),
                     new SingleDeleteMediaProgressListener() {
@@ -289,18 +284,13 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
                         @Override
                         public void onConfirmDialogDismissed(boolean confirmed) {
                             if (confirmed) {
+                                MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_FULL_IMAGE_DELETE_OK);
                                 mTotalCount = mMediaSet.getMediaCount();
                                 if (mTotalCount > 0) {
-                                    updateActionBarMessage(getString(
-                                            R.string.full_image_browse, Math
-                                                    .min(mCurrentIndex + 1,
-                                                            mTotalCount),
-                                            mTotalCount));
+                                    updateActionBarMessage(getString(R.string.full_image_browse, Math.min(mCurrentIndex + 1, mTotalCount), mTotalCount));
                                 } else {
                                     // not medias
-                                    Toast.makeText(getActivity(),
-                                            R.string.full_image_browse_empty,
-                                            Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(), R.string.full_image_browse_empty, Toast.LENGTH_SHORT).show();
                                     getActivity().finish();
                                     return;
                                 }
@@ -481,6 +471,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
     @Override
     public void onResume() {
         super.onResume();
+        MobclickAgent.onPageStart(TAG);
         mGLController.onResume();
         if (mModel == null) {
             //
@@ -505,6 +496,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
     @Override
     public void onPause() {
         super.onPause();
+        MobclickAgent.onPageEnd(TAG);
         mGLController.onPause();
         mGLController.lockRenderThread();
         try {
@@ -598,6 +590,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
             public void onItemClick(AdapterView<?> parent, View v, int postion, long id) {
                 shareManager.onShareTo(getActivity(), shareToList.get(postion).shareToType, shareData);
                 dlg.dismiss();
+                MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_FULL_IMAGE_SHARE_OK);
             }
         });
         dlg.show();

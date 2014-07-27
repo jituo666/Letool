@@ -50,7 +50,6 @@ public class LetoolSlidingMenu {
             FragmentTransaction ft1 = mFragmentManager.beginTransaction();
             ft1.setCustomAnimations(R.anim.slide_left_in, 0);
             ft1.add(R.id.local_image_browse_main_view, mFragment, SlidingMenuFragment.class.getSimpleName()).commit();
-            MobclickAgent.onEvent(mContext, StatConstants.EVENT_KEY_SLIDE_MENU);
             playTipAinm(true);
         } else if (mFragment != null) {
             FragmentTransaction ft = mFragmentManager.beginTransaction();

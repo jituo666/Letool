@@ -1,6 +1,7 @@
 
 package com.xjt.letool.activities;
 
+import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
@@ -55,6 +56,18 @@ public class SettingsActivity extends FragmentActivity implements LetoolContext 
         mTopBar = new LetoolTopBar(this, (ViewGroup) findViewById(R.id.letool_top_bar_container));
         mSlidingMenu = new LetoolSlidingMenu(this, getSupportFragmentManager(), findViewById(R.id.letool_top_bar_container));
         startFirstFragment();
+    }
+
+    @Override
+    protected void onResume() {
+        MobclickAgent.onResume(this);
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        MobclickAgent.onPause(this);
+        super.onPause();
     }
 
     @Override
@@ -124,7 +137,7 @@ public class SettingsActivity extends FragmentActivity implements LetoolContext 
     }
 
     @Override
-    public void showEmptyView(int iconResIcon,int messageResId) {
+    public void showEmptyView(int iconResIcon, int messageResId) {
 
     }
 
