@@ -93,10 +93,10 @@ public class LocalAlbum extends MediaSet {
         long time = System.currentTimeMillis();
         ArrayList<MediaItem> list = new ArrayList<MediaItem>();
         LetoolUtils.assertNotInRenderThread();
-        if (mAlbumCursor == null) {
+        if (mAlbumCursor == null || mAlbumCursor.isClosed()) {
             getAllMediaItems();
         }
-        if (mAlbumCursor == null) {
+        if (mAlbumCursor == null || mAlbumCursor.isClosed()) {
             return null;
         }
         if (mAlbumCursor.moveToPosition(start)) {
@@ -130,10 +130,9 @@ public class LocalAlbum extends MediaSet {
     public int getAllMediaItems() {
 
         long time = System.currentTimeMillis();
-        if (mAlbumCursor == null) {
+        if (mAlbumCursor == null || mAlbumCursor.isClosed()) {
             if (mBucketId.length == 1) {
-                mAlbumCursor = mResolver.query(mBaseUri, mProjection, mWhereClause, new String[] {
-                        String.valueOf(mBucketId[0])
+                mAlbumCursor = mResolver.query(mBaseUri, mProjection, mWhereClause, new String[] {String.valueOf(mBucketId[0])
                 }, mOrderClause);
             } else {
                 mAlbumCursor = mResolver.query(mBaseUri, mProjection, mWhereClause, null, mOrderClause);

@@ -522,7 +522,8 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         dlg.setTitle(R.string.common_recommend);
         dlg.setOkBtn(R.string.common_ok, cdl);
         dlg.setCancelBtn(R.string.common_cancel, cdl);
-        dlg.setMessage(mIsCameraSource ? R.string.common_delete_cur_video_tip : R.string.common_delete_cur_movie_tip);
+        dlg.setMessage(mIsCameraSource ? getString(R.string.common_delete_cur_video_tip, item.getName())
+                : getString(R.string.common_delete_cur_movie_tip,item.getName()));
         dlg.show();
     }
 

@@ -52,8 +52,8 @@
     <string name="common_detail">Detail</string>
     <string name="common_delete">Delete</string>
     <string name="common_delete_tip">Are you sure to delete?</string>
-    <string name="common_delete_cur_pic_tip">Are you sure to delete picture ?</string>
-    <string name="common_delete_cur_video_tip">Are you sure to delete video ?</string>
+    <string name="common_delete_cur_pic_tip">Are you sure to delete picture[%s] ?</string>
+    <string name="common_delete_cur_video_tip">Are you sure to delete video[%s] ?</string>
     <string name="common_delete_waiting">"Deleting\u2026"</string>
     <string name="common_update_checking">"Checking\u2026"</string>
     <string name="common_selection_tip">Please select something</string>
