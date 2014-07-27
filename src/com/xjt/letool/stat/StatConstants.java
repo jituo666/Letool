@@ -21,12 +21,12 @@ public class StatConstants {
     public static final String EVENT_KEY_CLICK_VIDEO = "clk_video"; // 点击录像
     public static final String EVENT_KEY_CLICK_MOVIE = "clk_movie"; // 点击视频
     //
-    public static final String EVENT_KEY_SLIDE_MENU = "slid_menu";// 点击侧面栏抽屉进入侧面蓝
-    public static final String EVENT_KEY_HARD_MENU_MENU = "hard_slid_menu"; // 从硬件菜单进入侧面蓝
+    public static final String EVENT_KEY_SLIDE_MENU = "slid_menu";// 点击侧面栏抽屉进入侧面栏
+    public static final String EVENT_KEY_HARD_MENU_MENU = "hard_slid_menu"; // 从硬件菜单进入侧面栏
     public static final String EVENT_KEY_SLIDE_MENU_PICTURE = "sl_picture"; // 侧边栏进入图片
     public static final String EVENT_KEY_SLIDE_MENU_VIDEO = "sl_video"; // 侧边栏进入视频
     public static final String EVENT_KEY_SLIDE_MENU_SETTING = "sl_setting"; // 侧边栏进入设置
-    public static final String EVENT_KEY_SLIDE_MENU_EXIT = "sl_exit"; // 侧边栏推出
+    public static final String EVENT_KEY_SLIDE_MENU_EXIT = "sl_exit"; // 侧边栏退出
     //
     public static final String EVENT_KEY_FULL_IMAGE_SHARE = "full_share"; //大图分享
     public static final String EVENT_KEY_FULL_IMAGE_SHARE_OK = "full_share_ok"; //大图分享
@@ -39,7 +39,6 @@ public class StatConstants {
     public static final String EVENT_KEY_CAMERA_SRC_SETTING_OK = "camera_src_set_ok"; // 照片目录设置后保存
     public static final String EVENT_KEY_CLEAR_CAHCE = "clear_cache"; // 清理缓存
     public static final String EVENT_KEY_UPDATE_CHECK = "update_check"; // 更新检查
-    public static final String EVENT_KEY_UPDATE_FINSHED = "update_finish"; // 更新检查
-    public static final String EVENT_KEY_QQ_ADD = "qq_add"; // 更新检查
-    public static final String EVENT_KEY_QQ_GROUP_ADD = "qq_g_add"; // 更新检查
+    public static final String EVENT_KEY_QQ_ADD = "qq_add"; // 加QQ
+    public static final String EVENT_KEY_QQ_GROUP_ADD = "qq_g_add"; // 加QQ群
 }
