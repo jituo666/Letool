@@ -47,15 +47,19 @@ public class MediaSetUtils {
         } else {
             ArrayList<Integer> list = new ArrayList<Integer>();
             MY_ALBUM_BUCKETS_DIR = "";
-            if (UtilStorage.getInstance().getExternalSdCardPath() != null) {
-                list.addAll(recurseCamerDir(UtilStorage.getInstance().getExternalSdCardPath().toString() + "/DCIM/"));
-                list.addAll(recurseCamerDir(UtilStorage.getInstance().getExternalSdCardPath().toString() + "/Camera/"));
-                list.addAll(recurseCamerDir(UtilStorage.getInstance().getExternalSdCardPath().toString() + "/Photo/"));
+            String outerSdcard = UtilStorage.getInstance().getExternalSdCardPath();
+            if (outerSdcard != null) {
+                list.addAll(recurseCamerDir(outerSdcard + "/DCIM"));
+                list.addAll(recurseCamerDir(outerSdcard + "/Camera"));
+                list.addAll(recurseCamerDir(outerSdcard + "/Photo"));
+                list.addAll(recurseCamerDir(outerSdcard + "/Photos"));
             }
-            if (UtilStorage.getInstance().getInnerSdCardPath() != null) {
-                list.addAll(recurseCamerDir(UtilStorage.getInstance().getInnerSdCardPath().toString() + "/DCIM/"));
-                list.addAll(recurseCamerDir(UtilStorage.getInstance().getInnerSdCardPath().toString() + "/Camera/"));
-                list.addAll(recurseCamerDir(UtilStorage.getInstance().getInnerSdCardPath().toString() + "/Photo/"));
+            String innnerSdCard = UtilStorage.getInstance().getInnerSdCardPath();
+            if (innnerSdCard != null) {
+                list.addAll(recurseCamerDir(innnerSdCard + "/DCIM"));
+                list.addAll(recurseCamerDir(innnerSdCard + "/Camera"));
+                list.addAll(recurseCamerDir(innnerSdCard + "/Photo"));
+                list.addAll(recurseCamerDir(innnerSdCard + "/Photos"));
             }
             if (list.size() == 0) {
                 list.addAll(recurseCamerDir(Environment.getExternalStorageDirectory().toString() + "/DCIM/"));
@@ -83,6 +87,7 @@ public class MediaSetUtils {
         ArrayList<Integer> ret = new ArrayList<Integer>();
         File f = new File(dirPath);
         if (f != null && f.exists() && f.isDirectory()) {
+            ret.add(LetoolUtils.getBucketId(dirPath));
             File dirs[] = f.listFiles();
             for (File dir : dirs) {
                 if (dir.isDirectory()) {

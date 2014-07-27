@@ -151,6 +151,7 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
                     }
                 }
             });
+            UmengUpdateAgent.setUpdateOnlyWifi(false);
             UmengUpdateAgent.update(context);
             progressDialog.setMessage(mLetoolContext.getActivityContext().getString(R.string.common_update_checking));
             progressDialog.setIndeterminate(true);
