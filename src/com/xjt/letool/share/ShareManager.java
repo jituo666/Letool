@@ -1,110 +1,69 @@
 
 package com.xjt.letool.share;
 
+import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.net.Uri;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.GridView;
+
+import com.umeng.analytics.MobclickAgent;
+import com.xjt.letool.R;
+import com.xjt.letool.stat.StatConstants;
+import com.xjt.letool.utils.PackageUtils;
+import com.xjt.letool.utils.PackageUtils.AppInfo;
+import com.xjt.letool.view.LetoolDialog;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import com.xjt.letool.R;
-import com.xjt.letool.common.LLog;
+public class ShareManager {
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.graphics.drawable.Drawable;
+    public static void showAllShareDialog(final Activity activity, final String mimeType, final ArrayList<Uri> shareUris) {
 
-public class ShareManager implements ShareListener {
+        if (shareUris.size() == 0)
+            return;
+        final boolean singleShare = (shareUris.size() == 1);
+        final List<AppInfo> shareToList = PackageUtils.getShareAppList(activity, mimeType, singleShare);
 
-    private Context mContext;
+        if (shareToList.size() == 0) {
+            Intent shareIntent = new Intent(singleShare ? Intent.ACTION_SEND : Intent.ACTION_SEND_MULTIPLE);
+            if (singleShare)
+                shareIntent.putExtra(Intent.EXTRA_STREAM, shareUris.get(0));
+            else
+                shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, shareUris);
+            shareIntent.setType(mimeType);
+            activity.startActivity(Intent.createChooser(shareIntent, activity.getString(R.string.common_share_to)));
+        } else {
+            final LetoolDialog dlg = new LetoolDialog(activity);
+            dlg.setTitle(R.string.common_share_to);
+            dlg.setCancelBtn(R.string.common_cancel, null);
 
-    public static class ShareTo {
+            GridView l = dlg.setGridAdapter(new ShareToAllAdapter(activity, shareToList));
+            l.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-        public int shareToType;
-        public String shareToTitle;
-        public Drawable shareToIcon;
-
-        public ShareTo(int type, String title, Drawable icon) {
-            shareToType = type;
-            shareToTitle = title;
-            shareToIcon = icon;
-        }
-    }
-
-    public ShareManager(Context context) {
-        mContext = context;
-    }
-
-    public List<ShareTo> getShareToList() {
-        ArrayList<ShareTo> list = new ArrayList<ShareTo>();
-        if (isQzoneInstalled()) {
-            list.add(new ShareTo(AppConstants.SHARE_TO_QQ, "QQ", mContext.getResources().getDrawable(R.drawable.ic_share_to_qq)));
-            list.add(new ShareTo(AppConstants.SHARE_TO_QZONE, "QQ空间", mContext.getResources().getDrawable(R.drawable.ic_share_to_qzone)));
-        }
-//        if (isWeichatIstalled(mContext)) {
-//            list.add(new ShareTo(AppConstants.SHARE_TO_WX, "微信", mContext.getResources().getDrawable(R.drawable.ic_launcher)));
-//            list.add(new ShareTo(AppConstants.SHARE_TO_WX_F, "微信朋友圈", mContext.getResources().getDrawable(R.drawable.ic_launcher)));
-//        }
-        return list;
-    }
-
-    private boolean isQzoneInstalled() {
-        boolean ret = false;
-        PackageInfo p = null;
-        try {
-            p = null;
-            p = mContext.getPackageManager().getPackageInfo("com.tencent.mobileqq", 0);
-            if (null != p) {
-                if (p.versionCode >= 50) {
-                    ret = true;
+                @Override
+                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                    Intent shareIntent = new Intent(singleShare ? Intent.ACTION_SEND : Intent.ACTION_SEND_MULTIPLE);
+                    shareIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+                    AppInfo appInfo = (AppInfo) shareToList.get(position);
+                    if (appInfo.icon != null) {
+                        dlg.dismiss();
+                        shareIntent.setComponent(new ComponentName(appInfo.pkgName, appInfo.launcherClass));
+                        if (singleShare)
+                            shareIntent.putExtra(Intent.EXTRA_STREAM, shareUris.get(0));
+                        else
+                            shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, shareUris);
+                        shareIntent.setType(mimeType);
+                        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        activity.startActivity(shareIntent);
+                        MobclickAgent.onEvent(activity, StatConstants.EVENT_KEY_FULL_IMAGE_SHARE_OK);
+                    }
                 }
-            } else {
-                ret = false;
-            }
-        } catch (PackageManager.NameNotFoundException e2) {
-            ret = false;
-        }
-        return ret;
-    }
-
-    private boolean isWeichatIstalled(Context context) {
-        boolean ret = false;
-        PackageInfo p = null;
-        try {
-            p = null;
-            p = context.getPackageManager().getPackageInfo("com.tencent.mm", 0);
-            if (null != p) {
-                if (p.versionCode >= 255) {
-                    ret = true;
-                }
-            } else {
-                ret = false;
-            }
-        } catch (NameNotFoundException e2) {
-            ret = false;
-        }
-        return ret;
-    }
-
-    @Override
-    public void onShareTo(Activity activity, int shareTo, ArrayList<String> shareData) {
-        switch (shareTo) {
-            case AppConstants.SHARE_TO_QQ: {
-                QQShareManager m = new QQShareManager(activity.getApplicationContext(), AppConstants.QQ_SHARE_APP_ID);
-                m.shareImageToQQ(activity, "分享", "了图分享", shareData.get(0));
-                break;
-            }
-            case AppConstants.SHARE_TO_QZONE: {
-                QQShareManager m = new QQShareManager(activity.getApplicationContext(), AppConstants.QQ_SHARE_APP_ID);
-                m.shareImageToQZone(activity, "分享", "了图分享", shareData);
-                break;
-            }
-            case AppConstants.SHARE_TO_WX: {
-                break;
-            }
-            case AppConstants.SHARE_TO_WX_F: {
-                break;
-            }
+            });
+            dlg.show();
         }
     }
 }

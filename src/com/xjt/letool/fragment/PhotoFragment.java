@@ -8,6 +8,7 @@ import com.xjt.letool.R;
 import com.xjt.letool.activities.LocalMediaActivity;
 import com.xjt.letool.activities.SettingsActivity;
 import com.xjt.letool.common.EyePosition;
+import com.xjt.letool.common.GlobalConstants;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
 import com.xjt.letool.metadata.DataManager;
@@ -20,6 +21,7 @@ import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.metadata.source.LocalAlbum;
 import com.xjt.letool.selectors.SelectionListener;
 import com.xjt.letool.selectors.SelectionManager;
+import com.xjt.letool.share.ShareManager;
 import com.xjt.letool.share.ShareToAllAdapter;
 import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.LetoolUtils;
@@ -542,7 +544,13 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                 MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SELECT_OK);
                 mSelector.leaveSelectionMode();
             } else if (v.getId() == R.id.operation_multi_share) {
-                showAllShareDialog();
+                ArrayList<Uri> uris = new ArrayList<Uri>();
+                for (MediaPath p : mSelector.getSelected(false)) {
+                    if (p.getFilePath().length() > 0) {
+                        uris.add(Uri.parse("file://" + p.getFilePath()));
+                    }
+                }
+                ShareManager.showAllShareDialog(getActivity(), GlobalConstants.MIMI_TYPE_IMAGE, uris);
             }
         }
     }
@@ -595,49 +603,4 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         mLetoolContext.pushContentFragment(fragment, this, true);
     }
 
-    private void showAllShareDialog() {
-
-        final List<AppInfo> shareToList = PackageUtils.getShareAppList(getActivity(), true);
-        final ArrayList<Uri> shareData = new ArrayList<Uri>();
-        for (MediaPath p : mSelector.getSelected(false)) {
-            if (p.getFilePath().length() > 0) {
-                shareData.add(Uri.parse("file://" + p.getFilePath()));
-            }
-        }
-        if (shareToList.size() == 0) {
-            Intent shareIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
-            shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, shareData);
-            shareIntent.setType("image/jpeg");
-            getActivity().startActivity(Intent.createChooser(shareIntent, getString(R.string.common_share_to)));
-        } else {
-
-            final LetoolDialog dlg = new LetoolDialog(getActivity());
-            dlg.setTitle(R.string.common_share_to);
-            dlg.setCancelBtn(R.string.common_cancel, null);
-
-            GridView l = dlg.setGridAdapter(new ShareToAllAdapter(getActivity(), shareToList));
-            l.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                @Override
-                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                    Intent shareIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
-                    shareIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-                    AppInfo appInfo = (AppInfo) shareToList.get(position);
-                    if (appInfo.icon != null) {
-                        dlg.dismiss();
-                        shareIntent.setComponent(new ComponentName(appInfo.pkgName, appInfo.launcherClass));
-                        shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, shareData);
-                        shareIntent.setType("image/jpeg");
-                        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        getActivity().startActivity(shareIntent);
-                        MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_FULL_IMAGE_SHARE_OK);
-                        if (mSelector.inSelectionMode()) {
-                            mSelector.leaveSelectionMode();
-                        }
-                    }
-                }
-            });
-            dlg.show();
-        }
-    }
 }

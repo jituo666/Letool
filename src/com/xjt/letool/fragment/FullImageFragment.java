@@ -1,11 +1,9 @@
 
 package com.xjt.letool.fragment;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Color;
@@ -21,11 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
@@ -40,7 +34,6 @@ import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.metadata.source.LocalAlbum;
 import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.share.ShareManager;
-import com.xjt.letool.share.ShareManager.ShareTo;
 import com.xjt.letool.share.ShareToAllAdapter;
 import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.LetoolUtils;
@@ -62,6 +55,7 @@ import com.xjt.letool.views.opengl.GLESCanvas;
 
 import com.xjt.letool.activities.LocalMediaActivity;
 import com.xjt.letool.adapters.FullImageDataAdapter;
+import com.xjt.letool.common.GlobalConstants;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.OrientationManager;
 import com.xjt.letool.common.SynchronizedHandler;
@@ -277,7 +271,9 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
             mLetoolContext.popContentFragment();
         } else if (v.getId() == R.id.action_share) {
             MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_FULL_IMAGE_SHARE);
-            showAllShareDialog();
+            ArrayList<Uri> uris = new ArrayList<Uri>();
+            uris.add(Uri.parse("file://" + mModel.getMediaItem(0).getFilePath()));
+            ShareManager.showAllShareDialog(getActivity(), GlobalConstants.MIMI_TYPE_IMAGE, uris);
         } else if (v.getId() == R.id.action_detail) {
             MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_FULL_IMAGE_DETAIL);
             if (mShowDetails) {
@@ -575,114 +571,4 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
         }
     }
 
-    // ////////////////////////////////////////////////////////[share1]/////////////////////////////////////////////////////////////////
-
-    private void showShareDialog() {
-
-        final ShareManager shareManager = new ShareManager(mLetoolContext.getActivityContext());
-        final List<ShareTo> shareToList = shareManager.getShareToList();
-        if (shareToList.size() <= 0) {
-            Toast.makeText(mLetoolContext.getActivityContext(), R.string.share_app_install_tip,
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-        final ArrayList<String> shareData = new ArrayList<String>();
-        shareData.add(mCurrentPhoto.getFilePath());
-        final LetoolDialog dlg = new LetoolDialog(getActivity());
-        dlg.setTitle(R.string.common_share_to);
-        dlg.setCancelBtn(R.string.common_cancel, null);
-
-        ListView l = dlg.setListAdapter(new ShareToAdapter(shareToList));
-        l.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View v, int postion, long id) {
-                shareManager.onShareTo(getActivity(), shareToList.get(postion).shareToType, shareData);
-                dlg.dismiss();
-                MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_FULL_IMAGE_SHARE_OK);
-            }
-        });
-        dlg.show();
-    }
-
-    private class ShareToAdapter extends BaseAdapter {
-
-        final List<ShareTo> mShareToList;
-
-        public ShareToAdapter(List<ShareTo> data) {
-            mShareToList = data;
-        }
-
-        @Override
-        public int getCount() {
-            return mShareToList.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return mShareToList.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            final View v;
-            if (convertView == null) {
-                v = getActivity().getLayoutInflater().inflate(R.layout.share_list_item, parent, false);
-            } else {
-                v = convertView;
-            }
-            TextView textView = (TextView) v.findViewById(R.id.app_name);
-            textView.setText(mShareToList.get(position).shareToTitle);
-            ImageView imageView = (ImageView) v.findViewById(R.id.app_icon);
-            imageView.setImageDrawable(mShareToList.get(position).shareToIcon);
-            return v;
-        }
-    }
-
-    // ////////////////////////////////////////////////////////[share1]/////////////////////////////////////////////////////////////////
-
-    private void showAllShareDialog() {
-
-        final List<AppInfo> shareToList = PackageUtils.getShareAppList(getActivity(), true);
-        if (shareToList.size() == 0) {
-            Intent shareIntent = new Intent(Intent.ACTION_SEND);
-            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + mModel.getMediaItem(0).getFilePath()));
-            shareIntent.setType("image/jpeg");
-            getActivity().startActivity(Intent.createChooser(shareIntent, getString(R.string.common_share_to)));
-        } else {
-            final ArrayList<String> shareData = new ArrayList<String>();
-            shareData.add(mCurrentPhoto.getFilePath());
-            final LetoolDialog dlg = new LetoolDialog(getActivity());
-            dlg.setTitle(R.string.common_share_to);
-            dlg.setCancelBtn(R.string.common_cancel, null);
-
-            GridView l = dlg.setGridAdapter(new ShareToAllAdapter(getActivity(), shareToList));
-            l.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                @Override
-                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                    shareIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-                    AppInfo appInfo = (AppInfo) shareToList.get(position);
-                    if (appInfo.icon != null) {
-                        dlg.dismiss();
-                        shareIntent.setComponent(new ComponentName(appInfo.pkgName, appInfo.launcherClass));
-                        File F = new File(mModel.getMediaItem(0).getFilePath());
-                        Uri u = Uri.fromFile(F);
-                        shareIntent.putExtra(Intent.EXTRA_STREAM, u);
-                        shareIntent.setType("image/jpeg");
-                        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        getActivity().startActivity(shareIntent);
-                        MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_FULL_IMAGE_SHARE_OK);
-                    }
-                }
-            });
-            dlg.show();
-        }
-    }
 }

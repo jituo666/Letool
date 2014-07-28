@@ -54,27 +54,6 @@
             android:multiprocess="false"
             android:permission="com.xjt.letool.data.provider.rw" />
 
-        <!-- Tencent sdk requirement -->
-        <activity
-            android:name="com.tencent.connect.common.AssistActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity
-            android:name="com.tencent.tauth.AuthActivity"
-            android:launchMode="singleTask"
-            android:noHistory="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="tencent101105397" />
-            </intent-filter>
-        </activity>
-        <!-- END Tencent sdk requirement -->
-
-
         <!-- Umeng sdk requirement -->
         <meta-data
             android:name="UMENG_APPKEY"

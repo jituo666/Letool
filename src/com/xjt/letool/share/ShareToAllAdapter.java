@@ -42,7 +42,7 @@ public class ShareToAllAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final View v;
         if (convertView == null) {
-            v = mContext.getLayoutInflater().inflate(R.layout.share_list_item1, parent, false);
+            v = mContext.getLayoutInflater().inflate(R.layout.share_list_item, parent, false);
         } else {
             v = convertView;
         }

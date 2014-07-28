@@ -21,17 +21,17 @@ public class PackageUtils {
 
     private static final String TAG = PackageUtils.class.getSimpleName();
 
-//    private final static String[] FILTER_APP_PACKAGENAME = {
-//            "com.mt.mtxx.mtxx",// 美图秀秀
-//            "my.beautyCamera",// 美人相机
-//            "my.PCamera",// POCO相机
-//            "com.ei.hdrphoto",// 好照片
-//            "cn.jingling.motu.photowonder",// 百度魔图
-//            "cn.poco.foodcamera", // POCO美食相机
-//            "jp.naver.linecamera.android",//LINE camera
-//            "powercam.activity", // PowerCam"
-//            "com.huaban.android", //采集到花瓣
-//    };
+    //    private final static String[] FILTER_APP_PACKAGENAME = {
+    //            "com.mt.mtxx.mtxx",// 美图秀秀
+    //            "my.beautyCamera",// 美人相机
+    //            "my.PCamera",// POCO相机
+    //            "com.ei.hdrphoto",// 好照片
+    //            "cn.jingling.motu.photowonder",// 百度魔图
+    //            "cn.poco.foodcamera", // POCO美食相机
+    //            "jp.naver.linecamera.android",//LINE camera
+    //            "powercam.activity", // PowerCam"
+    //            "com.huaban.android", //采集到花瓣
+    //    };
 
     private final static String[] SHARED_APP_PACKAGENAME = {
             "com.tencent.mm.ui.tools.ShareImgUI",// 微信好友
@@ -67,7 +67,7 @@ public class PackageUtils {
         public int versionCode;
     }
 
-    private static List<ResolveInfo> getShareApps(Context context, boolean singleSharing) {
+    private static List<ResolveInfo> getShareApps(Context context, String mimeType, boolean singleSharing) {
         List<ResolveInfo> apps = new ArrayList<ResolveInfo>();
         String shareAction = singleSharing ? Intent.ACTION_SEND : Intent.ACTION_SEND_MULTIPLE;
         Intent intent = new Intent(shareAction, null);
@@ -77,10 +77,10 @@ public class PackageUtils {
         return apps;
     }
 
-    public static List<AppInfo> getShareAppList(Context context, boolean singleSharing) {
+    public static List<AppInfo> getShareAppList(Context context, String mimeType, boolean singleSharing) {
         List<AppInfo> shareAppInfos = new ArrayList<AppInfo>();
         PackageManager packageManager = context.getPackageManager();
-        List<ResolveInfo> resolveInfos = getShareApps(context, singleSharing);
+        List<ResolveInfo> resolveInfos = getShareApps(context, mimeType, singleSharing);
         if (null == resolveInfos) {
             return shareAppInfos;
         } else {
@@ -105,7 +105,7 @@ public class PackageUtils {
                 }
             }
         }
-        if (result.size() %2 != 0) {
+        if (result.size() % 2 != 0) {
             result.add(new AppInfo());
         }
         return result;

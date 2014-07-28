@@ -8,6 +8,7 @@ import com.xjt.letool.R;
 import com.xjt.letool.activities.LocalMediaActivity;
 import com.xjt.letool.activities.MoviePlayActivity;
 import com.xjt.letool.common.EyePosition;
+import com.xjt.letool.common.GlobalConstants;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
 import com.xjt.letool.metadata.DataManager;
@@ -19,11 +20,15 @@ import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.metadata.loader.DataLoadingListener;
 import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.metadata.source.LocalAlbum;
+import com.xjt.letool.share.ShareManager;
+import com.xjt.letool.share.ShareToAllAdapter;
 import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.LetoolUtils;
+import com.xjt.letool.utils.PackageUtils;
 import com.xjt.letool.utils.RelativePosition;
 import com.xjt.letool.utils.StorageUtils;
 import com.xjt.letool.utils.Utils;
+import com.xjt.letool.utils.PackageUtils.AppInfo;
 import com.xjt.letool.view.SingleDeleteMediaListener.SingleDeleteMediaProgressListener;
 import com.xjt.letool.view.DetailsHelper.CloseListener;
 import com.xjt.letool.view.DetailsHelper.DetailsSource;
@@ -45,11 +50,13 @@ import com.xjt.letool.views.render.ThumbnailVideoRenderer;
 import com.xjt.letool.views.utils.ActionItem;
 import com.xjt.letool.views.utils.ViewConfigs;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -62,6 +69,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -80,8 +88,9 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     private static final int MSG_LAYOUT_CONFIRMED = 0;
     private static final int MSG_PICK_PHOTO = 1;
 
-    private static final int POP_UP_MENU_ITEM_DETAIL = 0;
-    private static final int POP_UP_MENU_ITEM_DELETE = 1;
+    private static final int POP_UP_MENU_ITEM_SHARE = 0;
+    private static final int POP_UP_MENU_ITEM_DETAIL = 1;
+    private static final int POP_UP_MENU_ITEM_DELETE = 2;
 
     private LetoolContext mLetoolContext;
 
@@ -211,6 +220,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             return;
         mLongPressedIndex = videoIndex;
         List<ActionItem> items = new ArrayList<ActionItem>();
+        addMenuItem(items, POP_UP_MENU_ITEM_SHARE, R.string.common_share);
         addMenuItem(items, POP_UP_MENU_ITEM_DETAIL, R.string.common_detail);
         addMenuItem(items, POP_UP_MENU_ITEM_DELETE, R.string.common_delete);
         final LetoolDialog dlg = new LetoolDialog(getActivity());
@@ -220,12 +230,16 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
 
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                if (position == POP_UP_MENU_ITEM_DETAIL) {
+                dlg.dismiss();
+                if (position == POP_UP_MENU_ITEM_SHARE) {
+                    ArrayList<Uri> uris = new ArrayList<Uri>();
+                    uris.add(Uri.parse("file://" + mVideoDataLoader.get(mLongPressedIndex).getFilePath()));
+                    ShareManager.showAllShareDialog(getActivity(), GlobalConstants.MIMI_TYPE_VIDEO, uris);
+                } else if (position == POP_UP_MENU_ITEM_DETAIL) {
                     showDetails();
                 } else if (position == POP_UP_MENU_ITEM_DELETE) {
                     delete();
                 }
-                dlg.dismiss();
             }
         });
         dlg.setCancelBtn(R.string.common_cancel, null);
@@ -523,7 +537,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         dlg.setOkBtn(R.string.common_ok, cdl);
         dlg.setCancelBtn(R.string.common_cancel, cdl);
         dlg.setMessage(mIsCameraSource ? getString(R.string.common_delete_cur_video_tip, item.getName())
-                : getString(R.string.common_delete_cur_movie_tip,item.getName()));
+                : getString(R.string.common_delete_cur_movie_tip, item.getName()));
         dlg.show();
     }
 
@@ -604,4 +618,5 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             return convertView;
         }
     }
+
 }
