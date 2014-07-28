@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/action_bar_selection"
     style="@style/MyWidget.ActionBarPanel"
-    android:background="@drawable/vpi__tab_unselected_holo"
     android:layout_marginLeft="4dp"
-    android:layout_marginRight="8dp" >
+    android:layout_marginRight="8dp"
+    android:background="@drawable/vpi__tab_unselected_holo" >
 
     <ImageView
         android:id="@+id/selection_finished"
@@ -17,9 +17,9 @@
         android:id="@+id/selection_divider"
         android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:layout_marginTop="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/selection_finished"
         android:background="@drawable/common_bar_divider" />
 
@@ -38,7 +38,18 @@
         style="@style/MyWidget.ActionBarIconStyle"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:layout_marginRight="2dp"
         android:clickable="false"
         android:src="@drawable/ic_action_delete" />
+
+    <ImageView
+        android:id="@+id/operation_multi_share"
+        style="@style/MyWidget.ActionBarIconStyle"
+        android:layout_toLeftOf="@id/operation_delete"
+        android:layout_marginRight="8dp"
+        android:layout_centerVertical="true"
+        android:clickable="false"
+        android:src="@drawable/ic_action_share"
+        android:visibility="gone"/>
 
 </RelativeLayout>

@@ -50,6 +50,7 @@ public class LetoolTopBar {
 
     public static final int ACTION_BUTTON_IDS[] = {
             R.id.action_navi,
+            R.id.operation_multi_share,
             R.id.operation_delete,
             R.id.action_navi,
             R.id.action_navi,

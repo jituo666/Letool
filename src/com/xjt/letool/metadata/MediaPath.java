@@ -7,6 +7,7 @@ import com.xjt.letool.utils.Utils;
 import java.lang.ref.WeakReference;
 
 public class MediaPath {
+
     /**
      * Path pattern" prefix:$Root/source/type/setId/itemId 
      * identity: id
@@ -14,11 +15,17 @@ public class MediaPath {
     private static final String TAG = "Path";
     private final String mPrefix;
     private final int mIdentity;
+    private String optionFilePath;
     private WeakReference<MediaObject> mObject;
 
     public MediaPath(String prefix, int identity) {
         mPrefix = prefix;
         mIdentity = identity;
+        optionFilePath = "";
+    }
+
+    public void setFilePath(String f) {
+        optionFilePath = f;
     }
 
     public void setObject(MediaObject object) {
@@ -71,5 +78,9 @@ public class MediaPath {
 
     public int getIdentity() {
         return mIdentity;
+    }
+    
+    public String getFilePath() {
+        return optionFilePath;
     }
 }

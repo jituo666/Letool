@@ -20,11 +20,14 @@ import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.metadata.source.LocalAlbum;
 import com.xjt.letool.selectors.SelectionListener;
 import com.xjt.letool.selectors.SelectionManager;
+import com.xjt.letool.share.ShareToAllAdapter;
 import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.LetoolUtils;
+import com.xjt.letool.utils.PackageUtils;
 import com.xjt.letool.utils.RelativePosition;
 import com.xjt.letool.utils.StorageUtils;
 import com.xjt.letool.utils.Utils;
+import com.xjt.letool.utils.PackageUtils.AppInfo;
 import com.xjt.letool.view.BatchDeleteMediaListener;
 import com.xjt.letool.view.BatchDeleteMediaListener.DeleteMediaProgressListener;
 import com.xjt.letool.view.DetailsHelper;
@@ -44,9 +47,12 @@ import com.xjt.letool.views.render.ThumbnailRenderer;
 import com.xjt.letool.views.utils.ViewConfigs;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.app.Fragment;
@@ -54,6 +60,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -186,7 +194,9 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
             MediaItem item = mAlbumDataSetLoader.get(thumbnailIndex);
             if (item == null)
                 return; // Item not ready yet, ignore the click
-            mSelector.toggle(item.getPath());
+            MediaPath p = item.getPath();
+            p.setFilePath(item.getFilePath());
+            mSelector.toggle(p);
             mThumbnailView.invalidate();
         } else { // Render transition in pressed state
             mRender.setPressedIndex(thumbnailIndex);
@@ -202,7 +212,9 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         MediaItem item = mAlbumDataSetLoader.get(thumbnailIndex);
         if (item == null)
             return;
-        mSelector.toggle(item.getPath());
+        MediaPath p = item.getPath();
+        p.setFilePath(item.getFilePath());
+        mSelector.toggle(p);
         mThumbnailView.invalidate();
     }
 
@@ -337,6 +349,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
         actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_SELECTION, this);
         actionBar.setContractSelectionManager(mSelector);
+        actionBar.getActionPanel().findViewById(R.id.operation_multi_share).setVisibility(View.VISIBLE);
         String format = getResources().getQuantityString(R.plurals.number_of_items, 0);
         actionBar.setTitleText(String.format(format, 0));
     }
@@ -475,7 +488,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
 
         if (v.getId() == R.id.action_navi) {
             if (mIsCameraSource) {
-                MobclickAgent.onEvent(mLetoolContext.getActivityContext(),StatConstants.EVENT_KEY_SLIDE_MENU);
+                MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SLIDE_MENU);
                 mLetoolContext.getLetoolSlidingMenu().toggle();
             } else {
                 mLetoolContext.popContentFragment();
@@ -498,7 +511,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                             @Override
                             public void onConfirmDialogDismissed(boolean confirmed) {
                                 if (confirmed) {
-                                    MobclickAgent.onEvent(mLetoolContext.getActivityContext(),StatConstants.EVENT_KEY_PHOTO_DELETE);
+                                    MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_PHOTO_DELETE);
                                     mSelector.leaveSelectionMode();
                                 }
                             }
@@ -517,8 +530,8 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                 dlg.show();
 
             } else if (v.getId() == R.id.navi_to_gallery) {
-                MobclickAgent.onEvent(mLetoolContext.getActivityContext(),mLetoolContext.isImageBrwosing() ?StatConstants.EVENT_KEY_CLICK_PICTURE:
-                    StatConstants.EVENT_KEY_CLICK_MOVIE);
+                MobclickAgent.onEvent(mLetoolContext.getActivityContext(), mLetoolContext.isImageBrwosing() ? StatConstants.EVENT_KEY_CLICK_PICTURE :
+                        StatConstants.EVENT_KEY_CLICK_MOVIE);
                 GalleryFragment f = new GalleryFragment();
                 Bundle data = new Bundle();
                 data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
@@ -528,6 +541,8 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
             } else if (v.getId() == R.id.selection_finished) {
                 MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SELECT_OK);
                 mSelector.leaveSelectionMode();
+            } else if (v.getId() == R.id.operation_multi_share) {
+                showAllShareDialog();
             }
         }
     }
@@ -580,4 +595,49 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         mLetoolContext.pushContentFragment(fragment, this, true);
     }
 
+    private void showAllShareDialog() {
+
+        final List<AppInfo> shareToList = PackageUtils.getShareAppList(getActivity(), true);
+        final ArrayList<Uri> shareData = new ArrayList<Uri>();
+        for (MediaPath p : mSelector.getSelected(false)) {
+            if (p.getFilePath().length() > 0) {
+                shareData.add(Uri.parse("file://" + p.getFilePath()));
+            }
+        }
+        if (shareToList.size() == 0) {
+            Intent shareIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+            shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, shareData);
+            shareIntent.setType("image/jpeg");
+            getActivity().startActivity(Intent.createChooser(shareIntent, getString(R.string.common_share_to)));
+        } else {
+
+            final LetoolDialog dlg = new LetoolDialog(getActivity());
+            dlg.setTitle(R.string.common_share_to);
+            dlg.setCancelBtn(R.string.common_cancel, null);
+
+            GridView l = dlg.setGridAdapter(new ShareToAllAdapter(getActivity(), shareToList));
+            l.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                @Override
+                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+                    shareIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+                    AppInfo appInfo = (AppInfo) shareToList.get(position);
+                    if (appInfo.icon != null) {
+                        dlg.dismiss();
+                        shareIntent.setComponent(new ComponentName(appInfo.pkgName, appInfo.launcherClass));
+                        shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, shareData);
+                        shareIntent.setType("image/jpeg");
+                        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                        getActivity().startActivity(shareIntent);
+                        MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_FULL_IMAGE_SHARE_OK);
+                        if (mSelector.inSelectionMode()) {
+                            mSelector.leaveSelectionMode();
+                        }
+                    }
+                }
+            });
+            dlg.show();
+        }
+    }
 }

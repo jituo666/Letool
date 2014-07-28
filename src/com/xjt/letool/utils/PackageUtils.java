@@ -21,24 +21,24 @@ public class PackageUtils {
 
     private static final String TAG = PackageUtils.class.getSimpleName();
 
-    private final static String[] FILTER_APP_PACKAGENAME = {
-            "com.mt.mtxx.mtxx",// 美图秀秀
-            "my.beautyCamera",// 美人相机
-            "my.PCamera",// POCO相机
-            "com.ei.hdrphoto",// 好照片
-            "cn.jingling.motu.photowonder",// 百度魔图
-            "cn.poco.foodcamera", // POCO美食相机
-            "jp.naver.linecamera.android",//LINE camera
-            "powercam.activity", // PowerCam"
-            "com.huaban.android", //采集到花瓣
-    };
+//    private final static String[] FILTER_APP_PACKAGENAME = {
+//            "com.mt.mtxx.mtxx",// 美图秀秀
+//            "my.beautyCamera",// 美人相机
+//            "my.PCamera",// POCO相机
+//            "com.ei.hdrphoto",// 好照片
+//            "cn.jingling.motu.photowonder",// 百度魔图
+//            "cn.poco.foodcamera", // POCO美食相机
+//            "jp.naver.linecamera.android",//LINE camera
+//            "powercam.activity", // PowerCam"
+//            "com.huaban.android", //采集到花瓣
+//    };
 
     private final static String[] SHARED_APP_PACKAGENAME = {
             "com.tencent.mm.ui.tools.ShareImgUI",// 微信好友
             "com.tencent.mm.ui.tools.ShareToTimeLineUI",// 微信朋友圈
             "com.tencent.mobileqq.activity.JumpActivity",// QQ好友
             "com.tencent.mobileqq.activity.qfileJumpActivity",// Q我的电脑
-            "com.qzone", // QQ空间
+            "com.qzone.ui.operation.QZonePublishMoodActivity", // QQ空间
             "com.sina.weibo.EditActivity", // 新浪微博
             "com.tencent.WBlog.intentproxy.TencentWeiboIntent", //腾讯微博
     };
@@ -85,6 +85,7 @@ public class PackageUtils {
             return shareAppInfos;
         } else {
             for (ResolveInfo resolveInfo : resolveInfos) {
+                LLog.i(TAG, "--------resolveInfo:" + resolveInfo.activityInfo.name);
                 if (isShareList(resolveInfo.activityInfo.name)) {
                     AppInfo appInfo = new AppInfo();
                     appInfo.pkgName = (resolveInfo.activityInfo.packageName);
@@ -103,6 +104,9 @@ public class PackageUtils {
                     result.add(i);
                 }
             }
+        }
+        if (result.size() %2 != 0) {
+            result.add(new AppInfo());
         }
         return result;
     }
