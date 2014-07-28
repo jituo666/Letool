@@ -50,7 +50,6 @@ import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
-import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.metadata.source.LocalSimpleAlbumSet;

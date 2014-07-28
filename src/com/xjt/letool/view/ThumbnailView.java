@@ -314,8 +314,7 @@ public class ThumbnailView extends GLBaseView {
     }
 
     // Make sure we are still at a resonable scroll position after the size
-    // is changed (like orientation change). We choose to keep the center
-    // visible thumbnail still visible. This is arbitrary but reasonable.
+    // is changed (like orientation change). We choose to keep the center visible thumbnail still visible. This is arbitrary but reasonable.
     @SuppressLint("WrongCall")
     @Override
     protected void onLayout(boolean changeSize, int l, int t, int r, int b) {

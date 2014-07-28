@@ -43,6 +43,20 @@
         android:layout_weight="1"
         android:visibility="gone" />
 
+    <GridView
+        android:id="@+id/grid"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:listSelector="@null"
+        android:background="@color/common_dark"
+        android:gravity="center"
+        android:horizontalSpacing="1dp"
+        android:numColumns="2"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="1dp"
+        android:visibility="gone" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"

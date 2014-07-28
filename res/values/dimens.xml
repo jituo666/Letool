@@ -51,7 +51,7 @@
     <dimen name="videoset_count_offset">8dp</dimen>
     <dimen name="videoset_title_font_size">14sp</dimen>
     <dimen name="videoset_count_font_size">16sp</dimen>
-    
+
     <!-- configuration for video page -->
     <integer name="video_rows_land">2</integer>
     <integer name="video_rows_port">4</integer>
@@ -70,7 +70,8 @@
     <dimen name="video_title_font_size">14sp</dimen>
     <dimen name="video_count_font_size">16sp</dimen>
     <dimen name="video_rotate_button_padding">8dp</dimen>
-    
+    <dimen name="share_list_item_height">48dp</dimen>
+
     <!-- configuration common UI -->
 
     <dimen name="letool_action_bar_height">48dp</dimen>

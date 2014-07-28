@@ -4,6 +4,7 @@ package com.xjt.letool.view;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
+import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -66,6 +67,13 @@ public class LetoolDialog extends Dialog {
         listView.setVisibility(View.VISIBLE);
         listView.setAdapter(adapter);
         return listView;
+    }
+
+    public GridView setGridAdapter(ListAdapter adapter) {
+        GridView gridView = (GridView) findViewById(R.id.grid);
+        gridView.setVisibility(View.VISIBLE);
+        gridView.setAdapter(adapter);
+        return gridView;
     }
 
     public void setOkBtn(int title, View.OnClickListener clickListener) {
