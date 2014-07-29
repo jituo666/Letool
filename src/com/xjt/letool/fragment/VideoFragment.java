@@ -21,14 +21,11 @@ import com.xjt.letool.metadata.loader.DataLoadingListener;
 import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.metadata.source.LocalAlbum;
 import com.xjt.letool.share.ShareManager;
-import com.xjt.letool.share.ShareToAllAdapter;
 import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.LetoolUtils;
-import com.xjt.letool.utils.PackageUtils;
 import com.xjt.letool.utils.RelativePosition;
 import com.xjt.letool.utils.StorageUtils;
 import com.xjt.letool.utils.Utils;
-import com.xjt.letool.utils.PackageUtils.AppInfo;
 import com.xjt.letool.view.SingleDeleteMediaListener.SingleDeleteMediaProgressListener;
 import com.xjt.letool.view.DetailsHelper.CloseListener;
 import com.xjt.letool.view.DetailsHelper.DetailsSource;
@@ -50,13 +47,11 @@ import com.xjt.letool.views.render.ThumbnailVideoRenderer;
 import com.xjt.letool.views.utils.ActionItem;
 import com.xjt.letool.views.utils.ViewConfigs;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -69,7 +64,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -233,8 +227,9 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
                 dlg.dismiss();
                 if (position == POP_UP_MENU_ITEM_SHARE) {
                     ArrayList<Uri> uris = new ArrayList<Uri>();
-                    uris.add(Uri.parse("file://" + mVideoDataLoader.get(mLongPressedIndex).getFilePath()));
-                    ShareManager.showAllShareDialog(getActivity(), GlobalConstants.MIMI_TYPE_VIDEO, uris);
+                    String filePath = mVideoDataLoader.get(mLongPressedIndex).getFilePath();
+                    uris.add(Uri.parse("file://" + filePath));
+                    ShareManager.showAllShareDialog(getActivity(), GlobalConstants.MIMI_TYPE_VIDEO, uris, null);
                 } else if (position == POP_UP_MENU_ITEM_DETAIL) {
                     showDetails();
                 } else if (position == POP_UP_MENU_ITEM_DELETE) {
@@ -591,7 +586,6 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     }
 
     static class ViewHolder {
-
         TextView title;
     }
 

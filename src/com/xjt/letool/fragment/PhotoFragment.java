@@ -22,14 +22,12 @@ import com.xjt.letool.metadata.source.LocalAlbum;
 import com.xjt.letool.selectors.SelectionListener;
 import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.share.ShareManager;
-import com.xjt.letool.share.ShareToAllAdapter;
+import com.xjt.letool.share.ShareManager.ShareListener;
 import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.LetoolUtils;
-import com.xjt.letool.utils.PackageUtils;
 import com.xjt.letool.utils.RelativePosition;
 import com.xjt.letool.utils.StorageUtils;
 import com.xjt.letool.utils.Utils;
-import com.xjt.letool.utils.PackageUtils.AppInfo;
 import com.xjt.letool.view.BatchDeleteMediaListener;
 import com.xjt.letool.view.BatchDeleteMediaListener.DeleteMediaProgressListener;
 import com.xjt.letool.view.DetailsHelper;
@@ -49,10 +47,8 @@ import com.xjt.letool.views.render.ThumbnailRenderer;
 import com.xjt.letool.views.utils.ViewConfigs;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -62,8 +58,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -550,7 +544,15 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                         uris.add(Uri.parse("file://" + p.getFilePath()));
                     }
                 }
-                ShareManager.showAllShareDialog(getActivity(), GlobalConstants.MIMI_TYPE_IMAGE, uris);
+                ShareManager.showAllShareDialog(getActivity(), GlobalConstants.MIMI_TYPE_IMAGE, uris,
+                        new ShareListener() {
+
+                            @Override
+                            public void shareTriggered() {
+                                if (mSelector.inSelectionMode())
+                                    mSelector.leaveSelectionMode();
+                            }
+                        });
             }
         }
     }

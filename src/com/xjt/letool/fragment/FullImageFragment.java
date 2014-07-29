@@ -273,7 +273,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
             MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_FULL_IMAGE_SHARE);
             ArrayList<Uri> uris = new ArrayList<Uri>();
             uris.add(Uri.parse("file://" + mModel.getMediaItem(0).getFilePath()));
-            ShareManager.showAllShareDialog(getActivity(), GlobalConstants.MIMI_TYPE_IMAGE, uris);
+            ShareManager.showAllShareDialog(getActivity(), GlobalConstants.MIMI_TYPE_IMAGE, uris, null);
         } else if (v.getId() == R.id.action_detail) {
             MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_FULL_IMAGE_DETAIL);
             if (mShowDetails) {

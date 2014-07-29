@@ -138,7 +138,6 @@ public class ThumbnailView extends GLBaseView {
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             cancelDown(false);
             float distance = ThumbnailLayout.WIDE ? distanceX : distanceY;
-            // Log.i(TAG, "--------------------------------------------------Scroll");
             mScroller.startScroll(Math.round(distance), 0, mLayout.getScrollLimit());
             invalidate();
             return true;
