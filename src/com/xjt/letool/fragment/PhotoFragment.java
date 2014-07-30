@@ -19,6 +19,7 @@ import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.metadata.loader.DataLoadingListener;
 import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.metadata.source.LocalAlbum;
+import com.xjt.letool.preference.GlobalPreference;
 import com.xjt.letool.selectors.SelectionListener;
 import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.share.ShareManager;
@@ -466,6 +467,9 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         super.onDestroy();
         if (mDataSet != null) {
             mDataSet.closeCursor();
+        }
+        if (GlobalPreference.rememberLastUI(getActivity())) {
+            GlobalPreference.setLastUI(getActivity(), GlobalConstants.UI_TYPE_IMAGE_ITEMS);
         }
         LLog.i(TAG, "onDestroy");
     }

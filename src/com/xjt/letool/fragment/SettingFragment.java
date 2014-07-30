@@ -32,6 +32,7 @@ import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
 import com.xjt.letool.common.ApiHelper;
 import com.xjt.letool.imagedata.blobcache.BlobCacheManager;
+import com.xjt.letool.preference.GlobalPreference;
 import com.xjt.letool.settings.LetoolPreference;
 import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.StorageUtils;
@@ -49,6 +50,8 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
     private static final String TAG = SettingFragment.class.getSimpleName();
 
     private LetoolPreference mCameraSource;
+    private LetoolPreference mAnimSwitch;
+    private LetoolPreference mRememberUISwitch;
     private LetoolPreference mClearCache;
     private LetoolPreference mVersionCheck;
     private LetoolPreference mAuthorDesc;
@@ -85,15 +88,23 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
 
     private void initViews() {
         String x = getString(R.string.clear_cache_desc, getCacheSize(), StringUtils.formatBytes(StorageUtils.getExternalStorageAvailableSize()));
-        mClearCache.setSettingItemText(getString(R.string.clear_cache_title), x);
-        mCameraSource.setSettingItemText(getString(R.string.camera_source_dirs), getString(R.string.camera_source_dirs_desc));
-        mVersionCheck.setSettingItemText(getString(R.string.version_update_check_title), getVersion());
-        mAuthorDesc.setSettingItemText(getString(R.string.author_title), getString(R.string.author_desc));
-        mQQGroup.setSettingItemText(getString(R.string.app_communication_platfrom), getString(R.string.app_QQ_group));
-        mAuthorDesc.setOnClickListener(this);
+
+        mCameraSource.setSettingItemText(getString(R.string.camera_source_dirs), getString(R.string.camera_source_dirs_desc), false);
+        mAnimSwitch.setSettingItemText(getString(R.string.anim_switch_title), getString(R.string.anim_switch_desc), true);
+        mAnimSwitch.setChecked(GlobalPreference.isAnimationOpen(getActivity()));
+        mRememberUISwitch.setSettingItemText(getString(R.string.remember_ui_switch_title), getString(R.string.remember_ui_switch_desc), true);
+        mRememberUISwitch.setChecked(GlobalPreference.rememberLastUI(getActivity()));
+        mClearCache.setSettingItemText(getString(R.string.clear_cache_title), x, false);
+        mVersionCheck.setSettingItemText(getString(R.string.version_update_check_title), getVersion(), false);
+        mAuthorDesc.setSettingItemText(getString(R.string.author_title), getString(R.string.author_desc), false);
+        mQQGroup.setSettingItemText(getString(R.string.app_communication_platfrom), getString(R.string.app_QQ_group), false);
+
         mCameraSource.setOnClickListener(this);
+        mAnimSwitch.setOnClickListener(this);
+        mRememberUISwitch.setOnClickListener(this);
         mClearCache.setOnClickListener(this);
         mVersionCheck.setOnClickListener(this);
+        mAuthorDesc.setOnClickListener(this);
         mQQGroup.setOnClickListener(this);
     }
 
@@ -102,10 +113,12 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
         View rootView = inflater.inflate(R.layout.app_settings_list, container, false);
         initBrowseActionBar();
         mCameraSource = (LetoolPreference) rootView.findViewById(R.id.camera_source);
+        mAnimSwitch = (LetoolPreference) rootView.findViewById(R.id.anim_switch);
+        mRememberUISwitch = (LetoolPreference) rootView.findViewById(R.id.remember_ui_switch);
         mClearCache = (LetoolPreference) rootView.findViewById(R.id.clear_cache);
         mVersionCheck = (LetoolPreference) rootView.findViewById(R.id.version_update_check);
         mAuthorDesc = (LetoolPreference) rootView.findViewById(R.id.author_desc);
-        mQQGroup = (LetoolPreference) rootView.findViewById(R.id.app_about);
+        mQQGroup = (LetoolPreference) rootView.findViewById(R.id.communication_platform);
         initViews();
         return rootView;
     }
@@ -116,6 +129,13 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
             MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_CAMERA_SRC_SETTING);
             CameraSourceSettingFragment f = new CameraSourceSettingFragment();
             mLetoolContext.pushContentFragment(f, this, true);
+        } else if (v.getId() == R.id.anim_switch) {
+            mAnimSwitch.setChecked(!mAnimSwitch.isChecked());
+            GlobalPreference.setAnimationOpen(getActivity(), mAnimSwitch.isChecked());
+        } else if (v.getId() == R.id.remember_ui_switch) {
+            mRememberUISwitch.setChecked(!mRememberUISwitch.isChecked());
+            GlobalPreference.setRememberLastUI(getActivity(), mRememberUISwitch.isChecked());
+            GlobalPreference.setLastUI(getActivity(), "");
         } else if (v.getId() == R.id.action_navi) {
             mLetoolContext.popContentFragment();
         } else if (v.getId() == R.id.clear_cache) {
@@ -162,7 +182,7 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
                 MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_QQ_ADD);
                 copyQQToClipBoard();
             }
-        } else if (v.getId() == R.id.app_about) {
+        } else if (v.getId() == R.id.communication_platform) {
             if (!joinQQGroup("pan68pjSBp1edKE0a6mUIUogCS4U-qZW")) {
                 Toast.makeText(mLetoolContext.getActivityContext(), R.string.app_QQ_group_failed, Toast.LENGTH_SHORT).show();
             } else {
@@ -253,7 +273,7 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
             if (dialog.isShowing()) {
                 dialog.dismiss();
                 String x = getString(R.string.clear_cache_desc, getCacheSize(), StringUtils.formatBytes(StorageUtils.getExternalStorageAvailableSize()));
-                mClearCache.setSettingItemText(getString(R.string.clear_cache_title), x);
+                mClearCache.setSettingItemText(getString(R.string.clear_cache_title), x, false);
             }
             Toast t = Toast.makeText(getActivity(), R.string.clear_cache_finished, Toast.LENGTH_SHORT);
             t.setGravity(Gravity.CENTER, 0, 0);

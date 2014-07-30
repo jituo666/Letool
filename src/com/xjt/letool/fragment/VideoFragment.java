@@ -20,6 +20,7 @@ import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.metadata.loader.DataLoadingListener;
 import com.xjt.letool.metadata.loader.ThumbnailDataLoader;
 import com.xjt.letool.metadata.source.LocalAlbum;
+import com.xjt.letool.preference.GlobalPreference;
 import com.xjt.letool.share.ShareManager;
 import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.LetoolUtils;
@@ -462,6 +463,9 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         if (mVideoData != null) {
             mVideoData.closeCursor();
         }
+        if (GlobalPreference.rememberLastUI(getActivity())) {
+            GlobalPreference.setLastUI(getActivity(), GlobalConstants.UI_TYPE_VIDEO_ITEMS);
+        }
         LLog.i(TAG, "onDestroy");
     }
 
@@ -586,6 +590,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     }
 
     static class ViewHolder {
+
         TextView title;
     }
 

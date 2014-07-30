@@ -20,6 +20,10 @@
     <string name="camera_source_dirs_desc">设置目录后,牛图将会从您设置的目录里搜索照片和录像文件</string>
     <string name="camera_source_dirs_title">设置照片目录</string>
     <string name="camera_source_dirs_tip">牛图在默认情况下从SD卡的/DCIM/Camera/目录下搜索照片和录像文件，但由于您的手机兼容性问题，照片、录像文件没有保存在这个目录，您需要自己指定照片和录像的目录。</string>
+    <string name="anim_switch_title">关闭动画</string>
+    <string name="anim_switch_desc">对于配置较低的手机,关闭动画可以使运行更流畅</string>
+    <string name="remember_ui_switch_title">记忆上次停留界面</string>
+    <string name="remember_ui_switch_desc">记忆上次退出程序时的界面，下次启动时直接进入该界面</string>
     <string name="clear_cache_title">清理缓存</string>
     <string name="clear_cache_desc">当前缓存大小 %1$s,手机剩余存储 %2$s</string>
     <string name="clear_cache_finished">缓存已被清理</string>
@@ -38,6 +42,9 @@
     <string name="share_app_install_tip">请选择安装QQ或者QQ空间的手机客户端!</string>
    <!-- common strings -->
     <string name="app_name">牛图</string>
+    
+    <string name="common_state_on">开</string>
+    <string name="common_state_off">关</string>
     <string name="common_picture">图片</string>
     <string name="common_photo">照片</string>
     <string name="common_video">录像</string>

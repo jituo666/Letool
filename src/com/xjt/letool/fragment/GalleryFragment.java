@@ -8,6 +8,7 @@ import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
 import com.xjt.letool.activities.LocalMediaActivity;
 import com.xjt.letool.common.EyePosition;
+import com.xjt.letool.common.GlobalConstants;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
 import com.xjt.letool.metadata.DataManager;
@@ -17,6 +18,7 @@ import com.xjt.letool.metadata.MediaSet;
 import com.xjt.letool.metadata.loader.DataLoadingListener;
 import com.xjt.letool.metadata.loader.ThumbnailSetDataLoader;
 import com.xjt.letool.metadata.source.LocalAlbumSet;
+import com.xjt.letool.preference.GlobalPreference;
 import com.xjt.letool.selectors.SelectionListener;
 import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.stat.StatConstants;
@@ -429,6 +431,10 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         super.onDestroy();
         if (mMediaSet != null) {
             mMediaSet.closeCursor();
+        }
+        if (GlobalPreference.rememberLastUI(getActivity())) {
+            GlobalPreference.setLastUI(getActivity(), mLetoolContext.isImageBrwosing() ?
+                    GlobalConstants.UI_TYPE_IMAGE_SETS :GlobalConstants.UI_TYPE_VIDEO_SETS);
         }
         LLog.i(TAG, "onDestroy");
     }

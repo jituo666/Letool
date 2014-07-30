@@ -10,4 +10,9 @@ public class GlobalConstants {
     public static final String MIMI_TYPE_IMAGE = "image/*";
     public static final String MIMI_TYPE_VIDEO = "video/*";
 
+    public static final String UI_TYPE_IMAGE_ITEMS = "image_items";
+    public static final String UI_TYPE_IMAGE_SETS = "image_sets";
+    public static final String UI_TYPE_VIDEO_ITEMS = "video_items";
+    public static final String UI_TYPE_VIDEO_SETS = "video_sets";
+
 }

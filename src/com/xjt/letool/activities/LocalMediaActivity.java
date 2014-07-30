@@ -21,6 +21,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
+import com.xjt.letool.common.GlobalConstants;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.OrientationManager;
 import com.xjt.letool.common.ThreadPool;
@@ -32,6 +33,7 @@ import com.xjt.letool.imagedata.utils.LetoolBitmapPool;
 import com.xjt.letool.metadata.DataManager;
 import com.xjt.letool.metadata.MediaItem;
 import com.xjt.letool.metadata.MediaSetUtils;
+import com.xjt.letool.preference.GlobalPreference;
 import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.view.GLController;
 import com.xjt.letool.view.GLRootView;
@@ -67,14 +69,13 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
     private boolean mWaitingForExit = false;
     public boolean mIsImage = true;
 
+    private String mCurrentFragment = "";
+
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.local_media_main);
-        if (getIntent().hasExtra(KEY_IS_IMAGE)) {
-            mIsImage = getIntent().getBooleanExtra(KEY_IS_IMAGE, true);
-        }
         mTopBar = new LetoolTopBar(this, (ViewGroup) findViewById(R.id.letool_top_bar_container));
         mBottomBar = new LetoolBottomBar(this, (ViewGroup) findViewById(R.id.letool_bottom_bar_container));
         mSlidingMenu = new LetoolSlidingMenu(this, getSupportFragmentManager(), findViewById(R.id.letool_top_bar_container));
@@ -87,24 +88,65 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
     private void startFirstFragment() {
 
         Fragment fragment = null;
-
         MediaSetUtils.initializeMyAlbumBuckets(this);
-        if (MediaSetUtils.getBucketsIds().length <= 0) {
-            fragment = new GalleryFragment();
-            Bundle data = new Bundle();
-            data.putString(LocalMediaActivity.KEY_MEDIA_PATH, getDataManager()
-                    .getTopSetPath(isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
-            fragment.setArguments(data);
+        if (!getIntent().hasExtra(KEY_IS_IMAGE) &&
+                GlobalPreference.rememberLastUI(getActivityContext()) &&
+                GlobalPreference.getLastUI(getActivityContext()).length() > 0) {
+            String lastUI = GlobalPreference.getLastUI(getActivityContext());
+            LLog.i(TAG, "----------remember last ui:" + lastUI);
+            if (lastUI.equals(GlobalConstants.UI_TYPE_VIDEO_ITEMS)) {
+                LLog.i(TAG, "----------remember last ui 1:" + lastUI);
+                mIsImage = false;
+                fragment = new VideoFragment();
+                Bundle data = new Bundle();
+                data.putString(LocalMediaActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
+                data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, true);
+                fragment.setArguments(data);
+            } else if (lastUI.equals(GlobalConstants.UI_TYPE_VIDEO_SETS)) {
+                LLog.i(TAG, "----------remember last ui 2:" + lastUI);
+                mIsImage = false;
+                fragment = new GalleryFragment();
+                Bundle data = new Bundle();
+                data.putString(LocalMediaActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
+                fragment.setArguments(data);
+            } else if (lastUI.equals(GlobalConstants.UI_TYPE_IMAGE_SETS)) {
+                LLog.i(TAG, "----------remember last ui 3:" + lastUI);
+                mIsImage = true;
+                fragment = new GalleryFragment();
+                Bundle data = new Bundle();
+                data.putString(LocalMediaActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
+                fragment.setArguments(data);
+            } else {
+                LLog.i(TAG, "----------remember last ui 4:" + lastUI);
+                mIsImage = true;
+                fragment = new PhotoFragment();
+                Bundle data = new Bundle();
+                data.putString(LocalMediaActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+                data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, true);
+                fragment.setArguments(data);
+            }
         } else {
 
-            fragment = mIsImage ? new PhotoFragment() : new VideoFragment();
-            Bundle data = new Bundle();
-            data.putString(LocalMediaActivity.KEY_MEDIA_PATH, getDataManager()
-                    .getTopSetPath(isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
-            data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, true);
-            fragment.setArguments(data);
+            LLog.i(TAG, "----------remember last ui: 100");
+            mIsImage = getIntent().getBooleanExtra(KEY_IS_IMAGE, true);
+            if (MediaSetUtils.getBucketsIds().length <= 0) {
+                fragment = new GalleryFragment();
+                Bundle data = new Bundle();
+                data.putString(LocalMediaActivity.KEY_MEDIA_PATH, getDataManager()
+                        .getTopSetPath(isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
+                fragment.setArguments(data);
+            } else {
+                fragment = mIsImage ? new PhotoFragment() : new VideoFragment();
+                Bundle data = new Bundle();
+                data.putString(LocalMediaActivity.KEY_MEDIA_PATH, getDataManager()
+                        .getTopSetPath(isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
+                data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, true);
+                fragment.setArguments(data);
 
+            }
+            LLog.i(TAG, "----------remember last ui: 5");
         }
+
         pushContentFragment(fragment, null, false);
     }
 
@@ -128,7 +170,7 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
         mOrientationManager.pause();
         LetoolBitmapPool.getInstance().clear();
         MediaItem.getBytesBufferPool().clear();
-        
+
     }
 
     @Override
@@ -142,7 +184,7 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
     }
 
     @Override
-    public void showEmptyView(int iconResIcon,int messageResId) {
+    public void showEmptyView(int iconResIcon, int messageResId) {
         LetoolEmptyView emptyView = (LetoolEmptyView) LayoutInflater.from(this).inflate(R.layout.local_empty_view, null);
         emptyView.updataView(iconResIcon, messageResId);
         //
@@ -220,6 +262,7 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
         if (resultCode == Activity.RESULT_OK) {
             Intent it = new Intent();
             it.setClass(this, LocalMediaActivity.class);
+            it.putExtra(KEY_IS_IMAGE, mIsImage);
             startActivity(it);
             finish();
         }

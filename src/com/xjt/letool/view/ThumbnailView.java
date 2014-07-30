@@ -9,6 +9,7 @@ import com.xjt.letool.animations.ThumbnailRisingAnim;
 import com.xjt.letool.animations.ThumbnailScatteringAnim;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.SynchronizedHandler;
+import com.xjt.letool.preference.GlobalPreference;
 import com.xjt.letool.utils.RelativePosition;
 import com.xjt.letool.utils.Utils;
 import com.xjt.letool.views.layout.ThumbnailLayout;
@@ -55,20 +56,26 @@ public class ThumbnailView extends GLBaseView {
 
     private ScrollBarView mScrollBar;
 
+    private LetoolContext mLetoolContext;
+
     //////////////////////////////////////////////////////////////Animations////////////////////////////////////////////////////////////////////
 
     public void startScatteringAnimation(RelativePosition position) {
-        mAnimation = new ThumbnailScatteringAnim(position);
-        mAnimation.start();
-        if (mLayout.getThumbnailHeight() != 0)
-            invalidate();
+        if (GlobalPreference.isAnimationOpen(mLetoolContext.getActivityContext())) {
+            mAnimation = new ThumbnailScatteringAnim(position);
+            mAnimation.start();
+            if (mLayout.getThumbnailHeight() != 0)
+                invalidate();
+        }
     }
 
     public void startRisingAnimation() {
-        mAnimation = new ThumbnailRisingAnim();
-        mAnimation.start();
-        if (mLayout.getThumbnailCount() != 0)
-            invalidate();
+        if (GlobalPreference.isAnimationOpen(mLetoolContext.getActivityContext())) {
+            mAnimation = new ThumbnailRisingAnim();
+            mAnimation.start();
+            if (mLayout.getThumbnailCount() != 0)
+                invalidate();
+        }
     }
 
     public boolean advanceAnimation(long animTime) {
@@ -246,7 +253,6 @@ public class ThumbnailView extends GLBaseView {
 
     public void setThumbnailRenderer(Renderer render) {
         mRenderer = render;
-
         if (mRenderer != null) {
             mRenderer.onThumbnailSizeChanged(mLayout.getThumbnailWidth(), mLayout.getThumbnailHeight());
         }
@@ -297,6 +303,7 @@ public class ThumbnailView extends GLBaseView {
 
     public ThumbnailView(LetoolContext context, ThumbnailLayout layout) {
         Context cxt = context.getActivityContext();
+        mLetoolContext = context;
         mGestureDetector = new GestureDetector(cxt, new MyGestureListener());
         mScroller = new ViewScrollerHelper(cxt);
         mHandler = new SynchronizedHandler(context.getGLController());

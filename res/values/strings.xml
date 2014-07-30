@@ -20,6 +20,10 @@
     <string name="camera_source_dirs_desc">Set photo and video source directories</string>
     <string name="camera_source_dirs_title">Camera source</string>
     <string name="camera_source_dirs_tip">By default, photos or videos is read from the directory [/DCIM/Camera], but photos or videos may not in this directory as the phone compatibility issues, this situation, you can own set one or more directories as the photos or videos directory.</string>
+    <string name="anim_switch_title">Animation Switch</string>
+    <string name="anim_switch_desc">Close Animation to accelerate application</string>
+    <string name="remember_ui_switch_title">Remember UI</string>
+    <string name="remember_ui_switch_desc">when leving,remember user interface for next enter</string>
     <string name="clear_cache_title">Clear cache</string>
     <string name="clear_cache_desc">Cache size %1$s，Available space %2$s</string>
     <string name="clear_cache_finished">Caches Cleared!</string>
@@ -37,6 +41,9 @@
     <string name="full_image_browse_empty">No photoes</string>
     <!-- common strings -->
     <string name="app_name">Letool</string>
+    
+    <string name="common_state_on">On</string>
+    <string name="common_state_off">Off</string>
     <string name="common_picture">Picture</string>
     <string name="common_photo">Photo</string>
     <string name="common_video">Video</string>

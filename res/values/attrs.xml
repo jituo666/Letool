@@ -26,5 +26,10 @@
         <attr name="largeIcons" format="reference" />
         <attr name="images" format="reference" />
     </declare-styleable>
+    <declare-styleable name="CommonToggleButton">
+        <attr name="textOn" format="string" />
+        <attr name="textOff" format="string" />
+        <attr name="disabledAlpha" format="float" />
+    </declare-styleable>
 
 </resources>
