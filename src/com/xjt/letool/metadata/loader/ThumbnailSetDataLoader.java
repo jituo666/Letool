@@ -257,8 +257,10 @@ public class ThumbnailSetDataLoader {
         @Override
         public UpdateInfo call() throws Exception {
             int index = getInvalidIndex(mVersion);
-            if (index == INDEX_NONE && mSourceVersion == mVersion)
+
+            if (index == INDEX_NONE && mSourceVersion == mVersion) {
                 return null;
+            }
             UpdateInfo info = new UpdateInfo();
             info.version = mSourceVersion;
             info.index = index;
@@ -339,14 +341,12 @@ public class ThumbnailSetDataLoader {
         @Override
         public void run() {
 
-            LLog.i(TAG, "===========:updateLoading run");
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
             boolean updateComplete = false;
             while (mActive) {
                 synchronized (this) {
                     if (mActive && !mDirty && updateComplete) {
                         if (!mSource.isLoading()) {
-                            LLog.i(TAG, "===========:updateLoading1");
                             updateLoading(false);
                         }
                         Utils.waitWithoutInterrupt(this);
@@ -354,7 +354,6 @@ public class ThumbnailSetDataLoader {
                     }
                 }
 
-                LLog.i(TAG, "===========:updateLoading2");
                 mDirty = false;
                 updateLoading(true);
                 long version = mSource.reload();
@@ -363,7 +362,6 @@ public class ThumbnailSetDataLoader {
                 if (updateComplete)
                     continue;
 
-                LLog.i(TAG, "===========:updateLoading3");
                 if (info.version != version) {
                     info.version = version;
                     info.size = mSource.getSubMediaSetCount();

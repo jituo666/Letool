@@ -7,7 +7,6 @@ import com.xjt.letool.common.LLog;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Rect;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Handler;
 import android.view.Gravity;
 import android.view.KeyEvent;

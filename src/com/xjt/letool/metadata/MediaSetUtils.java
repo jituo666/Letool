@@ -95,7 +95,7 @@ public class MediaSetUtils {
                     Integer i = LetoolUtils.getBucketId(dir.getAbsolutePath());
                     if (!ret.contains(i)) {
                         ret.add(i);
-                        MY_ALBUM_BUCKETS_DIR +=dir.getAbsolutePath();
+                        MY_ALBUM_BUCKETS_DIR += dir.getAbsolutePath();
                         MY_ALBUM_BUCKETS_DIR += "|";
                     }
 
