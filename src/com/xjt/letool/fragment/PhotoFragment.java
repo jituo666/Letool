@@ -50,6 +50,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
@@ -586,6 +587,15 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                 String.format(format, count));
     }
 
+    private Rect getSlotRect(int index) {
+        // Get slot rectangle relative to this root pane.
+        Rect offset = new Rect();
+        mRootPane.getBoundsOf(mThumbnailView, offset);
+        Rect r = mThumbnailView.getThumbnailRect(index);
+        r.offset(offset.left - mThumbnailView.getScrollX(), offset.top - mThumbnailView.getScrollY());
+        return r;
+    }
+
     private void pickPhoto(int index) {
         Bundle data = new Bundle();
         if (mIsCameraSource) {
@@ -601,6 +611,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         }
         Fragment fragment = new FullImageFragment();
         data.putInt(FullImageFragment.KEY_INDEX_HINT, index);
+        data.putParcelable(FullImageFragment.KEY_OPEN_ANIMATION_RECT, getSlotRect(index));
         fragment.setArguments(data);
         mLetoolContext.pushContentFragment(fragment, this, true);
     }

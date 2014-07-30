@@ -7,6 +7,7 @@ import java.util.List;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Rect;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -296,7 +297,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
                                 } else {
                                     // not medias
                                     Toast.makeText(getActivity(), R.string.full_image_browse_empty, Toast.LENGTH_SHORT).show();
-                                    getActivity().finish();
+                                    mLetoolContext.popContentFragment();
                                     return;
                                 }
                             }
@@ -420,7 +421,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
                 }
             }
         };
-
+        mFullImageView.setOpenAnimationRect((Rect) getArguments().getParcelable(KEY_OPEN_ANIMATION_RECT));
         mFullImageView.setFilmMode(mStartInFilmstrip && mMediaSet.getAllMediaItems() > 1);
     }
 
