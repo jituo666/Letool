@@ -2,7 +2,6 @@
 package com.xjt.letool.metadata.source;
 
 import android.content.ContentProviderClient;
-import android.content.ContentUris;
 import android.content.UriMatcher;
 import android.net.Uri;
 import android.provider.MediaStore;

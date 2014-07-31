@@ -10,6 +10,12 @@ import android.widget.TextView;
 import com.xjt.letool.R;
 import com.xjt.letool.surpport.CommonToggleButton;
 
+
+/**
+ * @Author Jituo.Xuan
+ * @Date 5:55:36 AM Aug 1, 2014
+ * @Comments:null
+ */
 public class LetoolPreference extends RelativeLayout {
 
     private TextView mMajorText;

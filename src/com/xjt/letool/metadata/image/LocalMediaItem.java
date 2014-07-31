@@ -11,9 +11,7 @@ import java.text.DateFormat;
 import java.util.Date;
 
 //
-// LocalMediaItem is an abstract class captures those common fields
-// in LocalImage and LocalVideo.
-//
+// LocalMediaItem is an abstract class captures those common fields in LocalImage and LocalVideo.
 public abstract class LocalMediaItem extends MediaItem {
 
     @SuppressWarnings("unused")

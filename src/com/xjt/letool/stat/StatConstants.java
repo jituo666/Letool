@@ -1,6 +1,11 @@
 
 package com.xjt.letool.stat;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 5:56:14 AM Aug 1, 2014
+ * @Comments:null
+ */
 public class StatConstants {
 
     public static final String UMENG_APP_RELEASE_KEY = "539289e956240b9f6902fa3c";

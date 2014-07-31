@@ -23,8 +23,6 @@ import com.xjt.letool.common.ThreadPool.Job;
 import com.xjt.letool.common.ThreadPool.JobContext;
 import com.xjt.letool.imagedata.blobcache.LocalETCBlobRequest;
 import com.xjt.letool.imagedata.blobcache.LocalImageBlobRequest;
-import com.xjt.letool.imagedata.dbcache.DataBaseCache;
-import com.xjt.letool.imagedata.dbcache.LocalThumbRequest;
 import com.xjt.letool.imagedata.exif.ExifInterface;
 import com.xjt.letool.imagedata.exif.ExifTag;
 import com.xjt.letool.imagedata.utils.BitmapDecodeUtils;
@@ -274,11 +272,6 @@ public class LocalImage extends LocalMediaItem {
     @Override
     public Job<Bitmap> requestImage(int type) {
         return new LocalImageBlobRequest(mApplication, mPath, dateModifiedInSec, type, filePath);
-    }
-
-    @Override
-    public Job<Bitmap> requestImage(int type, int index, long dateTaken, DataBaseCache loader) {
-        return new LocalThumbRequest(loader, type, index, dateTaken, filePath);
     }
 
     @Override

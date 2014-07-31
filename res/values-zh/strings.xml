@@ -40,9 +40,8 @@
     <string name="full_image_browse">大图浏览(%1$d/%2$d)</string>
     <string name="full_image_browse_empty">该目录已没有图片!</string>
     <string name="share_app_install_tip">请选择安装QQ或者QQ空间的手机客户端!</string>
-   <!-- common strings -->
+    <!-- common strings -->
     <string name="app_name">牛图</string>
-    
     <string name="common_state_on">开</string>
     <string name="common_state_off">关</string>
     <string name="common_picture">图片</string>
@@ -61,8 +60,8 @@
     <string name="common_delete">删除</string>
     <string name="common_delete_tip">确定删除所选内容?</string>
     <string name="common_delete_cur_pic_tip">确定删除当前图片?</string>
-    <string name="common_delete_cur_video_tip">确定删除录像文件[%s]?</string>
-    <string name="common_delete_cur_movie_tip">确定删除视频文件[%s]?</string>
+    <string name="common_delete_cur_video_tip">确定删除录像文件[&lt;font color=\"#e62e2e\"&gt;%1$s&lt;/font&gt;] ?</string>
+    <string name="common_delete_cur_movie_tip">确定删除视频文件[&lt;font color=\"#e62e2e\"&gt;%1$s&lt;/font&gt;] ?</string>
     <string name="common_delete_waiting">"正在删除,请稍候\u2026"</string>
     <string name="common_update_checking">"正在检查更新\u2026"</string>
     <string name="common_selection_tip">请选择所要删除的内容!</string>
@@ -140,5 +139,15 @@
     <plurals name="number_of_items">
         <item quantity="other"> %1$d 张</item>
     </plurals>
+
+    <string-array name="share_to_title">
+        <item>"微信好友"</item>
+        <item>"微信朋友圈"</item>
+        <item>"QQ好友"</item>
+        <item>"我的电脑"</item>
+        <item>"QQ空间"</item>
+        <item>"新浪微博"</item>
+        <item>"腾讯微博"</item>
+    </string-array>
 
 </resources>

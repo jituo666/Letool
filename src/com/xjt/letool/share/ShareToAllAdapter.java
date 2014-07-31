@@ -13,6 +13,11 @@ import com.xjt.letool.utils.PackageUtils.AppInfo;
 import java.util.List;
 
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 5:55:27 AM Aug 1, 2014
+ * @Comments:null
+ */
 public class ShareToAllAdapter extends BaseAdapter {
 
     final Activity mContext;

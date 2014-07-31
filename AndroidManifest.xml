@@ -47,13 +47,6 @@
             android:theme="@style/MainTheme" >
         </activity>
 
-        <provider
-            android:name="com.xjt.letool.imagedata.provider.LetoolProvider"
-            android:authorities="lt_provider_authories"
-            android:exported="true"
-            android:multiprocess="false"
-            android:permission="com.xjt.letool.data.provider.rw" />
-
         <!-- Umeng sdk requirement -->
         <meta-data
             android:name="UMENG_APPKEY"

@@ -14,8 +14,6 @@ import com.xjt.letool.LetoolApp;
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.ThreadPool.Job;
 import com.xjt.letool.imagedata.blobcache.LocalVideoBlobRequest;
-import com.xjt.letool.imagedata.dbcache.DataBaseCache;
-import com.xjt.letool.imagedata.dbcache.LocalThumbRequest;
 import com.xjt.letool.metadata.DBUpdateHelper;
 import com.xjt.letool.metadata.MediaDetails;
 import com.xjt.letool.metadata.MediaPath;
@@ -137,11 +135,6 @@ public class LocalVideo extends LocalMediaItem {
         bucketId = uh.update(bucketId, cursor.getInt(INDEX_BUCKET_ID));
         fileSize = uh.update(fileSize, cursor.getLong(INDEX_SIZE));
         return uh.isUpdated();
-    }
-
-    @Override
-    public Job<Bitmap> requestImage(int type, int index, long dateTaken, DataBaseCache loader) {
-        return new LocalThumbRequest(loader, type, index, dateTaken, filePath);
     }
 
     @Override

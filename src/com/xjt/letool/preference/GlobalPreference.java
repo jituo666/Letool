@@ -1,8 +1,6 @@
 
 package com.xjt.letool.preference;
 
-import com.xjt.letool.fragment.PhotoFragment;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;

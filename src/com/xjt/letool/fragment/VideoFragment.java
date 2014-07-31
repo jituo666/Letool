@@ -59,6 +59,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -535,8 +536,8 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         dlg.setTitle(R.string.common_recommend);
         dlg.setOkBtn(R.string.common_ok, cdl);
         dlg.setCancelBtn(R.string.common_cancel, cdl);
-        dlg.setMessage(mIsCameraSource ? getString(R.string.common_delete_cur_video_tip, item.getName())
-                : getString(R.string.common_delete_cur_movie_tip, item.getName()));
+        dlg.setMessage(mIsCameraSource ? Html.fromHtml(getString(R.string.common_delete_cur_video_tip, item.getName()))
+                : Html.fromHtml(getString(R.string.common_delete_cur_movie_tip, item.getName())));
         dlg.show();
     }
 
@@ -582,11 +583,15 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         mDetailsHelper.hide();
     }
 
-    public void addMenuItem(List<ActionItem> items, int itemId, int titleRes) {
+    public void addMenuItem(List<ActionItem> items, int itemId, CharSequence titleRes) {
         ActionItem item = new ActionItem();
         item.setItemId(itemId);
-        item.setTitle(getString(titleRes));
+        item.setTitle(titleRes.toString());
         items.add(item);
+    }
+
+    public void addMenuItem(List<ActionItem> items, int itemId, int titleRes) {
+        addMenuItem(items, itemId, getString(titleRes));
     }
 
     static class ViewHolder {

@@ -51,7 +51,7 @@ public class LetoolDialog extends Dialog {
         mMessage.setVisibility(View.VISIBLE);
     }
 
-    public void setMessage(String message) {
+    public void setMessage(CharSequence message) {
         mMessage = (TextView) findViewById(R.id.message);
         mMessage.setText(message);
         mMessage.setVisibility(View.VISIBLE);

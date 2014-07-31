@@ -60,8 +60,8 @@
     <string name="common_delete">Delete</string>
     <string name="common_delete_tip">Are you sure to delete?</string>
     <string name="common_delete_cur_pic_tip">Are you sure to delete picture ?</string>
-    <string name="common_delete_cur_video_tip">Are you sure to delete video [%s] ?</string>
-    <string name="common_delete_cur_movie_tip">Are you sure to delete movie [%s] ?</string>
+    <string name="common_delete_cur_video_tip">Are you sure to delete video [&lt;font color=\"#e62e2e\"&gt;%1$s&lt;/font&gt;] ?</string>
+    <string name="common_delete_cur_movie_tip">Are you sure to delete movie [&lt;font color=\"#e62e2e\"&gt;%1$s&lt;/font&gt;] ?</string>
     <string name="common_delete_waiting">"Deleting\u2026"</string>
     <string name="common_update_checking">"Checking\u2026"</string>
     <string name="common_selection_tip">Please select something</string>
@@ -141,5 +141,13 @@
         <item quantity="one">%1$d item</item>
         <item quantity="other">%1$d items</item>
     </plurals>
-
+    <string-array name="share_to_title">
+        <item>"Weixin"</item>
+        <item>"WX friends"</item>
+        <item>"QQ friends"</item>
+        <item>"My computer"</item>
+        <item>"QQ zone"</item>
+        <item>"Sina weibo"</item>
+        <item>"Tencent weibO"</item>
+    </string-array>
 </resources>

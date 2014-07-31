@@ -15,8 +15,14 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 
+import com.xjt.letool.R;
 import com.xjt.letool.common.LLog;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 5:55:20 AM Aug 1, 2014
+ * @Comments:null
+ */
 public class PackageUtils {
 
     private static final String TAG = PackageUtils.class.getSimpleName();
@@ -41,16 +47,6 @@ public class PackageUtils {
             "com.qzone.ui.operation.QZonePublishMoodActivity", // QQ空间
             "com.sina.weibo.EditActivity", // 新浪微博
             "com.tencent.WBlog.intentproxy.TencentWeiboIntent", //腾讯微博
-    };
-
-    private final static String[] SHARED_APP_PACKAGENAME_LABEL = {
-            "微信好友",
-            "微信朋友圈",
-            "QQ好友",
-            "我的电脑",
-            "QQ空间",
-            "新浪微博",
-            "腾讯微博"
     };
 
     public static class AppInfo {
@@ -100,7 +96,7 @@ public class PackageUtils {
             String s = SHARED_APP_PACKAGENAME[index];
             for (AppInfo i : shareAppInfos) {
                 if (i.launcherClass.equals(s)) {
-                    i.label = SHARED_APP_PACKAGENAME_LABEL[index];
+                    i.label = context.getResources().getStringArray(R.array.share_to_title)[index];
                     result.add(i);
                 }
             }

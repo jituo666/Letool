@@ -8,6 +8,11 @@ import android.widget.TextView;
 
 import com.xjt.letool.R;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 5:55:42 AM Aug 1, 2014
+ * @Comments:null
+ */
 public class SettingsTitleBar {
 
     private ViewGroup mBarContainer;

@@ -6,7 +6,6 @@ import android.opengl.ETC1Util.ETC1Texture;
 
 import com.xjt.letool.common.LLog;
 import com.xjt.letool.common.ThreadPool.Job;
-import com.xjt.letool.imagedata.dbcache.DataBaseCache;
 import com.xjt.letool.imagedata.utils.BytesBufferPool;
 import com.xjt.letool.views.opengl.ScreenNail;
 
@@ -34,8 +33,6 @@ public abstract class MediaItem extends MediaObject {
     public static final double INVALID_LATLNG = 0f;
 
     public abstract Job<Bitmap> requestImage(int type);
-
-    public abstract Job<Bitmap> requestImage(int type, int index, long dateTaken, DataBaseCache loader);
 
     public abstract Job<ETC1Texture> requestImage(int type, int extra);
 

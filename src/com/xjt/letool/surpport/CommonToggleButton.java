@@ -11,6 +11,11 @@ import android.view.Gravity;
 import android.widget.TextView;
 
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 5:56:20 AM Aug 1, 2014
+ * @Comments:null
+ */
 public class CommonToggleButton extends TextView {
     private static final int NO_ALPHA = 0xFF;
 

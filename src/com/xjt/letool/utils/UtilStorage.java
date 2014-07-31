@@ -11,6 +11,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
 
+/**
+ * @Author Jituo.Xuan
+ * @Date 5:56:29 AM Aug 1, 2014
+ * @Comments:null
+ */
 public class UtilStorage {
 
     private static final String TAG = UtilStorage.class.getSimpleName();
