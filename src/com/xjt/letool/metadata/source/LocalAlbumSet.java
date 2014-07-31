@@ -70,7 +70,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
 
     private final LetoolApp mApplication;
     private ArrayList<MediaSet> mAlbums = new ArrayList<MediaSet>();
-    private final DataNotifier mNotifierMedia;
+    private final DataNotifier mDataNotifier;
     private final String mName;
     private final Handler mHandler;
     private boolean mIsLoading;
@@ -86,10 +86,10 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
         mIsImage = isImage;
         if (isImage) {
             mBaseUri = mWatchUriImage;
-            mNotifierMedia = new DataNotifier(this, mWatchUriImage, application);
+            mDataNotifier = new DataNotifier(this, mWatchUriImage, application);
         } else {
             mBaseUri = mWatchUriVideo;
-            mNotifierMedia = new DataNotifier(this, mWatchUriVideo, application);
+            mDataNotifier = new DataNotifier(this, mWatchUriVideo, application);
         }
         mName = "Albums";
     }
@@ -227,7 +227,8 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
     // 2. Prevent calling onFutureDone() and reload() concurrently
     @Override
     public synchronized long reload() {
-        if (mNotifierMedia.isDirty()) {
+
+        if (mDataNotifier.isDirty()) {
             if (mLoadTask != null)
                 mLoadTask.cancel();
             mIsLoading = true;
@@ -239,8 +240,9 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
             for (MediaSet album : mAlbums) {
                 album.reload();
             }
-            LLog.i("test-r", "enter reload()-2:" + mDataVersion);
+            mIsLoading = false;
             mDataVersion = nextVersionNumber();
+
         }
         return mDataVersion;
     }
@@ -250,7 +252,6 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
         if (mLoadTask != future)
             return; // ignore, wait for the latest task
         mLoadBuffer = future.get();
-        mIsLoading = false;
         if (mLoadBuffer == null)
             mLoadBuffer = new ArrayList<MediaSet>();
         mHandler.post(new Runnable() {
@@ -264,7 +265,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
 
     // For debug only. Fake there is a ContentObserver.onChange() event.
     void fakeChange() {
-        mNotifierMedia.fakeChange();
+        mDataNotifier.fakeChange();
     }
 
     private static class BucketEntry {

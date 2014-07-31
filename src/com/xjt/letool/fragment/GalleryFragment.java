@@ -168,7 +168,6 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     private void clearLoadingBit(int loadingBit) {
         mLoadingBits &= ~loadingBit;
         if (mLoadingBits == 0 && mIsActive) {
-            LLog.i(TAG, "---++--------:" + mThumbnailSetAdapter.size());
             if (mThumbnailSetAdapter.size() == 0) {
                 mLetoolContext.showEmptyView(mLetoolContext.isImageBrwosing() ? R.drawable.ic_no_picture : R.drawable.ic_no_video,
                         mLetoolContext.isImageBrwosing() ? R.string.common_error_no_gallery : R.string.common_error_no_movies);

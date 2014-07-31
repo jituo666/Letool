@@ -25,7 +25,7 @@ import com.xjt.letool.views.opengl.TiledTexture;
 import com.xjt.letool.views.render.ThumbnailSetRenderer;
 import com.xjt.letool.views.utils.AlbumLabelMaker;
 
-public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListener {
+public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataChangedListener {
 
     private static final String TAG = "ThumbnailSetDataWindow";
     private static final int MSG_UPDATE_ALBUM_ENTRY = 1;
@@ -309,7 +309,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
     }
 
     @Override
-    public void onSizeChanged(int size) {
+    public void onDataSizeChanged(int size) {
         if (mIsActive && mSize != size) {
             mSize = size;
             if (mListener != null)
@@ -322,7 +322,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataListen
     }
 
     @Override
-    public void onContentChanged(int index) {
+    public void onDataContentChanged(int index) {
         if (!mIsActive) {
             return; // paused, ignore thumbnail changed event
         }
