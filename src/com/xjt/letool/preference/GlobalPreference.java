@@ -70,7 +70,7 @@ public class GlobalPreference {
 
     public static boolean rememberLastUI(Context ctx) {
         SharedPreferences prefs = initSharedPreferences(ctx);
-        return prefs.getBoolean(PREFS_KEY_REMEMBER_LAST_UI, false);
+        return prefs.getBoolean(PREFS_KEY_REMEMBER_LAST_UI, true);
     }
 
     public static void setRememberLastUI(Context ctx, boolean remember) {
