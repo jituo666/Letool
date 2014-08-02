@@ -25,7 +25,7 @@
         android:largeHeap="true"
         android:logo="@drawable/ic_launcher" >
         <activity
-            android:name="com.xjt.letool.activities.LocalMediaActivity"
+            android:name="com.xjt.letool.activities.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name"
             android:theme="@style/MainTheme" >
@@ -36,9 +36,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.xjt.letool.activities.MoviePlayActivity"
+            android:name="com.xjt.letool.activities.LocalMediaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="portrait"
             android:theme="@style/MainTheme" >
         </activity>
         <activity
@@ -46,15 +45,12 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/MainTheme" >
         </activity>
-
-        <!-- Umeng sdk requirement -->
-        <meta-data
-            android:name="UMENG_APPKEY"
-            android:value="539289e956240b9f6902fa3c" >
-        </meta-data>
-        <meta-data
-            android:name="UMENG_CHANNEL"
-            android:value="@string/test_channel_id" />
+        <activity
+            android:name="com.xjt.letool.activities.MoviePlayActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@style/MainTheme" >
+        </activity>
 
         <service
             android:name="com.umeng.update.net.DownloadingService"
