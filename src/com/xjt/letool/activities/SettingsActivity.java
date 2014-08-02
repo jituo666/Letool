@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
@@ -167,6 +168,11 @@ public class SettingsActivity extends FragmentActivity implements LetoolContext 
     @Override
     public void hideEmptyView() {
 
+    }
+
+    @Override
+    public View getGuidTipView() {
+        return null;
     }
 
 }

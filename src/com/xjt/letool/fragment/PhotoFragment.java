@@ -5,6 +5,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.xjt.letool.LetoolApp;
 import com.xjt.letool.LetoolContext;
 import com.xjt.letool.R;
+import com.xjt.letool.activities.LetoolMainActivity;
 import com.xjt.letool.activities.LocalMediaActivity;
 import com.xjt.letool.activities.SettingsActivity;
 import com.xjt.letool.common.EyePosition;
@@ -60,6 +61,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -164,6 +169,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                 mLetoolContext.showEmptyView(R.drawable.ic_no_picture, mIsCameraSource ? R.string.common_error_no_photos : R.string.common_error_no_gallery);
             } else {
                 mLetoolContext.hideEmptyView();
+                showGuideTip();
             }
         }
     }
@@ -204,6 +210,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     }
 
     public void onLongTap(int thumbnailIndex) {
+        hideGuideTip();
         MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_PHOTO_LONG_PRESSED);
         if (mGetContent)
             return;
@@ -453,6 +460,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        hideGuideTip();
         LLog.i(TAG, "onDestroyView");
     }
 
@@ -486,7 +494,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
 
     @Override
     public void onClick(View v) {
-
+        hideGuideTip();
         if (v.getId() == R.id.action_navi) {
             if (mIsCameraSource) {
                 MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SLIDE_MENU);
@@ -598,6 +606,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     }
 
     private void pickPhoto(int index) {
+        hideGuideTip();
         Bundle data = new Bundle();
         if (mIsCameraSource) {
             data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
@@ -617,4 +626,34 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         mLetoolContext.pushContentFragment(fragment, this, true);
     }
 
+    public void showGuideTip() {
+        if (GlobalPreference.IsGuideTipShown(getActivity()) && mAlbumDataSetLoader.size() > 0) {
+            final View tip = mLetoolContext.getGuidTipView();
+            tip.setVisibility(View.VISIBLE);
+            Animation a = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_bottom_in);
+            a.setStartOffset(600);
+            a.setDuration(600);
+            tip.startAnimation(a);
+            Button close = (Button) tip.findViewById(R.id.close_tip);
+            close.setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View arg0) {
+                    tip.setVisibility(View.GONE);
+                    tip.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_bottom_out));
+                    GlobalPreference.setGuideTipShown(getActivity(), false);
+                }
+            });
+        }
+    }
+
+    public void hideGuideTip() {
+        if (GlobalPreference.IsGuideTipShown(getActivity())) {
+            final View tip = mLetoolContext.getGuidTipView();
+            if (tip.getVisibility() == View.VISIBLE) {
+                tip.setVisibility(View.GONE);
+                tip.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_bottom_out));
+            }
+        }
+    }
 }

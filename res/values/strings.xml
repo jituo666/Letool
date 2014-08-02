@@ -41,7 +41,6 @@
     <string name="full_image_browse_empty">No photoes</string>
     <!-- common strings -->
     <string name="app_name">Letool</string>
-    
     <string name="common_state_on">On</string>
     <string name="common_state_off">Off</string>
     <string name="common_picture">Picture</string>
@@ -82,6 +81,9 @@
     <string name="common_video_set">(%d Video(s))</string>
     <string name="common_error_no_dirs">No picture or video directory!</string>
     <string name="share_app_install_tip">Please install QQ </string>
+    <string name="friendly_tips">Friendly tip</string>
+    <string name="friendly_tip_cotent">1. Long press thumbnail to enter selection mode \n2. Press menu key or the upper left corner button to enter main menu</string>
+    <string name="close_tip">I known</string>
 
     <!-- Text indicating the title of a media item in details window [CHAR LIMIT=14] -->
     <string name="title">Title</string>
@@ -141,6 +143,7 @@
         <item quantity="one">%1$d item</item>
         <item quantity="other">%1$d items</item>
     </plurals>
+
     <string-array name="share_to_title">
         <item>"Weixin"</item>
         <item>"WX friends"</item>
@@ -150,4 +153,5 @@
         <item>"Sina weibo"</item>
         <item>"Tencent weibO"</item>
     </string-array>
+
 </resources>
