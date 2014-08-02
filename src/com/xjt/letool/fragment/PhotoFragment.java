@@ -589,8 +589,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         mLetoolContext.getLetoolTopBar().setTitleText(String.format(format, count));
     }
 
-    private Rect getSlotRect(int index) {
-        // Get slot rectangle relative to this root pane.
+    private Rect getThumbnailRect(int index) {
         Rect offset = new Rect();
         mRootPane.getBoundsOf(mThumbnailView, offset);
         Rect r = mThumbnailView.getThumbnailRect(index);
@@ -613,7 +612,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         }
         Fragment fragment = new FullImageFragment();
         data.putInt(FullImageFragment.KEY_INDEX_HINT, index);
-        data.putParcelable(FullImageFragment.KEY_OPEN_ANIMATION_RECT, getSlotRect(index));
+        data.putParcelable(FullImageFragment.KEY_OPEN_ANIMATION_RECT, getThumbnailRect(index));
         fragment.setArguments(data);
         mLetoolContext.pushContentFragment(fragment, this, true);
     }
