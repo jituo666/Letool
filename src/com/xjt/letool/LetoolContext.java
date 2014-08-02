@@ -3,6 +3,7 @@ package com.xjt.letool;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
+import android.view.View;
 
 import com.xjt.letool.common.OrientationManager;
 import com.xjt.letool.common.ThreadPool;
@@ -38,6 +39,7 @@ public interface LetoolContext {
     public OrientationManager getOrientationManager();
 
     //
+    public View getGuidTipView();
     public void showEmptyView(int iconResIcon,int messageResId);
 
     public void hideEmptyView();

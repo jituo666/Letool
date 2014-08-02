@@ -28,8 +28,8 @@ public class LetoolBottomBar {
     };
 
     public static final int BOTTOM_MODE_LAYOUT_ID[] = {
-            R.layout.local_fullmage_bottom_bar,
-            R.layout.local_fullmage_bottom_bar
+            R.layout.local_media_bottom_bar,
+            R.layout.local_media_bottom_bar
     };
 
     public static final int BOTTOM_BUTTON_IDS[] = {

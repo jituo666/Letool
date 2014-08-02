@@ -69,8 +69,6 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
     private boolean mWaitingForExit = false;
     public boolean mIsImage = true;
 
-    private String mCurrentFragment = "";
-
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
@@ -203,7 +201,6 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
     }
 
     public void pushContentFragment(Fragment newFragment, Fragment oldFragment, boolean backup) {
-
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (oldFragment != null) {
             ft.remove(oldFragment);
@@ -326,6 +323,11 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
     @Override
     public boolean isImageBrwosing() {
         return mIsImage;
+    }
+
+    @Override
+    public View getGuidTipView() {
+        return findViewById(R.id.function_guide_tip);
     }
 
 }
