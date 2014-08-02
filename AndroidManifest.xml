@@ -50,7 +50,7 @@
         <!-- Umeng sdk requirement -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="538f2c0456240ba4a0059794" >
+            android:value="539289e956240b9f6902fa3c" >
         </meta-data>
         <meta-data
             android:name="UMENG_CHANNEL"
