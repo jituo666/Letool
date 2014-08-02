@@ -11,7 +11,7 @@ import com.xjt.letool.stat.StatConstants;
  * @Date 1:38:59 PM Aug 2, 2014
  * @Comments:null
  */
-public class MainActivity extends LocalMediaActivity {
+public class LetoolMainActivity extends LocalMediaActivity {
 
     @Override
     protected void onCreate(Bundle b) {
