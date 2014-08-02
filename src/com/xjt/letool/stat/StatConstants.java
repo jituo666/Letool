@@ -8,9 +8,7 @@ package com.xjt.letool.stat;
  */
 public class StatConstants {
 
-    public static final String UMENG_APP_RELEASE_KEY = "539289e956240b9f6902fa3c";
     public static final String UMENG_APP_DEBUG_KEY = "538f2c0456240ba4a0059794";
-
     public static final String UMENG_TEST_CHANNEL_ID = "com-xjt-letool-umeng-test-id";
 
     //
