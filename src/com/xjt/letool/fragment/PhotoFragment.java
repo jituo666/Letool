@@ -585,10 +585,8 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     @Override
     public void onSelectionChange(MediaPath path, boolean selected) {
         int count = mSelector.getSelectedCount();
-        String format = getResources().getQuantityString(
-                R.plurals.number_of_items, count);
-        mLetoolContext.getLetoolTopBar().setTitleText(
-                String.format(format, count));
+        String format = getResources().getQuantityString(R.plurals.number_of_items, count);
+        mLetoolContext.getLetoolTopBar().setTitleText(String.format(format, count));
     }
 
     private Rect getSlotRect(int index) {

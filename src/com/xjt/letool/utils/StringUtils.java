@@ -1,3 +1,4 @@
+
 package com.xjt.letool.utils;
 
 import java.text.DecimalFormat;
@@ -9,8 +10,8 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 
-
 public class StringUtils {
+
     /**
      * Format bytes count in proper suffix.
      * @param size Bytes count in bytes (B)
@@ -27,15 +28,15 @@ public class StringUtils {
         DecimalFormat formatter = new DecimalFormat("#0.0");
         if (size >= 1024 * 1024 * 1024l) {
             // in GB
-            return formatter.format(size / (1024 * 1024 * 1024f)) + "G" + (hasByte? "B" : "");
+            return formatter.format(size / (1024 * 1024 * 1024f)) + "G" + (hasByte ? "B" : "");
         } else if (size >= 1024 * 1024l) {
             // in MB
-            return formatter.format(size / (1024 * 1024f)) + "M" + (hasByte? "B" : "");
+            return formatter.format(size / (1024 * 1024f)) + "M" + (hasByte ? "B" : "");
         } else if (size >= 1024) {
             // in KB
-            return formatter.format(size / 1024f) + "K" + (hasByte? "B" : "");
+            return formatter.format(size / 1024f) + "K" + (hasByte ? "B" : "");
         } else {
-            return size + (hasByte? "B" : "");
+            return size + (hasByte ? "B" : "");
         }
     }
 
@@ -162,18 +163,8 @@ public class StringUtils {
             return str.substring(index);
         return str;
     }
-    
-    public static String formatTime(Context c,long time) {
 
-    	return String.format("(" + c.getString(R.string.duration) + " %02d:%02d:%02d"  + ")", time/3600,time%3600/60,time%60);
-/*    	String result = "";
-    	long temp = 0;
-    	temp = time/3600;
-    	if (temp > 0) {
-    		result += temp + c.getString(R.string.common_hour);
-    	}
-    	String second = String.valueOf(time%60);
-    	String minutes = String.valueOf(time%3600);
-    	return result + minutes + c.getString(R.string.common_minutes) + second + c.getString(R.string.common_seconds);*/
+    public static String formatTime(Context c, long time) {
+        return String.format("(" + c.getString(R.string.duration) + " %02d:%02d:%02d" + ")", time / 3600, time % 3600 / 60, time % 60);
     }
 }

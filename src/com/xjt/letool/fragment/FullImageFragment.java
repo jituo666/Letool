@@ -2,10 +2,6 @@
 package com.xjt.letool.fragment;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import android.content.ComponentName;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 
@@ -19,8 +15,6 @@ import android.view.LayoutInflater;
 
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
@@ -35,11 +29,8 @@ import com.xjt.letool.metadata.MediaSetUtils;
 import com.xjt.letool.metadata.source.LocalAlbum;
 import com.xjt.letool.selectors.SelectionManager;
 import com.xjt.letool.share.ShareManager;
-import com.xjt.letool.share.ShareToAllAdapter;
 import com.xjt.letool.stat.StatConstants;
 import com.xjt.letool.utils.LetoolUtils;
-import com.xjt.letool.utils.PackageUtils;
-import com.xjt.letool.utils.PackageUtils.AppInfo;
 import com.xjt.letool.view.LetoolDialog;
 import com.xjt.letool.view.DetailsHelper;
 import com.xjt.letool.view.LetoolTopBar.OnActionModeListener;
@@ -344,8 +335,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
             @Override
             public void onPhotoChanged(int index, MediaItem item) {
                 mCurrentIndex = index;
-                updateActionBarMessage(getString(R.string.full_image_browse,
-                        Math.min(mCurrentIndex + 1, mTotalCount), mTotalCount));
+                updateActionBarMessage(getString(R.string.full_image_browse, Math.min(mCurrentIndex + 1, mTotalCount), mTotalCount));
 
             }
 

@@ -76,7 +76,6 @@
 
     <dimen name="letool_action_bar_height">48dp</dimen>
     <dimen name="letool_action_bar_icon_size">32dp</dimen>
-    <dimen name="letool_action_bar_text_size">20sp</dimen>
     <dimen name="letool_action_bar_text_size1">18sp</dimen>
     <dimen name="letool_sliding_menu_side_padding">4dp</dimen>
     <dimen name="letool_sliding_menu_item_height">48dp</dimen>
@@ -90,6 +89,7 @@
     <dimen name="letool_settings_minor_item_height">16dp</dimen>
     <dimen name="letool_camera_source_settings_item_padding">2dp</dimen>
     <dimen name="letool_camera_source_settings_item_height">56dp</dimen>
+    <dimen name="common_text_size_large">20sp</dimen>
     <dimen name="common_text_size_middle">16dp</dimen>
     <dimen name="common_text_size_small">13dp</dimen>
     <dimen name="common_list_header_height">30dp</dimen>

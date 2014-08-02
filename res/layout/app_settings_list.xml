@@ -1,71 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MyWidget.ScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/main_screen_bg"
-    android:orientation="vertical" >
+    android:background="@drawable/main_screen_bg" >
 
-    <include
-        android:id="@+id/camera_source"
-        layout="@layout/app_settings_list_item" />
-
-    <View
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@drawable/common_list_divider" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 
-    <include
-        android:id="@+id/anim_switch"
-        layout="@layout/app_settings_list_item" />
+        <include
+            android:id="@+id/camera_source"
+            layout="@layout/app_settings_list_item" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@drawable/common_list_divider" />
+        <View
+            android:layout_width="match_parent" 
+            android:layout_height="1dp"
+            android:background="@drawable/common_list_divider" />
 
-    <include
-        android:id="@+id/remember_ui_switch"
-        layout="@layout/app_settings_list_item" />
+        <include
+            android:id="@+id/anim_switch"
+            layout="@layout/app_settings_list_item" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@drawable/common_list_divider" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/common_list_divider" />
 
-    <include
-        android:id="@+id/clear_cache"
-        layout="@layout/app_settings_list_item" />
+        <include
+            android:id="@+id/remember_ui_switch"
+            layout="@layout/app_settings_list_item" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@drawable/common_list_divider" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/common_list_divider" />
 
-    <include
-        android:id="@+id/version_update_check"
-        layout="@layout/app_settings_list_item" />
+        <include
+            android:id="@+id/clear_cache"
+            layout="@layout/app_settings_list_item" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@drawable/common_list_divider" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/common_list_divider" />
 
-    <include
-        android:id="@+id/author_desc"
-        layout="@layout/app_settings_list_item" />
+        <include
+            android:id="@+id/version_update_check"
+            layout="@layout/app_settings_list_item" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@drawable/common_list_divider" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/common_list_divider" />
 
-    <include
-        android:id="@+id/communication_platform"
-        layout="@layout/app_settings_list_item" />
+        <include
+            android:id="@+id/author_desc"
+            layout="@layout/app_settings_list_item" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@drawable/common_list_divider" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/common_list_divider" />
 
-</LinearLayout>
+        <include
+            android:id="@+id/communication_platform"
+            layout="@layout/app_settings_list_item" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/common_list_divider" />
+    </LinearLayout>
+
+</ScrollView>

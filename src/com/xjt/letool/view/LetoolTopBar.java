@@ -65,8 +65,7 @@ public class LetoolTopBar {
     private View mActionModePanel;
     private OnActionModeListener mOnActionModeListener;
     private int mCurActionBarMode;
-    private boolean mIsExpand = false;
-    private SelectionManager mConractSelectionManager;
+    private SelectionManager mSelectionManager;
 
     public LetoolTopBar(FragmentActivity activity, ViewGroup barContainer) {
         mActivity = activity;
@@ -117,14 +116,13 @@ public class LetoolTopBar {
     }
 
     public void setContractSelectionManager(SelectionManager selector) {
-        mConractSelectionManager = selector;
-        mIsExpand = false;
+        mSelectionManager = selector;
     }
 
     public void exitSelection() {
-        if (mCurActionBarMode == ACTION_BAR_MODE_SELECTION && mConractSelectionManager != null
-                && mConractSelectionManager.inSelectionMode()) {
-            mConractSelectionManager.leaveSelectionMode();
+        if (mCurActionBarMode == ACTION_BAR_MODE_SELECTION && mSelectionManager != null
+                && mSelectionManager.inSelectionMode()) {
+            mSelectionManager.leaveSelectionMode();
         }
     }
 
