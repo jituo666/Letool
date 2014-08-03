@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.xjt.letool"
+    package="com.xjt.newpic"
     android:versionCode="5"
     android:versionName="1.2.5" >
 
@@ -17,17 +17,15 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
-        android:name="com.xjt.letool.LetoolAppImpl"
+        android:name="com.xjt.newpic.LetoolAppImpl"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
         android:largeHeap="true"
         android:logo="@drawable/ic_launcher" >
         <activity
-            android:name="com.xjt.letool.activities.LetoolMainActivity"
+            android:name="com.xjt.newpic.activities.LetoolMainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/app_name"
             android:theme="@style/MainTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,17 +34,17 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.xjt.letool.activities.LocalMediaActivity"
+            android:name="com.xjt.newpic.activities.LocalMediaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/MainTheme" >
         </activity>
         <activity
-            android:name="com.xjt.letool.activities.SettingsActivity"
+            android:name="com.xjt.newpic.activities.SettingsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/MainTheme" >
         </activity>
         <activity
-            android:name="com.xjt.letool.activities.MoviePlayActivity"
+            android:name="com.xjt.newpic.activities.MoviePlayActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/MainTheme" >

@@ -6,7 +6,7 @@
     android:background="@drawable/main_screen_bg"
     android:orientation="vertical" >
 
-    <com.xjt.letool.view.GLRootView
+    <com.xjt.newpic.view.GLRootView
         android:id="@+id/gl_root_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

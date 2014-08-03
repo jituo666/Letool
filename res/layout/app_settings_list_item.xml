@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.xjt.letool.settings.LetoolPreference xmlns:android="http://schemas.android.com/apk/res/android"
+<com.xjt.newpic.settings.LetoolPreference xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,7 +10,7 @@
     android:paddingRight="8dp"
     android:paddingTop="2dp" >
 
-    <com.xjt.letool.surpport.CommonToggleButton
+    <com.xjt.newpic.surpport.CommonToggleButton
         android:id="@+id/toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,4 +42,4 @@
         android:textColor="@color/minor_text_color"
         android:textSize="12sp" />
 
-</com.xjt.letool.settings.LetoolPreference>
+</com.xjt.newpic.settings.LetoolPreference>

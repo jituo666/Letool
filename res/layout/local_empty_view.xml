@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.xjt.letool.view.LetoolEmptyView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.xjt.newpic.view.LetoolEmptyView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/main_screen_bg"
@@ -22,4 +22,4 @@
         android:textColor="@color/minor_text_color"
         android:textSize="18sp" />
 
-</com.xjt.letool.view.LetoolEmptyView>
+</com.xjt.newpic.view.LetoolEmptyView>
