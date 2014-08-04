@@ -40,7 +40,7 @@
     <string name="full_image_browse">Full image(%1$d/%2$d)</string>
     <string name="full_image_browse_empty">No photoes</string>
     <!-- common strings -->
-    <string name="app_name">Letool</string>
+    <string name="app_name">牛图</string>
     <string name="common_state_on">On</string>
     <string name="common_state_off">Off</string>
     <string name="common_picture">Picture</string>

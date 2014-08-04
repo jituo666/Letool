@@ -21,7 +21,7 @@ public class LetoolMainActivity extends LocalMediaActivity {
 //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_91); // "LETOOL0000001001"; //91手机助手
 //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_TENCENT); // "LETOOL0000001002";//腾讯应用宝
 //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_BAIDU); // "LETOOL0000001003";//百度
-//        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_360); // "LETOOL0000001004";//360手机助手
+//          AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_360); // "LETOOL0000001004";//360手机助手
 //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_ALI); // "LETOOL0000001005";//阿里淘宝
 //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_ANZHI); // "LETOOL0000001006";//安智
 //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_MUMAYI); // "LETOOL0000001007";//木蚂蚁
@@ -37,7 +37,7 @@ public class LetoolMainActivity extends LocalMediaActivity {
 //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_LENOVO); // "LETOOL0000001018";//联想
 //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_HUAWEI); // "LETOOL0000001019";//华为
 //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_ZHONGXIN); // "LETOOL0000001020"; //中兴
-//        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_YIDONGMM); // "LETOOL0000001021";//移动MM
+        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_YIDONGMM); // "LETOOL0000001021";//移动MM
 //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_WOSHOP); // "LETOOL0000001022";//联通沃商店
 //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_NOKIA); // "LETOOL0000001023";// 诺基亚
 //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_OTHERS); // "LETOOL0000001111";//其它

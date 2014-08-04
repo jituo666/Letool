@@ -67,7 +67,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
     private static final int MSG_UNFREEZE_GLROOT = 6;
     private static final int MSG_REFRESH_BOTTOM_CONTROLS = 8;
     private static final int MSG_ON_CAMERA_CENTER = 9;
-    private static final int MSG_ON_PICTURE_CENTER = 10;
+    private static final int MSG_ON_UPDATE_TITLE = 10;
     private static final int MSG_REFRESH_IMAGE = 11;
     private static final int MSG_UPDATE_PHOTO_UI = 12;
     private static final int MSG_UPDATE_DEFERRED = 14;
@@ -157,9 +157,6 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
     @Override
     public void onPictureCenter(boolean mIsCameraSource) {
         mFullImageView.setWantPictureCenterCallbacks(false);
-        mHandler.removeMessages(MSG_ON_CAMERA_CENTER);
-        mHandler.removeMessages(MSG_ON_PICTURE_CENTER);
-        mHandler.sendEmptyMessage(mIsCameraSource ? MSG_ON_CAMERA_CENTER : MSG_ON_PICTURE_CENTER);
     }
 
     private void requestDeferredUpdate() {
@@ -284,7 +281,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
                                 MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_FULL_IMAGE_DELETE_OK);
                                 mTotalCount = mMediaSet.getMediaCount();
                                 if (mTotalCount > 0) {
-                                    updateActionBarMessage(getString(R.string.full_image_browse, Math.min(mCurrentIndex + 1, mTotalCount), mTotalCount));
+                                    mHandler.sendEmptyMessage(MSG_ON_UPDATE_TITLE);
                                 } else {
                                     // not medias
                                     Toast.makeText(getActivity(), R.string.full_image_browse_empty, Toast.LENGTH_SHORT).show();
@@ -335,7 +332,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
             @Override
             public void onPhotoChanged(int index, MediaItem item) {
                 mCurrentIndex = index;
-                updateActionBarMessage(getString(R.string.full_image_browse, Math.min(mCurrentIndex + 1, mTotalCount), mTotalCount));
+                mHandler.sendEmptyMessage(MSG_ON_UPDATE_TITLE);
 
             }
 
@@ -387,7 +384,8 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
                     case MSG_ON_CAMERA_CENTER: {
                         break;
                     }
-                    case MSG_ON_PICTURE_CENTER: {
+                    case MSG_ON_UPDATE_TITLE: {
+                        updateActionBarMessage(getString(R.string.full_image_browse, Math.min(mCurrentIndex + 1, mTotalCount), mTotalCount));
                         break;
                     }
                     case MSG_REFRESH_IMAGE: {

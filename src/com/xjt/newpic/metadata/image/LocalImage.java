@@ -8,7 +8,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapRegionDecoder;
 import android.net.Uri;
-import android.opengl.ETC1Util;
 import android.opengl.ETC1Util.ETC1Texture;
 import android.os.Build;
 import android.provider.MediaStore.Images;
@@ -17,7 +16,6 @@ import android.provider.MediaStore.MediaColumns;
 import android.util.Log;
 
 import com.xjt.newpic.LetoolApp;
-import com.xjt.newpic.R;
 import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.common.ThreadPool.Job;
@@ -299,7 +297,7 @@ public class LocalImage extends LocalMediaItem {
 
         @Override
         public ETC1Texture run(JobContext jc) {
-            long time = System.currentTimeMillis();
+/*            long time = System.currentTimeMillis();
             InputStream input = mApplication.getResources().openRawResource(R.raw.slid0);
             try {
                 ETC1Util.ETC1Texture texture = ETC1Util.createTexture(input);
@@ -313,7 +311,7 @@ public class LocalImage extends LocalMediaItem {
                 } catch (IOException e) {
                     // ignore exception thrown from close.
                 }
-            }
+            }*/
             return null;
         }
     }
