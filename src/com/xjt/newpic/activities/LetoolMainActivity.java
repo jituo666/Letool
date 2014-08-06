@@ -15,8 +15,11 @@ public class LetoolMainActivity extends LocalMediaActivity {
 
     @Override
     protected void onCreate(Bundle b) {
-        AnalyticsConfig.setAppkey(StatConstants.UMENG_APP_RELEASE_KEY);
 
+        AnalyticsConfig.setAppkey(StatConstants.UMENG_APP_DEBUG_KEY);
+        AnalyticsConfig.setChannel(StatConstants.UMENG_TEST_CHANNEL_ID);
+
+        //        AnalyticsConfig.setAppkey(StatConstants.UMENG_APP_RELEASE_KEY);
         //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_ID_WDJ); // "LETOOL0000001000"; //豌豆夹
         //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_91); // "LETOOL0000001001"; //91手机助手
         //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_TENCENT); // "LETOOL0000001002";//腾讯应用宝
