@@ -7,7 +7,7 @@ import com.xjt.newpic.views.opengl.GLESCanvas;
 import com.xjt.newpic.views.utils.ViewEdgeEffect;
 
 // EdgeView draws EdgeEffect (blue glow) at four sides of the view.
-public class EdgeView extends GLBaseView {
+public class EdgeView extends GLView {
     @SuppressWarnings("unused")
     private static final String TAG = "EdgeView";
 

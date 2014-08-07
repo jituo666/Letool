@@ -35,13 +35,13 @@ public class DetailsHelper {
         public void onResolutionAvailable(int width, int height);
     }
 
-    public DetailsHelper(LetoolContext activity, GLBaseView rootPane, DetailsSource source) {
+    public DetailsHelper(LetoolContext activity, GLView rootPane, DetailsSource source) {
         mContainer = new DialogDetailsView(activity, source);
     }
 
     public void layout(int left, int top, int right, int bottom) {
-        if (mContainer instanceof GLBaseView) {
-            GLBaseView view = (GLBaseView) mContainer;
+        if (mContainer instanceof GLView) {
+            GLView view = (GLView) mContainer;
             view.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.makeMeasureSpec(bottom - top, MeasureSpec.AT_MOST));
             view.layout(0, top, view.getMeasuredWidth(), top + view.getMeasuredHeight());
         }

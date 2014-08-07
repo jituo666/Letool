@@ -38,7 +38,14 @@ public class LocalAlbum extends MediaSet {
     private final boolean mIsImage;
     private final DataNotifier mNotifier;
     private final String mItemPath;
-    private Cursor mAlbumCursor;
+    private Cursor mCursor;
+    private boolean isMergedAlbum;
+
+    public LocalAlbum(MediaPath path, LetoolApp application, int bucketId, boolean isImage) {
+        this(path, application, new int[] {
+                bucketId
+        }, isImage, LocalAlbumSet.getBucketName(application.getContentResolver(), bucketId));
+    }
 
     public LocalAlbum(MediaPath path, LetoolApp application, int[] bucketIds, boolean isImage, String name) {
         super(path, nextVersionNumber());
@@ -47,6 +54,7 @@ public class LocalAlbum extends MediaSet {
         mName = name;
         mIsImage = isImage;
         mBucketId = bucketIds;
+        isMergedAlbum = mBucketId.length > 1;
         StringBuilder sbValue = new StringBuilder();
         if (bucketIds.length <= 0) {
             mWhereClause = null;
@@ -58,7 +66,7 @@ public class LocalAlbum extends MediaSet {
         }
         final String subWhere = " in(" + sbValue.toString() + ")";
         if (isImage) {
-            if (mBucketId.length == 1) {
+            if (!isMergedAlbum) {
                 mWhereClause = ImageColumns.BUCKET_ID + " = ?";
             } else {
                 mWhereClause = ImageColumns.BUCKET_ID + subWhere;
@@ -68,7 +76,7 @@ public class LocalAlbum extends MediaSet {
             mProjection = LocalImage.PROJECTION;
             mItemPath = LocalImage.ITEM_PATH;
         } else {
-            if (mBucketId.length == 1) {
+            if (!isMergedAlbum) {
                 mWhereClause = VideoColumns.BUCKET_ID + " = ?";
             } else {
                 mWhereClause = VideoColumns.BUCKET_ID + subWhere;
@@ -82,31 +90,25 @@ public class LocalAlbum extends MediaSet {
         mNotifier = new DataNotifier(this, mBaseUri, application);
     }
 
-    public LocalAlbum(MediaPath path, LetoolApp application, int bucketId, boolean isImage) {
-        this(path, application, new int[] {
-                bucketId
-        }, isImage, LocalAlbumSet.getBucketName(application.getContentResolver(), bucketId));
-    }
-
     @Override
     public ArrayList<MediaItem> getMediaItem(int start, int count) {
         long time = System.currentTimeMillis();
         ArrayList<MediaItem> list = new ArrayList<MediaItem>();
         LetoolUtils.assertNotInRenderThread();
-        if (mAlbumCursor == null || mAlbumCursor.isClosed()) {
-            getAllMediaItems();
+        if (mCursor == null || mCursor.isClosed()) {
+            updateMediaSet();
         }
-        if (mAlbumCursor == null || mAlbumCursor.isClosed()) {
+        if (mCursor == null || mCursor.isClosed()) {
             return null;
         }
-        if (mAlbumCursor.moveToPosition(start)) {
+        if (mCursor.moveToPosition(start)) {
             int i = 0;
             do {
-                int id = mAlbumCursor.getInt(0);
+                int id = mCursor.getInt(0);
                 MediaPath childPath = new MediaPath(mItemPath, id);
-                MediaItem item = loadOrUpdateItem(childPath, mAlbumCursor, mApplication.getDataManager(), mApplication, mIsImage);
+                MediaItem item = loadOrUpdateItem(childPath, mCursor, mApplication.getDataManager(), mApplication, mIsImage);
                 list.add(item);
-            } while (++i < count && mAlbumCursor.moveToNext());
+            } while (++i < count && mCursor.moveToNext());
         }
         LLog.w(TAG, "getMediaItem with count:" + count + " spend " + (System.currentTimeMillis() - time));
         return list;
@@ -127,22 +129,23 @@ public class LocalAlbum extends MediaSet {
     }
 
     @Override
-    public int getAllMediaItems() {
+    public int updateMediaSet() {
 
         long time = System.currentTimeMillis();
-        if (mAlbumCursor == null || mAlbumCursor.isClosed()) {
-            if (mBucketId.length == 1) {
-                mAlbumCursor = mResolver.query(mBaseUri, mProjection, mWhereClause, new String[] {String.valueOf(mBucketId[0])
+        if (mCursor == null || mCursor.isClosed()) {
+            if (!isMergedAlbum) {
+                mCursor = mResolver.query(mBaseUri, mProjection, mWhereClause, new String[] {
+                        String.valueOf(mBucketId[0])
                 }, mOrderClause);
             } else {
-                mAlbumCursor = mResolver.query(mBaseUri, mProjection, mWhereClause, null, mOrderClause);
+                mCursor = mResolver.query(mBaseUri, mProjection, mWhereClause, null, mOrderClause);
             }
-            if (mAlbumCursor == null) {
+            if (mCursor == null) {
                 return 0;
             }
         }
-        LLog.i(TAG, "----------------getAllMediaItem Count:" + mAlbumCursor.getCount() + " spend " + (System.currentTimeMillis() - time));
-        return mAlbumCursor.getCount();
+        LLog.i(TAG, "----------------updateCursor Count:" + mCursor.getCount() + " spend " + (System.currentTimeMillis() - time));
+        return mCursor.getCount();
     }
 
     @Override
@@ -153,8 +156,8 @@ public class LocalAlbum extends MediaSet {
     @Override
     public long reload() {
         if (mNotifier.isDirty()) {
+            destroyMediaSet();
             mDataVersion = nextVersionNumber();
-            closeCursor();
         }
         return mDataVersion;
     }
@@ -167,10 +170,14 @@ public class LocalAlbum extends MediaSet {
     @Override
     public void delete() {
         LetoolUtils.assertNotInRenderThread();
-        mResolver.delete(mBaseUri, mWhereClause,
-                new String[] {
-                    String.valueOf(mBucketId)
-                });
+        if (!isMergedAlbum) {
+            mResolver.delete(mBaseUri, mWhereClause,
+                    new String[] {
+                        String.valueOf(mBucketId)
+                    });
+        } else {
+            mResolver.delete(mBaseUri, mWhereClause, null);
+        }
         mApplication.getDataManager().broadcastLocalDeletion();
     }
 
@@ -180,12 +187,12 @@ public class LocalAlbum extends MediaSet {
     }
 
     @Override
-    public void closeCursor() {
-        if (mAlbumCursor != null) {
+    public void destroyMediaSet() {
+        if (mCursor != null) {
             try {
-                mAlbumCursor.close();
+                mCursor.close();
             } finally {
-                mAlbumCursor = null;
+                mCursor = null;
             }
         }
     }
@@ -199,10 +206,14 @@ public class LocalAlbum extends MediaSet {
 
     @Override
     public int getMediaCount() {
+        if (mCursor != null && !mCursor.isClosed()) {
+            return mCursor.getCount();
+        }
         int count = 0;
         Cursor c = null;
         try {
-            if (mBucketId.length == 1) {
+
+            if (!isMergedAlbum) {
                 c = mResolver.query(mBaseUri, new String[] {
                         "count(*)"
                 }, mWhereClause, new String[] {

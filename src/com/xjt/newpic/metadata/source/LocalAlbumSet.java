@@ -31,7 +31,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
     public static final String PATH_VIDEO = "/local/video/";
 
     private static final String TAG = LocalAlbumSet.class.getSimpleName();
-    // The indices should match the following projections.
+
     private static final int INDEX_BUCKET_ID = 0;
     private static final int INDEX_BUCKET_NAME = 1;
 
@@ -194,9 +194,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
     }
 
     public static String getBucketName(ContentResolver resolver, long bucketId) {
-        Uri uri = mBaseUri.buildUpon().appendQueryParameter("limit", "1")
-                .build();
-
+        Uri uri = mBaseUri.buildUpon().appendQueryParameter("limit", "1").build();
         Cursor cursor = resolver.query(uri, PROJECTION_BUCKET, "bucket_id = ?",
                 new String[] {
                     String.valueOf(bucketId)
@@ -303,10 +301,10 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
     }
 
     @Override
-    public void closeCursor() {
+    public void destroyMediaSet() {
         if (mAlbums != null && mAlbums.size() > 0) {
             for (MediaSet album : mAlbums) {
-                album.closeCursor();
+                album.destroyMediaSet();
             }
         }
     }

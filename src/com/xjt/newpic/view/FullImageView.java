@@ -36,7 +36,7 @@ import com.xjt.newpic.views.utils.GestureRecognizer;
 
 import java.lang.ref.WeakReference;
 
-public class FullImageView extends GLBaseView {
+public class FullImageView extends GLView {
 
     @SuppressWarnings("unused")
     private static final String TAG = FullImageView.class.getSimpleName();
@@ -219,7 +219,7 @@ public class FullImageView extends GLBaseView {
         mTileView = new TiledImageView(context);
         addComponent(mTileView);
         mContext = context.getActivityContext();
-        mPlaceholderColor = mContext.getResources().getColor(R.color.photo_placeholder);
+        mPlaceholderColor = mContext.getResources().getColor(R.color.full_image_placeholder);
         mEdgeView = new EdgeView(mContext);
         addComponent(mEdgeView);
         mNoThumbnailText = StringTexture.newInstance(mContext.getString(R.string.no_thumbnail), DEFAULT_TEXT_SIZE, Color.WHITE);

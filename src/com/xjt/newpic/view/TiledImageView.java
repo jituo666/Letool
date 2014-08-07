@@ -26,7 +26,7 @@ import com.xjt.newpic.views.opengl.UploadedBitmapTexture;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class TiledImageView extends GLBaseView {
+public class TiledImageView extends GLView {
     public static final int SIZE_UNKNOWN = -1;
 
     @SuppressWarnings("unused")

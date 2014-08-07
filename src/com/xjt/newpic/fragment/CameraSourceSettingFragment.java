@@ -322,7 +322,7 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
         protected Void doInBackground(Void... arg0) {
             ArrayList<MediaSet> r = mDataSet.getAllAlbums();
             for (MediaSet s : r) {
-                int count = s.getAllMediaItems();
+                int count = s.updateMediaSet();
                 if (count > 0) {
                     String path = s.getCoverMediaItem().getFilePath();
                     File parentfile = new File(path).getParentFile();

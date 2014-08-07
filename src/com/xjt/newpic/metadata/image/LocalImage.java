@@ -13,7 +13,6 @@ import android.os.Build;
 import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Images.ImageColumns;
 import android.provider.MediaStore.MediaColumns;
-import android.util.Log;
 
 import com.xjt.newpic.LetoolApp;
 import com.xjt.newpic.common.ApiHelper;
@@ -35,7 +34,6 @@ import com.xjt.newpic.utils.LetoolUtils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 
 // LocalImage represents an image in the local storage.
 public class LocalImage extends LocalMediaItem {
@@ -292,27 +290,4 @@ public class LocalImage extends LocalMediaItem {
         }
     }
 
-    //for test
-    public class TexureLoader implements Job<ETC1Texture> {
-
-        @Override
-        public ETC1Texture run(JobContext jc) {
-/*            long time = System.currentTimeMillis();
-            InputStream input = mApplication.getResources().openRawResource(R.raw.slid0);
-            try {
-                ETC1Util.ETC1Texture texture = ETC1Util.createTexture(input);
-                LLog.i(TAG, "------TexureLoader:" + (System.currentTimeMillis() - time));
-                return texture;
-            } catch (IOException e) {
-                Log.w(TAG, "Could not load texture: " + e);
-            } finally {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    // ignore exception thrown from close.
-                }
-            }*/
-            return null;
-        }
-    }
 }

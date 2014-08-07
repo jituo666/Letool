@@ -48,7 +48,7 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
 
     private GL11 mGL;
     private GLESCanvas mCanvas;
-    private GLBaseView mContentView;
+    private GLView mContentView;
     private OrientationSource mOrientationSource;
     // mCompensation is the difference between the UI orientation on GLCanvas and the framework orientation. See OrientationManager for details.
     private int mCompensation;
@@ -331,7 +331,7 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
     }
 
     @Override
-    public void setContentPane(GLBaseView content) {
+    public void setContentPane(GLView content) {
         if (mContentView == content)
             return;
         if (mContentView != null) {

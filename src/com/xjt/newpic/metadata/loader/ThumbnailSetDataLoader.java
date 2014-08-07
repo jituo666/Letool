@@ -361,8 +361,9 @@ public class ThumbnailSetDataLoader {
                         info.item = mSource.getSubMediaSet(info.index);
                         if (info.item == null)
                             continue;
-                        info.totalCount = info.item.getTotalMediaItemCount();
+
                         info.cover = info.item.getCoverMediaItem();
+                        info.totalCount = info.item.getMediaCount();
                     }
                 }
                 executeAndWait(new UpdateContent(info));

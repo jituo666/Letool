@@ -9,6 +9,12 @@ import com.xjt.newpic.views.layout.ThumbnailLayoutSpec;
 import com.xjt.newpic.views.render.ThumbnailSetRenderer;
 import com.xjt.newpic.views.render.ThumbnailVideoRenderer;
 
+
+/**
+ * @Author Jituo.Xuan
+ * @Date 3:28:44 PM Aug 7, 2014
+ * @Comments:null
+ */
 public final class ViewConfigs {
 
     public static class AlbumSetPage {
@@ -78,8 +84,6 @@ public final class ViewConfigs {
         private AlbumPage(Context context) {
             Resources r = context.getResources();
 
-            placeholderColor = r.getColor(R.color.album_placeholder);
-
             albumSpec = new ThumbnailLayoutSpec();
             albumSpec.rowsLand = r.getInteger(R.integer.album_rows_land);
             albumSpec.rowsPort = r.getInteger(R.integer.album_rows_port);
@@ -94,7 +98,6 @@ public final class ViewConfigs {
 
         }
     }
-    
 
     public static class VideoSetPage {
 
@@ -141,7 +144,7 @@ public final class ViewConfigs {
             labelSpec.countColor = r.getColor(R.color.albumset_label_count);
         }
     }
-    
+
     public static class VideoPage {
 
         private static VideoPage sInstance;

@@ -3,7 +3,6 @@ package com.xjt.newpic.metadata.source;
 
 import android.content.ContentProviderClient;
 import android.content.UriMatcher;
-import android.net.Uri;
 import android.provider.MediaStore;
 
 import com.xjt.newpic.LetoolApp;
@@ -82,70 +81,6 @@ public class LocalSource extends MediaSource {
                 throw new RuntimeException("bad path: " + path);
         }
     }
-
-    private static int getMediaType(String type, int defaultType) {
-        if (type == null)
-            return defaultType;
-        try {
-            int value = Integer.parseInt(type);
-            if ((value & (MediaObject.MEDIA_TYPE_IMAGE | MediaObject.MEDIA_TYPE_VIDEO)) != 0)
-                return value;
-        } catch (NumberFormatException e) {
-            LLog.w(TAG, "invalid type: " + type, e);
-        }
-        return defaultType;
-    }
-
-    // The media type bit passed by the intent
-    public static final String KEY_MEDIA_TYPES = "mediaTypes";
-
-    private MediaPath getAlbumPath(Uri uri, int defaultType) {
-        int mediaType = getMediaType(uri.getQueryParameter(KEY_MEDIA_TYPES), defaultType);
-        String bucketId = uri.getQueryParameter(KEY_BUCKET_ID);
-        int id = 0;
-        try {
-            id = Integer.parseInt(bucketId);
-        } catch (NumberFormatException e) {
-            LLog.w(TAG, "invalid bucket id: " + bucketId, e);
-            return null;
-        }
-        switch (mediaType) {
-            case MediaObject.MEDIA_TYPE_IMAGE:
-                return new MediaPath("/local/image", id);
-            case MediaObject.MEDIA_TYPE_VIDEO:
-                return new MediaPath("/local/video", id);
-            default:
-                return new MediaPath("/local/all", id);
-        }
-    }
-
-/*    @Override
-    public MediaPath findPathByUri(Uri uri, String type) {
-        try {
-            switch (mUriMatcher.match(uri)) {
-                case LOCAL_IMAGE_ITEM: {
-                    int id = ContentUris.parseId(uri);
-                    return id >= 0 ? new MediaPath(LocalImage.ITEM_PATH, id) : null;
-                }
-                case LOCAL_VIDEO_ITEM: {
-                    long id = ContentUris.parseId(uri);
-                    return id >= 0 ? new MediaPath(LocalVideo.ITEM_PATH, id) : null;
-                }
-                case LOCAL_IMAGE_ALBUM: {
-                    return getAlbumPath(uri, MediaObject.MEDIA_TYPE_IMAGE);
-                }
-                case LOCAL_VIDEO_ALBUM: {
-                    return getAlbumPath(uri, MediaObject.MEDIA_TYPE_VIDEO);
-                }
-                case LOCAL_ALL_ALBUM: {
-                    return getAlbumPath(uri, MediaObject.MEDIA_TYPE_ALL);
-                }
-            }
-        } catch (NumberFormatException e) {
-            LLog.w(TAG, "uri: " + uri.toString(), e);
-        }
-        return null;
-    }*/
 
     @Override
     public void resume() {

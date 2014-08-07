@@ -2,6 +2,7 @@
 package com.xjt.newpic.views.render;
 
 import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.R;
 import com.xjt.newpic.adapters.ThumbnailDataWindow;
 import com.xjt.newpic.metadata.MediaPath;
 import com.xjt.newpic.metadata.loader.ThumbnailDataLoader;
@@ -26,7 +27,6 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
     private ThumbnailFilter mThumbnailFilter;
 
     private final ColorTexture mWaitLoadingTexture;
-    private final int mPlaceholderColor = 0xFFE8E8E8;
 
     private int mPressedIndex = -1;
     private boolean mAnimatePressedUp;
@@ -57,7 +57,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
         mFragment = context;
         mThumbnailView = slotView;
         mMediaSelector = selector;
-        mWaitLoadingTexture = new ColorTexture(mPlaceholderColor);
+        mWaitLoadingTexture = new ColorTexture(context.getActivityContext().getResources().getColor(R.color.thumbnail_placehoder));
         mWaitLoadingTexture.setSize(1, 1);
     }
 
@@ -92,7 +92,6 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
 
     @Override
     public void onVisibleThumbnailRangeChanged(int visibleStart, int visibleEnd) {
-        //LLog.i(TAG, "onVisibleRangeChanged visibleStart:" + visibleStart + " visibleEnd:" + visibleEnd);
         if (mDataWindow != null) {
             mDataWindow.setActiveWindow(visibleStart, visibleEnd);
         }

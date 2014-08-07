@@ -27,7 +27,6 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
     private static final String TAG = ThumbnailSetRenderer.class.getSimpleName();
 
     private static final int CACHE_SIZE = 48;
-    private final int mPlaceholderColor;
 
     private final ColorTexture mWaitLoadingTexture;
     private LetoolContext mLetoolContext;
@@ -38,8 +37,6 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
     private int mPressedIndex = -1;
     private boolean mAnimatePressedUp;
     private MediaPath mHighlightItemPath = null;
-    private boolean mInSelectionMode;
-    private SelectionManager mMediaSelector;
 
     private LabelSpec mLabelSpec;
 
@@ -76,11 +73,9 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         super(activity.getActivityContext());
         mLetoolContext = activity;
         mThumbnailView = thumbnailView;
-        mPlaceholderColor = 0xFFE8E8E8;
-        mMediaSelector = selector;
         mLabelSpec = ViewConfigs.AlbumSetPage.get(activity.getActivityContext()).labelSpec;
         mVideoPlayIcon = new ResourceTexture(activity.getActivityContext(), R.drawable.ic_video_folder);
-        mWaitLoadingTexture = new ColorTexture(mPlaceholderColor);
+        mWaitLoadingTexture = new ColorTexture(activity.getActivityContext().getResources().getColor(R.color.thumbnail_placehoder));
         mWaitLoadingTexture.setSize(1, 1);
     }
 
@@ -177,12 +172,6 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
             }
         } else if ((mHighlightItemPath != null)) {
             drawSelectedFrame(canvas, width, height);
-        } else if (mInSelectionMode) {
-            if (mMediaSelector.isItemSelected(entry.setPath)) {
-                drawSelectedFrame(canvas, width, height);
-            } else {
-                drawPreSelectedFrame(canvas, width, height);
-            }
         }
         return renderRequestFlags;
     }
@@ -191,7 +180,6 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
 
     @Override
     public void prepareDrawing() {
-        mInSelectionMode = mMediaSelector.inSelectionMode();
     }
 
     public void pause() {

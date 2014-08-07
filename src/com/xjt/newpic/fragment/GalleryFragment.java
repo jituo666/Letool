@@ -28,7 +28,7 @@ import com.xjt.newpic.utils.RelativePosition;
 import com.xjt.newpic.utils.StorageUtils;
 import com.xjt.newpic.view.BatchDeleteMediaListener;
 import com.xjt.newpic.view.DetailsHelper;
-import com.xjt.newpic.view.GLBaseView;
+import com.xjt.newpic.view.GLView;
 import com.xjt.newpic.view.GLController;
 import com.xjt.newpic.view.LetoolDialog;
 import com.xjt.newpic.view.LetoolTopBar;
@@ -38,7 +38,6 @@ import com.xjt.newpic.view.DetailsHelper.CloseListener;
 import com.xjt.newpic.view.LetoolTopBar.OnActionModeListener;
 import com.xjt.newpic.views.layout.ThumbnailLayout;
 import com.xjt.newpic.views.layout.ThumbnailSetContractLayout;
-import com.xjt.newpic.views.layout.ThumbnailLayout.LayoutListener;
 import com.xjt.newpic.views.opengl.FadeTexture;
 import com.xjt.newpic.views.opengl.GLESCanvas;
 import com.xjt.newpic.views.render.ThumbnailSetRenderer;
@@ -64,11 +63,10 @@ import android.widget.Toast;
  * @Date 9:40:26 PM Apr 20, 2014
  * @Comments:null
  */
-public class GalleryFragment extends Fragment implements OnActionModeListener, EyePosition.EyePositionListener, SelectionListener, LayoutListener {
+public class GalleryFragment extends Fragment implements OnActionModeListener, EyePosition.EyePositionListener, SelectionListener {
 
     private static final String TAG = GalleryFragment.class.getSimpleName();
 
-    public static final String KEY_IS_EMPTY_ALBUM = "empty-album";
     private static final int MSG_LAYOUT_CONFIRMED = 0;
     private static final int MSG_PICK_ALBUM = 1;
 
@@ -99,7 +97,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     private int mLoadingBits = 0;
     private Handler mHandler;
 
-    private final GLBaseView mRootPane = new GLBaseView() {
+    private final GLView mRootPane = new GLView() {
 
         private final float mMatrix[] = new float[16];
 
@@ -267,11 +265,10 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         }
         mThumbnailView = new ThumbnailView(mLetoolContext, layout);
         mThumbnailView.setBackgroundColor(
-                LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.default_background_thumbnail))
+                LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.gl_background_color))
                 );
         mThumbnailViewRenderer = new ThumbnailSetRenderer(mLetoolContext, mThumbnailView, mSelector);
         layout.setRenderer(mThumbnailViewRenderer);
-        layout.setLayoutListener(this);
         mThumbnailView.setThumbnailRenderer(mThumbnailViewRenderer);
         mRootPane.addComponent(mThumbnailView);
         mThumbnailView.setListener(new ThumbnailView.SimpleListener() {
@@ -429,7 +426,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     public void onDestroy() {
         super.onDestroy();
         if (mMediaSet != null) {
-            mMediaSet.closeCursor();
+            mMediaSet.destroyMediaSet();
         }
         if (GlobalPreference.rememberLastUI(getActivity())) {
             GlobalPreference.setLastUI(getActivity(), mLetoolContext.isImageBrwosing() ?
@@ -594,11 +591,6 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         int count = mSelector.getSelectedCount();
         String format = getResources().getQuantityString(R.plurals.number_of_items, count);
         mLetoolContext.getLetoolTopBar().setTitleText(String.format(format, count));
-    }
-
-    @Override
-    public void onLayoutFinshed(int count) {
-        mHandler.obtainMessage(MSG_LAYOUT_CONFIRMED, count, 0).sendToTarget();
     }
 
 }

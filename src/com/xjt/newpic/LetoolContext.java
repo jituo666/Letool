@@ -40,7 +40,8 @@ public interface LetoolContext {
 
     //
     public View getGuidTipView();
-    public void showEmptyView(int iconResIcon,int messageResId);
+
+    public void showEmptyView(int iconResIcon, int messageResId);
 
     public void hideEmptyView();
 

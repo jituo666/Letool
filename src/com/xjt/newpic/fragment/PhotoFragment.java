@@ -32,7 +32,7 @@ import com.xjt.newpic.utils.StorageUtils;
 import com.xjt.newpic.utils.Utils;
 import com.xjt.newpic.view.BatchDeleteMediaListener;
 import com.xjt.newpic.view.DetailsHelper;
-import com.xjt.newpic.view.GLBaseView;
+import com.xjt.newpic.view.GLView;
 import com.xjt.newpic.view.GLController;
 import com.xjt.newpic.view.LetoolBottomBar;
 import com.xjt.newpic.view.LetoolDialog;
@@ -42,7 +42,6 @@ import com.xjt.newpic.view.BatchDeleteMediaListener.DeleteMediaProgressListener;
 import com.xjt.newpic.view.LetoolTopBar.OnActionModeListener;
 import com.xjt.newpic.views.layout.ThumbnailContractLayout;
 import com.xjt.newpic.views.layout.ThumbnailLayout;
-import com.xjt.newpic.views.layout.ThumbnailLayout.LayoutListener;
 import com.xjt.newpic.views.opengl.FadeTexture;
 import com.xjt.newpic.views.opengl.GLESCanvas;
 import com.xjt.newpic.views.render.ThumbnailRenderer;
@@ -73,8 +72,7 @@ import android.widget.Toast;
  * @Date 9:48:35 AM Apr 19, 2014
  * @Comments:null
  */
-public class PhotoFragment extends Fragment implements EyePosition.EyePositionListener, SelectionListener, OnActionModeListener,
-        LayoutListener {
+public class PhotoFragment extends Fragment implements EyePosition.EyePositionListener, SelectionListener, OnActionModeListener {
 
     private static final String TAG = PhotoFragment.class.getSimpleName();
 
@@ -112,7 +110,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     private float mY;
     private float mZ;
 
-    private final GLBaseView mRootPane = new GLBaseView() {
+    private final GLView mRootPane = new GLView() {
 
         private final float mMatrix[] = new float[16];
 
@@ -172,11 +170,6 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                 showGuideTip();
             }
         }
-    }
-
-    @Override
-    public void onLayoutFinshed(int count) {
-        mHandler.obtainMessage(MSG_LAYOUT_CONFIRMED, count, 0).sendToTarget();
     }
 
     private void onDown(int index) {
@@ -294,7 +287,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         ThumbnailLayout layout;
         layout = new ThumbnailContractLayout(mConfig.albumSpec);
         mThumbnailView = new ThumbnailView(mLetoolContext, layout);
-        mThumbnailView.setBackgroundColor(LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.default_background_thumbnail)));
+        mThumbnailView.setBackgroundColor(LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.gl_background_color)));
         mThumbnailView.setListener(new ThumbnailView.SimpleListener() {
 
             @Override
@@ -319,7 +312,6 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         });
         mRender = new ThumbnailRenderer(mLetoolContext, mThumbnailView, mSelector);
         layout.setRenderer(mRender);
-        layout.setLayoutListener(this);
         mThumbnailView.setThumbnailRenderer(mRender);
         mRender.setModel(mAlbumDataSetLoader);
         mRootPane.addComponent(mThumbnailView);
@@ -474,7 +466,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     public void onDestroy() {
         super.onDestroy();
         if (mDataSet != null) {
-            mDataSet.closeCursor();
+            mDataSet.destroyMediaSet();
         }
         if (GlobalPreference.rememberLastUI(getActivity())) {
             GlobalPreference.setLastUI(getActivity(), GlobalConstants.UI_TYPE_IMAGE_ITEMS);

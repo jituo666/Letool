@@ -2,6 +2,7 @@
 package com.xjt.newpic.views.render;
 
 import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.R;
 import com.xjt.newpic.adapters.ThumbnailVideoDataWindow;
 import com.xjt.newpic.adapters.ThumbnailVideoDataWindow.VideoEntry;
 import com.xjt.newpic.metadata.MediaPath;
@@ -24,7 +25,6 @@ public class ThumbnailVideoRenderer extends AbstractThumbnailRender {
     private static final String TAG = ThumbnailVideoRenderer.class.getSimpleName();
 
     private static final int CACHE_SIZE = 48;
-    private final int mPlaceholderColor;
 
     private final ColorTexture mWaitLoadingTexture;
     private LetoolContext mActivity;
@@ -71,10 +71,8 @@ public class ThumbnailVideoRenderer extends AbstractThumbnailRender {
         super(activity.getActivityContext());
         mActivity = activity;
         mThumbnailView = thumbnailView;
-        mPlaceholderColor = 0xFFE8E8E8;
         mLabelSpec = ViewConfigs.VideoPage.get(activity.getActivityContext()).labelSpec;
-
-        mWaitLoadingTexture = new ColorTexture(mPlaceholderColor);
+        mWaitLoadingTexture = new ColorTexture(activity.getActivityContext().getResources().getColor(R.color.thumbnail_placehoder));
         mWaitLoadingTexture.setSize(1, 1);
     }
 

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="default_background_thumbnail">#FFFFFFFF</color>
+    <color name="gl_background_color">#FFFFFFFF</color>
+    <color name="thumbnail_placehoder">#FFe8e8e8</color>
+    <color name="full_image_placeholder">#333</color>
 
     <!-- configuration for album set page -->
     <color name="albumset_label_background">#EE414143</color>
@@ -10,11 +12,6 @@
     <color name="video_label_background">#EE414143</color>
     <color name="video_label_title">#FBFBFB</color>
     <color name="video_label_count">#A9ABAD</color>
-
-    <color name="album_placeholder">#FFe8e8e8</color>
-
-    <color name="photo_placeholder">#333</color>
-
 
     <!-- =============================================================================================== -->
 
@@ -33,6 +30,6 @@
     <color name="common_dark">#3d5562</color>
     <color name="common_blue">#00d8ff</color>
     <color name="common_black">#222222</color>
-
     <color name="navi_text_disabled_color">#727373</color>
+
 </resources>

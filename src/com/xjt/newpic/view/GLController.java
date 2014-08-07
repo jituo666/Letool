@@ -34,7 +34,7 @@ public interface GLController {
 
     public void unlockRenderThread();
 
-    public void setContentPane(GLBaseView content);
+    public void setContentPane(GLView content);
 
     public void setOrientationSource(OrientationSource source);
 

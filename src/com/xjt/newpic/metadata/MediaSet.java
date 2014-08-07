@@ -43,8 +43,12 @@ public abstract class MediaSet extends MediaObject {
         super(path, version);
     }
 
-    public int getAllMediaItems() {
+    public int updateMediaSet() {
         return 0;
+    }
+
+    public void destroyMediaSet() {
+
     }
 
     public int getMediaCount() {
@@ -52,12 +56,10 @@ public abstract class MediaSet extends MediaObject {
     }
 
     // Returns the media items in the range [start, start + count).
-    //
     // The number of media items returned may be less than the specified count
     // if there are not enough media items available. The number of
     // media items available may not be consistent with the return value of
-    // getMediaItemCount() because the contents of database may have already
-    // changed.
+    // getMediaItemCount() because the contents of database may have already changed.
     public ArrayList<MediaItem> getMediaItem(int start, int count) {
         return new ArrayList<MediaItem>();
     }
@@ -95,7 +97,7 @@ public abstract class MediaSet extends MediaObject {
     }
 
     public int getTotalMediaItemCount() {
-        int total = getAllMediaItems();
+        int total = getMediaCount();
         for (int i = 0, n = getSubMediaSetCount(); i < n; i++) {
             total += getSubMediaSet(i).getTotalMediaItemCount();
         }
@@ -196,7 +198,7 @@ public abstract class MediaSet extends MediaObject {
     // Subclasses may override this and use more efficient implementations.
     // Returns the number of items enumerated.
     protected int enumerateMediaItems(ItemConsumer consumer, int startIndex) {
-        int total = getAllMediaItems();
+        int total = updateMediaSet();
         int start = 0;
         while (start < total) {
             int count = Math.min(MEDIAITEM_BATCH_FETCH_COUNT, total - start);
@@ -350,7 +352,4 @@ public abstract class MediaSet extends MediaObject {
         }
     }
 
-    public void closeCursor() {
-
-    }
 }

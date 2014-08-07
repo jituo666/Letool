@@ -28,7 +28,7 @@ import com.xjt.newpic.utils.RelativePosition;
 import com.xjt.newpic.utils.StorageUtils;
 import com.xjt.newpic.utils.Utils;
 import com.xjt.newpic.view.DetailsHelper;
-import com.xjt.newpic.view.GLBaseView;
+import com.xjt.newpic.view.GLView;
 import com.xjt.newpic.view.GLController;
 import com.xjt.newpic.view.LetoolBottomBar;
 import com.xjt.newpic.view.LetoolDialog;
@@ -41,7 +41,6 @@ import com.xjt.newpic.view.LetoolTopBar.OnActionModeListener;
 import com.xjt.newpic.view.SingleDeleteMediaListener.SingleDeleteMediaProgressListener;
 import com.xjt.newpic.views.layout.ThumbnailContractLayout;
 import com.xjt.newpic.views.layout.ThumbnailLayout;
-import com.xjt.newpic.views.layout.ThumbnailLayout.LayoutListener;
 import com.xjt.newpic.views.opengl.FadeTexture;
 import com.xjt.newpic.views.opengl.GLESCanvas;
 import com.xjt.newpic.views.render.ThumbnailVideoRenderer;
@@ -79,57 +78,56 @@ import android.widget.Toast;
  * @Date 9:48:35 AM Apr 19, 2014
  * @Comments:null
  */
-public class VideoFragment extends Fragment implements EyePosition.EyePositionListener, OnActionModeListener,
-        LayoutListener {
+public class VideoFragment extends Fragment implements EyePosition.EyePositionListener, OnActionModeListener {
 
     private static final String TAG = VideoFragment.class.getSimpleName();
 
     private static final int BIT_LOADING_RELOAD = 1;
-    private static final int MSG_LAYOUT_CONFIRMED = 0;
-    private static final int MSG_PICK_PHOTO = 1;
+    //
+    private static final int MSG_PICK_VIDEO = 1;
 
-    private static final int POP_UP_MENU_ITEM_SHARE = 0;
-    private static final int POP_UP_MENU_ITEM_DETAIL = 1;
-    private static final int POP_UP_MENU_ITEM_DELETE = 2;
+    private static final int MENU_ITEM_SHARE = 0;
+    private static final int MENU_ITEM_DETAIL = 1;
+    private static final int MENU_ITEM_DELETE = 2;
 
     private LetoolContext mLetoolContext;
 
     // photo data
-    private MediaPath mVideoDataPath;
+    private String mAlbumTitle;
+    private MediaPath mVideoPath;
     private MediaSet mVideoData;
     private ThumbnailDataLoader mVideoDataLoader;
     private int mLoadingBits = 0;
+    private boolean mIsCameraSource = false;
 
     // views
     private GLController mGLController;
     private ViewConfigs.VideoPage mConfig;
     private ThumbnailView mThumbnailView;
     private ThumbnailVideoRenderer mRender;
-    private RelativePosition mOpenCenter = new RelativePosition();
-    private boolean mIsActive = false;
 
-    private String mAlbumTitle;
-    private boolean mIsCameraSource = false;
-    private boolean mIsSDCardMountedCorreclty = false;
-    private boolean mHasDefaultDCIMDirectory = false;
-    private SynchronizedHandler mHandler;
+    // gl
     private EyePosition mEyePosition; // The eyes' position of the user, the origin is at the center of the device and the unit is in pixels.
     private float mUserDistance; // in pixel
     private float mX;
     private float mY;
     private float mZ;
 
+    private boolean mIsActive = false;
+    private boolean mIsSDCardMountedCorreclty = false;
+    private boolean mHasDefaultDCIMDirectory = false;
     private boolean mShowDetails;
     private DetailsHelper mDetailsHelper;
+    private SynchronizedHandler mHandler;
+    private RelativePosition mOpenCenter = new RelativePosition();
     private int mLongPressedIndex = 0;
 
-    private final GLBaseView mRootPane = new GLBaseView() {
+    private final GLView mRootPane = new GLView() {
 
         private final float mMatrix[] = new float[16];
 
         @Override
-        protected void onLayout(boolean changed, int left, int top, int right,
-                int bottom) {
+        protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
             mEyePosition.resetPosition();
             LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
             int thumbnailViewLeft = left + mConfig.paddingLeft;
@@ -137,8 +135,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             int thumbnailViewTop = top + mConfig.paddingTop + actionBar.getHeight();
             int thumbnailViewBottom = bottom - top - mConfig.paddingBottom;
             mRender.setHighlightItemPath(null);
-            // Set the mThumbnailView as a reference point to the open animation
-            mOpenCenter.setReferencePosition(0, thumbnailViewTop);
+            mOpenCenter.setReferencePosition(0, thumbnailViewTop); // Set the mThumbnailView as a reference point to the open animation
             mOpenCenter.setAbsolutePosition((right - left) / 2, (bottom - top) / 2);
             mThumbnailView.layout(thumbnailViewLeft, thumbnailViewTop, thumbnailViewRight, thumbnailViewBottom);
             if (mShowDetails) {
@@ -186,11 +183,6 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         }
     }
 
-    @Override
-    public void onLayoutFinshed(int count) {
-        mHandler.obtainMessage(MSG_LAYOUT_CONFIRMED, count, 0).sendToTarget();
-    }
-
     private void onDown(int index) {
         mRender.setPressedIndex(index);
     }
@@ -206,10 +198,9 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     private void onSingleTapUp(int videoIndex) {
         if (!mIsActive)
             return;
-
         mRender.setPressedIndex(videoIndex);
         mRender.setPressedUp();
-        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_PICK_PHOTO, videoIndex, 0), FadeTexture.DURATION);
+        mHandler.sendMessageDelayed(mHandler.obtainMessage(MSG_PICK_VIDEO, videoIndex, 0), FadeTexture.DURATION);
 
     }
 
@@ -221,9 +212,9 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             return;
         mLongPressedIndex = videoIndex;
         List<ActionItem> items = new ArrayList<ActionItem>();
-        addMenuItem(items, POP_UP_MENU_ITEM_SHARE, R.string.common_share);
-        addMenuItem(items, POP_UP_MENU_ITEM_DETAIL, R.string.common_detail);
-        addMenuItem(items, POP_UP_MENU_ITEM_DELETE, R.string.common_delete);
+        addMenuItem(items, MENU_ITEM_SHARE, R.string.common_share);
+        addMenuItem(items, MENU_ITEM_DETAIL, R.string.common_detail);
+        addMenuItem(items, MENU_ITEM_DELETE, R.string.common_delete);
         final LetoolDialog dlg = new LetoolDialog(getActivity());
         dlg.setTitle(item.getName());
         ListView listView = dlg.setListAdapter(new MenuItemAdapter(getActivity(), items));
@@ -232,14 +223,14 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 dlg.dismiss();
-                if (position == POP_UP_MENU_ITEM_SHARE) {
+                if (position == MENU_ITEM_SHARE) {
                     ArrayList<Uri> uris = new ArrayList<Uri>();
                     String filePath = mVideoDataLoader.get(mLongPressedIndex).getFilePath();
                     uris.add(Uri.parse("file://" + filePath));
                     ShareManager.showAllShareDialog(getActivity(), GlobalConstants.MIMI_TYPE_VIDEO, uris, null);
-                } else if (position == POP_UP_MENU_ITEM_DETAIL) {
+                } else if (position == MENU_ITEM_DETAIL) {
                     showDetails();
-                } else if (position == POP_UP_MENU_ITEM_DELETE) {
+                } else if (position == MENU_ITEM_DELETE) {
                     delete();
                 }
             }
@@ -269,10 +260,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             @Override
             public void handleMessage(Message message) {
                 switch (message.what) {
-                    case MSG_LAYOUT_CONFIRMED: {
-                        break;
-                    }
-                    case MSG_PICK_PHOTO: {
+                    case MSG_PICK_VIDEO: {
                         playVideo(message.arg1);
                         break;
                     }
@@ -291,8 +279,8 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         if (mIsCameraSource) {
             if (MediaSetUtils.getBucketsIds().length > 0) {
                 mAlbumTitle = getString(R.string.common_photo);
-                mVideoDataPath = new MediaPath(data.getString(LocalMediaActivity.KEY_MEDIA_PATH), MediaSetUtils.getBucketsIds()[0]);
-                mVideoData = new LocalAlbum(mVideoDataPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.getBucketsIds(),
+                mVideoPath = new MediaPath(data.getString(LocalMediaActivity.KEY_MEDIA_PATH), MediaSetUtils.getBucketsIds()[0]);
+                mVideoData = new LocalAlbum(mVideoPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.getBucketsIds(),
                         mLetoolContext.isImageBrwosing(),
                         getString(R.string.common_photo));
                 mHasDefaultDCIMDirectory = true;
@@ -302,10 +290,10 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             }
         } else {
             mAlbumTitle = data.getString(LocalMediaActivity.KEY_ALBUM_TITLE);
-            mVideoDataPath = new MediaPath(data.getString(LocalMediaActivity.KEY_MEDIA_PATH), data.getInt(LocalMediaActivity.KEY_ALBUM_ID));
-            mVideoData = mLetoolContext.getDataManager().getMediaSet(mVideoDataPath);
+            mVideoPath = new MediaPath(data.getString(LocalMediaActivity.KEY_MEDIA_PATH), data.getInt(LocalMediaActivity.KEY_ALBUM_ID));
+            mVideoData = mLetoolContext.getDataManager().getMediaSet(mVideoPath);
             if (mVideoData == null) {
-                Utils.fail("MediaSet is null. Path = %s", mVideoDataPath);
+                Utils.fail("MediaSet is null. Path = %s", mVideoPath);
             }
         }
         mVideoDataLoader = new ThumbnailDataLoader(mLetoolContext, mVideoData);
@@ -317,7 +305,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         ThumbnailLayout layout;
         layout = new ThumbnailContractLayout(mConfig.videoSpec);
         mThumbnailView = new ThumbnailView(mLetoolContext, layout);
-        mThumbnailView.setBackgroundColor(LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.default_background_thumbnail)));
+        mThumbnailView.setBackgroundColor(LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.gl_background_color)));
         mThumbnailView.setListener(new ThumbnailView.SimpleListener() {
 
             @Override
@@ -342,7 +330,6 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         });
         mRender = new ThumbnailVideoRenderer(mLetoolContext, mThumbnailView);
         layout.setRenderer(mRender);
-        layout.setLayoutListener(this);
         mThumbnailView.setThumbnailRenderer(mRender);
         mRender.setModel(mVideoDataLoader);
         mRootPane.addComponent(mThumbnailView);
@@ -398,11 +385,11 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     @Override
     public void onResume() {
         super.onResume();
+        LLog.i(TAG, "onResume " + System.currentTimeMillis());
         MobclickAgent.onPageStart(TAG);
         if (!mIsSDCardMountedCorreclty || mIsCameraSource && !mHasDefaultDCIMDirectory) {
             return;
         }
-        LLog.i(TAG, "onResume" + System.currentTimeMillis());
 
         mGLController.setContentPane(mRootPane);
         mGLController.onResume();
@@ -468,7 +455,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     public void onDestroy() {
         super.onDestroy();
         if (mVideoData != null) {
-            mVideoData.closeCursor();
+            mVideoData.destroyMediaSet();
         }
         if (GlobalPreference.rememberLastUI(getActivity())) {
             GlobalPreference.setLastUI(getActivity(), GlobalConstants.UI_TYPE_VIDEO_ITEMS);
@@ -561,7 +548,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
 
         @Override
         public int size() {
-            return mVideoData != null ? mVideoData.getAllMediaItems() : 1;
+            return mVideoData != null ? mVideoData.updateMediaSet() : 1;
         }
 
         @Override

@@ -40,7 +40,7 @@ import com.xjt.newpic.stat.StatConstants;
 import com.xjt.newpic.utils.LetoolUtils;
 import com.xjt.newpic.view.DetailsHelper;
 import com.xjt.newpic.view.FullImageView;
-import com.xjt.newpic.view.GLBaseView;
+import com.xjt.newpic.view.GLView;
 import com.xjt.newpic.view.GLController;
 import com.xjt.newpic.view.LetoolBottomBar;
 import com.xjt.newpic.view.LetoolDialog;
@@ -135,7 +135,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
         public void setCurrentPhoto(MediaPath path, int indexHint);
     }
 
-    private final GLBaseView mRootPane = new GLBaseView() {
+    private final GLView mRootPane = new GLView() {
 
         @Override
         protected void onLayout(boolean changed, int left, int top, int right,
@@ -312,7 +312,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
         initDatas();
 
         if (mCurrentPhoto == null) {
-            mTotalCount = mMediaSet.getAllMediaItems();
+            mTotalCount = mMediaSet.updateMediaSet();
             if (mTotalCount > 0) {
                 if (mCurrentIndex >= mTotalCount)
                     mCurrentIndex = 0;
@@ -410,7 +410,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
             }
         };
         mFullImageView.setOpenAnimationRect((Rect) getArguments().getParcelable(KEY_OPEN_ANIMATION_RECT));
-        mFullImageView.setFilmMode(mStartInFilmstrip && mMediaSet.getAllMediaItems() > 1);
+        mFullImageView.setFilmMode(mStartInFilmstrip && mMediaSet.updateMediaSet() > 1);
     }
 
     private void initViews() {
@@ -551,7 +551,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
 
         @Override
         public int size() {
-            return mMediaSet != null ? mMediaSet.getAllMediaItems() : 1;
+            return mMediaSet != null ? mMediaSet.updateMediaSet() : 1;
         }
 
         @Override

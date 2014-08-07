@@ -1008,7 +1008,7 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
                 long version = mSource.reload();
                 if (info.version != version) {
                     info.reloadContent = true;
-                    info.size = mSource.getAllMediaItems();
+                    info.size = mSource.updateMediaSet();
                 }
                 if (!info.reloadContent) continue;
                 info.items = mSource.getMediaItem(info.contentStart, info.contentEnd);

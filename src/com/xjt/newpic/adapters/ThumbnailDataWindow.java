@@ -258,6 +258,8 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
     @Override
     public void onContentChanged(int index) {
         if (index >= mContentStart && index < mContentEnd && mIsActive) {
+
+            LLog.i(TAG, "onContentChanged:" + index + " :" + System.currentTimeMillis());
             freeThumbnailContent(index);
             prepareThumbnailContent(index);
             updateAllImageRequests();
@@ -270,6 +272,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
     @Override
     public void onSizeChanged(int size) {
         if (mSize != size) {
+            LLog.i(TAG, "onSizeChanged:" + size + " :" + System.currentTimeMillis());
             mSize = size;
             if (mDataListener != null) {
                 mDataListener.onSizeChanged(mSize);

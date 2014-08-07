@@ -30,7 +30,7 @@ import android.view.View;
  * @Comments:null
  */
 
-public class ThumbnailView extends GLBaseView {
+public class ThumbnailView extends GLView {
 
     private static final String TAG = ThumbnailView.class.getSimpleName();
 

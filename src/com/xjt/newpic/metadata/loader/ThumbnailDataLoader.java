@@ -44,12 +44,12 @@ public class ThumbnailDataLoader {
     private final MediaSet mSource;
     private long mSourceVersion = MediaObject.INVALID_DATA_VERSION;
 
-    private final SynchronizedHandler mMainHandler;
+    private final SynchronizedHandler mHandler;
     private MySourceListener mSourceListener = new MySourceListener();
     private DataLoadingListener mLoadingListener;
     private DataChangedListener mDataChangedListener;
     private ReloadTask mReloadTask;
-    private long mFailedVersion = MediaObject.INVALID_DATA_VERSION; // the data version on which last loading failed
+    private long mFailedVersion = MediaObject.INVALID_DATA_VERSION;
 
     public static interface DataChangedListener {
 
@@ -66,7 +66,7 @@ public class ThumbnailDataLoader {
         Arrays.fill(mItemVersion, MediaObject.INVALID_DATA_VERSION);
         Arrays.fill(mSetVersion, MediaObject.INVALID_DATA_VERSION);
 
-        mMainHandler = new SynchronizedHandler(context.getGLController()) {
+        mHandler = new SynchronizedHandler(context.getGLController()) {
 
             @Override
             public void handleMessage(Message message) {
@@ -208,7 +208,7 @@ public class ThumbnailDataLoader {
 
     private <T> T executeAndWait(Callable<T> callable) {
         FutureTask<T> task = new FutureTask<T>(callable);
-        mMainHandler.sendMessage(mMainHandler.obtainMessage(MSG_RUN_OBJECT, task));
+        mHandler.sendMessage(mHandler.obtainMessage(MSG_RUN_OBJECT, task));
         try {
             return task.get();
         } catch (InterruptedException e) {
@@ -268,7 +268,6 @@ public class ThumbnailDataLoader {
             if (mSize != info.size) {
                 mSize = info.size;
                 if (mDataChangedListener != null) {
-                    //LLog.i(TAG, "------2-------tag0 count:" + info.allSortTag.get(0).count);
                     mDataChangedListener.onSizeChanged(mSize);
                 }
                 if (mContentEnd > mSize)
@@ -293,7 +292,6 @@ public class ThumbnailDataLoader {
                     mItemVersion[index] = itemVersion;
                     mData[index] = updateItem;
                     if (mDataChangedListener != null && i >= mActiveStart && i < mActiveEnd) {
-                        //LLog.i(TAG, "UpdateContent:" + index + " :" + System.currentTimeMillis());
                         mDataChangedListener.onContentChanged(i);
                     }
                 }
@@ -318,7 +316,7 @@ public class ThumbnailDataLoader {
             if (mIsLoading == loading)
                 return;
             mIsLoading = loading;
-            mMainHandler.sendEmptyMessage(loading ? MSG_LOAD_START : MSG_LOAD_FINISH);
+            mHandler.sendEmptyMessage(loading ? MSG_LOAD_START : MSG_LOAD_FINISH);
         }
 
         @Override
@@ -346,7 +344,7 @@ public class ThumbnailDataLoader {
                     continue;
                 synchronized (DataManager.LOCK) {
                     if (info.version != version) {
-                        info.size = mSource.getAllMediaItems();
+                        info.size = mSource.updateMediaSet();
                         info.version = version;
                     }
                     if (info.reloadCount > 0) {

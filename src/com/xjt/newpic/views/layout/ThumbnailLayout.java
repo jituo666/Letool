@@ -33,13 +33,6 @@ public abstract class ThumbnailLayout {
     protected int mContentLengthInMajorDirection;
     protected int mScrollPosition;
 
-    private LayoutListener mLayoutListener;
-
-    public interface LayoutListener {
-
-        public void onLayoutFinshed(int count);
-    }
-
     public int getThumbnailCount() {
         return mThumbnailCount;
     }
@@ -67,9 +60,6 @@ public abstract class ThumbnailLayout {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void setLayoutListener(LayoutListener l) {
-        mLayoutListener = l;
-    }
 
     public void setThumbnailViewSize(int width, int height) {
         mWidth = width;
@@ -87,9 +77,6 @@ public abstract class ThumbnailLayout {
             return;
         mThumbnailCount = thumbnailCount;
         initThumbnailLayoutParameters();
-        if (mLayoutListener != null) {
-            mLayoutListener.onLayoutFinshed(thumbnailCount);
-        }
     }
 
     public void setScrollPosition(int position) {

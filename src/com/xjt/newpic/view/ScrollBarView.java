@@ -15,7 +15,7 @@ import com.xjt.newpic.views.opengl.NinePatchTexture;
  * @Date 8:18:12 PM Jul 24, 2014
  * @Comments:null
  */
-public class ScrollBarView extends GLBaseView {
+public class ScrollBarView extends GLView {
 
     @SuppressWarnings("unused")
     private static final String TAG = ScrollBarView.class.getSimpleName();

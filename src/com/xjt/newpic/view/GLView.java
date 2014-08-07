@@ -22,15 +22,15 @@ import android.view.View;
  * @Comments:null
  */
 @SuppressLint("WrongCall")
-public class GLBaseView {
+public class GLView {
 
-    private static final String TAG = GLBaseView.class.getSimpleName();
+    private static final String TAG = GLView.class.getSimpleName();
 
     protected final Rect mBounds = new Rect();
     protected final Rect mPaddings = new Rect();
-    protected GLBaseView mParent;
-    private ArrayList<GLBaseView> mComponents;
-    private GLBaseView mMotionTarget;
+    protected GLView mParent;
+    private ArrayList<GLView> mComponents;
+    private GLView mMotionTarget;
     private CanvasAnim mAnimation;
     public static final int VISIBLE = View.VISIBLE;
     public static final int INVISIBLE = View.INVISIBLE;
@@ -54,10 +54,10 @@ public class GLBaseView {
     private float[] mBackgroundColor;
     private StateTransAnim mTransition;
 
-    public boolean getBoundsOf(GLBaseView descendant, Rect out) {
+    public boolean getBoundsOf(GLView descendant, Rect out) {
         int xoffset = 0;
         int yoffset = 0;
-        GLBaseView view = descendant;
+        GLView view = descendant;
         while (view != this) {
             if (view == null)
                 return false;
@@ -146,8 +146,8 @@ public class GLBaseView {
 
     protected void onVisibilityChanged(int visibility) {
         for (int i = 0, n = getComponentCount(); i < n; ++i) {
-            GLBaseView child = getComponent(i);
-            if (child.getVisibility() == GLBaseView.VISIBLE) {
+            GLView child = getComponent(i);
+            if (child.getVisibility() == GLView.VISIBLE) {
                 child.onVisibilityChanged(visibility);
             }
         }
@@ -167,18 +167,18 @@ public class GLBaseView {
         return mComponents == null ? 0 : mComponents.size();
     }
 
-    public GLBaseView getComponent(int index) {
+    public GLView getComponent(int index) {
         if (mComponents == null) {
             throw new ArrayIndexOutOfBoundsException(index);
         }
         return mComponents.get(index);
     }
 
-    public void addComponent(GLBaseView component) {
+    public void addComponent(GLView component) {
         if (component.mParent != null)
             throw new IllegalStateException();
         if (mComponents == null) {
-            mComponents = new ArrayList<GLBaseView>();
+            mComponents = new ArrayList<GLView>();
         }
         mComponents.add(component);
         component.mParent = this;
@@ -188,7 +188,7 @@ public class GLBaseView {
         }
     }
 
-    public boolean removeComponent(GLBaseView component) {
+    public boolean removeComponent(GLView component) {
         if (mComponents == null)
             return false;
         if (mComponents.remove(component)) {
@@ -206,7 +206,7 @@ public class GLBaseView {
         mComponents.clear();
     }
 
-    private void removeOneComponent(GLBaseView component) {
+    private void removeOneComponent(GLView component) {
         if (mMotionTarget == component) {
             long now = SystemClock.uptimeMillis();
             MotionEvent cancelEvent = MotionEvent.obtain(now, now, MotionEvent.ACTION_CANCEL, 0, 0, 0);
@@ -244,8 +244,8 @@ public class GLBaseView {
         }
     }
 
-    protected void renderChild(GLESCanvas canvas, GLBaseView component) {
-        if (component.getVisibility() != GLBaseView.VISIBLE
+    protected void renderChild(GLESCanvas canvas, GLView component) {
+        if (component.getVisibility() != GLView.VISIBLE
                 && component.mAnimation == null)
             return;
 
@@ -340,7 +340,7 @@ public class GLBaseView {
         return false;
     }
 
-    protected boolean dispatchTouchEvent(MotionEvent event, int x, int y, GLBaseView component, boolean checkBounds) {
+    protected boolean dispatchTouchEvent(MotionEvent event, int x, int y, GLView component, boolean checkBounds) {
         Rect rect = component.mBounds;
         int left = rect.left;
         int top = rect.top;
@@ -376,8 +376,8 @@ public class GLBaseView {
         if (action == MotionEvent.ACTION_DOWN) {
             // in the reverse rendering order
             for (int i = getComponentCount() - 1; i >= 0; --i) {
-                GLBaseView component = getComponent(i);
-                if (component.getVisibility() != GLBaseView.VISIBLE)
+                GLView component = getComponent(i);
+                if (component.getVisibility() != GLView.VISIBLE)
                     continue;
                 if (dispatchTouchEvent(event, x, y, component, true)) {
                     mMotionTarget = component;
