@@ -50,8 +50,7 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
     private GLESCanvas mCanvas;
     private GLBaseView mContentView;
     private OrientationSource mOrientationSource;
-    // mCompensation is the difference between the UI orientation on GLCanvas
-    // and the framework orientation. See OrientationManager for details.
+    // mCompensation is the difference between the UI orientation on GLCanvas and the framework orientation. See OrientationManager for details.
     private int mCompensation;
     // mCompensationMatrix maps the coordinates of touch events. It is kept sync with mCompensation.
     private Matrix mCompensationMatrix = new Matrix();
@@ -77,17 +76,26 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
         super(context, attrs);
         mFlags |= FLAG_INITIALIZED;
         setEGLContextClientVersion(ApiHelper.HAS_GLES20_REQUIRED ? 2 : 1);
-        if (ApiHelper.USE_888_PIXEL_FORMAT) {
-            setEGLConfigChooser(8, 8, 8, 0, 0, 0);
-        } else {
-            setEGLConfigChooser(5, 6, 5, 0, 0, 0);
-        }
+        setEGLConfigChooser(5, 6, 5, 0, 0, 0);
         setRenderer(this);
-        if (ApiHelper.USE_888_PIXEL_FORMAT) {
-            getHolder().setFormat(PixelFormat.RGB_888);
-        } else {
-            getHolder().setFormat(PixelFormat.RGB_565);
+        getHolder().setFormat(PixelFormat.RGB_565);
+    }
+
+    @Override
+    public void requestLayoutContentPane() {
+        mRenderLock.lock();
+        try {
+            if (mContentView == null || (mFlags & FLAG_NEED_LAYOUT) != 0)
+                return;
+            // "View" system will invoke onLayout() for initialization(bug ?), we have to ignore it since the GLThread is not ready yet.
+            if ((mFlags & FLAG_INITIALIZED) == 0)
+                return;
+            mFlags |= FLAG_NEED_LAYOUT;
+            requestRender();
+        } finally {
+            mRenderLock.unlock();
         }
+
     }
 
     @Override
@@ -178,7 +186,6 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        long time = System.currentTimeMillis();
         AnimationTime.update();
         mRenderLock.lock();
         while (mFreeze) {
@@ -189,8 +196,6 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
         } finally {
             mRenderLock.unlock();
         }
-
-        //LLog.i(TAG, "+++++++++++[[[[  onDrawFrame  ]]] spend:" + (System.currentTimeMillis() - time) + " :" + System.currentTimeMillis());
     }
 
     private void onDrawFrameLocked(GL10 gl) {
@@ -252,8 +257,7 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // Register the newly launched animation so that we can set the start
-    // time more precisely. (Usually, it takes much longer for first
+    // Register the newly launched animation so that we can set the start time more precisely. (Usually, it takes much longer for first
     // rendering, so we set the animation start time as the time we complete rendering)
     @Override
     public void registerLaunchedAnimation(CanvasAnim animation) {
@@ -271,24 +275,6 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
     @Override
     public void requestRenderForced() {
         superRequestRender();
-
-    }
-
-    @Override
-    public void requestLayoutContentPane() {
-        mRenderLock.lock();
-        try {
-            if (mContentView == null || (mFlags & FLAG_NEED_LAYOUT) != 0)
-                return;
-            // "View" system will invoke onLayout() for initialization(bug ?), we have to ignore it since the GLThread is not ready yet.
-            if ((mFlags & FLAG_INITIALIZED) == 0)
-                return;
-            mFlags |= FLAG_NEED_LAYOUT;
-            requestRender();
-        } finally {
-            mRenderLock.unlock();
-        }
-
     }
 
     private void layoutContentPane() {
@@ -408,8 +394,7 @@ public class GLRootView extends GLSurfaceView implements GLSurfaceView.Renderer,
 
     // We need to unfreeze in the following methods and in onPause().
     // These methods will wait on GLThread. If we have freezed the GLRootView,
-    // the GLThread will wait on main thread to call unfreeze and cause dead
-    // lock.
+    // the GLThread will wait on main thread to call unfreeze and cause dead lock.
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
         unfreeze();
