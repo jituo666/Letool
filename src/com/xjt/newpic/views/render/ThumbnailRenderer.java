@@ -4,6 +4,7 @@ package com.xjt.newpic.views.render;
 import com.xjt.newpic.LetoolContext;
 import com.xjt.newpic.R;
 import com.xjt.newpic.adapters.ThumbnailDataWindow;
+import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.metadata.MediaPath;
 import com.xjt.newpic.metadata.loader.ThumbnailDataLoader;
 import com.xjt.newpic.selectors.SelectionManager;
@@ -128,10 +129,12 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
         if (mPressedIndex == index) {
             if (mAnimatePressedUp) {
                 drawPressedUpFrame(canvas, width, height);
-                renderRequestFlags |= ThumbnailView.RENDER_MORE_FRAME;
                 if (isPressedUpFrameFinished()) {
                     mAnimatePressedUp = false;
                     mPressedIndex = -1;
+                    renderRequestFlags = 0;
+                } else {
+                    renderRequestFlags |= ThumbnailView.RENDER_MORE_FRAME;
                 }
             } else {
                 drawPressedFrame(canvas, width, height);

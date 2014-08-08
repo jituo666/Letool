@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Rect;
 
 import com.xjt.newpic.R;
+import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.view.ThumbnailView;
 import com.xjt.newpic.views.opengl.FadeOutTexture;
 import com.xjt.newpic.views.opengl.GLESCanvas;
@@ -18,6 +19,8 @@ import com.xjt.newpic.views.opengl.Texture;
  * @Comments:null
  */
 public abstract class AbstractThumbnailRender implements ThumbnailView.Renderer {
+
+    private static final String TAG = AbstractThumbnailRender.class.getSimpleName();
 
     private final ResourceTexture mVideoOverlay;
     protected ResourceTexture mVideoPlayIcon;
@@ -52,8 +55,7 @@ public abstract class AbstractThumbnailRender implements ThumbnailView.Renderer 
     }
 
     protected void drawVideoOverlay(GLESCanvas canvas, int width, int height) {
-        // Scale the video overlay to the height of the thumbnail and put it
-        // on the left side.
+        // Scale the video overlay to the height of the thumbnail and put it  on the left side.
         ResourceTexture v = mVideoOverlay;
         float scale = (float) height / v.getHeight();
         int w = Math.round(scale * v.getWidth());

@@ -1,12 +1,13 @@
+
 package com.xjt.newpic.views.opengl;
 
 import com.xjt.newpic.animations.AnimationTime;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.utils.Utils;
 
-
 // FadeTexture is a texture which fades the given texture along the time.
 public abstract class FadeTexture implements Texture {
+
     @SuppressWarnings("unused")
     private static final String TAG = "FadeTexture";
 
@@ -57,7 +58,7 @@ public abstract class FadeTexture implements Texture {
     }
 
     protected float getRatio() {
-        float r = (float)(now() - mStartTime) / DURATION;
+        float r = (float) (now() - mStartTime) / DURATION;
         return Utils.clamp(1.0f - r, 0.0f, 1.0f);
     }
 

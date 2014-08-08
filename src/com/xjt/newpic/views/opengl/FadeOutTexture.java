@@ -1,8 +1,7 @@
 package com.xjt.newpic.views.opengl;
 
 
-// FadeOutTexture is a texture which begins with a given texture, then gradually animates
-// into fading out totally.
+// FadeOutTexture is a texture which begins with a given texture, then gradually animates into fading out totally.
 public class FadeOutTexture extends FadeTexture {
     @SuppressWarnings("unused")
     private static final String TAG = "FadeOutTexture";

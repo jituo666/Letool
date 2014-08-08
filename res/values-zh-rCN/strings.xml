@@ -37,7 +37,7 @@
     <string name="app_QQ_to_clipboard">QQ号:2518545630已复制到剪切板!</string>
     <string name="app_no_update">没有更新!</string>
     <string name="app_update_only_wifi">没有wifi连接,只在wifi下更新</string>
-    <string name="full_image_browse">大图浏览(%1$d/%2$d)</string>
+    <string name="full_image_browse">大图(%1$d/%2$d)</string>
     <string name="full_image_browse_empty">该目录已没有图片!</string>
     <string name="share_app_install_tip">请选择安装QQ或者QQ空间的手机客户端!</string>
     <!-- common strings -->
