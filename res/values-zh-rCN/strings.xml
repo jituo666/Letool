@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
     <!-- Used to format short video duration in Details dialog. minutes:seconds e.g. 00:30 -->
     <string name="details_ms">%1$02d:%2$02d</string>
@@ -81,7 +82,6 @@
     <string name="common_error_no_movies">没有视频文件.</string>
     <string name="common_error_no_video">没有录像文件.</string>
     <string name="common_error_no_dirs">没有检测到图片和视频目录!</string>
-
     <string name="friendly_tips">温馨提示</string>
     <string name="friendly_tip_cotent">1.长按图片可进入选择模式 \n2.按下菜单键或左上角按钮可进入侧边栏</string>
     <string name="close_tip">不再提示</string>
@@ -153,5 +153,11 @@
         <item>"新浪微博"</item>
         <item>"腾讯微博"</item>
     </string-array>
+
+    <string name="folder_camera" msgid="4714658994809533480">"相机"</string>
+    <string name="folder_download" msgid="7186215137642323932">"下载"</string>
+    <string name="folder_edited_online_photos" msgid="6278215510236800181">"编辑过的在线照片"</string>
+    <string name="folder_imported" msgid="2773581395524747099">"已导入"</string>
+    <string name="folder_screenshot" msgid="7200396565864213450">"屏幕截图"</string>
 
 </resources>

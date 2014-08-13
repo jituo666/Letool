@@ -2,6 +2,7 @@
 package com.xjt.newpic.metadata.source;
 
 import android.content.ContentResolver;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore.Images;
@@ -10,12 +11,14 @@ import android.provider.MediaStore.Video;
 import android.provider.MediaStore.Video.VideoColumns;
 
 import com.xjt.newpic.LetoolApp;
+import com.xjt.newpic.R;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.metadata.DataManager;
 import com.xjt.newpic.metadata.DataNotifier;
 import com.xjt.newpic.metadata.MediaItem;
 import com.xjt.newpic.metadata.MediaPath;
 import com.xjt.newpic.metadata.MediaSet;
+import com.xjt.newpic.metadata.MediaSetUtils;
 import com.xjt.newpic.metadata.image.LocalImage;
 import com.xjt.newpic.metadata.image.LocalMediaItem;
 import com.xjt.newpic.metadata.video.LocalVideo;
@@ -233,5 +236,22 @@ public class LocalAlbum extends MediaSet {
             }
         }
         return count;
+    }
+    
+    public static String getLocalizedName(Resources res, int bucketId,
+            String name) {
+        if (bucketId == MediaSetUtils.CAMERA_BUCKET_ID) {
+            return res.getString(R.string.folder_camera);
+        } else if (bucketId == MediaSetUtils.DOWNLOAD_BUCKET_ID) {
+            return res.getString(R.string.folder_download);
+        } else if (bucketId == MediaSetUtils.IMPORTED_BUCKET_ID) {
+            return res.getString(R.string.folder_imported);
+        } else if (bucketId == MediaSetUtils.SNAPSHOT_BUCKET_ID) {
+            return res.getString(R.string.folder_screenshot);
+        } else if (bucketId == MediaSetUtils.EDITED_ONLINE_PHOTOS_BUCKET_ID) {
+            return res.getString(R.string.folder_edited_online_photos);
+        } else {
+            return name;
+        }
     }
 }

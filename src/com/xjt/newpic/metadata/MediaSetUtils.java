@@ -16,10 +16,19 @@ import java.util.Comparator;
 public class MediaSetUtils {
 
     private static final String TAG = MediaSetUtils.class.getSimpleName();
+    public static final String CAMERA = "DCIM/Camera";
     public static final String IMPORTED = "Imported";
     public static final String DOWNLOAD = "download";
+    public static final String EDITED_ONLINE_PHOTOS = "EditedOnlinePhotos";
+    public static final String SCREENSHOTS = "Pictures/Screenshots";
     public static final Comparator<MediaSet> NAME_COMPARATOR = new NameComparator();
 
+    public static final int CAMERA_BUCKET_ID = LetoolUtils.getBucketId(
+            Environment.getExternalStorageDirectory().toString() + "/"
+            + CAMERA);
+    public static final int EDITED_ONLINE_PHOTOS_BUCKET_ID = LetoolUtils.getBucketId(
+            Environment.getExternalStorageDirectory().toString() + "/"
+            + EDITED_ONLINE_PHOTOS);
     public static final int DOWNLOAD_BUCKET_ID = LetoolUtils.getBucketId(
             Environment.getExternalStorageDirectory().toString() + "/" + DOWNLOAD);
     public static final int IMPORTED_BUCKET_ID = LetoolUtils.getBucketId(

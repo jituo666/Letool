@@ -2,9 +2,12 @@
 package com.xjt.newpic.fragment;
 
 import java.util.ArrayList;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Rect;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,13 +15,11 @@ import android.os.Message;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
-
 import com.xjt.newpic.LetoolApp;
 import com.xjt.newpic.LetoolContext;
 import com.xjt.newpic.R;
@@ -28,8 +29,10 @@ import com.xjt.newpic.common.GlobalConstants;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.common.OrientationManager;
 import com.xjt.newpic.common.SynchronizedHandler;
+import com.xjt.newpic.filtershow.FilterShowActivity;
 import com.xjt.newpic.metadata.MediaDetails;
 import com.xjt.newpic.metadata.MediaItem;
+import com.xjt.newpic.metadata.MediaObject;
 import com.xjt.newpic.metadata.MediaPath;
 import com.xjt.newpic.metadata.MediaSet;
 import com.xjt.newpic.metadata.MediaSetUtils;
@@ -254,6 +257,29 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
         }
     }
 
+
+    private void launchPhotoEditor() {
+        MediaItem current = mModel.getMediaItem(0);
+        if (current == null || (current.getSupportedOperations()
+                & MediaObject.SUPPORT_EDIT) == 0) {
+            return;
+        }
+
+        Intent intent = new Intent(ACTION_NEXTGEN_EDIT);
+
+        intent.setDataAndType(current.getContentUri(), current.getMimeType())
+                .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        if (getActivity().getPackageManager()
+                .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).size() == 0) {
+            intent.setAction(Intent.ACTION_EDIT);
+        }
+        intent.putExtra(FilterShowActivity.LAUNCH_FULLSCREEN,
+        		true);
+        ((Activity) getActivity()).startActivity(Intent.createChooser(intent, null));
+        //overrideTransitionToEditor();
+    }
+
+    
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.action_navi) {
@@ -264,12 +290,13 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
             uris.add(Uri.parse("file://" + mModel.getMediaItem(0).getFilePath()));
             ShareManager.showAllShareDialog(getActivity(), GlobalConstants.MIMI_TYPE_IMAGE, uris, null);
         } else if (v.getId() == R.id.action_detail) {
-            MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_FULL_IMAGE_DETAIL);
-            if (mShowDetails) {
-                hideDetails();
-            } else {
-                showDetails();
-            }
+//            MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_FULL_IMAGE_DETAIL);
+//            if (mShowDetails) {
+//                hideDetails();
+//            } else {
+//                showDetails();
+//            }
+        	launchPhotoEditor();
         } else if (v.getId() == R.id.action_delete) {
             SingleDeleteMediaListener cdl = new SingleDeleteMediaListener(
                     getActivity(), mCurrentPhoto.getPath(), mLetoolContext.getDataManager(),
