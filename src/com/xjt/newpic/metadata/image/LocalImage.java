@@ -192,7 +192,7 @@ public class LocalImage extends LocalMediaItem {
         if (rotation < 0)
             rotation += 360;
 
-        if (mimeType.equalsIgnoreCase("image/jpeg")) {
+        if (mimeType.equalsIgnoreCase(MIME_TYPE_JPEG)) {
             ExifInterface exifInterface = new ExifInterface();
             ExifTag tag = exifInterface.buildTag(ExifInterface.TAG_ORIENTATION,
                     ExifInterface.getOrientationValueForRotation(rotation));

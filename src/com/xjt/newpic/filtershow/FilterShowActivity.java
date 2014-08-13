@@ -1,5 +1,6 @@
 package com.xjt.newpic.filtershow;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -48,7 +49,6 @@ import android.widget.ShareActionProvider;
 import android.widget.ShareActionProvider.OnShareTargetSelectedListener;
 import android.widget.Spinner;
 import android.widget.Toast;
-
 import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.xjt.newpic.R;
 import com.xjt.newpic.filtershow.cache.ImageLoader;
@@ -103,7 +103,6 @@ import com.xjt.newpic.fragment.FullImageFragment;
 import com.xjt.newpic.imagedata.utils.LetoolBitmapPool;
 import com.xjt.newpic.metadata.source.LocalAlbum;
 import com.xjt.newpic.utils.LetoolUtils;
-
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.FileOutputStream;
@@ -330,19 +329,19 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
     private void loadXML() {
         setContentView(R.layout.filtershow_activity);
 
-//        ActionBar actionBar = getActionBar();
-//        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-//        actionBar.setCustomView(R.layout.filtershow_actionbar);
-//        actionBar.setBackgroundDrawable(new ColorDrawable(
-//                getResources().getColor(R.color.background_screen)));
-//
-//        mSaveButton = actionBar.getCustomView();
-//        mSaveButton.setOnClickListener(new OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                saveImage();
-//            }
-//        });
+        ActionBar actionBar = getActionBar();
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setCustomView(R.layout.filtershow_actionbar);
+        actionBar.setBackgroundDrawable(new ColorDrawable(
+                getResources().getColor(R.color.background_screen)));
+
+        mSaveButton = actionBar.getCustomView();
+        mSaveButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveImage();
+            }
+        });
 
         mImageShow = (ImageShow) findViewById(R.id.imageShow);
         mImageViews.add(mImageShow);
@@ -1472,7 +1471,8 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         return new Point(x, y);
     }
 
-    public void startTouchAnimation(View target, float x, float y) {
+    @SuppressLint("NewApi")
+	public void startTouchAnimation(View target, float x, float y) {
         final CategorySelected hint =
                 (CategorySelected) findViewById(R.id.categorySelectedIndicator);
         int location[] = new int[2];

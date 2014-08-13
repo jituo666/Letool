@@ -267,14 +267,15 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
 
         Intent intent = new Intent(ACTION_NEXTGEN_EDIT);
 
-        intent.setDataAndType(current.getContentUri(), current.getMimeType())
-                .setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        LLog.i(TAG, " 111current.getMimeType():" + current.getMimeType());
+        intent.setDataAndType(current.getContentUri(), current.getMimeType()).setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         if (getActivity().getPackageManager()
                 .queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).size() == 0) {
             intent.setAction(Intent.ACTION_EDIT);
+
+            LLog.i(TAG, " 222ACTION_EDIT:" + current.getMimeType());
         }
-        intent.putExtra(FilterShowActivity.LAUNCH_FULLSCREEN,
-        		true);
+        intent.putExtra(FilterShowActivity.LAUNCH_FULLSCREEN,true);
         ((Activity) getActivity()).startActivity(Intent.createChooser(intent, null));
         //overrideTransitionToEditor();
     }
