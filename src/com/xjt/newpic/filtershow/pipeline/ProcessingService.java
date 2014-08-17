@@ -239,13 +239,9 @@ public class ProcessingService extends Service {
         mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNotifyMgr.cancelAll();
 
-        mBuilder =
-                new Notification.Builder(this)
-                        .setSmallIcon(R.drawable.filtershow_button_fx)
-                        .setContentTitle(getString(R.string.filtershow_notification_label))
-                        .setContentText(getString(R.string.filtershow_notification_message));
+        mBuilder = new Notification.Builder(this).setSmallIcon(R.drawable.filtershow_button_fx).setContentTitle(getString(R.string.filtershow_notification_label)).setContentText(getString(R.string.filtershow_notification_message));
 
-        startForeground(mNotificationId, mBuilder.build());
+        startForeground(mNotificationId, mBuilder.getNotification());
 
         updateProgress(SaveImage.MAX_PROCESSING_STEPS, 0);
 
@@ -257,12 +253,12 @@ public class ProcessingService extends Service {
 
     public void updateNotificationWithBitmap(Bitmap bitmap) {
         mBuilder.setLargeIcon(bitmap);
-        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+        mNotifyMgr.notify(mNotificationId, mBuilder.getNotification());
     }
 
     public void updateProgress(int max, int current) {
         mBuilder.setProgress(max, current, false);
-        mNotifyMgr.notify(mNotificationId, mBuilder.build());
+        mNotifyMgr.notify(mNotificationId, mBuilder.getNotification());
     }
 
     public void completePreviewSaveImage(Uri result, boolean exit) {

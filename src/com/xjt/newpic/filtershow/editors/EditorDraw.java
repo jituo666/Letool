@@ -1,65 +1,41 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.xjt.newpic.filtershow.editors;
 
-import android.app.ActionBar;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.SeekBar;
 
 import com.xjt.newpic.R;
 import com.xjt.newpic.filtershow.FilterShowActivity;
-import com.xjt.newpic.filtershow.colorpicker.ColorHueView;
-import com.xjt.newpic.filtershow.colorpicker.ColorListener;
-import com.xjt.newpic.filtershow.colorpicker.ColorOpacityView;
-import com.xjt.newpic.filtershow.colorpicker.ColorSVRectView;
 import com.xjt.newpic.filtershow.controller.BitmapCaller;
 import com.xjt.newpic.filtershow.controller.ColorChooser;
 import com.xjt.newpic.filtershow.controller.FilterView;
-import com.xjt.newpic.filtershow.controller.ParameterColor;
 import com.xjt.newpic.filtershow.filters.FilterDrawRepresentation;
 import com.xjt.newpic.filtershow.filters.FilterRepresentation;
 import com.xjt.newpic.filtershow.filters.ImageFilterDraw;
 import com.xjt.newpic.filtershow.imageshow.ImageDraw;
+import com.xjt.newpic.surpport.PopupMenu;
+import com.xjt.newpic.surpport.PopupMenuItem;
 
 public class EditorDraw extends ParametricEditor implements FilterView {
-    private static final String LOGTAG = "EditorDraw";
+
+    private static final String TAG = EditorDraw.class.getSimpleName();
+
+    private static final int POP_UP_MENU_ID_STYLE = 0;
+    private static final int POP_UP_MENU_ID_SIZE = 1;
+    private static final int POP_UP_MENU_ID_COLOR = 2;
+    private static final int POP_UP_MENU_ID_CLEAR = 3;
+
     public static final int ID = R.id.editorDraw;
     public ImageDraw mImageDraw;
-    private static final int MODE_SIZE = FilterDrawRepresentation.PARAM_SIZE;
-    private static final int MODE_SIZEE = FilterDrawRepresentation.PARAM_SIZE;
-    private static final int MODE_STYLE = FilterDrawRepresentation.PARAM_STYLE;
-    private static final int MODE_COLOR = FilterDrawRepresentation.PARAM_COLOR;
     int[] brushIcons = {
             R.drawable.brush_flat,
             R.drawable.brush_round,
@@ -77,7 +53,6 @@ public class EditorDraw extends ParametricEditor implements FilterView {
     };
     private EditorDrawTabletUI mTabletUI;
     private String mParameterString;
-    private int mSelectedColorButton;
     private String mDrawString = null;
 
     public EditorDraw() {
@@ -100,7 +75,6 @@ public class EditorDraw extends ParametricEditor implements FilterView {
         if (mParameterString == null) {
             mParameterString = "";
         }
-        String paramString;
         String val = rep.getValueString();
 
         mImageDraw.displayDrawLook();
@@ -164,39 +138,43 @@ public class EditorDraw extends ParametricEditor implements FilterView {
             return;
         }
         final PopupMenu popupMenu = new PopupMenu(mImageShow.getActivity(), button);
-        popupMenu.getMenuInflater().inflate(R.menu.filtershow_menu_draw, popupMenu.getMenu());
+        popupMenu.add(POP_UP_MENU_ID_STYLE, R.string.draw_style);
+        popupMenu.add(POP_UP_MENU_ID_SIZE, R.string.draw_size);
+        popupMenu.add(POP_UP_MENU_ID_COLOR, R.string.draw_color);
+        popupMenu.add(POP_UP_MENU_ID_CLEAR, R.string.draw_clear);
+
         if (!ParametricEditor.useCompact(mContext)) {
-            Menu menu = popupMenu.getMenu();
-            int count = menu.size();
+            int count = popupMenu.size();
             for (int i = 0; i < count; i++) {
-                MenuItem item = menu.getItem(i);
-                if (item.getItemId() != R.id.draw_menu_clear) {
+                PopupMenuItem item = popupMenu.getItem(i);
+                if (item.getItemId() != 3) {
                     item.setVisible(false);
                 }
             }
             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 
                 @Override
-                public boolean onMenuItemClick(MenuItem item) {
+                public boolean onMenuItemClick(PopupMenuItem item) {
                     clearDrawing();
                     return true;
                 }
+
             });
         } else {
             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 
                 @Override
-                public boolean onMenuItemClick(MenuItem item) {
+                public boolean onMenuItemClick(PopupMenuItem item) {
                     selectMenuItem(item);
                     return true;
                 }
             });
         }
         popupMenu.show();
-        ((FilterShowActivity)mContext).onShowMenu(popupMenu);
+        ((FilterShowActivity) mContext).onShowMenu(popupMenu);
     }
 
-    protected void selectMenuItem(MenuItem item) {
+    protected void selectMenuItem(PopupMenuItem item) {
         ImageFilterDraw filter = (ImageFilterDraw) mImageShow.getCurrentFilter();
         FilterDrawRepresentation rep = getDrawRep();
         if (rep == null) {
@@ -204,20 +182,20 @@ public class EditorDraw extends ParametricEditor implements FilterView {
         }
 
         switch (item.getItemId()) {
-            case R.id.draw_menu_clear:
-                clearDrawing();
-                break;
-            case R.id.draw_menu_size:
-                rep.setPramMode(FilterDrawRepresentation.PARAM_SIZE);
-                break;
-            case R.id.draw_menu_style:
+            case POP_UP_MENU_ID_STYLE:
                 rep.setPramMode(FilterDrawRepresentation.PARAM_STYLE);
                 break;
-            case R.id.draw_menu_color:
+            case POP_UP_MENU_ID_SIZE:
+                rep.setPramMode(FilterDrawRepresentation.PARAM_SIZE);
+                break;
+            case POP_UP_MENU_ID_COLOR:
                 rep.setPramMode(FilterDrawRepresentation.PARAM_COLOR);
                 break;
+            case POP_UP_MENU_ID_CLEAR:
+                clearDrawing();
+                break;
         }
-        if (item.getItemId() != R.id.draw_menu_clear) {
+        if (item.getItemId() != 4) {
             mParameterString = item.getTitle().toString();
             updateText();
         }
@@ -234,7 +212,7 @@ public class EditorDraw extends ParametricEditor implements FilterView {
         mView.invalidate();
     }
 
-    public void clearDrawing(){
+    public void clearDrawing() {
         ImageDraw idraw = (ImageDraw) mImageShow;
         idraw.resetParameter();
         commitLocalRepresentation();
@@ -246,19 +224,6 @@ public class EditorDraw extends ParametricEditor implements FilterView {
             super.setUtilityPanelUI(actionButton, editControl);
             return;
         }
-
-        mSeekBar = (SeekBar) editControl.findViewById(R.id.primarySeekBar);
-        if (mSeekBar != null) {
-            mSeekBar.setVisibility(View.GONE);
-        }
-        LayoutInflater inflater =
-                (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        LinearLayout lp = (LinearLayout) inflater.inflate(
-                R.layout.filtershow_draw_ui, (ViewGroup) editControl, true);
-
-        mTabletUI = new EditorDrawTabletUI(this, mContext, lp);
-        mDrawString = mContext.getResources().getString(R.string.imageDraw).toUpperCase();
-        setMenuIcon(true);
 
     }
 

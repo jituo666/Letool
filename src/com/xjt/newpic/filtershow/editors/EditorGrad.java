@@ -1,30 +1,14 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 package com.xjt.newpic.filtershow.editors;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -40,9 +24,12 @@ import com.xjt.newpic.filtershow.filters.FilterGradRepresentation;
 import com.xjt.newpic.filtershow.filters.FilterRepresentation;
 import com.xjt.newpic.filtershow.imageshow.ImageGrad;
 import com.xjt.newpic.filtershow.imageshow.MasterImage;
+import com.xjt.newpic.surpport.PopupMenu;
+import com.xjt.newpic.surpport.PopupMenuItem;
 
 public class EditorGrad extends ParametricEditor
         implements OnSeekBarChangeListener, ParameterActionAndInt {
+
     private static final String LOGTAG = "EditorGrad";
     public static final int ID = R.id.editorGrad;
     PopupMenu mPopupMenu;
@@ -55,7 +42,8 @@ public class EditorGrad extends ParametricEditor
     private static final int DEL_ICON = R.drawable.ic_grad_del;
     private int mSliderMode = MODE_BRIGHTNESS;
     ImageGrad mImageGrad;
-    ParamAdapter []mAdapters = new ParamAdapter[3];
+    ParamAdapter[] mAdapters = new ParamAdapter[3];
+
     public EditorGrad() {
         super(ID, R.layout.filtershow_grad_editor, R.id.gradEditor);
     }
@@ -115,6 +103,7 @@ public class EditorGrad extends ParametricEditor
         if (useCompact(mContext)) {
             view.setText(mContext.getString(R.string.editor_grad_brightness));
             view.setOnClickListener(new OnClickListener() {
+
                 @Override
                 public void onClick(View arg0) {
                     showPopupMenu(accessoryViewList);
@@ -134,7 +123,8 @@ public class EditorGrad extends ParametricEditor
 
     public void setEffectName() {
         if (mPopupMenu != null) {
-            MenuItem item = mPopupMenu.getMenu().findItem(R.id.editor_grad_brightness);
+            PopupMenuItem item = mPopupMenu.getItem(0);
+
             mEffectName = item.getTitle().toString();
         }
     }
@@ -145,34 +135,6 @@ public class EditorGrad extends ParametricEditor
             super.setUtilityPanelUI(actionButton, editControl);
             return;
         }
-        mSeekBar = (SeekBar) editControl.findViewById(R.id.primarySeekBar);
-        if (mSeekBar != null) {
-            mSeekBar.setVisibility(View.GONE);
-        }
-        LayoutInflater inflater =
-                (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        LinearLayout lp = (LinearLayout) inflater.inflate(
-                R.layout.filtershow_grad_ui, (ViewGroup) editControl, true);
-
-        mAdapters[0] = new ParamAdapter(R.id.gradContrastSeekBar, R.id.gradContrastValue,
-                lp, MODE_CONTRAST);
-        mAdapters[1] = new ParamAdapter(R.id.gradBrightnessSeekBar, R.id.gradBrightnessValue,
-                lp, MODE_BRIGHTNESS);
-        mAdapters[2] = new ParamAdapter(R.id.gradSaturationSeekBar, R.id.gradSaturationValue,
-                lp, MODE_SATURATION);
-        lp.findViewById(R.id.gradAddButton).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fireLeftAction();
-            }
-        });
-        lp.findViewById(R.id.gradDelButton).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fireRightAction();
-            }
-        });
-        setMenuIcon(false);
     }
 
     public void updateParameters() {
@@ -183,6 +145,7 @@ public class EditorGrad extends ParametricEditor
     }
 
     private class ParamAdapter implements OnSeekBarChangeListener {
+
         SeekBar mSlider;
         TextView mTextView;
         int mMin = -100;
@@ -195,7 +158,7 @@ public class EditorGrad extends ParametricEditor
             mSlider.setMax(mMax - mMin);
             mMode = mode;
             FilterGradRepresentation rep = getGradRepresentation();
-            if (rep != null){
+            if (rep != null) {
                 updateValues(rep);
             }
             mSlider.setOnSeekBarChangeListener(this);
@@ -255,41 +218,48 @@ public class EditorGrad extends ParametricEditor
             setUpPopupMenu(button);
         }
         mPopupMenu.show();
-        ((FilterShowActivity)mContext).onShowMenu(mPopupMenu);
+        ((FilterShowActivity) mContext).onShowMenu(mPopupMenu);
     }
+
+    private static final int POP_UP_MENU_ID_BRIGHTNESS = 0;
+    private static final int POP_UP_MENU_ID_SATURATION = 1;
+    private static final int POP_UP_MENU_ID_CONTRAST = 2;
 
     private void setUpPopupMenu(Button button) {
         mPopupMenu = new PopupMenu(mImageShow.getActivity(), button);
-        mPopupMenu.getMenuInflater()
-                .inflate(R.menu.filtershow_menu_grad, mPopupMenu.getMenu());
+        //mPopupMenu.getMenuInflater().inflate(R.menu.filtershow_menu_grad, mPopupMenu.getMenu());
+        mPopupMenu.add(POP_UP_MENU_ID_BRIGHTNESS, R.string.editor_grad_brightness);
+        mPopupMenu.add(POP_UP_MENU_ID_SATURATION, R.string.editor_grad_saturation);
+        mPopupMenu.add(POP_UP_MENU_ID_CONTRAST, R.string.editor_grad_contrast);
         FilterGradRepresentation rep = (FilterGradRepresentation) getLocalRepresentation();
         if (rep == null) {
             return;
         }
         updateMenuItems(rep);
-        hackFixStrings(mPopupMenu.getMenu());
+        hackFixStrings(mPopupMenu);
         setEffectName();
         updateText();
 
         mPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
+            public boolean onMenuItemClick(PopupMenuItem item) {
                 FilterRepresentation tmpRep = getLocalRepresentation();
 
                 if (tmpRep instanceof FilterGradRepresentation) {
                     FilterGradRepresentation rep = (FilterGradRepresentation) tmpRep;
                     int cmdID = item.getItemId();
                     switch (cmdID) {
-                        case R.id.editor_grad_brightness:
+                        case POP_UP_MENU_ID_BRIGHTNESS:
                             mSliderMode = MODE_BRIGHTNESS;
                             mEffectName = item.getTitle().toString();
                             break;
-                        case R.id.editor_grad_contrast:
-                            mSliderMode = MODE_CONTRAST;
+                        case POP_UP_MENU_ID_SATURATION:
+                            mSliderMode = MODE_SATURATION;
                             mEffectName = item.getTitle().toString();
                             break;
-                        case R.id.editor_grad_saturation:
-                            mSliderMode = MODE_SATURATION;
+                        case POP_UP_MENU_ID_CONTRAST:
+                            mSliderMode = MODE_CONTRAST;
                             mEffectName = item.getTitle().toString();
                             break;
                     }
@@ -301,6 +271,7 @@ public class EditorGrad extends ParametricEditor
                 }
                 return true;
             }
+
         });
     }
 

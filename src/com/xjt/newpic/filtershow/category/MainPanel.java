@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.xjt.newpic.filtershow.category;
 
 import android.os.Bundle;
@@ -28,7 +12,6 @@ import android.widget.LinearLayout;
 import com.xjt.newpic.R;
 import com.xjt.newpic.filtershow.FilterShowActivity;
 import com.xjt.newpic.filtershow.imageshow.MasterImage;
-import com.xjt.newpic.filtershow.state.StatePanel;
 
 public class MainPanel extends Fragment {
 
@@ -124,7 +107,6 @@ public class MainPanel extends Fragment {
         });
 
         FilterShowActivity activity = (FilterShowActivity) getActivity();
-        showImageStatePanel(activity.isShowingImageStatePanel());
         showPanel(activity.getCurrentPanel());
         return mMainView;
     }
@@ -259,40 +241,4 @@ public class MainPanel extends Fragment {
         });
     }
 
-    public void showImageStatePanel(boolean show) {
-        View container = mMainView.findViewById(R.id.state_panel_container);
-        FragmentTransaction transaction = null;
-        if (container == null) {
-            FilterShowActivity activity = (FilterShowActivity) getActivity();
-            container = activity.getMainStatePanelContainer(R.id.state_panel_container);
-        } else {
-            transaction = getChildFragmentManager().beginTransaction();
-        }
-        if (container == null) {
-            return;
-        } else {
-            transaction = getFragmentManager().beginTransaction();
-        }
-        int currentPanel = mCurrentSelected;
-        if (show) {
-            container.setVisibility(View.VISIBLE);
-            StatePanel statePanel = new StatePanel();
-            statePanel.setMainPanel(this);
-            FilterShowActivity activity = (FilterShowActivity) getActivity();
-            activity.updateVersions();
-            transaction.replace(R.id.state_panel_container, statePanel, StatePanel.FRAGMENT_TAG);
-        } else {
-            container.setVisibility(View.GONE);
-            Fragment statePanel = getChildFragmentManager().findFragmentByTag(StatePanel.FRAGMENT_TAG);
-            if (statePanel != null) {
-                transaction.remove(statePanel);
-            }
-            if (currentPanel == VERSIONS) {
-                currentPanel = LOOKS;
-            }
-        }
-        mCurrentSelected = -1;
-        showPanel(currentPanel);
-        transaction.commit();
-    }
 }

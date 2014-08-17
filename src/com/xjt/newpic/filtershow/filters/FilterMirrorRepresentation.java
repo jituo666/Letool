@@ -16,8 +16,6 @@
 
 package com.xjt.newpic.filtershow.filters;
 
-import android.util.JsonReader;
-import android.util.JsonWriter;
 import android.util.Log;
 
 import com.xjt.newpic.R;
@@ -26,6 +24,8 @@ import com.xjt.newpic.filtershow.editors.ImageOnlyEditor;
 import com.xjt.newpic.filtershow.imageshow.GeometryMathUtils;
 import com.xjt.newpic.filtershow.imageshow.MasterImage;
 import com.xjt.newpic.filtershow.pipeline.ImagePreset;
+import com.xjt.newpic.surpport.JsonReader;
+import com.xjt.newpic.surpport.JsonWriter;
 
 import java.io.IOException;
 import java.util.ArrayList;

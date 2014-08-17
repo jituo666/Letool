@@ -79,5 +79,9 @@
     <dimen name="photoeditor_text_padding">10dp</dimen>
     <dimen name="photoeditor_original_text_size">18dp</dimen>
     <dimen name="photoeditor_original_text_margin">4dp</dimen>
+    <dimen name="switcher_size">72dp</dimen>
+    <dimen name="setting_popup_right_margin">5dp</dimen>
 
+    
+    <dimen name="notification_large_icon_width">64dp</dimen>
 </resources>

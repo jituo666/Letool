@@ -1,8 +1,12 @@
+
 package com.xjt.newpic.metadata;
 
+import android.annotation.TargetApi;
 import android.media.ExifInterface;
+import android.os.Build;
 
 import com.xjt.newpic.R;
+import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.common.LLog;
 
 import java.io.IOException;
@@ -12,13 +16,14 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 public class MediaDetails implements Iterable<Entry<Integer, Object>> {
+
     @SuppressWarnings("unused")
     private static final String TAG = "MediaDetails";
 
     private TreeMap<Integer, Object> mDetails = new TreeMap<Integer, Object>();
     private HashMap<Integer, Integer> mUnits = new HashMap<Integer, Integer>();
 
-//    public static final int INDEX_TITLE = 1;
+    //    public static final int INDEX_TITLE = 1;
     public static final int INDEX_DESCRIPTION = 2;
     public static final int INDEX_DATETIME = 3;
     public static final int INDEX_LOCATION = 4;
@@ -44,6 +49,7 @@ public class MediaDetails implements Iterable<Entry<Integer, Object>> {
     public static final int INDEX_PATH = 200;
 
     public static class FlashState {
+
         private static int FLASH_FIRED_MASK = 1;
         private static int FLASH_RETURN_MASK = 2 | 4;
         private static int FLASH_MODE_MASK = 8 | 16;
@@ -102,21 +108,21 @@ public class MediaDetails implements Iterable<Entry<Integer, Object>> {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static void extractExifInfo(MediaDetails details, String filePath) {
         try {
             ExifInterface exif = new ExifInterface(filePath);
             setExifData(details, exif, ExifInterface.TAG_FLASH, MediaDetails.INDEX_FLASH);
             setExifData(details, exif, ExifInterface.TAG_IMAGE_WIDTH, MediaDetails.INDEX_WIDTH);
-            setExifData(details, exif, ExifInterface.TAG_IMAGE_LENGTH,
-                    MediaDetails.INDEX_HEIGHT);
+            setExifData(details, exif, ExifInterface.TAG_IMAGE_LENGTH,MediaDetails.INDEX_HEIGHT);
             setExifData(details, exif, ExifInterface.TAG_MAKE, MediaDetails.INDEX_MAKE);
             setExifData(details, exif, ExifInterface.TAG_MODEL, MediaDetails.INDEX_MODEL);
-            setExifData(details, exif, ExifInterface.TAG_APERTURE, MediaDetails.INDEX_APERTURE);
-            setExifData(details, exif, ExifInterface.TAG_ISO, MediaDetails.INDEX_ISO);
-            setExifData(details, exif, ExifInterface.TAG_WHITE_BALANCE,
-                    MediaDetails.INDEX_WHITE_BALANCE);
-            setExifData(details, exif, ExifInterface.TAG_EXPOSURE_TIME,
-                    MediaDetails.INDEX_EXPOSURE_TIME);
+            if (ApiHelper.AT_LEAST_11) {
+                setExifData(details, exif, ExifInterface.TAG_APERTURE, MediaDetails.INDEX_APERTURE);
+                setExifData(details, exif, ExifInterface.TAG_ISO, MediaDetails.INDEX_ISO);
+                setExifData(details, exif, ExifInterface.TAG_EXPOSURE_TIME, MediaDetails.INDEX_EXPOSURE_TIME);
+            }
+            setExifData(details, exif, ExifInterface.TAG_WHITE_BALANCE, MediaDetails.INDEX_WHITE_BALANCE);
 
             double data = exif.getAttributeDouble(ExifInterface.TAG_FOCAL_LENGTH, 0);
             if (data != 0f) {

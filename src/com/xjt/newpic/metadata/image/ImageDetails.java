@@ -1,9 +1,13 @@
+
 package com.xjt.newpic.metadata.image;
 
+import android.annotation.TargetApi;
 import android.media.ExifInterface;
+import android.os.Build;
 import android.util.SparseIntArray;
 
 import com.xjt.newpic.R;
+import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.common.LLog;
 
 import java.io.IOException;
@@ -12,6 +16,7 @@ import java.util.Map.Entry;
 import java.util.TreeMap;
 
 public class ImageDetails implements Iterable<Entry<Integer, Object>> {
+
     @SuppressWarnings("unused")
     private static final String TAG = "ImageDetails";
 
@@ -44,6 +49,7 @@ public class ImageDetails implements Iterable<Entry<Integer, Object>> {
     public static final int INDEX_PATH = 200;
 
     public static class FlashState {
+
         private static int FLASH_FIRED_MASK = 1;
         private static int FLASH_RETURN_MASK = 2 | 4;
         private static int FLASH_MODE_MASK = 8 | 16;
@@ -102,6 +108,8 @@ public class ImageDetails implements Iterable<Entry<Integer, Object>> {
         }
     }
 
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public static void extractExifInfo(ImageDetails details, String filePath) {
         try {
             ExifInterface exif = new ExifInterface(filePath);
@@ -111,12 +119,12 @@ public class ImageDetails implements Iterable<Entry<Integer, Object>> {
                     ImageDetails.INDEX_HEIGHT);
             setExifData(details, exif, ExifInterface.TAG_MAKE, ImageDetails.INDEX_MAKE);
             setExifData(details, exif, ExifInterface.TAG_MODEL, ImageDetails.INDEX_MODEL);
-            setExifData(details, exif, ExifInterface.TAG_APERTURE, ImageDetails.INDEX_APERTURE);
-            setExifData(details, exif, ExifInterface.TAG_ISO, ImageDetails.INDEX_ISO);
-            setExifData(details, exif, ExifInterface.TAG_WHITE_BALANCE,
-                    ImageDetails.INDEX_WHITE_BALANCE);
-            setExifData(details, exif, ExifInterface.TAG_EXPOSURE_TIME,
-                    ImageDetails.INDEX_EXPOSURE_TIME);
+            if (ApiHelper.AT_LEAST_11) {
+                setExifData(details, exif, ExifInterface.TAG_APERTURE, ImageDetails.INDEX_APERTURE);
+                setExifData(details, exif, ExifInterface.TAG_ISO, ImageDetails.INDEX_ISO);
+                setExifData(details, exif, ExifInterface.TAG_EXPOSURE_TIME, ImageDetails.INDEX_EXPOSURE_TIME);
+            }
+            setExifData(details, exif, ExifInterface.TAG_WHITE_BALANCE, ImageDetails.INDEX_WHITE_BALANCE);
 
             double data = exif.getAttributeDouble(ExifInterface.TAG_FOCAL_LENGTH, 0);
             if (data != 0f) {

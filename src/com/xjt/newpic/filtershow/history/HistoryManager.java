@@ -1,23 +1,8 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.xjt.newpic.filtershow.history;
 
 import android.graphics.drawable.Drawable;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 import java.util.Vector;
 
@@ -26,11 +11,12 @@ public class HistoryManager {
 
     private Vector<HistoryItem> mHistoryItems = new Vector<HistoryItem>();
     private int mCurrentPresetPosition = 0;
-    private MenuItem mUndoMenuItem = null;
-    private MenuItem mRedoMenuItem = null;
-    private MenuItem mResetMenuItem = null;
+    private ImageView mUndoMenuItem = null;
+    private ImageView mRedoMenuItem = null;
+    private ImageView mResetMenuItem = null;
+    private ImageView mAcceptMenuItem = null;
 
-    public void setMenuItems(MenuItem undoItem, MenuItem redoItem, MenuItem resetItem) {
+    public void setMenuItems(ImageView undoItem, ImageView redoItem, ImageView resetItem ) {
         mUndoMenuItem = undoItem;
         mRedoMenuItem = redoItem;
         mResetMenuItem = resetItem;
@@ -93,9 +79,9 @@ public class HistoryManager {
         }
     }
 
-    private void setEnabled(MenuItem item, boolean enabled) {
+    private void setEnabled(ImageView item, boolean enabled) {
         item.setEnabled(enabled);
-        Drawable drawable = item.getIcon();
+        Drawable drawable = item.getDrawable();
         if (drawable != null) {
             drawable.setAlpha(enabled ? 255 : 80);
         }

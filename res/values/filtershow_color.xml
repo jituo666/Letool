@@ -50,4 +50,6 @@
     <color name="color_chooser_unslected_border">#00000000</color>
     <color name="color_chooser_slected_border">#a7a7a7</color>
 
+    
+    <color name="holo_blue_light">#ff33b5e5</color>
 </resources>

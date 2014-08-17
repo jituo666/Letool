@@ -34,7 +34,6 @@
                 android:layout_height="@dimen/category_panel_height"
                 custom:iconSize="@dimen/category_panel_icon_size"
                 android:divider="@android:color/transparent"
-                android:dividerPadding="8dip"
                 />
 
     </HorizontalScrollView>

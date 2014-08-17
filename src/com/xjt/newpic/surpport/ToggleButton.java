@@ -16,7 +16,7 @@ import android.widget.TextView;
  * @Date 5:56:20 AM Aug 1, 2014
  * @Comments:null
  */
-public class CommonToggleButton extends TextView {
+public class ToggleButton extends TextView {
     private static final int NO_ALPHA = 0xFF;
 
     private Context mContext;
@@ -29,18 +29,18 @@ public class CommonToggleButton extends TextView {
         android.R.attr.state_checked
     };
 
-    public CommonToggleButton(Context context) {
+    public ToggleButton(Context context) {
         super(context);
         init(context);
     }
 
-    public CommonToggleButton(Context context, AttributeSet attrs) {
+    public ToggleButton(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CommonToggleButton);
-        mTextOn = a.getText(R.styleable.CommonToggleButton_textOn);
-        mTextOff = a.getText(R.styleable.CommonToggleButton_textOff);
-        mDisabledAlpha = a.getFloat(R.styleable.CommonToggleButton_disabledAlpha, 0.5f);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ToggleButton);
+        mTextOn = a.getText(R.styleable.ToggleButton_textOn);
+        mTextOff = a.getText(R.styleable.ToggleButton_textOff);
+        mDisabledAlpha = a.getFloat(R.styleable.ToggleButton_disabledAlpha, 0.5f);
         a.recycle();
 
         init(context);

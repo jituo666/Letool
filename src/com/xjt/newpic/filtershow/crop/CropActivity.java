@@ -1,21 +1,6 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.xjt.newpic.filtershow.crop;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.WallpaperManager;
@@ -44,6 +29,7 @@ import android.widget.Toast;
 
 import com.xjt.newpic.R;
 import com.android.gallery3d.common.Utils;
+import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.filtershow.cache.ImageLoader;
 import com.xjt.newpic.filtershow.tools.SaveImage;
 
@@ -105,19 +91,19 @@ public class CropActivity extends Activity {
         setContentView(R.layout.crop_activity);
         mCropView = (CropView) findViewById(R.id.cropView);
 
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-            actionBar.setCustomView(R.layout.filtershow_actionbar);
-
-            View mSaveButton = actionBar.getCustomView();
-            mSaveButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    startFinishOutput();
-                }
-            });
-        }
+//        ActionBar actionBar = getActionBar();
+//        if (actionBar != null) {
+//            actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+//            actionBar.setCustomView(R.layout.filtershow_actionbar);
+//
+//            View mSaveButton = actionBar.getCustomView();
+//            mSaveButton.setOnClickListener(new OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    startFinishOutput();
+//                }
+//            });
+//        }
         if (intent.getData() != null) {
             mSourceUri = intent.getData();
             startLoadBitmap(mSourceUri);
@@ -417,6 +403,7 @@ public class CropActivity extends Activity {
             }
         }
 
+        @SuppressLint("NewApi")
         @Override
         protected Boolean doInBackground(Bitmap... params) {
             boolean failure = false;
@@ -489,7 +476,8 @@ public class CropActivity extends Activity {
                 if (decoder != null) {
                     // Do region decoding to get crop bitmap
                     BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inMutable = true;
+                    if (ApiHelper.AT_LEAST_11)
+                        options.inMutable = true;
                     crop = decoder.decodeRegion(roundedTrueCrop, options);
                     decoder.recycle();
                 }

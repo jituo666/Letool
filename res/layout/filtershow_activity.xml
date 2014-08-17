@@ -15,86 +15,95 @@
      limitations under the License.
 -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:id="@+id/mainView"
-             android:background="@drawable/filtershow_tiled_background">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/filtershow_tiled_background"
+    android:orientation="vertical" >
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/letool_top_bar_container"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/letool_action_bar_height"
+        android:layout_gravity="top"
+        android:orientation="horizontal" >
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical" >
 
-        <FrameLayout
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
+                android:layout_height="0dp"
+                android:layout_weight="1" >
 
-            <ProgressBar
+                <ProgressBar
                     android:id="@+id/loading"
                     style="@android:style/Widget.ProgressBar.Large"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:background="@null"
                     android:indeterminate="true"
-                    android:indeterminateOnly="true"
-                    android:background="@null"/>
+                    android:indeterminateOnly="true" />
 
-            <LinearLayout
-                    android:layout_weight="1"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal" >
 
-                <FrameLayout
+                    <FrameLayout
                         android:id="@+id/central_panel_container"
-                        android:layout_gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
-                <FrameLayout
+                    <FrameLayout
                         android:id="@+id/editorContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1" />
 
-                <com.xjt.newpic.filtershow.imageshow.ImageShow
+                    <com.xjt.newpic.filtershow.imageshow.ImageShow
                         android:id="@+id/imageShow"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
+                        android:layout_weight="1" />
+                </LinearLayout>
+            </FrameLayout>
 
-
-            </LinearLayout>
-
-        </FrameLayout>
-
-        <com.xjt.newpic.filtershow.CenteredLinearLayout
+            <com.xjt.newpic.filtershow.CenteredLinearLayout
                 xmlns:custom="http://schemas.android.com/apk/res/com.xjt.newpic"
                 android:id="@+id/mainPanel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|bottom"
-                custom:max_width="650dip"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                custom:max_width="650dip" >
 
-            <FrameLayout android:id="@+id/main_panel_container"
-                         android:layout_gravity="center"
-                         android:layout_width="match_parent"
-                         android:layout_height="0dip"
-                         android:layout_weight="1" />
+                <FrameLayout
+                    android:id="@+id/main_panel_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dip"
+                    android:layout_gravity="center"
+                    android:layout_weight="1" />
+            </com.xjt.newpic.filtershow.CenteredLinearLayout>
+        </LinearLayout>
 
-        </com.xjt.newpic.filtershow.CenteredLinearLayout>
-
-    </LinearLayout>
-
-    <com.xjt.newpic.filtershow.category.CategorySelected
+        <com.xjt.newpic.filtershow.category.CategorySelected
+            android:id="@+id/categorySelectedIndicator"
             android:layout_width="@dimen/category_panel_icon_size"
             android:layout_height="@dimen/category_panel_icon_size"
-            android:id="@+id/categorySelectedIndicator"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
+    </FrameLayout>
 
-</FrameLayout>
+</LinearLayout>

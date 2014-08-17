@@ -1,30 +1,14 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+
 package com.xjt.newpic.filtershow.editors;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -35,15 +19,26 @@ import com.xjt.newpic.filtershow.controller.BasicParameterStyle;
 import com.xjt.newpic.filtershow.controller.BitmapCaller;
 import com.xjt.newpic.filtershow.controller.FilterView;
 import com.xjt.newpic.filtershow.controller.Parameter;
-import com.xjt.newpic.filtershow.filters.FilterBasicRepresentation;
 import com.xjt.newpic.filtershow.filters.FilterChanSatRepresentation;
 import com.xjt.newpic.filtershow.filters.FilterRepresentation;
 import com.xjt.newpic.filtershow.imageshow.MasterImage;
 import com.xjt.newpic.filtershow.pipeline.ImagePreset;
+import com.xjt.newpic.surpport.PopupMenuItem;
+import com.xjt.newpic.surpport.PopupMenu;
 
 public class EditorChanSat extends ParametricEditor implements OnSeekBarChangeListener, FilterView {
+
+    private final String TAG = EditorChanSat.class.getSimpleName();
     public static final int ID = R.id.editorChanSat;
-    private final String LOGTAG = "EditorGrunge";
+
+    private static final int POP_UP_MENU_ID_MAIN = 0;
+    private static final int POP_UP_MENU_ID_RED = 1;
+    private static final int POP_UP_MENU_ID_YELLOW = 2;
+    private static final int POP_UP_MENU_ID_GREEN = 3;
+    private static final int POP_UP_MENU_ID_CYAN = 4;
+    private static final int POP_UP_MENU_ID_BLUE = 5;
+    private static final int POP_UP_MENU_ID_MAGENTA = 6;
+
     private SwapButton mButton;
     private final Handler mHandler = new Handler();
 
@@ -101,22 +96,27 @@ public class EditorChanSat extends ParametricEditor implements OnSeekBarChangeLi
 
         if (useCompact(mContext)) {
             final PopupMenu popupMenu = new PopupMenu(mImageShow.getActivity(), mButton);
-
-            popupMenu.getMenuInflater().inflate(R.menu.filtershow_menu_chan_sat,
-                    popupMenu.getMenu());
-
+            popupMenu.add(POP_UP_MENU_ID_MAIN, R.string.editor_chan_sat_main);
+            popupMenu.add(POP_UP_MENU_ID_RED, R.string.editor_chan_sat_red);
+            popupMenu.add(POP_UP_MENU_ID_YELLOW, R.string.editor_chan_sat_yellow);
+            popupMenu.add(POP_UP_MENU_ID_GREEN, R.string.editor_chan_sat_green);
+            popupMenu.add(POP_UP_MENU_ID_CYAN, R.string.editor_chan_sat_cyan);
+            popupMenu.add(POP_UP_MENU_ID_BLUE, R.string.editor_chan_sat_blue);
+            popupMenu.add(POP_UP_MENU_ID_MAGENTA, R.string.editor_chan_sat_magenta);
             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
                 @Override
-                public boolean onMenuItemClick(MenuItem item) {
+                public boolean onMenuItemClick(PopupMenuItem item) {
                     selectMenuItem(item);
                     return true;
                 }
             });
             mButton.setOnClickListener(new OnClickListener() {
+
                 @Override
                 public void onClick(View arg0) {
                     popupMenu.show();
-                    ((FilterShowActivity)mContext).onShowMenu(popupMenu);
+                    ((FilterShowActivity) mContext).onShowMenu(popupMenu);
                 }
             });
             mButton.setListener(this);
@@ -174,64 +174,23 @@ public class EditorChanSat extends ParametricEditor implements OnSeekBarChangeLi
             super.setUtilityPanelUI(actionButton, editControl);
             return;
         }
-        mActionButton = actionButton;
-        mEditControl = editControl;
-        mEditTitle.setCompoundDrawables(null, null, null, null);
-        LinearLayout group = (LinearLayout) editControl;
-        LayoutInflater inflater =
-                (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        LinearLayout controls = (LinearLayout) inflater.inflate(
-                R.layout.filtershow_saturation_controls, group, false);
-        ViewGroup.LayoutParams lp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        controls.setLayoutParams(lp);
-        group.removeAllViews();
-        group.addView(controls);
-        mMainBar = (SeekBar) controls.findViewById(R.id.mainSeekbar);
-        mMainBar.setMax(200);
-        mMainBar.setOnSeekBarChangeListener(this);
-        mMainValue = (TextView) controls.findViewById(R.id.mainValue);
-        mRedBar = (SeekBar) controls.findViewById(R.id.redSeekBar);
-        mRedBar.setMax(200);
-        mRedBar.setOnSeekBarChangeListener(this);
-        mRedValue = (TextView) controls.findViewById(R.id.redValue);
-        mYellowBar = (SeekBar) controls.findViewById(R.id.yellowSeekBar);
-        mYellowBar.setMax(200);
-        mYellowBar.setOnSeekBarChangeListener(this);
-        mYellowValue = (TextView) controls.findViewById(R.id.yellowValue);
-        mGreenBar = (SeekBar) controls.findViewById(R.id.greenSeekBar);
-        mGreenBar.setMax(200);
-        mGreenBar.setOnSeekBarChangeListener(this);
-        mGreenValue = (TextView) controls.findViewById(R.id.greenValue);
-        mCyanBar = (SeekBar) controls.findViewById(R.id.cyanSeekBar);
-        mCyanBar.setMax(200);
-        mCyanBar.setOnSeekBarChangeListener(this);
-        mCyanValue = (TextView) controls.findViewById(R.id.cyanValue);
-        mBlueBar = (SeekBar) controls.findViewById(R.id.blueSeekBar);
-        mBlueBar.setMax(200);
-        mBlueBar.setOnSeekBarChangeListener(this);
-        mBlueValue = (TextView) controls.findViewById(R.id.blueValue);
-        mMagentaBar = (SeekBar) controls.findViewById(R.id.magentaSeekBar);
-        mMagentaBar.setMax(200);
-        mMagentaBar.setOnSeekBarChangeListener(this);
-        mMagentaValue = (TextView) controls.findViewById(R.id.magentaValue);
     }
 
     public int getParameterIndex(int id) {
         switch (id) {
-            case R.id.editor_chan_sat_main:
+            case POP_UP_MENU_ID_MAIN:
                 return FilterChanSatRepresentation.MODE_MASTER;
-            case R.id.editor_chan_sat_red:
+            case POP_UP_MENU_ID_RED:
                 return FilterChanSatRepresentation.MODE_RED;
-            case R.id.editor_chan_sat_yellow:
+            case POP_UP_MENU_ID_YELLOW:
                 return FilterChanSatRepresentation.MODE_YELLOW;
-            case R.id.editor_chan_sat_green:
+            case POP_UP_MENU_ID_GREEN:
                 return FilterChanSatRepresentation.MODE_GREEN;
-            case R.id.editor_chan_sat_cyan:
+            case POP_UP_MENU_ID_CYAN:
                 return FilterChanSatRepresentation.MODE_CYAN;
-            case R.id.editor_chan_sat_blue:
+            case POP_UP_MENU_ID_BLUE:
                 return FilterChanSatRepresentation.MODE_BLUE;
-            case R.id.editor_chan_sat_magenta:
+            case POP_UP_MENU_ID_MAGENTA:
                 return FilterChanSatRepresentation.MODE_MAGENTA;
         }
         return -1;
@@ -276,7 +235,8 @@ public class EditorChanSat extends ParametricEditor implements OnSeekBarChangeLi
     @Override
     public void computeIcon(int n, BitmapCaller caller) {
         FilterChanSatRepresentation rep = getChanSatRep();
-        if (rep == null) return;
+        if (rep == null)
+            return;
         rep = (FilterChanSatRepresentation) rep.copy();
         ImagePreset preset = new ImagePreset();
         preset.addFilter(rep);
@@ -284,12 +244,9 @@ public class EditorChanSat extends ParametricEditor implements OnSeekBarChangeLi
         caller.available(src);
     }
 
-    protected void selectMenuItem(MenuItem item) {
-        if (getLocalRepresentation() != null
-                && getLocalRepresentation() instanceof FilterChanSatRepresentation) {
-            FilterChanSatRepresentation csrep =
-                    (FilterChanSatRepresentation) getLocalRepresentation();
-
+    protected void selectMenuItem(PopupMenuItem item) {
+        if (getLocalRepresentation() != null && getLocalRepresentation() instanceof FilterChanSatRepresentation) {
+            FilterChanSatRepresentation csrep = (FilterChanSatRepresentation) getLocalRepresentation();
             switchToMode(csrep, getParameterIndex(item.getItemId()), item.getTitle().toString());
 
         }
@@ -304,7 +261,6 @@ public class EditorChanSat extends ParametricEditor implements OnSeekBarChangeLi
         mButton.setText(mCurrentlyEditing);
         {
             Parameter param = getParameterToEdit(csrep);
-
             control(param, mEditControl);
         }
         updateSeekBar(csrep);
@@ -315,46 +271,17 @@ public class EditorChanSat extends ParametricEditor implements OnSeekBarChangeLi
     public void onProgressChanged(SeekBar sbar, int progress, boolean arg2) {
         FilterChanSatRepresentation rep = getChanSatRep();
         int value = progress - 100;
-        switch (sbar.getId()) {
-            case R.id.mainSeekbar:
-                rep.setParameterMode(FilterChanSatRepresentation.MODE_MASTER);
-                mMainValue.setText("" + value);
-                break;
-            case R.id.redSeekBar:
-                rep.setParameterMode(FilterChanSatRepresentation.MODE_RED);
-                mRedValue.setText("" + value);
-                break;
-            case R.id.yellowSeekBar:
-                rep.setParameterMode(FilterChanSatRepresentation.MODE_YELLOW);
-                mYellowValue.setText("" + value);
-                break;
-            case R.id.greenSeekBar:
-                rep.setParameterMode(FilterChanSatRepresentation.MODE_GREEN);
-                mGreenValue.setText("" + value);
-                break;
-            case R.id.cyanSeekBar:
-                rep.setParameterMode(FilterChanSatRepresentation.MODE_CYAN);
-                mCyanValue.setText("" + value);
-                break;
-            case R.id.blueSeekBar:
-                rep.setParameterMode(FilterChanSatRepresentation.MODE_BLUE);
-                mBlueValue.setText("" + value);
-                break;
-            case R.id.magentaSeekBar:
-                rep.setParameterMode(FilterChanSatRepresentation.MODE_MAGENTA);
-                mMagentaValue.setText("" + value);
-                break;
-        }
         rep.setCurrentParameter(value);
         commitLocalRepresentation();
     }
 
     @Override
-    public void swapLeft(MenuItem item) {
+    public void swapLeft(PopupMenuItem item) {
         super.swapLeft(item);
         mButton.setTranslationX(0);
         mButton.animate().translationX(mButton.getWidth()).setDuration(SwapButton.ANIM_DURATION);
         Runnable updateButton = new Runnable() {
+
             @Override
             public void run() {
                 mButton.animate().cancel();
@@ -366,11 +293,12 @@ public class EditorChanSat extends ParametricEditor implements OnSeekBarChangeLi
     }
 
     @Override
-    public void swapRight(MenuItem item) {
+    public void swapRight(PopupMenuItem item) {
         super.swapRight(item);
         mButton.setTranslationX(0);
         mButton.animate().translationX(-mButton.getWidth()).setDuration(SwapButton.ANIM_DURATION);
         Runnable updateButton = new Runnable() {
+
             @Override
             public void run() {
                 mButton.animate().cancel();

@@ -21,6 +21,7 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
 
+import com.xjt.newpic.R;
 import com.xjt.newpic.filtershow.cache.ImageLoader;
 import com.xjt.newpic.filtershow.filters.FiltersManager;
 import com.xjt.newpic.filtershow.tools.SaveImage;
@@ -147,8 +148,7 @@ public class ImageSavingTask extends ProcessingTask {
     }
 
     private Bitmap createNotificationBitmap(Bitmap preview, Uri sourceUri, ImagePreset preset) {
-        int notificationBitmapSize = Resources.getSystem().getDimensionPixelSize(
-                android.R.dimen.notification_large_icon_width);
+        int notificationBitmapSize = Resources.getSystem().getDimensionPixelSize(R.dimen.notification_large_icon_width);
         if (preview != null) {
             return Bitmap.createScaledBitmap(preview,
                     notificationBitmapSize, notificationBitmapSize, true);

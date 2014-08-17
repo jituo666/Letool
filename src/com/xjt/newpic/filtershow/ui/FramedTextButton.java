@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2012 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.xjt.newpic.filtershow.ui;
 
 import android.content.Context;
@@ -28,6 +12,7 @@ import android.widget.ImageButton;
 import com.xjt.newpic.R;
 
 public class FramedTextButton extends ImageButton {
+
     private static final String LOGTAG = "FramedTextButton";
     private String mText = null;
     private static int mTextSize = 24;
@@ -60,19 +45,19 @@ public class FramedTextButton extends ImageButton {
 
     public void setTextFrom(int itemId) {
         switch (itemId) {
-            case R.id.curve_menu_rgb: {
+            case 0: {
                 setText(getContext().getString(R.string.curves_channel_rgb));
                 break;
             }
-            case R.id.curve_menu_red: {
+            case 1: {
                 setText(getContext().getString(R.string.curves_channel_red));
                 break;
             }
-            case R.id.curve_menu_green: {
+            case 2: {
                 setText(getContext().getString(R.string.curves_channel_green));
                 break;
             }
-            case R.id.curve_menu_blue: {
+            case 3: {
                 setText(getContext().getString(R.string.curves_channel_blue));
                 break;
             }
@@ -95,7 +80,7 @@ public class FramedTextButton extends ImageButton {
         mText = a.getString(R.styleable.ImageButtonTitle_android_text);
     }
 
-    public String getText(){
+    public String getText() {
         return mText;
     }
 
@@ -110,11 +95,11 @@ public class FramedTextButton extends ImageButton {
                 h - mTextPadding, gPaint);
         gPath.reset();
         gPath.moveTo(w - mTextPadding - mTrianglePadding - mTriangleSize,
-                     h - mTextPadding - mTrianglePadding);
+                h - mTextPadding - mTrianglePadding);
         gPath.lineTo(w - mTextPadding - mTrianglePadding,
-                     h - mTextPadding - mTrianglePadding - mTriangleSize);
+                h - mTextPadding - mTrianglePadding - mTriangleSize);
         gPath.lineTo(w - mTextPadding - mTrianglePadding,
-                     h - mTextPadding - mTrianglePadding);
+                h - mTextPadding - mTrianglePadding);
         gPath.close();
         gPaint.setARGB(128, 255, 255, 255);
         gPaint.setStrokeWidth(1);

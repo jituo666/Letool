@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2012 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.xjt.newpic.filtershow.imageshow;
 
 import android.content.Context;
@@ -26,12 +10,10 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 
 import com.xjt.newpic.R;
 import com.xjt.newpic.filtershow.FilterShowActivity;
@@ -41,12 +23,20 @@ import com.xjt.newpic.filtershow.filters.FilterCurvesRepresentation;
 import com.xjt.newpic.filtershow.filters.FiltersManager;
 import com.xjt.newpic.filtershow.filters.ImageFilterCurves;
 import com.xjt.newpic.filtershow.pipeline.ImagePreset;
+import com.xjt.newpic.surpport.PopupMenu;
+import com.xjt.newpic.surpport.PopupMenuItem;
 
 import java.util.HashMap;
 
 public class ImageCurves extends ImageShow {
 
-    private static final String LOGTAG = "ImageCurves";
+    private static final String TAG = ImageCurves.class.getSimpleName();
+
+    private static final int POP_UP_MENU_ID_RGB = 0;
+    private static final int POP_UP_MENU_ID_RED = 1;
+    private static final int POP_UP_MENU_ID_GREEN = 2;
+    private static final int POP_UP_MENU_ID_BLUE = 3;
+
     Paint gPaint = new Paint();
     Path gPathSpline = new Path();
     HashMap<Integer, String> mIdStrLut;
@@ -89,35 +79,36 @@ public class ImageCurves extends ImageShow {
     }
 
     private void showPopupMenu(LinearLayout accessoryViewList) {
-        final Button button = (Button) accessoryViewList.findViewById(
-                R.id.applyEffect);
+        final Button button = (Button) accessoryViewList.findViewById(R.id.applyEffect);
         if (button == null) {
             return;
         }
-        if (mIdStrLut == null){
+        if (mIdStrLut == null) {
             mIdStrLut = new HashMap<Integer, String>();
-            mIdStrLut.put(R.id.curve_menu_rgb,
-                    getContext().getString(R.string.curves_channel_rgb));
-            mIdStrLut.put(R.id.curve_menu_red,
-                    getContext().getString(R.string.curves_channel_red));
-            mIdStrLut.put(R.id.curve_menu_green,
-                    getContext().getString(R.string.curves_channel_green));
-            mIdStrLut.put(R.id.curve_menu_blue,
-                    getContext().getString(R.string.curves_channel_blue));
+            mIdStrLut.put(POP_UP_MENU_ID_RGB, getContext().getString(R.string.curves_channel_rgb));
+            mIdStrLut.put(POP_UP_MENU_ID_RED, getContext().getString(R.string.curves_channel_red));
+            mIdStrLut.put(POP_UP_MENU_ID_GREEN, getContext().getString(R.string.curves_channel_green));
+            mIdStrLut.put(POP_UP_MENU_ID_BLUE, getContext().getString(R.string.curves_channel_blue));
         }
         PopupMenu popupMenu = new PopupMenu(getActivity(), button);
-        popupMenu.getMenuInflater().inflate(R.menu.filtershow_menu_curves, popupMenu.getMenu());
+        //popupMenu.getMenuInflater().inflate(R.menu.filtershow_menu_curves, popupMenu.getMenu());
+        popupMenu.add(POP_UP_MENU_ID_RGB, R.string.curves_channel_rgb);
+        popupMenu.add(POP_UP_MENU_ID_RED, R.string.curves_channel_red);
+        popupMenu.add(POP_UP_MENU_ID_GREEN, R.string.curves_channel_green);
+        popupMenu.add(POP_UP_MENU_ID_BLUE, R.string.curves_channel_blue);
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
+            public boolean onMenuItemClick(PopupMenuItem item) {
                 setChannel(item.getItemId());
                 button.setText(mIdStrLut.get(item.getItemId()));
                 return true;
             }
+
         });
-        Editor.hackFixStrings(popupMenu.getMenu());
+        Editor.hackFixStrings(popupMenu);
         popupMenu.show();
-        ((FilterShowActivity)getContext()).onShowMenu(popupMenu);
+        ((FilterShowActivity) getContext()).onShowMenu(popupMenu);
     }
 
     @Override
@@ -128,7 +119,8 @@ public class ImageCurves extends ImageShow {
         view.setVisibility(View.VISIBLE);
 
         view.setOnClickListener(new OnClickListener() {
-                @Override
+
+            @Override
             public void onClick(View arg0) {
                 showPopupMenu(accessoryViewList);
             }
@@ -334,6 +326,7 @@ public class ImageCurves extends ImageShow {
     }
 
     class ComputeHistogramTask extends AsyncTask<Bitmap, Void, int[]> {
+
         @Override
         protected int[] doInBackground(Bitmap... params) {
             int[] histo = new int[256 * 3];
@@ -416,19 +409,19 @@ public class ImageCurves extends ImageShow {
 
     public void setChannel(int itemId) {
         switch (itemId) {
-            case R.id.curve_menu_rgb: {
+            case POP_UP_MENU_ID_RGB: {
                 mCurrentCurveIndex = Spline.RGB;
                 break;
             }
-            case R.id.curve_menu_red: {
+            case POP_UP_MENU_ID_RED: {
                 mCurrentCurveIndex = Spline.RED;
                 break;
             }
-            case R.id.curve_menu_green: {
+            case POP_UP_MENU_ID_GREEN: {
                 mCurrentCurveIndex = Spline.GREEN;
                 break;
             }
-            case R.id.curve_menu_blue: {
+            case POP_UP_MENU_ID_BLUE: {
                 mCurrentCurveIndex = Spline.BLUE;
                 break;
             }

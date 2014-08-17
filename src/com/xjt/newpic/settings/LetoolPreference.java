@@ -8,7 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.xjt.newpic.R;
-import com.xjt.newpic.surpport.CommonToggleButton;
+import com.xjt.newpic.surpport.ToggleButton;
 
 
 /**
@@ -20,7 +20,7 @@ public class LetoolPreference extends RelativeLayout {
 
     private TextView mMajorText;
     private TextView mMinorText;
-    private CommonToggleButton mSwitch;
+    private ToggleButton mSwitch;
 
     public LetoolPreference(Context context) {
         super(context);
@@ -35,7 +35,7 @@ public class LetoolPreference extends RelativeLayout {
         super.onFinishInflate();
         mMajorText = (TextView) findViewById(R.id.item_major_title);
         mMinorText = (TextView) findViewById(R.id.item_minor_title);
-        mSwitch = (CommonToggleButton) findViewById(R.id.toggle);
+        mSwitch = (ToggleButton) findViewById(R.id.toggle);
     }
 
     public void setSettingItemText(CharSequence title, CharSequence desc, boolean withToogle) {

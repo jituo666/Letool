@@ -1,49 +1,33 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.xjt.newpic.filtershow.editors;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.SeekBar;
 
 import com.xjt.newpic.R;
+import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.filtershow.FilterShowActivity;
-import com.xjt.newpic.filtershow.controller.BitmapCaller;
 import com.xjt.newpic.filtershow.controller.ColorChooser;
-import com.xjt.newpic.filtershow.controller.FilterView;
 import com.xjt.newpic.filtershow.filters.FilterColorBorderRepresentation;
 import com.xjt.newpic.filtershow.filters.FilterRepresentation;
-import com.xjt.newpic.filtershow.filters.ImageFilterColorBorder;
 import com.xjt.newpic.filtershow.imageshow.ImageShow;
+import com.xjt.newpic.surpport.PopupMenu;
+import com.xjt.newpic.surpport.PopupMenuItem;
 
-public class EditorColorBorder extends ParametricEditor  {
-    private static final String LOGTAG = "EditorColorBorder";
+public class EditorColorBorder extends ParametricEditor {
+
+    private static final String TAG = EditorColorBorder.class.getSimpleName();
+
+    private static final int POP_UP_MENU_ID_CORNER_SIZE = 0;
+    private static final int POP_UP_MENU_ID_BODER_SIZE = 1;
+    private static final int POP_UP_MENU_ID_BODER_COLOR = 2;
+    private static final int POP_UP_MENU_ID_BODER_CLEAR = 3;
+
     public static final int ID = R.id.editorColorBorder;
 
     int[] mBasColors = {
@@ -53,9 +37,8 @@ public class EditorColorBorder extends ParametricEditor  {
             FilterColorBorderRepresentation.DEFAULT_MENU_COLOR4,
             FilterColorBorderRepresentation.DEFAULT_MENU_COLOR5,
     };
-    private EditorColorBorderTabletUI mTabletUI;
+
     private String mParameterString;
-    private int mSelectedColorButton;
 
     public EditorColorBorder() {
         super(ID);
@@ -70,7 +53,6 @@ public class EditorColorBorder extends ParametricEditor  {
         if (mParameterString == null) {
             mParameterString = "";
         }
-        String paramString;
         String val = rep.getValueString();
         return mParameterString + val;
     }
@@ -86,14 +68,7 @@ public class EditorColorBorder extends ParametricEditor  {
         super.reflectCurrentFilter();
         FilterRepresentation rep = getLocalRepresentation();
         if (rep != null && getLocalRepresentation() instanceof FilterColorBorderRepresentation) {
-            FilterColorBorderRepresentation cbRep =
-                    (FilterColorBorderRepresentation) getLocalRepresentation();
-            if (!ParametricEditor.useCompact(mContext)) {
-                if (mTabletUI != null) {
-                    mTabletUI.setColorBorderRepresentation(cbRep);
-                }
-
-            }
+            FilterColorBorderRepresentation cbRep = (FilterColorBorderRepresentation) getLocalRepresentation();
             cbRep.setPramMode(FilterColorBorderRepresentation.PARAM_SIZE);
             mParameterString = mContext.getString(R.string.color_border_size);
             if (mEditControl != null) {
@@ -121,47 +96,48 @@ public class EditorColorBorder extends ParametricEditor  {
     }
 
     private void showPopupMenu(LinearLayout accessoryViewList) {
-        final Button button = (Button) accessoryViewList.findViewById(
-                R.id.applyEffect);
+        final Button button = (Button) accessoryViewList.findViewById(R.id.applyEffect);
         if (button == null) {
             return;
         }
         final PopupMenu popupMenu = new PopupMenu(mImageShow.getActivity(), button);
-        popupMenu.getMenuInflater().inflate(R.menu.filtershow_menu_color_border,
-                popupMenu.getMenu());
+        popupMenu.add(POP_UP_MENU_ID_CORNER_SIZE, R.string.color_border_corner_size);
+        popupMenu.add(POP_UP_MENU_ID_BODER_SIZE, R.string.color_border_size);
+        popupMenu.add(POP_UP_MENU_ID_BODER_COLOR, R.string.color_border_color);
+        popupMenu.add(POP_UP_MENU_ID_BODER_CLEAR, R.string.color_border_clear);
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
+            public boolean onMenuItemClick(PopupMenuItem item) {
                 selectMenuItem(item);
                 return true;
             }
         });
         popupMenu.show();
-        ((FilterShowActivity)mContext).onShowMenu(popupMenu);
+        LLog.i(TAG, " -------------------------------====showPopupMenu excuted !:");
+        ((FilterShowActivity) mContext).onShowMenu(popupMenu);
     }
 
-    protected void selectMenuItem(MenuItem item) {
-        ImageFilterColorBorder filter = (ImageFilterColorBorder) mImageShow.getCurrentFilter();
+    protected void selectMenuItem(PopupMenuItem item) {
         FilterColorBorderRepresentation rep = getColorBorderRep();
         if (rep == null) {
             return;
         }
         switch (item.getItemId()) {
-            case R.id.color_border_menu_clear:
-                clearFrame();
-                break;
-            case R.id.color_border_menu_size:
-                rep.setPramMode(FilterColorBorderRepresentation.PARAM_SIZE);
-                break;
-            case R.id.color_border_menu_corner_size:
+            case POP_UP_MENU_ID_CORNER_SIZE:
                 rep.setPramMode(FilterColorBorderRepresentation.PARAM_RADIUS);
                 break;
-            case R.id.color_border_menu_color:
+            case POP_UP_MENU_ID_BODER_SIZE:
+                rep.setPramMode(FilterColorBorderRepresentation.PARAM_SIZE);
+                break;
+            case POP_UP_MENU_ID_BODER_COLOR:
                 rep.setPramMode(FilterColorBorderRepresentation.PARAM_COLOR);
                 break;
+            case POP_UP_MENU_ID_BODER_CLEAR:
+                clearFrame();
+                break;
         }
-        if (item.getItemId() != R.id.color_border_menu_clear) {
+        if (item.getItemId() != 3) {
             mParameterString = item.getTitle().toString();
         }
         if (mControl instanceof ColorChooser) {
@@ -195,7 +171,6 @@ public class EditorColorBorder extends ParametricEditor  {
             mSeekBar.setVisibility(View.GONE);
         }
 
-        mTabletUI = new EditorColorBorderTabletUI(this, mContext, editControl);
 
     }
 
@@ -206,6 +181,5 @@ public class EditorColorBorder extends ParametricEditor  {
         }
         return null;
     }
-
 
 }

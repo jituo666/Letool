@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <include layout="@layout/local_content_view" />
+    <include layout="@layout/local_media_content_view" />
 
     <FrameLayout
         android:id="@+id/letool_top_bar_container"

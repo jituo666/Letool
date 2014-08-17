@@ -1,48 +1,47 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.xjt.newpic.filtershow.editors;
 
 import android.content.Context;
 import android.util.Log;
 import android.util.SparseArray;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 
 import com.xjt.newpic.R;
+import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.filtershow.FilterShowActivity;
 import com.xjt.newpic.filtershow.filters.FilterCropRepresentation;
 import com.xjt.newpic.filtershow.filters.FilterRepresentation;
 import com.xjt.newpic.filtershow.imageshow.ImageCrop;
 import com.xjt.newpic.filtershow.imageshow.MasterImage;
+import com.xjt.newpic.surpport.PopupMenu;
+import com.xjt.newpic.surpport.PopupMenuItem;
 
 public class EditorCrop extends Editor implements EditorInfo {
+
     public static final String TAG = EditorCrop.class.getSimpleName();
     public static final int ID = R.id.editorCrop;
 
+    private static final int POP_UP_MENU_ID_1_1 = 0;
+    private static final int POP_UP_MENU_ID_4_6 = 1;
+    private static final int POP_UP_MENU_ID_4_3 = 2;
+    private static final int POP_UP_MENU_ID_3_4 = 3;
+    private static final int POP_UP_MENU_ID_5_7 = 4;
+    private static final int POP_UP_MENU_ID_7_5 = 5;
+    private static final int POP_UP_MENU_ID_9_16 = 6;
+    private static final int POP_UP_MENU_ID_FREE = 7;
+    private static final int POP_UP_MENU_ID_ORIGNAL = 8;
+
     // Holder for an aspect ratio it's string id
     protected static final class AspectInfo {
+
         int mAspectX;
         int mAspectY;
         int mStringId;
+
         AspectInfo(int stringID, int x, int y) {
             mStringId = stringID;
             mAspectX = x;
@@ -54,13 +53,15 @@ public class EditorCrop extends Editor implements EditorInfo {
     protected static final SparseArray<AspectInfo> sAspects;
     static {
         sAspects = new SparseArray<AspectInfo>();
-        sAspects.put(R.id.crop_menu_1to1, new AspectInfo(R.string.aspect1to1_effect, 1, 1));
-        sAspects.put(R.id.crop_menu_4to3, new AspectInfo(R.string.aspect4to3_effect, 4, 3));
-        sAspects.put(R.id.crop_menu_3to4, new AspectInfo(R.string.aspect3to4_effect, 3, 4));
-        sAspects.put(R.id.crop_menu_5to7, new AspectInfo(R.string.aspect5to7_effect, 5, 7));
-        sAspects.put(R.id.crop_menu_7to5, new AspectInfo(R.string.aspect7to5_effect, 7, 5));
-        sAspects.put(R.id.crop_menu_none, new AspectInfo(R.string.aspectNone_effect, 0, 0));
-        sAspects.put(R.id.crop_menu_original, new AspectInfo(R.string.aspectOriginal_effect, 0, 0));
+        sAspects.put(POP_UP_MENU_ID_1_1, new AspectInfo(R.string.aspect1to1_effect, 1, 1));
+        sAspects.put(POP_UP_MENU_ID_4_6, new AspectInfo(R.string.aspect4to6_effect, 4, 6));
+        sAspects.put(POP_UP_MENU_ID_4_3, new AspectInfo(R.string.aspect4to3_effect, 4, 3));
+        sAspects.put(POP_UP_MENU_ID_3_4, new AspectInfo(R.string.aspect3to4_effect, 3, 4));
+        sAspects.put(POP_UP_MENU_ID_5_7, new AspectInfo(R.string.aspect5to7_effect, 5, 7));
+        sAspects.put(POP_UP_MENU_ID_7_5, new AspectInfo(R.string.aspect7to5_effect, 7, 5));
+        sAspects.put(POP_UP_MENU_ID_9_16, new AspectInfo(R.string.aspect9to16_effect, 9, 16));
+        sAspects.put(POP_UP_MENU_ID_FREE, new AspectInfo(R.string.aspectNone_effect, 0, 0));
+        sAspects.put(POP_UP_MENU_ID_ORIGNAL, new AspectInfo(R.string.aspectOriginal_effect, 0, 0));
     }
 
     protected ImageCrop mImageCrop;
@@ -104,9 +105,11 @@ public class EditorCrop extends Editor implements EditorInfo {
 
     @Override
     public void openUtilityPanel(final LinearLayout accessoryViewList) {
+
         Button view = (Button) accessoryViewList.findViewById(R.id.applyEffect);
         view.setText(mContext.getString(R.string.crop));
         view.setOnClickListener(new OnClickListener() {
+
             @Override
             public void onClick(View arg0) {
                 showPopupMenu(accessoryViewList);
@@ -119,9 +122,9 @@ public class EditorCrop extends Editor implements EditorInfo {
         if (info == null) {
             throw new IllegalArgumentException("Invalid resource ID: " + itemId);
         }
-        if (itemId == R.id.crop_menu_original) {
+        if (itemId == POP_UP_MENU_ID_ORIGNAL) {
             mImageCrop.applyOriginalAspect();
-        } else if (itemId == R.id.crop_menu_none) {
+        } else if (itemId == POP_UP_MENU_ID_FREE) {
             mImageCrop.applyFreeAspect();
         } else {
             mImageCrop.applyAspect(info.mAspectX, info.mAspectY);
@@ -132,21 +135,31 @@ public class EditorCrop extends Editor implements EditorInfo {
     private void showPopupMenu(LinearLayout accessoryViewList) {
         final Button button = (Button) accessoryViewList.findViewById(R.id.applyEffect);
         final PopupMenu popupMenu = new PopupMenu(mImageShow.getActivity(), button);
-        popupMenu.getMenuInflater().inflate(R.menu.filtershow_menu_crop, popupMenu.getMenu());
+        popupMenu.add(POP_UP_MENU_ID_1_1, R.string.aspect1to1_effect);
+        popupMenu.add(POP_UP_MENU_ID_4_6, R.string.aspect4to6_effect);
+        popupMenu.add(POP_UP_MENU_ID_4_3, R.string.aspect4to3_effect);
+        popupMenu.add(POP_UP_MENU_ID_3_4, R.string.aspect3to4_effect);
+        popupMenu.add(POP_UP_MENU_ID_5_7, R.string.aspect5to7_effect);
+        popupMenu.add(POP_UP_MENU_ID_7_5, R.string.aspect7to5_effect);
+        popupMenu.add(POP_UP_MENU_ID_9_16, R.string.aspect9to16_effect);
+        popupMenu.add(POP_UP_MENU_ID_FREE, R.string.aspectNone_effect);
+        popupMenu.add(POP_UP_MENU_ID_ORIGNAL, R.string.aspectOriginal_effect);
+
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
             @Override
-            public boolean onMenuItemClick(MenuItem item) {
+            public boolean onMenuItemClick(PopupMenuItem item) {
                 changeCropAspect(item.getItemId());
                 return true;
             }
         });
         popupMenu.show();
-        ((FilterShowActivity)mContext).onShowMenu(popupMenu);
+        ((FilterShowActivity) mContext).onShowMenu(popupMenu);
     }
 
     @Override
     public void setUtilityPanelUI(View actionButton, View editControl) {
-        super.setUtilityPanelUI(actionButton,editControl);
+        super.setUtilityPanelUI(actionButton, editControl);
         setMenuIcon(true);
     }
 

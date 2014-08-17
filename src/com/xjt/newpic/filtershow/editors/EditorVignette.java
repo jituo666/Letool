@@ -1,30 +1,12 @@
-/*
- * Copyright (C) 2012 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.xjt.newpic.filtershow.editors;
 
 import android.content.Context;
 import android.os.Handler;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -35,10 +17,20 @@ import com.xjt.newpic.filtershow.controller.Parameter;
 import com.xjt.newpic.filtershow.filters.FilterRepresentation;
 import com.xjt.newpic.filtershow.filters.FilterVignetteRepresentation;
 import com.xjt.newpic.filtershow.imageshow.ImageVignette;
+import com.xjt.newpic.surpport.PopupMenu;
+import com.xjt.newpic.surpport.PopupMenuItem;
 
 public class EditorVignette extends ParametricEditor {
+
+    private static final String TAG = EditorVignette.class.getSimpleName();
+
+    private static final int POP_UP_MENU_ID_VIGNETTE = 0;
+    private static final int POP_UP_MENU_ID_FALLOFF = 1;
+    private static final int POP_UP_MENU_ID_CONTRAST = 2;
+    private static final int POP_UP_MENU_ID_SATURATION = 3;
+    private static final int POP_UP_MENU_ID_EXPOSURE = 4;
+
     public static final int ID = R.id.vignetteEditor;
-    private static final String LOGTAG = "EditorVignettePlanet";
     ImageVignette mImageVignette;
 
     private SeekBar mVignetteBar;
@@ -46,7 +38,6 @@ public class EditorVignette extends ParametricEditor {
     private SeekBar mSaturationBar;
     private SeekBar mContrastBar;
     private SeekBar mFalloffBar;
-
 
     private TextView mVignetteValue;
     private TextView mExposureValue;
@@ -66,7 +57,6 @@ public class EditorVignette extends ParametricEditor {
     };
 
     String mCurrentlyEditing = null;
-
 
     public EditorVignette() {
         super(ID, R.layout.filtershow_vignette_editor, R.id.imageVignette);
@@ -97,22 +87,22 @@ public class EditorVignette extends ParametricEditor {
                 && getLocalRepresentation() instanceof FilterVignetteRepresentation) {
             FilterVignetteRepresentation rep =
                     (FilterVignetteRepresentation) getLocalRepresentation();
-            int min;
-            int []mode = {
+
+            int[] mode = {
                     FilterVignetteRepresentation.MODE_VIGNETTE,
                     FilterVignetteRepresentation.MODE_EXPOSURE,
                     FilterVignetteRepresentation.MODE_SATURATION,
                     FilterVignetteRepresentation.MODE_CONTRAST,
                     FilterVignetteRepresentation.MODE_FALLOFF
             };
-            SeekBar []sliders = {
+            SeekBar[] sliders = {
                     mVignetteBar,
                     mExposureBar,
                     mSaturationBar,
                     mContrastBar,
                     mFalloffBar
             };
-            TextView []label = {
+            TextView[] label = {
                     mVignetteValue,
                     mExposureValue,
                     mSaturationValue,
@@ -133,8 +123,6 @@ public class EditorVignette extends ParametricEditor {
             updateText();
         }
     }
-
-
 
     @Override
     public String calculateUserMessage(Context context, String effectName, Object parameterValue) {
@@ -159,22 +147,27 @@ public class EditorVignette extends ParametricEditor {
 
         if (useCompact(mContext)) {
             final PopupMenu popupMenu = new PopupMenu(mImageShow.getActivity(), mButton);
-
-            popupMenu.getMenuInflater().inflate(R.menu.filtershow_menu_vignette,
-                    popupMenu.getMenu());
-
+            //popupMenu.getMenuInflater().inflate(R.menu.filtershow_menu_vignette, popupMenu.getMenu());
+            popupMenu.add(POP_UP_MENU_ID_VIGNETTE, R.string.vignette_main);
+            popupMenu.add(POP_UP_MENU_ID_FALLOFF, R.string.vignette_falloff);
+            popupMenu.add(POP_UP_MENU_ID_CONTRAST, R.string.vignette_contrast);
+            popupMenu.add(POP_UP_MENU_ID_SATURATION, R.string.vignette_saturation);
+            popupMenu.add(POP_UP_MENU_ID_EXPOSURE, R.string.vignette_exposure);
             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
                 @Override
-                public boolean onMenuItemClick(MenuItem item) {
+                public boolean onMenuItemClick(PopupMenuItem item) {
                     selectMenuItem(item);
                     return true;
                 }
+
             });
             mButton.setOnClickListener(new View.OnClickListener() {
+
                 @Override
-                public void onClick(View arg0) {
+                public void onClick(View v) {
                     popupMenu.show();
-                    ((FilterShowActivity)mContext).onShowMenu(popupMenu);
+                    ((FilterShowActivity) mContext).onShowMenu(popupMenu);
                 }
             });
             mButton.setListener(this);
@@ -187,60 +180,18 @@ public class EditorVignette extends ParametricEditor {
         }
     }
 
-    @Override
-    public void setUtilityPanelUI(View actionButton, View editControl) {
-        if (useCompact(mContext)) {
-            super.setUtilityPanelUI(actionButton, editControl);
-            return;
-        }
-        mActionButton = actionButton;
-        mEditControl = editControl;
-        mEditTitle.setCompoundDrawables(null, null, null, null);
-        LinearLayout group = (LinearLayout) editControl;
-        LayoutInflater inflater =
-                (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        LinearLayout controls = (LinearLayout) inflater.inflate(
-                R.layout.filtershow_vignette_controls, group, false);
-        ViewGroup.LayoutParams lp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        controls.setLayoutParams(lp);
-        group.removeAllViews();
-        group.addView(controls);
-
-        mVignetteBar = (SeekBar) controls.findViewById(R.id.mainVignetteSeekbar);
-        mVignetteBar.setMax(200);
-        mVignetteBar.setOnSeekBarChangeListener(this);
-        mVignetteValue = (TextView) controls.findViewById(R.id.mainVignetteValue);
-        mExposureBar = (SeekBar) controls.findViewById(R.id.exposureSeekBar);
-        mExposureBar.setMax(200);
-        mExposureBar.setOnSeekBarChangeListener(this);
-        mExposureValue = (TextView) controls.findViewById(R.id.exposureValue);
-        mSaturationBar = (SeekBar) controls.findViewById(R.id.saturationSeekBar);
-        mSaturationBar.setMax(200);
-        mSaturationBar.setOnSeekBarChangeListener(this);
-        mSaturationValue = (TextView) controls.findViewById(R.id.saturationValue);
-        mContrastBar = (SeekBar) controls.findViewById(R.id.contrastSeekBar);
-        mContrastBar.setMax(200);
-        mContrastBar.setOnSeekBarChangeListener(this);
-        mContrastValue = (TextView) controls.findViewById(R.id.contrastValue);
-        mFalloffBar = (SeekBar) controls.findViewById(R.id.falloffSeekBar);
-        mFalloffBar.setMax(200);
-        mFalloffBar.setOnSeekBarChangeListener(this);
-        mFalloffValue = (TextView) controls.findViewById(R.id.falloffValue);
-    }
-
     public int getParameterIndex(int id) {
         switch (id) {
-            case R.id.editor_vignette_main:
+            case POP_UP_MENU_ID_VIGNETTE:
                 return FilterVignetteRepresentation.MODE_VIGNETTE;
-            case R.id.editor_vignette_saturation:
-                return FilterVignetteRepresentation.MODE_SATURATION;
-            case R.id.editor_vignette_contrast:
-                return FilterVignetteRepresentation.MODE_CONTRAST;
-            case R.id.editor_vignette_exposure:
-                return FilterVignetteRepresentation.MODE_EXPOSURE;
-            case R.id.editor_vignette_falloff:
+            case POP_UP_MENU_ID_FALLOFF:
                 return FilterVignetteRepresentation.MODE_FALLOFF;
+            case POP_UP_MENU_ID_CONTRAST:
+                return FilterVignetteRepresentation.MODE_CONTRAST;
+            case POP_UP_MENU_ID_SATURATION:
+                return FilterVignetteRepresentation.MODE_SATURATION;
+            case POP_UP_MENU_ID_EXPOSURE:
+                return FilterVignetteRepresentation.MODE_EXPOSURE;
         }
         return -1;
     }
@@ -279,7 +230,7 @@ public class EditorVignette extends ParametricEditor {
         return null;
     }
 
-    protected void selectMenuItem(MenuItem item) {
+    protected void selectMenuItem(PopupMenuItem item) {
         if (getLocalRepresentation() != null
                 && getLocalRepresentation() instanceof FilterVignetteRepresentation) {
             FilterVignetteRepresentation csrep =
@@ -307,51 +258,16 @@ public class EditorVignette extends ParametricEditor {
 
     @Override
     public void onProgressChanged(SeekBar sbar, int progress, boolean arg2) {
-        FilterVignetteRepresentation rep = getVignetteRep();
-        int value = progress;
-        BasicParameterInt  p;
-        switch (sbar.getId()) {
-            case R.id.mainVignetteSeekbar:
-                rep.setParameterMode(FilterVignetteRepresentation.MODE_VIGNETTE);
-                p = rep.getFilterParameter(rep.getParameterMode());
-                value += p.getMinimum();
-                mVignetteValue.setText("" + value);
-                break;
-            case R.id.exposureSeekBar:
-                rep.setParameterMode(FilterVignetteRepresentation.MODE_EXPOSURE);
-                p = rep.getFilterParameter(rep.getParameterMode());
-                value += p.getMinimum();
-                mExposureValue.setText("" + value);
-                break;
-            case R.id.saturationSeekBar:
-                rep.setParameterMode(FilterVignetteRepresentation.MODE_SATURATION);
-                p = rep.getFilterParameter(rep.getParameterMode());
-                value += p.getMinimum();
-                mSaturationValue.setText("" + value);
-                break;
-            case R.id.contrastSeekBar:
-                rep.setParameterMode(FilterVignetteRepresentation.MODE_CONTRAST);
-                p = rep.getFilterParameter(rep.getParameterMode());
-                value += p.getMinimum();
-                mContrastValue.setText("" + value);
-                break;
-            case R.id.falloffSeekBar:
-                rep.setParameterMode(FilterVignetteRepresentation.MODE_FALLOFF);
-                p = rep.getFilterParameter(rep.getParameterMode());
-                value += p.getMinimum();
-                mFalloffValue.setText("" + value);
-                break;
-        }
-        rep.setCurrentParameter(value);
-        commitLocalRepresentation();
+       
     }
 
     @Override
-    public void swapLeft(MenuItem item) {
+    public void swapLeft(PopupMenuItem item) {
         super.swapLeft(item);
         mButton.setTranslationX(0);
         mButton.animate().translationX(mButton.getWidth()).setDuration(SwapButton.ANIM_DURATION);
         Runnable updateButton = new Runnable() {
+
             @Override
             public void run() {
                 mButton.animate().cancel();
@@ -363,11 +279,12 @@ public class EditorVignette extends ParametricEditor {
     }
 
     @Override
-    public void swapRight(MenuItem item) {
+    public void swapRight(PopupMenuItem item) {
         super.swapRight(item);
         mButton.setTranslationX(0);
         mButton.animate().translationX(-mButton.getWidth()).setDuration(SwapButton.ANIM_DURATION);
         Runnable updateButton = new Runnable() {
+
             @Override
             public void run() {
                 mButton.animate().cancel();

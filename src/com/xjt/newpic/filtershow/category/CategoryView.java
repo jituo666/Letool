@@ -1,21 +1,7 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.xjt.newpic.filtershow.category;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -28,13 +14,13 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.xjt.newpic.R;
+import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.filtershow.FilterShowActivity;
 import com.xjt.newpic.filtershow.ui.SelectionRenderer;
 
-public class CategoryView extends IconView
-        implements View.OnClickListener, SwipableView{
+public class CategoryView extends IconView implements View.OnClickListener, SwipableView {
 
-    private static final String LOGTAG = "CategoryView";
+    private static final String TAG = CategoryView.class.getSimpleName();
     public static final int VERTICAL = 0;
     public static final int HORIZONTAL = 1;
     private Paint mPaint = new Paint();
@@ -164,6 +150,7 @@ public class CategoryView extends IconView
         }
     }
 
+    @SuppressLint("NewApi")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         boolean ret = super.onTouchEvent(event);
@@ -180,8 +167,10 @@ public class CategoryView extends IconView
             mStartTouchX = event.getX();
         }
         if (event.getActionMasked() == MotionEvent.ACTION_UP) {
-            setTranslationX(0);
-            setTranslationY(0);
+            if (ApiHelper.AT_LEAST_11) {
+                setTranslationX(0);
+                setTranslationY(0);
+            }
         }
         if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {
             float delta = event.getY() - mStartTouchY;

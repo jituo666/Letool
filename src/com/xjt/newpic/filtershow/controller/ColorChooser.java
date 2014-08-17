@@ -1,6 +1,5 @@
 package com.xjt.newpic.filtershow.controller;
 
-import android.app.ActionBar.LayoutParams;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -20,7 +19,7 @@ import java.util.Arrays;
 import java.util.Vector;
 
 public class ColorChooser implements Control {
-    private final String LOGTAG = "StyleChooser";
+    private final String TAG = ColorChooser.class.getSimpleName();
     protected ParameterColor mParameter;
     protected LinearLayout mLinearLayout;
     protected Editor mEditor;
@@ -50,16 +49,13 @@ public class ColorChooser implements Control {
         mSelected    = res.getColor(R.color.color_chooser_slected_border);
         mEditor = editor;
         mContext = container.getContext();
-        int iconDim = res.getDimensionPixelSize(R.dimen.draw_style_icon_dim);
         mParameter = (ParameterColor) parameter;
-        LayoutInflater inflater =
-                (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mTopView = inflater.inflate(mLayoutID, container, true);
         mLinearLayout = (LinearLayout) mTopView.findViewById(R.id.listStyles);
         mTopView.setVisibility(View.VISIBLE);
 
         mIconButton.clear();
-        LayoutParams lp = new LayoutParams(iconDim, iconDim);
         int [] palette = mParameter.getColorPalette();
         for (int i = 0; i < mButtonsID.length; i++) {
             final Button button = (Button) mTopView.findViewById(mButtonsID[i]);

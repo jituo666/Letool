@@ -16,8 +16,6 @@
 
 package com.xjt.newpic.filtershow.imageshow;
 
-import android.animation.Animator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -43,6 +41,7 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.nineoldandroids.animation.ValueAnimator;
 import com.xjt.newpic.R;
 import com.xjt.newpic.filtershow.FilterShowActivity;
 import com.xjt.newpic.filtershow.filters.FilterMirrorRepresentation;

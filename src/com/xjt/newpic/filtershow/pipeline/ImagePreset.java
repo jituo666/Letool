@@ -1,30 +1,11 @@
-/*
- * Copyright (C) 2012 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.xjt.newpic.filtershow.pipeline;
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.support.v8.renderscript.Allocation;
-import android.util.JsonReader;
-import android.util.JsonWriter;
 import android.util.Log;
 
 import com.xjt.newpic.R;
-import com.xjt.newpic.filtershow.cache.BitmapCache;
 import com.xjt.newpic.filtershow.cache.ImageLoader;
 import com.xjt.newpic.filtershow.filters.BaseFiltersManager;
 import com.xjt.newpic.filtershow.filters.FilterCropRepresentation;
@@ -39,8 +20,8 @@ import com.xjt.newpic.filtershow.filters.FiltersManager;
 import com.xjt.newpic.filtershow.filters.ImageFilter;
 import com.xjt.newpic.filtershow.imageshow.GeometryMathUtils;
 import com.xjt.newpic.filtershow.imageshow.MasterImage;
-import com.xjt.newpic.filtershow.state.State;
-import com.xjt.newpic.filtershow.state.StateAdapter;
+import com.xjt.newpic.surpport.JsonReader;
+import com.xjt.newpic.surpport.JsonWriter;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -583,22 +564,6 @@ public class ImagePreset {
         return true;
     }
 
-    public void fillImageStateAdapter(StateAdapter imageStateAdapter) {
-        if (imageStateAdapter == null) {
-            return;
-        }
-        Vector<State> states = new Vector<State>();
-        for (FilterRepresentation filter : mFilters) {
-            if (filter instanceof FilterUserPresetRepresentation) {
-                // do not show the user preset itself in the state panel
-                continue;
-            }
-            State state = new State(filter.getName());
-            state.setFilterRepresentation(filter);
-            states.add(state);
-        }
-        imageStateAdapter.fill(states);
-    }
 
     public void setPartialRendering(boolean partialRendering, Rect bounds) {
         mPartialRendering = partialRendering;

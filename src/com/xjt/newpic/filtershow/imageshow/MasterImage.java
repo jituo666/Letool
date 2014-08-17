@@ -1,23 +1,5 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.xjt.newpic.filtershow.imageshow;
 
-import android.animation.Animator;
-import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -27,6 +9,8 @@ import android.graphics.RectF;
 import android.net.Uri;
 
 import com.android.gallery3d.exif.ExifTag;
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.ValueAnimator;
 import com.xjt.newpic.filtershow.FilterShowActivity;
 import com.xjt.newpic.filtershow.cache.BitmapCache;
 import com.xjt.newpic.filtershow.cache.ImageLoader;
@@ -43,7 +27,6 @@ import com.xjt.newpic.filtershow.pipeline.RenderingRequest;
 import com.xjt.newpic.filtershow.pipeline.RenderingRequestCaller;
 import com.xjt.newpic.filtershow.pipeline.SharedBuffer;
 import com.xjt.newpic.filtershow.pipeline.SharedPreset;
-import com.xjt.newpic.filtershow.state.StateAdapter;
 
 import java.util.List;
 import java.util.Vector;
@@ -98,7 +81,6 @@ public class MasterImage implements RenderingRequestCaller {
     public static final int MIRROR_ANIMATION = 3;
 
     private HistoryManager mHistory = null;
-    private StateAdapter mState = null;
 
     private FilterShowActivity mActivity = null;
 
@@ -258,7 +240,6 @@ public class MasterImage implements RenderingRequestCaller {
             preset.showFilters();
         }
         mPreset = preset;
-        mPreset.fillImageStateAdapter(mState);
         if (addToHistory) {
             HistoryItem historyItem = new HistoryItem(mPreset, change);
             mHistory.addHistoryItem(historyItem);
@@ -281,17 +262,11 @@ public class MasterImage implements RenderingRequestCaller {
         return mHistory;
     }
 
-    public StateAdapter getState() {
-        return mState;
-    }
 
     public void setHistoryManager(HistoryManager adapter) {
         mHistory = adapter;
     }
 
-    public void setStateAdapter(StateAdapter adapter) {
-        mState = adapter;
-    }
 
     public void setCurrentFilter(ImageFilter filter) {
         mCurrentFilter = filter;

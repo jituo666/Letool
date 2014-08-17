@@ -1,43 +1,26 @@
-/*
- * Copyright (C) 2012 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.xjt.newpic.filtershow.editors;
 
 import android.content.Context;
 import android.content.res.Configuration;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
 import com.xjt.newpic.R;
+import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.filtershow.controller.Control;
 import com.xjt.newpic.filtershow.filters.FilterRepresentation;
 import com.xjt.newpic.filtershow.imageshow.ImageShow;
 import com.xjt.newpic.filtershow.imageshow.MasterImage;
 import com.xjt.newpic.filtershow.pipeline.ImagePreset;
+import com.xjt.newpic.surpport.PopupMenu;
+import com.xjt.newpic.surpport.PopupMenuItem;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -46,6 +29,9 @@ import java.util.Collection;
  * Base class for Editors Must contain a mImageShow and a top level view
  */
 public class Editor implements OnSeekBarChangeListener, SwapButton.SwapButtonListener {
+
+    private static final String TAG = Editor.class.getSimpleName();
+
     protected Context mContext;
     protected View mView;
     protected ImageShow mImageShow;
@@ -54,7 +40,6 @@ public class Editor implements OnSeekBarChangeListener, SwapButton.SwapButtonLis
     Button mEditTitle;
     protected Button mFilterTitle;
     protected int mID;
-    private final String LOGTAG = "Editor";
     protected boolean mChangesGeometry = false;
     protected FilterRepresentation mLocalRepresentation = null;
     protected byte mShowParameter = SHOW_VALUE_UNDEFINED;
@@ -63,10 +48,11 @@ public class Editor implements OnSeekBarChangeListener, SwapButton.SwapButtonLis
     public static byte SHOW_VALUE_OFF = 0;
     public static byte SHOW_VALUE_INT = 1;
 
-    public static void hackFixStrings(Menu menu) {
+    public static void hackFixStrings(PopupMenu menu) {
         int count = menu.size();
         for (int i = 0; i < count; i++) {
-            MenuItem item = menu.getItem(i);
+            PopupMenuItem item = menu.getItem(i);
+            LLog.i(TAG, "count" + count + " i:" + i + "------------hackFixStrings:" + (item == null));
             item.setTitle(item.getTitle().toString().toUpperCase());
         }
     }
@@ -92,7 +78,7 @@ public class Editor implements OnSeekBarChangeListener, SwapButton.SwapButtonLis
     }
 
     public void setUpEditorUI(View actionButton, View editControl,
-                              Button editTitle, Button stateButton) {
+            Button editTitle, Button stateButton) {
         mEditTitle = editTitle;
         mFilterTitle = stateButton;
         mButton = editTitle;
@@ -110,7 +96,6 @@ public class Editor implements OnSeekBarChangeListener, SwapButton.SwapButtonLis
      */
     public void setUtilityPanelUI(View actionButton, View editControl) {
 
-        AttributeSet aset;
         Context context = editControl.getContext();
         LayoutInflater inflater =
                 (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -122,7 +107,7 @@ public class Editor implements OnSeekBarChangeListener, SwapButton.SwapButtonLis
         if (context.getResources().getConfiguration().orientation
                 == Configuration.ORIENTATION_PORTRAIT) {
             if (showsSeekBar()) {
-               mSeekBar.setVisibility(View.VISIBLE);
+                mSeekBar.setVisibility(View.VISIBLE);
             }
         }
 
@@ -241,7 +226,6 @@ public class Editor implements OnSeekBarChangeListener, SwapButton.SwapButtonLis
         }
         // Regenerate the filtered bitmap.
         MasterImage.getImage().invalidateFiltersOnly();
-        preset.fillImageStateAdapter(MasterImage.getImage().getState());
     }
 
     /**
@@ -284,15 +268,13 @@ public class Editor implements OnSeekBarChangeListener, SwapButton.SwapButtonLis
     }
 
     protected void setMenuIcon(boolean on) {
-        mEditTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(
-                0, 0, on ? R.drawable.filtershow_menu_marker_rtl : 0, 0);
+        mEditTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, on ? R.drawable.filtershow_menu_marker_rtl : 0, 0);
     }
 
     protected void createMenu(int[] strId, View button) {
         PopupMenu pmenu = new PopupMenu(mContext, button);
-        Menu menu = pmenu.getMenu();
         for (int i = 0; i < strId.length; i++) {
-            menu.add(Menu.NONE, Menu.FIRST + i, 0, mContext.getString(strId[i]));
+            pmenu.add(i, strId[i]);
         }
         setMenuIcon(true);
 
@@ -313,12 +295,12 @@ public class Editor implements OnSeekBarChangeListener, SwapButton.SwapButtonLis
     }
 
     @Override
-    public void swapLeft(MenuItem item) {
+    public void swapLeft(PopupMenuItem item) {
 
     }
 
     @Override
-    public void swapRight(MenuItem item) {
+    public void swapRight(PopupMenuItem item) {
 
     }
 

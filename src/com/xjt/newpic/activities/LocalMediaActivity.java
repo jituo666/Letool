@@ -73,7 +73,7 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.local_media_main);
+        setContentView(R.layout.local_media_main_view);
         mTopBar = new LetoolTopBar(this, (ViewGroup) findViewById(R.id.letool_top_bar_container));
         mBottomBar = new LetoolBottomBar(this, (ViewGroup) findViewById(R.id.letool_bottom_bar_container));
         mSlidingMenu = new LetoolSlidingMenu(this, getSupportFragmentManager(), findViewById(R.id.letool_top_bar_container));
@@ -183,7 +183,7 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
 
     @Override
     public void showEmptyView(int iconResIcon, int messageResId) {
-        LetoolEmptyView emptyView = (LetoolEmptyView) LayoutInflater.from(this).inflate(R.layout.local_empty_view, null);
+        LetoolEmptyView emptyView = (LetoolEmptyView) LayoutInflater.from(this).inflate(R.layout.local_media_empty_view, null);
         emptyView.updataView(iconResIcon, messageResId);
         //
         ViewGroup normalView = (ViewGroup) mMainView.findViewById(R.id.normal_root_view);

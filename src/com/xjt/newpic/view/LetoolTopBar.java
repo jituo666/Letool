@@ -25,20 +25,23 @@ public class LetoolTopBar {
     public static final int ACTION_BAR_MODE_SELECTION = 1;
     public static final int ACTION_BAR_MODE_SETTINGS = 2;
     public static final int ACTION_BAR_MODE_FULL_IMAGE = 3;
+    public static final int ACTION_BAR_MODE_IMAGE_EDIT = 4;
 
     private FragmentActivity mActivity;
     public static final int ACTION_BAR_MODE[] = {
             ACTION_BAR_MODE_BROWSE,
             ACTION_BAR_MODE_SELECTION,
             ACTION_BAR_MODE_SETTINGS,
-            ACTION_BAR_MODE_FULL_IMAGE
+            ACTION_BAR_MODE_FULL_IMAGE,
+            ACTION_BAR_MODE_IMAGE_EDIT
     };
 
     public static final int ACTION_MODE_LAYOUT_ID[] = {
-            R.layout.local_media_top_bar,
-            R.layout.local_selection_top_bar,
-            R.layout.local_media_top_bar,
-            R.layout.local_media_top_bar
+            R.layout.local_media_browse_top_bar,
+            R.layout.local_media_selection_top_bar,
+            R.layout.local_media_browse_top_bar,
+            R.layout.local_media_browse_top_bar,
+            R.layout.local_media_edit_top_bar
     };
 
     public static final int ACTION_MODE_TITLE_VIEW_ID[] = {
@@ -54,7 +57,11 @@ public class LetoolTopBar {
             R.id.operation_delete,
             R.id.action_navi,
             R.id.action_navi,
-            R.id.selection_finished
+            R.id.selection_finished,
+            R.id.action_undo,
+            R.id.action_redo,
+            R.id.action_accept,
+            R.id.action_more
     };
 
     public static interface OnActionModeListener extends View.OnClickListener {
