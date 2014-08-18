@@ -3,15 +3,12 @@ package com.xjt.newpic.filtershow.editors;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.os.Handler;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.TextView;
 
 import com.xjt.newpic.R;
 import com.xjt.newpic.filtershow.FilterShowActivity;
@@ -39,23 +36,7 @@ public class EditorChanSat extends ParametricEditor implements OnSeekBarChangeLi
     private static final int POP_UP_MENU_ID_BLUE = 5;
     private static final int POP_UP_MENU_ID_MAGENTA = 6;
 
-    private SwapButton mButton;
-    private final Handler mHandler = new Handler();
-
-    private SeekBar mMainBar;
-    private SeekBar mRedBar;
-    private SeekBar mYellowBar;
-    private SeekBar mGreenBar;
-    private SeekBar mCyanBar;
-    private SeekBar mBlueBar;
-    private SeekBar mMagentaBar;
-    private TextView mMainValue;
-    private TextView mRedValue;
-    private TextView mYellowValue;
-    private TextView mGreenValue;
-    private TextView mCyanValue;
-    private TextView mBlueValue;
-    private TextView mMagentaValue;
+    private Button mButton;
 
     int[] mMenuStrings = {
             R.string.editor_chan_sat_main,
@@ -91,89 +72,53 @@ public class EditorChanSat extends ParametricEditor implements OnSeekBarChangeLi
 
     @Override
     public void openUtilityPanel(final LinearLayout accessoryViewList) {
-        mButton = (SwapButton) accessoryViewList.findViewById(R.id.applyEffect);
+        mButton = (Button) accessoryViewList.findViewById(R.id.applyEffect);
         mButton.setText(mContext.getString(R.string.editor_chan_sat_main));
 
-        if (useCompact(mContext)) {
-            final PopupMenu popupMenu = new PopupMenu(mImageShow.getActivity(), mButton);
-            popupMenu.add(POP_UP_MENU_ID_MAIN, R.string.editor_chan_sat_main);
-            popupMenu.add(POP_UP_MENU_ID_RED, R.string.editor_chan_sat_red);
-            popupMenu.add(POP_UP_MENU_ID_YELLOW, R.string.editor_chan_sat_yellow);
-            popupMenu.add(POP_UP_MENU_ID_GREEN, R.string.editor_chan_sat_green);
-            popupMenu.add(POP_UP_MENU_ID_CYAN, R.string.editor_chan_sat_cyan);
-            popupMenu.add(POP_UP_MENU_ID_BLUE, R.string.editor_chan_sat_blue);
-            popupMenu.add(POP_UP_MENU_ID_MAGENTA, R.string.editor_chan_sat_magenta);
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+        final PopupMenu popupMenu = new PopupMenu(mImageShow.getActivity(), mButton);
+        popupMenu.add(POP_UP_MENU_ID_MAIN, R.string.editor_chan_sat_main);
+        popupMenu.add(POP_UP_MENU_ID_RED, R.string.editor_chan_sat_red);
+        popupMenu.add(POP_UP_MENU_ID_YELLOW, R.string.editor_chan_sat_yellow);
+        popupMenu.add(POP_UP_MENU_ID_GREEN, R.string.editor_chan_sat_green);
+        popupMenu.add(POP_UP_MENU_ID_CYAN, R.string.editor_chan_sat_cyan);
+        popupMenu.add(POP_UP_MENU_ID_BLUE, R.string.editor_chan_sat_blue);
+        popupMenu.add(POP_UP_MENU_ID_MAGENTA, R.string.editor_chan_sat_magenta);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 
-                @Override
-                public boolean onMenuItemClick(PopupMenuItem item) {
-                    selectMenuItem(item);
-                    return true;
-                }
-            });
-            mButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public boolean onMenuItemClick(PopupMenuItem item) {
+                selectMenuItem(item);
+                return true;
+            }
+        });
+        mButton.setOnClickListener(new OnClickListener() {
 
-                @Override
-                public void onClick(View arg0) {
-                    popupMenu.show();
-                    ((FilterShowActivity) mContext).onShowMenu(popupMenu);
-                }
-            });
-            mButton.setListener(this);
+            @Override
+            public void onClick(View arg0) {
+                popupMenu.show();
+                ((FilterShowActivity) mContext).onShowMenu(popupMenu);
+            }
+        });
 
-            FilterChanSatRepresentation csrep = getChanSatRep();
-            String menuString = mContext.getString(mMenuStrings[0]);
-            switchToMode(csrep, FilterChanSatRepresentation.MODE_MASTER, menuString);
-        } else {
-            mButton.setText(mContext.getString(R.string.saturation));
-        }
+        FilterChanSatRepresentation csrep = getChanSatRep();
+        String menuString = mContext.getString(mMenuStrings[0]);
+        switchToMode(csrep, FilterChanSatRepresentation.MODE_MASTER, menuString);
     }
 
     @Override
     public void reflectCurrentFilter() {
-        if (useCompact(mContext)) {
-            super.reflectCurrentFilter();
-            updateText();
-            return;
-        }
-        mLocalRepresentation = null;
-        if (getLocalRepresentation() != null
-                && getLocalRepresentation() instanceof FilterChanSatRepresentation) {
-            FilterChanSatRepresentation rep =
-                    (FilterChanSatRepresentation) getLocalRepresentation();
-            int value = rep.getValue(FilterChanSatRepresentation.MODE_MASTER);
-            mMainBar.setProgress(value + 100);
-            mMainValue.setText("" + value);
-            value = rep.getValue(FilterChanSatRepresentation.MODE_RED);
-            mRedBar.setProgress(value + 100);
-            mRedValue.setText("" + value);
-            value = rep.getValue(FilterChanSatRepresentation.MODE_YELLOW);
-            mYellowBar.setProgress(value + 100);
-            mYellowValue.setText("" + value);
-            value = rep.getValue(FilterChanSatRepresentation.MODE_GREEN);
-            mGreenBar.setProgress(value + 100);
-            mGreenValue.setText("" + value);
-            value = rep.getValue(FilterChanSatRepresentation.MODE_CYAN);
-            mCyanBar.setProgress(value + 100);
-            mCyanValue.setText("" + value);
-            value = rep.getValue(FilterChanSatRepresentation.MODE_BLUE);
-            mBlueBar.setProgress(value + 100);
-            mBlueValue.setText("" + value);
-            value = rep.getValue(FilterChanSatRepresentation.MODE_MAGENTA);
-            mMagentaBar.setProgress(value + 100);
-            mMagentaValue.setText("" + value);
-            String text = mContext.getString(rep.getTextId()).toUpperCase();
-            mFilterTitle.setText(text);
-            updateText();
-        }
+
+        super.reflectCurrentFilter();
+        updateText();
+        return;
+
     }
 
     @Override
     public void setUtilityPanelUI(View actionButton, View editControl) {
-        if (useCompact(mContext)) {
-            super.setUtilityPanelUI(actionButton, editControl);
-            return;
-        }
+
+        super.setUtilityPanelUI(actionButton, editControl);
+        return;
     }
 
     public int getParameterIndex(int id) {
@@ -201,7 +146,6 @@ public class EditorChanSat extends ParametricEditor implements OnSeekBarChangeLi
         if (mButton == null) {
             return;
         }
-        mButton.setListener(null);
         mButton.setOnClickListener(null);
     }
 
@@ -275,37 +219,4 @@ public class EditorChanSat extends ParametricEditor implements OnSeekBarChangeLi
         commitLocalRepresentation();
     }
 
-    @Override
-    public void swapLeft(PopupMenuItem item) {
-        super.swapLeft(item);
-        mButton.setTranslationX(0);
-        mButton.animate().translationX(mButton.getWidth()).setDuration(SwapButton.ANIM_DURATION);
-        Runnable updateButton = new Runnable() {
-
-            @Override
-            public void run() {
-                mButton.animate().cancel();
-                mButton.setTranslationX(0);
-            }
-        };
-        mHandler.postDelayed(updateButton, SwapButton.ANIM_DURATION);
-        selectMenuItem(item);
-    }
-
-    @Override
-    public void swapRight(PopupMenuItem item) {
-        super.swapRight(item);
-        mButton.setTranslationX(0);
-        mButton.animate().translationX(-mButton.getWidth()).setDuration(SwapButton.ANIM_DURATION);
-        Runnable updateButton = new Runnable() {
-
-            @Override
-            public void run() {
-                mButton.animate().cancel();
-                mButton.setTranslationX(0);
-            }
-        };
-        mHandler.postDelayed(updateButton, SwapButton.ANIM_DURATION);
-        selectMenuItem(item);
-    }
 }

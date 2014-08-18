@@ -104,7 +104,7 @@ public class PopupMenu implements PopupWindow.OnDismissListener {
     }
 
     public PopupMenuItem getItem(int index) {
-        if (index > 0 && index < mItems.size()) {
+        if (index >= 0 && index < mItems.size()) {
             return mItems.get(index);
         }
         return null;

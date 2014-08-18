@@ -28,7 +28,7 @@ import java.util.Collection;
 /**
  * Base class for Editors Must contain a mImageShow and a top level view
  */
-public class Editor implements OnSeekBarChangeListener, SwapButton.SwapButtonListener {
+public class Editor implements OnSeekBarChangeListener {
 
     private static final String TAG = Editor.class.getSimpleName();
 
@@ -37,7 +37,7 @@ public class Editor implements OnSeekBarChangeListener, SwapButton.SwapButtonLis
     protected ImageShow mImageShow;
     protected FrameLayout mFrameLayout;
     protected SeekBar mSeekBar;
-    Button mEditTitle;
+    protected Button mEditTitle;
     protected Button mFilterTitle;
     protected int mID;
     protected boolean mChangesGeometry = false;
@@ -52,8 +52,12 @@ public class Editor implements OnSeekBarChangeListener, SwapButton.SwapButtonLis
         int count = menu.size();
         for (int i = 0; i < count; i++) {
             PopupMenuItem item = menu.getItem(i);
-            LLog.i(TAG, "count" + count + " i:" + i + "------------hackFixStrings:" + (item == null));
-            item.setTitle(item.getTitle().toString().toUpperCase());
+            LLog.i(TAG, count + "---------hackFixStrings-----:" + i + " " + (item == null));
+            if (item != null) {
+
+                LLog.i(TAG, "---------hackFixStrings str    -----:" + (item.getTitle() == null));
+                item.setTitle(item.getTitle().toString().toUpperCase());
+            }
         }
     }
 
@@ -77,8 +81,7 @@ public class Editor implements OnSeekBarChangeListener, SwapButton.SwapButtonLis
         return true;
     }
 
-    public void setUpEditorUI(View actionButton, View editControl,
-            Button editTitle, Button stateButton) {
+    public void setUpEditorUI(View actionButton, View editControl, Button editTitle, Button stateButton) {
         mEditTitle = editTitle;
         mFilterTitle = stateButton;
         mButton = editTitle;
@@ -97,15 +100,12 @@ public class Editor implements OnSeekBarChangeListener, SwapButton.SwapButtonLis
     public void setUtilityPanelUI(View actionButton, View editControl) {
 
         Context context = editControl.getContext();
-        LayoutInflater inflater =
-                (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        LinearLayout lp = (LinearLayout) inflater.inflate(
-                R.layout.filtershow_seekbar, (ViewGroup) editControl, true);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LinearLayout lp = (LinearLayout) inflater.inflate(R.layout.filtershow_seekbar, (ViewGroup) editControl, true);
         mSeekBar = (SeekBar) lp.findViewById(R.id.primarySeekBar);
         mSeekBar.setOnSeekBarChangeListener(this);
         mSeekBar.setVisibility(View.GONE);
-        if (context.getResources().getConfiguration().orientation
-                == Configuration.ORIENTATION_PORTRAIT) {
+        if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             if (showsSeekBar()) {
                 mSeekBar.setVisibility(View.VISIBLE);
             }
@@ -114,11 +114,6 @@ public class Editor implements OnSeekBarChangeListener, SwapButton.SwapButtonLis
         if (mButton != null) {
             setMenuIcon(showsPopupIndicator());
         }
-    }
-
-    @Override
-    public void onProgressChanged(SeekBar sbar, int progress, boolean arg2) {
-
     }
 
     public void setPanel() {
@@ -136,8 +131,7 @@ public class Editor implements OnSeekBarChangeListener, SwapButton.SwapButtonLis
         if (mView == null) {
             mView = mFrameLayout.findViewById(viewid);
             if (mView == null) {
-                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService
-                        (Context.LAYOUT_INFLATER_SERVICE);
+                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 mView = inflater.inflate(layoutid, mFrameLayout, false);
                 mFrameLayout.addView(mView, mView.getLayoutParams());
             }
@@ -295,12 +289,7 @@ public class Editor implements OnSeekBarChangeListener, SwapButton.SwapButtonLis
     }
 
     @Override
-    public void swapLeft(PopupMenuItem item) {
-
-    }
-
-    @Override
-    public void swapRight(PopupMenuItem item) {
+    public void onProgressChanged(SeekBar sbar, int progress, boolean arg2) {
 
     }
 

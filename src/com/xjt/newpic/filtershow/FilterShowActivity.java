@@ -1349,21 +1349,21 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
                 float distance = mHandledSwipeView.getHeight();
                 if (direction == CategoryView.VERTICAL) {
                     delta = ev.getX() - mSwipeStartX;
-                    mHandledSwipeView.setTranslationX(delta);
+                    //mHandledSwipeView.setTranslationX(delta);
                     distance = mHandledSwipeView.getWidth();
                 } else {
-                    mHandledSwipeView.setTranslationY(delta);
+                    //mHandledSwipeView.setTranslationY(delta);
                 }
                 delta = Math.abs(delta);
                 float transparency = Math.min(1, delta / distance);
-                mHandledSwipeView.setAlpha(1.f - transparency);
+                //mHandledSwipeView.setAlpha(1.f - transparency);
                 mHandledSwipeViewLastDelta = delta;
             }
             if (ev.getActionMasked() == MotionEvent.ACTION_CANCEL
                     || ev.getActionMasked() == MotionEvent.ACTION_UP) {
-                mHandledSwipeView.setTranslationX(0);
-                mHandledSwipeView.setTranslationY(0);
-                mHandledSwipeView.setAlpha(1.f);
+                //mHandledSwipeView.setTranslationX(0);
+                //mHandledSwipeView.setTranslationY(0);
+                //mHandledSwipeView.setAlpha(1.f);
                 mHandlingSwipeButton = false;
                 float distance = mHandledSwipeView.getHeight();
                 if (direction == CategoryView.VERTICAL) {
@@ -1399,8 +1399,8 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         ((View) hint.getParent()).getLocationOnScreen(locationHint);
         int dx = (int) (x - (hint.getWidth()) / 2);
         int dy = (int) (y - (hint.getHeight()) / 2);
-        hint.setTranslationX(location[0] - locationHint[0] + dx);
-        hint.setTranslationY(location[1] - locationHint[1] + dy);
+//        hint.setTranslationX(location[0] - locationHint[0] + dx);
+//        hint.setTranslationY(location[1] - locationHint[1] + dy);
         hint.setVisibility(View.VISIBLE);
 //        hint.animate().scaleX(2).scaleY(2).alpha(0).withEndAction(new Runnable() {
 //

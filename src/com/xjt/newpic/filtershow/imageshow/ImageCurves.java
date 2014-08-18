@@ -1,5 +1,7 @@
+
 package com.xjt.newpic.filtershow.imageshow;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -16,6 +18,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.xjt.newpic.R;
+import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.filtershow.FilterShowActivity;
 import com.xjt.newpic.filtershow.editors.Editor;
 import com.xjt.newpic.filtershow.editors.EditorCurves;
@@ -56,15 +59,19 @@ public class ImageCurves extends ImageShow {
     private EditorCurves mEditorCurves;
     private FilterCurvesRepresentation mFilterCurvesRepresentation;
 
+    @SuppressLint("NewApi")
     public ImageCurves(Context context) {
         super(context);
-        setLayerType(LAYER_TYPE_SOFTWARE, gPaint);
+        if (ApiHelper.AT_LEAST_11)
+            setLayerType(LAYER_TYPE_SOFTWARE, gPaint);
         resetCurve();
     }
 
+    @SuppressLint("NewApi")
     public ImageCurves(Context context, AttributeSet attrs) {
         super(context, attrs);
-        setLayerType(LAYER_TYPE_SOFTWARE, gPaint);
+        if (ApiHelper.AT_LEAST_11)
+            setLayerType(LAYER_TYPE_SOFTWARE, gPaint);
         resetCurve();
     }
 

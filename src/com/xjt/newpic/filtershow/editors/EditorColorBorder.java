@@ -7,7 +7,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.LLog;
@@ -162,16 +161,8 @@ public class EditorColorBorder extends ParametricEditor {
 
     @Override
     public void setUtilityPanelUI(View actionButton, View editControl) {
-        if (ParametricEditor.useCompact(mContext)) {
-            super.setUtilityPanelUI(actionButton, editControl);
-            return;
-        }
-        mSeekBar = (SeekBar) editControl.findViewById(R.id.primarySeekBar);
-        if (mSeekBar != null) {
-            mSeekBar.setVisibility(View.GONE);
-        }
-
-
+        super.setUtilityPanelUI(actionButton, editControl);
+        return;
     }
 
     FilterColorBorderRepresentation getColorBorderRep() {

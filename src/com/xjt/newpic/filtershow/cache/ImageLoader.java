@@ -16,6 +16,7 @@
 
 package com.xjt.newpic.filtershow.cache;
 
+import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
@@ -29,6 +30,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
@@ -39,6 +41,7 @@ import com.android.gallery3d.common.Utils;
 import com.android.gallery3d.exif.ExifInterface;
 import com.android.gallery3d.exif.ExifTag;
 import com.xjt.newpic.utils.XmpUtilHelper;
+import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.filtershow.imageshow.MasterImage;
 import com.xjt.newpic.filtershow.pipeline.FilterEnvironment;
 import com.xjt.newpic.filtershow.tools.XmpPresets;
@@ -48,6 +51,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public final class ImageLoader {
 
     private static final String LOGTAG = "ImageLoader";
@@ -66,7 +70,9 @@ public final class ImageLoader {
 
     private static final int BITMAP_LOAD_BACKOUT_ATTEMPTS = 5;
     private static final float OVERDRAW_ZOOM = 1.2f;
-    private ImageLoader() {}
+
+    private ImageLoader() {
+    }
 
     /**
      * Returns the Mime type for a Url.  Safe to use with Urls that do not
@@ -83,7 +89,9 @@ public final class ImageLoader {
 
     public static String getLocalPathFromUri(Context context, Uri uri) {
         Cursor cursor = context.getContentResolver().query(uri,
-                new String[]{MediaStore.Images.Media.DATA}, null, null, null);
+                new String[] {
+                    MediaStore.Images.Media.DATA
+                }, null, null, null);
         if (cursor == null) {
             return null;
         }
@@ -105,7 +113,9 @@ public final class ImageLoader {
         Cursor cursor = null;
         try {
             cursor = context.getContentResolver().query(uri,
-                    new String[] { MediaStore.Images.ImageColumns.ORIENTATION },
+                    new String[] {
+                        MediaStore.Images.ImageColumns.ORIENTATION
+                    },
                     null, null, null);
             if (cursor != null && cursor.moveToNext()) {
                 int ori = cursor.getInt(0);
@@ -159,11 +169,11 @@ public final class ImageLoader {
         return ORI_NORMAL;
     }
 
-    private static int parseExif(ExifInterface exif){
+    private static int parseExif(ExifInterface exif) {
         Integer tagval = exif.getTagIntValue(ExifInterface.TAG_ORIENTATION);
         if (tagval != null) {
             int orientation = tagval;
-            switch(orientation) {
+            switch (orientation) {
                 case ORI_NORMAL:
                 case ORI_ROTATE_90:
                 case ORI_ROTATE_180:
@@ -186,7 +196,7 @@ public final class ImageLoader {
      */
     public static int getMetadataRotation(Context context, Uri uri) {
         int orientation = getMetadataOrientation(context, uri);
-        switch(orientation) {
+        switch (orientation) {
             case ORI_ROTATE_90:
                 return 90;
             case ORI_ROTATE_180:
@@ -252,8 +262,8 @@ public final class ImageLoader {
      * null.
      */
     public static Bitmap loadRegionBitmap(Context context, BitmapCache cache,
-                                          Uri uri, BitmapFactory.Options options,
-                                          Rect bounds) {
+            Uri uri, BitmapFactory.Options options,
+            Rect bounds) {
         InputStream is = null;
         int w = 0;
         int h = 0;
@@ -275,7 +285,9 @@ public final class ImageLoader {
             }
             Bitmap reuse = cache.getBitmap(imageBounds.width(),
                     imageBounds.height(), BitmapCache.REGION);
-            options.inBitmap = reuse;
+            if (ApiHelper.AT_LEAST_11) {
+                options.inBitmap = reuse;
+            }
             Bitmap bitmap = decoder.decodeRegion(imageBounds, options);
             if (bitmap != reuse) {
                 cache.cache(reuse); // not reused, put back in cache
@@ -310,11 +322,11 @@ public final class ImageLoader {
      */
     public static Bitmap loadDownsampledBitmap(Context context, Uri uri, int sampleSize) {
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inMutable = true;
+        if (ApiHelper.AT_LEAST_11)
+            options.inMutable = true;
         options.inSampleSize = sampleSize;
         return loadBitmap(context, uri, options);
     }
-
 
     /**
      * Returns the bitmap from the given uri loaded using the given options.
@@ -405,19 +417,20 @@ public final class ImageLoader {
         Bitmap bmap = loadConstrainedBitmap(uri, context, maxSideLength, originalBounds, false);
         if (bmap != null) {
             bmap = orientBitmap(bmap, orientation);
-            if (bmap.getConfig()!= Bitmap.Config.ARGB_8888){
-                bmap = bmap.copy( Bitmap.Config.ARGB_8888,true);
+            if (bmap.getConfig() != Bitmap.Config.ARGB_8888) {
+                bmap = bmap.copy(Bitmap.Config.ARGB_8888, true);
             }
         }
         return bmap;
     }
 
     public static Bitmap getScaleOneImageForPreset(Context context,
-                                                   BitmapCache cache,
-                                                   Uri uri, Rect bounds,
-                                                   Rect destination) {
+            BitmapCache cache,
+            Uri uri, Rect bounds,
+            Rect destination) {
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inMutable = true;
+        if (ApiHelper.AT_LEAST_11)
+            options.inMutable = true;
         if (destination != null) {
             int thresholdWidth = (int) (destination.width() * OVERDRAW_ZOOM);
             if (bounds.width() > thresholdWidth) {

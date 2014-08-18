@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.filtershow.filters;
 
 import android.graphics.Bitmap;
@@ -12,14 +13,14 @@ import com.xjt.newpic.R;
 import com.xjt.newpic.filtershow.pipeline.FilterEnvironment;
 
 public class ImageFilterChanSat extends ImageFilterRS {
-    private static final String LOGTAG = "ImageFilterChanSat";
+
+    private static final String TAG = ImageFilterChanSat.class.getSimpleName();
     private ScriptC_saturation mScript;
     private Bitmap mSourceBitmap;
 
     private static final int STRIP_SIZE = 64;
 
     FilterChanSatRepresentation mParameters = new FilterChanSatRepresentation();
-    private Bitmap mOverlayBitmap;
 
     public ImageFilterChanSat() {
         mName = "ChannelSat";
@@ -47,27 +48,22 @@ public class ImageFilterChanSat extends ImageFilterRS {
             mScript = null;
         }
     }
+
     @Override
     protected void createFilter(android.content.res.Resources res, float scaleFactor,
-                                int quality) {
+            int quality) {
         createFilter(res, scaleFactor, quality, getInPixelsAllocation());
     }
 
     @Override
     protected void createFilter(android.content.res.Resources res, float scaleFactor,
-                                int quality, Allocation in) {
+            int quality, Allocation in) {
         RenderScript rsCtx = getRenderScriptContext();
 
         Type.Builder tb_float = new Type.Builder(rsCtx, Element.F32_4(rsCtx));
         tb_float.setX(in.getType().getX());
         tb_float.setY(in.getType().getY());
         mScript = new ScriptC_saturation(rsCtx, res, R.raw.saturation);
-    }
-
-
-    private Bitmap getSourceBitmap() {
-        assert (mSourceBitmap != null);
-        return mSourceBitmap;
     }
 
     @Override
@@ -85,24 +81,19 @@ public class ImageFilterChanSat extends ImageFilterRS {
 
     @Override
     protected void bindScriptValues() {
-        int width = getInPixelsAllocation().getType().getX();
-        int height = getInPixelsAllocation().getType().getY();
+
     }
-
-
 
     @Override
     protected void runFilter() {
-        int []sat = new int[7];
-        for(int i = 0;i<sat.length ;i ++){
-          sat[i] =   mParameters.getValue(i);
+        int[] sat = new int[7];
+        for (int i = 0; i < sat.length; i++) {
+            sat[i] = mParameters.getValue(i);
         }
-
 
         int width = getInPixelsAllocation().getType().getX();
         int height = getInPixelsAllocation().getType().getY();
         Matrix m = getOriginalToScreenMatrix(width, height);
-
 
         mScript.set_saturation(sat);
 
@@ -142,4 +133,3 @@ public class ImageFilterChanSat extends ImageFilterRS {
         return false;
     }
 }
-

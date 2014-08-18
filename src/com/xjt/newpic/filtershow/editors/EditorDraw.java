@@ -51,7 +51,6 @@ public class EditorDraw extends ParametricEditor implements FilterView {
             FilterDrawRepresentation.DEFAULT_MENU_COLOR4,
             FilterDrawRepresentation.DEFAULT_MENU_COLOR5,
     };
-    private EditorDrawTabletUI mTabletUI;
     private String mParameterString;
     private String mDrawString = null;
 
@@ -69,9 +68,7 @@ public class EditorDraw extends ParametricEditor implements FilterView {
         if (rep == null) {
             return "";
         }
-        if (!ParametricEditor.useCompact(mContext)) {
 
-        }
         if (mParameterString == null) {
             mParameterString = "";
         }
@@ -96,14 +93,6 @@ public class EditorDraw extends ParametricEditor implements FilterView {
         if (rep != null && getLocalRepresentation() instanceof FilterDrawRepresentation) {
             FilterDrawRepresentation drawRep = (FilterDrawRepresentation) getLocalRepresentation();
             mImageDraw.setFilterDrawRepresentation(drawRep);
-            if (!ParametricEditor.useCompact(mContext)) {
-                if (mTabletUI != null) {
-
-                    mTabletUI.setDrawRepresentation(drawRep);
-                }
-                return;
-            }
-
             drawRep.getParam(FilterDrawRepresentation.PARAM_STYLE).setFilterView(this);
             drawRep.setPramMode(FilterDrawRepresentation.PARAM_COLOR);
             mParameterString = mContext.getString(R.string.draw_color);
@@ -143,33 +132,14 @@ public class EditorDraw extends ParametricEditor implements FilterView {
         popupMenu.add(POP_UP_MENU_ID_COLOR, R.string.draw_color);
         popupMenu.add(POP_UP_MENU_ID_CLEAR, R.string.draw_clear);
 
-        if (!ParametricEditor.useCompact(mContext)) {
-            int count = popupMenu.size();
-            for (int i = 0; i < count; i++) {
-                PopupMenuItem item = popupMenu.getItem(i);
-                if (item.getItemId() != 3) {
-                    item.setVisible(false);
-                }
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(PopupMenuItem item) {
+                selectMenuItem(item);
+                return true;
             }
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-
-                @Override
-                public boolean onMenuItemClick(PopupMenuItem item) {
-                    clearDrawing();
-                    return true;
-                }
-
-            });
-        } else {
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-
-                @Override
-                public boolean onMenuItemClick(PopupMenuItem item) {
-                    selectMenuItem(item);
-                    return true;
-                }
-            });
-        }
+        });
         popupMenu.show();
         ((FilterShowActivity) mContext).onShowMenu(popupMenu);
     }
@@ -220,11 +190,7 @@ public class EditorDraw extends ParametricEditor implements FilterView {
 
     @Override
     public void setUtilityPanelUI(View actionButton, View editControl) {
-        if (ParametricEditor.useCompact(mContext)) {
-            super.setUtilityPanelUI(actionButton, editControl);
-            return;
-        }
-
+        super.setUtilityPanelUI(actionButton, editControl);
     }
 
     FilterDrawRepresentation getDrawRep() {

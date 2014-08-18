@@ -1,18 +1,15 @@
+
 package com.xjt.newpic.filtershow.editors;
 
 import android.content.Context;
-import android.os.Handler;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import com.xjt.newpic.R;
 import com.xjt.newpic.filtershow.FilterShowActivity;
-import com.xjt.newpic.filtershow.controller.BasicParameterInt;
 import com.xjt.newpic.filtershow.controller.Parameter;
 import com.xjt.newpic.filtershow.filters.FilterRepresentation;
 import com.xjt.newpic.filtershow.filters.FilterVignetteRepresentation;
@@ -33,20 +30,7 @@ public class EditorVignette extends ParametricEditor {
     public static final int ID = R.id.vignetteEditor;
     ImageVignette mImageVignette;
 
-    private SeekBar mVignetteBar;
-    private SeekBar mExposureBar;
-    private SeekBar mSaturationBar;
-    private SeekBar mContrastBar;
-    private SeekBar mFalloffBar;
-
-    private TextView mVignetteValue;
-    private TextView mExposureValue;
-    private TextView mSaturationValue;
-    private TextView mContrastValue;
-    private TextView mFalloffValue;
-
-    private SwapButton mButton;
-    private final Handler mHandler = new Handler();
+    private Button mButton;
 
     int[] mMenuStrings = {
             R.string.vignette_main,
@@ -71,57 +55,15 @@ public class EditorVignette extends ParametricEditor {
 
     @Override
     public void reflectCurrentFilter() {
-        if (useCompact(mContext)) {
-            super.reflectCurrentFilter();
+        super.reflectCurrentFilter();
 
-            FilterRepresentation rep = getLocalRepresentation();
-            if (rep != null && getLocalRepresentation() instanceof FilterVignetteRepresentation) {
-                FilterVignetteRepresentation drawRep = (FilterVignetteRepresentation) rep;
-                mImageVignette.setRepresentation(drawRep);
-            }
-            updateText();
-            return;
+        FilterRepresentation rep = getLocalRepresentation();
+        if (rep != null && getLocalRepresentation() instanceof FilterVignetteRepresentation) {
+            FilterVignetteRepresentation drawRep = (FilterVignetteRepresentation) rep;
+            mImageVignette.setRepresentation(drawRep);
         }
-        mLocalRepresentation = null;
-        if (getLocalRepresentation() != null
-                && getLocalRepresentation() instanceof FilterVignetteRepresentation) {
-            FilterVignetteRepresentation rep =
-                    (FilterVignetteRepresentation) getLocalRepresentation();
+        updateText();
 
-            int[] mode = {
-                    FilterVignetteRepresentation.MODE_VIGNETTE,
-                    FilterVignetteRepresentation.MODE_EXPOSURE,
-                    FilterVignetteRepresentation.MODE_SATURATION,
-                    FilterVignetteRepresentation.MODE_CONTRAST,
-                    FilterVignetteRepresentation.MODE_FALLOFF
-            };
-            SeekBar[] sliders = {
-                    mVignetteBar,
-                    mExposureBar,
-                    mSaturationBar,
-                    mContrastBar,
-                    mFalloffBar
-            };
-            TextView[] label = {
-                    mVignetteValue,
-                    mExposureValue,
-                    mSaturationValue,
-                    mContrastValue,
-                    mFalloffValue
-            };
-            for (int i = 0; i < mode.length; i++) {
-                BasicParameterInt p = (BasicParameterInt) rep.getFilterParameter(mode[i]);
-                int value = p.getValue();
-                sliders[i].setMax(p.getMaximum() - p.getMinimum());
-                sliders[i].setProgress(value - p.getMinimum());
-                label[i].setText("" + value);
-            }
-
-            mImageVignette.setRepresentation(rep);
-            String text = mContext.getString(rep.getTextId()).toUpperCase();
-            mFilterTitle.setText(text);
-            updateText();
-        }
     }
 
     @Override
@@ -142,42 +84,38 @@ public class EditorVignette extends ParametricEditor {
 
     @Override
     public void openUtilityPanel(final LinearLayout accessoryViewList) {
-        mButton = (SwapButton) accessoryViewList.findViewById(R.id.applyEffect);
+        mButton = (Button) accessoryViewList.findViewById(R.id.applyEffect);
         mButton.setText(mContext.getString(R.string.vignette_main));
 
-        if (useCompact(mContext)) {
-            final PopupMenu popupMenu = new PopupMenu(mImageShow.getActivity(), mButton);
-            //popupMenu.getMenuInflater().inflate(R.menu.filtershow_menu_vignette, popupMenu.getMenu());
-            popupMenu.add(POP_UP_MENU_ID_VIGNETTE, R.string.vignette_main);
-            popupMenu.add(POP_UP_MENU_ID_FALLOFF, R.string.vignette_falloff);
-            popupMenu.add(POP_UP_MENU_ID_CONTRAST, R.string.vignette_contrast);
-            popupMenu.add(POP_UP_MENU_ID_SATURATION, R.string.vignette_saturation);
-            popupMenu.add(POP_UP_MENU_ID_EXPOSURE, R.string.vignette_exposure);
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+        final PopupMenu popupMenu = new PopupMenu(mImageShow.getActivity(), mButton);
+        //popupMenu.getMenuInflater().inflate(R.menu.filtershow_menu_vignette, popupMenu.getMenu());
+        popupMenu.add(POP_UP_MENU_ID_VIGNETTE, R.string.vignette_main);
+        popupMenu.add(POP_UP_MENU_ID_FALLOFF, R.string.vignette_falloff);
+        popupMenu.add(POP_UP_MENU_ID_CONTRAST, R.string.vignette_contrast);
+        popupMenu.add(POP_UP_MENU_ID_SATURATION, R.string.vignette_saturation);
+        popupMenu.add(POP_UP_MENU_ID_EXPOSURE, R.string.vignette_exposure);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 
-                @Override
-                public boolean onMenuItemClick(PopupMenuItem item) {
-                    selectMenuItem(item);
-                    return true;
-                }
+            @Override
+            public boolean onMenuItemClick(PopupMenuItem item) {
+                selectMenuItem(item);
+                return true;
+            }
 
-            });
-            mButton.setOnClickListener(new View.OnClickListener() {
+        });
+        mButton.setOnClickListener(new View.OnClickListener() {
 
-                @Override
-                public void onClick(View v) {
-                    popupMenu.show();
-                    ((FilterShowActivity) mContext).onShowMenu(popupMenu);
-                }
-            });
-            mButton.setListener(this);
+            @Override
+            public void onClick(View v) {
+                popupMenu.show();
+                ((FilterShowActivity) mContext).onShowMenu(popupMenu);
+            }
+        });
 
-            FilterVignetteRepresentation csrep = getVignetteRep();
-            String menuString = mContext.getString(mMenuStrings[0]);
-            switchToMode(csrep, FilterVignetteRepresentation.MODE_VIGNETTE, menuString);
-        } else {
-            mButton.setText(mContext.getString(R.string.vignette_main));
-        }
+        FilterVignetteRepresentation csrep = getVignetteRep();
+        String menuString = mContext.getString(mMenuStrings[0]);
+        switchToMode(csrep, FilterVignetteRepresentation.MODE_VIGNETTE, menuString);
+
     }
 
     public int getParameterIndex(int id) {
@@ -201,7 +139,6 @@ public class EditorVignette extends ParametricEditor {
         if (mButton == null) {
             return;
         }
-        mButton.setListener(null);
         mButton.setOnClickListener(null);
     }
 
@@ -258,40 +195,7 @@ public class EditorVignette extends ParametricEditor {
 
     @Override
     public void onProgressChanged(SeekBar sbar, int progress, boolean arg2) {
-       
+
     }
 
-    @Override
-    public void swapLeft(PopupMenuItem item) {
-        super.swapLeft(item);
-        mButton.setTranslationX(0);
-        mButton.animate().translationX(mButton.getWidth()).setDuration(SwapButton.ANIM_DURATION);
-        Runnable updateButton = new Runnable() {
-
-            @Override
-            public void run() {
-                mButton.animate().cancel();
-                mButton.setTranslationX(0);
-            }
-        };
-        mHandler.postDelayed(updateButton, SwapButton.ANIM_DURATION);
-        selectMenuItem(item);
-    }
-
-    @Override
-    public void swapRight(PopupMenuItem item) {
-        super.swapRight(item);
-        mButton.setTranslationX(0);
-        mButton.animate().translationX(-mButton.getWidth()).setDuration(SwapButton.ANIM_DURATION);
-        Runnable updateButton = new Runnable() {
-
-            @Override
-            public void run() {
-                mButton.animate().cancel();
-                mButton.setTranslationX(0);
-            }
-        };
-        mHandler.postDelayed(updateButton, SwapButton.ANIM_DURATION);
-        selectMenuItem(item);
-    }
 }

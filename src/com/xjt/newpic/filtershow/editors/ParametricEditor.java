@@ -1,7 +1,7 @@
+
 package com.xjt.newpic.filtershow.editors;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
 import com.xjt.newpic.R;
-import com.xjt.newpic.filtershow.controller.ActionSlider;
 import com.xjt.newpic.filtershow.controller.BasicSlider;
 import com.xjt.newpic.filtershow.controller.ColorChooser;
 import com.xjt.newpic.filtershow.controller.Control;
 import com.xjt.newpic.filtershow.controller.Parameter;
-import com.xjt.newpic.filtershow.controller.ParameterActionAndInt;
 import com.xjt.newpic.filtershow.controller.ParameterBrightness;
 import com.xjt.newpic.filtershow.controller.ParameterColor;
 import com.xjt.newpic.filtershow.controller.ParameterHue;
@@ -29,7 +27,6 @@ import com.xjt.newpic.filtershow.controller.SliderHue;
 import com.xjt.newpic.filtershow.controller.SliderOpacity;
 import com.xjt.newpic.filtershow.controller.SliderSaturation;
 import com.xjt.newpic.filtershow.controller.StyleChooser;
-import com.xjt.newpic.filtershow.controller.TitledSlider;
 import com.xjt.newpic.filtershow.filters.FilterBasicRepresentation;
 import com.xjt.newpic.filtershow.filters.FilterRepresentation;
 
@@ -37,38 +34,33 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 
 public class ParametricEditor extends Editor {
-    private int mLayoutID;
-    private int mViewID;
-    public static int ID = R.id.editorParametric;
-    private final String LOGTAG = "ParametricEditor";
-    protected Control mControl;
+
+    private final String TAG = ParametricEditor.class.getSimpleName();
+
     public static final int MINIMUM_WIDTH = 600;
     public static final int MINIMUM_HEIGHT = 800;
-    View mActionButton;
-    View mEditControl;
-    static HashMap<String, Class> portraitMap = new HashMap<String, Class>();
-    static HashMap<String, Class> landscapeMap = new HashMap<String, Class>();
+    public static int ID = R.id.editorParametric;
+
+    private int mLayoutID;
+    private int mViewID;
+    protected Control mControl;
+    protected View mActionButton;
+    protected View mEditControl;
+    protected static HashMap<String, Class<?>> portraitMap = new HashMap<String, Class<?>>();
+
     static {
         portraitMap.put(ParameterSaturation.sParameterType, SliderSaturation.class);
-        landscapeMap.put(ParameterSaturation.sParameterType, SliderSaturation.class);
         portraitMap.put(ParameterHue.sParameterType, SliderHue.class);
-        landscapeMap.put(ParameterHue.sParameterType, SliderHue.class);
         portraitMap.put(ParameterOpacity.sParameterType, SliderOpacity.class);
-        landscapeMap.put(ParameterOpacity.sParameterType, SliderOpacity.class);
         portraitMap.put(ParameterBrightness.sParameterType, SliderBrightness.class);
-        landscapeMap.put(ParameterBrightness.sParameterType, SliderBrightness.class);
         portraitMap.put(ParameterColor.sParameterType, ColorChooser.class);
-        landscapeMap.put(ParameterColor.sParameterType, ColorChooser.class);
 
         portraitMap.put(ParameterInteger.sParameterType, BasicSlider.class);
-        landscapeMap.put(ParameterInteger.sParameterType, TitledSlider.class);
-        portraitMap.put(ParameterActionAndInt.sParameterType, ActionSlider.class);
-        landscapeMap.put(ParameterActionAndInt.sParameterType, ActionSlider.class);
+        //        portraitMap.put(ParameterActionAndInt.sParameterType, ActionSlider.class);
         portraitMap.put(ParameterStyles.sParameterType, StyleChooser.class);
-        landscapeMap.put(ParameterStyles.sParameterType, StyleChooser.class);
     }
 
-    static Constructor getConstructor(Class cl) {
+    static Constructor<?> getConstructor(Class<?> cl) {
         try {
             return cl.getConstructor(Context.class, ViewGroup.class);
         } catch (Exception e) {
@@ -92,15 +84,15 @@ public class ParametricEditor extends Editor {
 
     @Override
     public String calculateUserMessage(Context context, String effectName, Object parameterValue) {
-        String apply = "";
 
-        if (mShowParameter == SHOW_VALUE_INT & useCompact(context)) {
-           if (getLocalRepresentation() instanceof FilterBasicRepresentation) {
-            FilterBasicRepresentation interval = (FilterBasicRepresentation) getLocalRepresentation();
+        String apply = "";
+        if (mShowParameter == SHOW_VALUE_INT) {
+            if (getLocalRepresentation() instanceof FilterBasicRepresentation) {
+                FilterBasicRepresentation interval = (FilterBasicRepresentation) getLocalRepresentation();
                 apply += " " + effectName.toUpperCase() + " " + interval.getStateRepresentation();
-           } else {
+            } else {
                 apply += " " + effectName.toUpperCase() + " " + parameterValue;
-           }
+            }
         } else {
             apply += " " + effectName.toUpperCase();
         }
@@ -116,8 +108,7 @@ public class ParametricEditor extends Editor {
     @Override
     public void reflectCurrentFilter() {
         super.reflectCurrentFilter();
-        if (getLocalRepresentation() != null
-                && getLocalRepresentation() instanceof FilterBasicRepresentation) {
+        if (getLocalRepresentation() != null && getLocalRepresentation() instanceof FilterBasicRepresentation) {
             FilterBasicRepresentation interval = (FilterBasicRepresentation) getLocalRepresentation();
             mControl.setPrameter(interval);
         }
@@ -129,10 +120,6 @@ public class ParametricEditor extends Editor {
         return new Control[] {
                 slider
         };
-    }
-
-    protected static boolean useCompact(Context context) {
-        return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
     }
 
     protected Parameter getParameterToEdit(FilterRepresentation rep) {
@@ -154,8 +141,7 @@ public class ParametricEditor extends Editor {
             control(param, editControl);
         } else {
             mSeekBar = new SeekBar(editControl.getContext());
-            LayoutParams lp = new LinearLayout.LayoutParams(
-                    LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+            LayoutParams lp = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
             mSeekBar.setLayoutParams(lp);
             ((LinearLayout) editControl).addView(mSeekBar);
             mSeekBar.setOnSeekBarChangeListener(this);
@@ -164,8 +150,7 @@ public class ParametricEditor extends Editor {
 
     protected void control(Parameter p, View editControl) {
         String pType = p.getParameterType();
-        Context context = editControl.getContext();
-        Class c = ((useCompact(context)) ? portraitMap : landscapeMap).get(pType);
+        Class<?> c = portraitMap.get(pType);
 
         if (c != null) {
             try {
@@ -173,12 +158,12 @@ public class ParametricEditor extends Editor {
                 p.setController(mControl);
                 mControl.setUp((ViewGroup) editControl, p, this);
             } catch (Exception e) {
-                Log.e(LOGTAG, "Error in loading Control ", e);
+                Log.e(TAG, "Error in loading Control ", e);
             }
         } else {
-            Log.e(LOGTAG, "Unable to find class for " + pType);
+            Log.e(TAG, "Unable to find class for " + pType);
             for (String string : portraitMap.keySet()) {
-                Log.e(LOGTAG, "for " + string + " use " + portraitMap.get(string));
+                Log.e(TAG, "for " + string + " use " + portraitMap.get(string));
             }
         }
     }

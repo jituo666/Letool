@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Vector;
 
 public abstract class BaseFiltersManager implements FiltersManagerInterface {
-    protected HashMap<Class, ImageFilter> mFilters = null;
+    protected HashMap<Class<?>, ImageFilter> mFilters = null;
     protected HashMap<String, FilterRepresentation> mRepresentationLookup = null;
     private static final String LOGTAG = "BaseFiltersManager";
 
@@ -39,11 +39,11 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
     private static int mImageBorderSize = 4; // in percent
 
     protected void init() {
-        mFilters = new HashMap<Class, ImageFilter>();
+        mFilters = new HashMap<Class<?>, ImageFilter>();
         mRepresentationLookup = new HashMap<String, FilterRepresentation>();
-        Vector<Class> filters = new Vector<Class>();
+        Vector<Class<?>> filters = new Vector<Class<?>>();
         addFilterClasses(filters);
-        for (Class filterClass : filters) {
+        for (Class<?> filterClass : filters) {
             try {
                 Object filterInstance = filterClass.newInstance();
                 if (filterInstance instanceof ImageFilter) {
@@ -77,7 +77,7 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
         return null;
     }
 
-    public ImageFilter getFilter(Class c) {
+    public ImageFilter getFilter(Class<?> c) {
         return mFilters.get(c);
     }
 
@@ -86,7 +86,7 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
         return mFilters.get(representation.getFilterClass());
     }
 
-    public FilterRepresentation getRepresentation(Class c) {
+    public FilterRepresentation getRepresentation(Class<?> c) {
         ImageFilter filter = mFilters.get(c);
         if (filter != null) {
             return filter.getDefaultRepresentation();
@@ -99,7 +99,7 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
             return;
         }
         Vector<ImageFilter> usedFilters = preset.getUsedFilters(this);
-        for (Class c : mFilters.keySet()) {
+        for (Class<?> c : mFilters.keySet()) {
             ImageFilter filter = mFilters.get(c);
             if (!usedFilters.contains(filter)) {
                 filter.freeResources();
@@ -108,7 +108,7 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
     }
 
     public void freeRSFilterScripts() {
-        for (Class c : mFilters.keySet()) {
+        for (Class<?> c : mFilters.keySet()) {
             ImageFilter filter = mFilters.get(c);
             if (filter != null && filter instanceof ImageFilterRS) {
                 ((ImageFilterRS) filter).resetScripts();
@@ -116,7 +116,7 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
         }
     }
 
-    protected void addFilterClasses(Vector<Class> filters) {
+    protected void addFilterClasses(Vector<Class<?>> filters) {
         filters.add(ImageFilterTinyPlanet.class);
         filters.add(ImageFilterRedEye.class);
         filters.add(ImageFilterWBalance.class);

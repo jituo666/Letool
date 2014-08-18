@@ -42,8 +42,8 @@ public class ProcessingService extends Service {
     private static final String LOGTAG = "ProcessingService";
     private static final boolean SHOW_IMAGE = false;
     private int mNotificationId;
-    private NotificationManager mNotifyMgr = null;
-    private Notification.Builder mBuilder = null;
+//    private NotificationManager mNotifyMgr = null;
+//    private Notification.Builder mBuilder = null;
 
     private static final String PRESET = "preset";
     private static final String QUALITY = "quality";
@@ -236,12 +236,12 @@ public class ProcessingService extends Service {
     public void handleSaveRequest(Uri sourceUri, Uri selectedUri,
             File destinationFile, ImagePreset preset, Bitmap previewImage,
             boolean flatten, int quality, float sizeFactor, boolean exit) {
-        mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        mNotifyMgr.cancelAll();
-
-        mBuilder = new Notification.Builder(this).setSmallIcon(R.drawable.filtershow_button_fx).setContentTitle(getString(R.string.filtershow_notification_label)).setContentText(getString(R.string.filtershow_notification_message));
-
-        startForeground(mNotificationId, mBuilder.getNotification());
+//        mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//        mNotifyMgr.cancelAll();
+//
+//        mBuilder = new Notification.Builder(this).setSmallIcon(R.drawable.filtershow_button_fx).setContentTitle(getString(R.string.filtershow_notification_label)).setContentText(getString(R.string.filtershow_notification_message));
+//
+//        startForeground(mNotificationId, mBuilder.getNotification());
 
         updateProgress(SaveImage.MAX_PROCESSING_STEPS, 0);
 
@@ -252,13 +252,13 @@ public class ProcessingService extends Service {
     }
 
     public void updateNotificationWithBitmap(Bitmap bitmap) {
-        mBuilder.setLargeIcon(bitmap);
-        mNotifyMgr.notify(mNotificationId, mBuilder.getNotification());
+//        mBuilder.setLargeIcon(bitmap);
+//        mNotifyMgr.notify(mNotificationId, mBuilder.getNotification());
     }
 
     public void updateProgress(int max, int current) {
-        mBuilder.setProgress(max, current, false);
-        mNotifyMgr.notify(mNotificationId, mBuilder.getNotification());
+//        mBuilder.setProgress(max, current, false);
+//        mNotifyMgr.notify(mNotificationId, mBuilder.getNotification());
     }
 
     public void completePreviewSaveImage(Uri result, boolean exit) {
@@ -274,7 +274,7 @@ public class ProcessingService extends Service {
             viewImage.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(viewImage);
         }
-        mNotifyMgr.cancel(mNotificationId);
+        //mNotifyMgr.cancel(mNotificationId);
         if (!exit) {
             stopForeground(true);
             stopSelf();

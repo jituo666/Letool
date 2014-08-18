@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2012 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.xjt.newpic.filtershow.filters;
 
 import android.graphics.Bitmap;
@@ -139,15 +123,19 @@ public abstract class ImageFilterRS extends ImageFilter {
             if (DEBUG) {
                 Log.v(LOGTAG, "DONE apply filter " + getName() + " in pipeline " + pipeline.getName());
             }
-        } catch (android.renderscript.RSIllegalArgumentException e) {
-            Log.e(LOGTAG, "Illegal argument? " + e);
-        } catch (android.renderscript.RSRuntimeException e) {
-            Log.e(LOGTAG, "RS runtime exception ? " + e);
-        } catch (java.lang.OutOfMemoryError e) {
+        }
+//        catch (android.renderscript.RSIllegalArgumentException e) {
+//            Log.e(LOGTAG, "Illegal argument? " + e);
+//        } catch (android.renderscript.RSRuntimeException e) {
+//            Log.e(LOGTAG, "RS runtime exception ? " + e);
+//        } 
+        catch (java.lang.OutOfMemoryError e) {
             // Many of the renderscript filters allocated large (>16Mb resources) in order to apply.
             System.gc();
             displayLowMemoryToast();
             Log.e(LOGTAG, "not enough memory for filter " + getName(), e);
+        } catch (Exception e) {
+            
         }
         return bitmap;
     }

@@ -148,7 +148,7 @@ public class ImageSavingTask extends ProcessingTask {
     }
 
     private Bitmap createNotificationBitmap(Bitmap preview, Uri sourceUri, ImagePreset preset) {
-        int notificationBitmapSize = Resources.getSystem().getDimensionPixelSize(R.dimen.notification_large_icon_width);
+        int notificationBitmapSize = 32;//Resources(R.dimen.notification_large_icon_width);
         if (preview != null) {
             return Bitmap.createScaledBitmap(preview,
                     notificationBitmapSize, notificationBitmapSize, true);

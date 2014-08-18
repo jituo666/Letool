@@ -1,14 +1,10 @@
 package com.xjt.newpic.filtershow.filters;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Matrix;
 
 import com.xjt.newpic.R;
 
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Matrix;
 import android.support.v8.renderscript.Allocation;
 import android.support.v8.renderscript.Element;
 import android.support.v8.renderscript.RenderScript;
@@ -18,15 +14,13 @@ import android.support.v8.renderscript.Type;
 import com.xjt.newpic.filtershow.pipeline.FilterEnvironment;
 
 public class ImageFilterGrad extends ImageFilterRS {
-    private static final String LOGTAG = "ImageFilterGrad";
+    private static final String TAG = ImageFilterGrad.class.getSimpleName();
     private ScriptC_grad mScript;
     private Bitmap mSourceBitmap;
-    private static final int RADIUS_SCALE_FACTOR = 160;
 
     private static final int STRIP_SIZE = 64;
 
     FilterGradRepresentation mParameters = new FilterGradRepresentation();
-    private Bitmap mOverlayBitmap;
 
     public ImageFilterGrad() {
         mName = "grad";

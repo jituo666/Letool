@@ -41,6 +41,7 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.xjt.newpic.R;
 import com.xjt.newpic.filtershow.FilterShowActivity;
