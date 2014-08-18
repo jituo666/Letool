@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.filtershow.filters;
 
 import com.xjt.newpic.filtershow.editors.BasicEditor;
@@ -8,8 +9,19 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class FilterRepresentation {
-    private static final String LOGTAG = "FilterRepresentation";
-    private static final boolean DEBUG = false;
+
+    private static final String TAG = FilterRepresentation.class.getSimpleName();
+
+    protected static final String NAME_TAG = "Name";
+
+    public static final byte TYPE_BORDER = 1;
+    public static final byte TYPE_FX = 2;
+    public static final byte TYPE_WBALANCE = 3;
+    public static final byte TYPE_VIGNETTE = 4;
+    public static final byte TYPE_NORMAL = 5;
+    public static final byte TYPE_TINYPLANET = 6;
+    public static final byte TYPE_GEOMETRY = 7;
+
     private String mName;
     private int mPriority = TYPE_NORMAL;
     private Class<?> mFilterClass;
@@ -22,20 +34,12 @@ public class FilterRepresentation {
     private boolean mShowParameterValue = true;
     private boolean mIsBooleanFilter = false;
     private String mSerializationName;
-    public static final byte TYPE_BORDER = 1;
-    public static final byte TYPE_FX = 2;
-    public static final byte TYPE_WBALANCE = 3;
-    public static final byte TYPE_VIGNETTE = 4;
-    public static final byte TYPE_NORMAL = 5;
-    public static final byte TYPE_TINYPLANET = 6;
-    public static final byte TYPE_GEOMETRY = 7;
-    protected static final String NAME_TAG = "Name";
 
     public FilterRepresentation(String name) {
         mName = name;
     }
 
-    public FilterRepresentation copy(){
+    public FilterRepresentation copy() {
         FilterRepresentation representation = new FilterRepresentation(mName);
         representation.useParametersFrom(this);
         return representation;
@@ -51,7 +55,7 @@ public class FilterRepresentation {
         representation.setOverlayId(getOverlayId());
         representation.setOverlayOnly(getOverlayOnly());
         representation.setShowParameterValue(showParameterValue());
-        representation.mSerializationName = mSerializationName;
+        representation.setSerializationName(mSerializationName);
         representation.setIsBooleanFilter(isBooleanFilter());
     }
 
@@ -62,8 +66,7 @@ public class FilterRepresentation {
         if (representation.mFilterClass == mFilterClass
                 && representation.mName.equalsIgnoreCase(mName)
                 && representation.mPriority == mPriority
-                // TODO: After we enable partial rendering, we can switch back
-                // to use member variable here.
+                // TODO: After we enable partial rendering, we can switch back to use member variable here.
                 && representation.supportsPartialRendering() == supportsPartialRendering()
                 && representation.mTextId == mTextId
                 && representation.mEditorId == mEditorId
@@ -181,7 +184,8 @@ public class FilterRepresentation {
 
     public int[] getEditorIds() {
         return new int[] {
-        mEditorId };
+                mEditorId
+        };
     }
 
     public void setEditorId(int editorId) {
@@ -219,7 +223,11 @@ public class FilterRepresentation {
 
     // this is the old way of doing this and will be removed soon
     public String[][] serializeRepresentation() {
-        String[][] ret = {{NAME_TAG, getName()}};
+        String[][] ret = {
+                {
+                        NAME_TAG, getName()
+            }
+        };
         return ret;
     }
 
@@ -227,7 +235,9 @@ public class FilterRepresentation {
         ArrayList<String[]> al = new ArrayList<String[]>();
         reader.beginObject();
         while (reader.hasNext()) {
-            String[] kv = {reader.nextName(), reader.nextString()};
+            String[] kv = {
+                    reader.nextName(), reader.nextString()
+            };
             al.add(kv);
 
         }
@@ -254,7 +264,7 @@ public class FilterRepresentation {
 
     public boolean canMergeWith(FilterRepresentation representation) {
         if (getFilterType() == FilterRepresentation.TYPE_GEOMETRY
-            && representation.getFilterType() == FilterRepresentation.TYPE_GEOMETRY) {
+                && representation.getFilterType() == FilterRepresentation.TYPE_GEOMETRY) {
             return true;
         }
         return false;

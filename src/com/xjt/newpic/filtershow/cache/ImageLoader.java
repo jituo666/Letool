@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2012 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.xjt.newpic.filtershow.cache;
 
 import android.annotation.TargetApi;
@@ -25,9 +9,7 @@ import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
-import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
@@ -43,8 +25,6 @@ import com.android.gallery3d.exif.ExifTag;
 import com.xjt.newpic.utils.XmpUtilHelper;
 import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.filtershow.imageshow.MasterImage;
-import com.xjt.newpic.filtershow.pipeline.FilterEnvironment;
-import com.xjt.newpic.filtershow.tools.XmpPresets;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -523,8 +503,7 @@ public final class ImageLoader {
 
     public static XMPMeta getXmpObject(Context context) {
         try {
-            InputStream is = context.getContentResolver().openInputStream(
-                    MasterImage.getImage().getUri());
+            InputStream is = context.getContentResolver().openInputStream(MasterImage.getImage().getUri());
             return XmpUtilHelper.extractXMPMeta(is);
         } catch (FileNotFoundException e) {
             return null;

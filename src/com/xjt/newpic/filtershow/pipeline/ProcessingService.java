@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.xjt.newpic.filtershow.pipeline;
 
 import android.app.Notification;
@@ -27,7 +11,6 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.xjt.newpic.R;
 import com.xjt.newpic.filtershow.FilterShowActivity;
@@ -92,8 +75,7 @@ public class ProcessingService extends Service {
         mRenderingRequestTask.postRenderingRequest(request);
     }
 
-    public void postHighresRenderingRequest(ImagePreset preset, float scaleFactor,
-                                            RenderingRequestCaller caller) {
+    public void postHighresRenderingRequest(ImagePreset preset, float scaleFactor, RenderingRequestCaller caller) {
         RenderingRequest request = new RenderingRequest();
         // TODO: use the triple buffer preset as UpdatePreviewTask does instead of creating a copy
         ImagePreset passedPreset = new ImagePreset(preset);
@@ -106,8 +88,7 @@ public class ProcessingService extends Service {
     }
 
     public void postFullresRenderingRequest(ImagePreset preset, float scaleFactor,
-                                            Rect bounds, Rect destination,
-                                            RenderingRequestCaller caller) {
+                                            Rect bounds, Rect destination, RenderingRequestCaller caller) {
         RenderingRequest request = new RenderingRequest();
         ImagePreset passedPreset = new ImagePreset(preset);
         request.setOriginalImagePreset(preset);
@@ -215,8 +196,7 @@ public class ProcessingService extends Service {
             mNeedsAlive = false;
             mSaving = true;
             handleSaveRequest(sourceUri, selectedUri, destinationFile, preset,
-                    MasterImage.getImage().getHighresImage(),
-                    flatten, quality, sizeFactor, exit);
+                    MasterImage.getImage().getHighresImage(), flatten, quality, sizeFactor, exit);
         }
         return START_REDELIVER_INTENT;
     }

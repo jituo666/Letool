@@ -57,8 +57,7 @@ public class ColorPickerDialog extends Dialog   {
         mColorOpacityView = (ColorOpacityView) findViewById(R.id.colorOpacityView);
         mColorCompareView = (ColorCompareView) findViewById(R.id.btnSelect);
 
-        float[] hsvo = new float[] {
-                123, .9f, 1, 1 };
+        float[] hsvo = new float[] {123, .9f, 1, 1 };
 
         ImageButton apply = (ImageButton) findViewById(R.id.applyColorPick);
         ImageButton cancel = (ImageButton) findViewById(R.id.cancelColorPick);

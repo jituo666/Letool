@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.filtershow.imageshow;
 
 import android.graphics.Bitmap;
@@ -33,15 +34,19 @@ import java.util.Vector;
 
 public class MasterImage implements RenderingRequestCaller {
 
-    private static final String LOGTAG = "MasterImage";
-    private boolean DEBUG  = false;
+    private static final String TAG = MasterImage.class.getSimpleName();
+
     private static final boolean DISABLEZOOM = false;
     public static final int SMALL_BITMAP_DIM = 160;
     public static final int MAX_BITMAP_DIM = 900;
+
+    public static final int CIRCLE_ANIMATION = 1;
+    public static final int ROTATE_ANIMATION = 2;
+    public static final int MIRROR_ANIMATION = 3;
+
     private static MasterImage sMasterImage = null;
 
     private boolean mSupportsHighRes = false;
-
     private ImageFilter mCurrentFilter = null;
     private ImagePreset mPreset = null;
     private ImagePreset mLoadedPreset = null;
@@ -55,6 +60,7 @@ public class MasterImage implements RenderingRequestCaller {
     private Bitmap mOriginalBitmapLarge = null;
     private Bitmap mOriginalBitmapHighres = null;
     private Bitmap mTemporaryThumbnail = null;
+
     private int mOrientation;
     private Rect mOriginalBounds;
     private final Vector<ImageShow> mLoadListeners = new Vector<ImageShow>();
@@ -76,9 +82,6 @@ public class MasterImage implements RenderingRequestCaller {
     private float mCurrentAnimRotationStartValue = 0;
     private float mAnimFraction = 0;
     private int mCurrentLookAnimation = 0;
-    public static final int CIRCLE_ANIMATION = 1;
-    public static final int ROTATE_ANIMATION = 2;
-    public static final int MIRROR_ANIMATION = 3;
 
     private HistoryManager mHistory = null;
 
@@ -98,10 +101,22 @@ public class MasterImage implements RenderingRequestCaller {
     private List<ExifTag> mEXIF;
     private BitmapCache mBitmapCache = new BitmapCache();
 
+    private Runnable mWarnListenersRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+            for (int i = 0; i < mLoadListeners.size(); i++) {
+                ImageShow imageShow = mLoadListeners.elementAt(i);
+                imageShow.imageLoaded();
+            }
+            invalidatePreview();
+        }
+    };
+
     private MasterImage() {
+
     }
 
-    // TODO: remove singleton
     public static void setMaster(MasterImage master) {
         sMasterImage = master;
     }
@@ -111,6 +126,135 @@ public class MasterImage implements RenderingRequestCaller {
             sMasterImage = new MasterImage();
         }
         return sMasterImage;
+    }
+
+    public boolean loadBitmap(Uri uri, int size) {
+        setUri(uri);
+        mEXIF = ImageLoader.getExif(getActivity(), uri);
+        mOrientation = ImageLoader.getMetadataOrientation(mActivity, uri);
+        Rect originalBounds = new Rect();
+        mOriginalBitmapLarge = ImageLoader.loadOrientedConstrainedBitmap(uri, mActivity, Math.min(MAX_BITMAP_DIM, size),
+                mOrientation, originalBounds);
+        setOriginalBounds(originalBounds);
+        if (mOriginalBitmapLarge == null) {
+            return false;
+        }
+        int sw = SMALL_BITMAP_DIM;
+        int sh = (int) (SMALL_BITMAP_DIM * (float) mOriginalBitmapLarge.getHeight() / mOriginalBitmapLarge.getWidth());
+        mOriginalBitmapSmall = Bitmap.createScaledBitmap(mOriginalBitmapLarge, sw, sh, true);
+        mZoomOrientation = mOrientation;
+        warnListeners();
+        return true;
+    }
+
+    public void onNewLook(FilterRepresentation newRepresentation) {
+        if (getFilteredImage() == null) {
+            return;
+        }
+        if (mAnimator != null) {
+            mAnimator.cancel();
+            if (mCurrentLookAnimation == ROTATE_ANIMATION) {
+                mCurrentAnimRotationStartValue += 90;
+            }
+        } else {
+            resetAnimBitmap();
+            mPreviousImage = mBitmapCache.getBitmapCopy(getFilteredImage(), BitmapCache.NEW_LOOK);
+        }
+        if (newRepresentation instanceof FilterUserPresetRepresentation) {
+            mCurrentLookAnimation = CIRCLE_ANIMATION;
+            mAnimator = ValueAnimator.ofFloat(0, 1);
+            mAnimator.setDuration(650);
+        }
+        if (newRepresentation instanceof FilterRotateRepresentation) {
+            mCurrentLookAnimation = ROTATE_ANIMATION;
+            mAnimator = ValueAnimator.ofFloat(0, 90);
+            mAnimator.setDuration(500);
+        }
+        if (newRepresentation instanceof FilterMirrorRepresentation) {
+            mCurrentLookAnimation = MIRROR_ANIMATION;
+            mAnimator = ValueAnimator.ofFloat(1, 0, -1);
+            mAnimator.setDuration(500);
+        }
+        mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                if (mCurrentLookAnimation == CIRCLE_ANIMATION) {
+                    setMaskScale((Float) animation.getAnimatedValue());
+                } else if (mCurrentLookAnimation == ROTATE_ANIMATION
+                        || mCurrentLookAnimation == MIRROR_ANIMATION) {
+                    setAnimRotation((Float) animation.getAnimatedValue());
+                    setAnimFraction(animation.getAnimatedFraction());
+                }
+            }
+        });
+        mAnimator.addListener(new Animator.AnimatorListener() {
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                mOnGoingNewLookAnimation = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mOnGoingNewLookAnimation = false;
+                mCurrentAnimRotationStartValue = 0;
+                mAnimator = null;
+                notifyObservers();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        mAnimator.start();
+        notifyObservers();
+    }
+
+    public void warnListeners() {
+        mActivity.runOnUiThread(mWarnListenersRunnable);
+    }
+
+    @Override
+    public void available(RenderingRequest request) {
+        if (request.getBitmap() == null) {
+            return;
+        }
+        boolean needsCheckModification = false;
+        if (request.getType() == RenderingRequest.GEOMETRY_RENDERING) {
+            mBitmapCache.cache(mGeometryOnlyBitmap);
+            mGeometryOnlyBitmap = request.getBitmap();
+            needsCheckModification = true;
+        }
+        if (request.getType() == RenderingRequest.FILTERS_RENDERING) {
+            mBitmapCache.cache(mFiltersOnlyBitmap);
+            mFiltersOnlyBitmap = request.getBitmap();
+            notifyObservers();
+            needsCheckModification = true;
+        }
+        if (request.getType() == RenderingRequest.PARTIAL_RENDERING
+                && request.getScaleFactor() == getScaleFactor()) {
+            mBitmapCache.cache(mPartialBitmap);
+            mPartialBitmap = request.getBitmap();
+            mPartialBounds.set(request.getBounds());
+            notifyObservers();
+            needsCheckModification = true;
+        }
+        if (request.getType() == RenderingRequest.HIGHRES_RENDERING) {
+            mBitmapCache.cache(mHighresBitmap);
+            mHighresBitmap = request.getBitmap();
+            notifyObservers();
+            needsCheckModification = true;
+        }
+        if (needsCheckModification) {
+            mActivity.enableSave(hasModifications());
+        }
     }
 
     public Bitmap getOriginalBitmapSmall() {
@@ -128,12 +272,33 @@ public class MasterImage implements RenderingRequestCaller {
         return mOriginalBitmapHighres;
     }
 
-    public void setOriginalBitmapHighres(Bitmap mOriginalBitmapHighres) {
-        this.mOriginalBitmapHighres = mOriginalBitmapHighres;
+    public void setOriginalBitmapHighres(Bitmap originalBitmapHighres) {
+        mOriginalBitmapHighres = originalBitmapHighres;
     }
 
     public int getOrientation() {
         return mOrientation;
+    }
+
+    public int getZoomOrientation() {
+        return mZoomOrientation;
+    }
+
+    public void addListener(ImageShow imageShow) {
+        if (!mLoadListeners.contains(imageShow)) {
+            mLoadListeners.add(imageShow);
+        }
+    }
+
+    public void addObserver(ImageShow observer) {
+        if (mObservers.contains(observer)) {
+            return;
+        }
+        mObservers.add(observer);
+    }
+
+    public void removeObserver(ImageShow observer) {
+        mObservers.remove(observer);
     }
 
     public Rect getOriginalBounds() {
@@ -150,67 +315,6 @@ public class MasterImage implements RenderingRequestCaller {
 
     public void setUri(Uri uri) {
         mUri = uri;
-    }
-
-    public int getZoomOrientation() {
-        return mZoomOrientation;
-    }
-
-    public void addListener(ImageShow imageShow) {
-        if (!mLoadListeners.contains(imageShow)) {
-            mLoadListeners.add(imageShow);
-        }
-    }
-
-    public void warnListeners() {
-        mActivity.runOnUiThread(mWarnListenersRunnable);
-    }
-
-    private Runnable mWarnListenersRunnable = new Runnable() {
-        @Override
-        public void run() {
-            for (int i = 0; i < mLoadListeners.size(); i++) {
-                ImageShow imageShow = mLoadListeners.elementAt(i);
-                imageShow.imageLoaded();
-            }
-            invalidatePreview();
-        }
-    };
-
-    public boolean loadBitmap(Uri uri, int size) {
-        setUri(uri);
-        mEXIF = ImageLoader.getExif(getActivity(), uri);
-        mOrientation = ImageLoader.getMetadataOrientation(mActivity, uri);
-        Rect originalBounds = new Rect();
-        mOriginalBitmapLarge = ImageLoader.loadOrientedConstrainedBitmap(uri, mActivity,
-                Math.min(MAX_BITMAP_DIM, size),
-                mOrientation, originalBounds);
-        setOriginalBounds(originalBounds);
-        if (mOriginalBitmapLarge == null) {
-            return false;
-        }
-        int sw = SMALL_BITMAP_DIM;
-        int sh = (int) (sw * (float) mOriginalBitmapLarge.getHeight() / mOriginalBitmapLarge
-                .getWidth());
-        mOriginalBitmapSmall = Bitmap.createScaledBitmap(mOriginalBitmapLarge, sw, sh, true);
-        mZoomOrientation = mOrientation;
-        warnListeners();
-        return true;
-    }
-
-    public void setSupportsHighRes(boolean value) {
-        mSupportsHighRes = value;
-    }
-
-    public void addObserver(ImageShow observer) {
-        if (mObservers.contains(observer)) {
-            return;
-        }
-        mObservers.add(observer);
-    }
-
-    public void removeObserver(ImageShow observer) {
-        mObservers.remove(observer);
     }
 
     public void setActivity(FilterShowActivity activity) {
@@ -233,12 +337,8 @@ public class MasterImage implements RenderingRequestCaller {
         return mFiltersOnlyPreset;
     }
 
-    public synchronized void setPreset(ImagePreset preset,
-                                       FilterRepresentation change,
-                                       boolean addToHistory) {
-        if (DEBUG) {
-            preset.showFilters();
-        }
+    public synchronized void setPreset(ImagePreset preset, FilterRepresentation change, boolean addToHistory) {
+        preset.showFilters();
         mPreset = preset;
         if (addToHistory) {
             HistoryItem historyItem = new HistoryItem(mPreset, change);
@@ -262,11 +362,9 @@ public class MasterImage implements RenderingRequestCaller {
         return mHistory;
     }
 
-
     public void setHistoryManager(HistoryManager adapter) {
         mHistory = adapter;
     }
-
 
     public void setCurrentFilter(ImageFilter filter) {
         mCurrentFilter = filter;
@@ -344,32 +442,6 @@ public class MasterImage implements RenderingRequestCaller {
         return getPreviewBuffer().getConsumer().getPreset();
     }
 
-    public float getMaskScale() {
-        return mMaskScale;
-    }
-
-    public void setMaskScale(float scale) {
-        mMaskScale = scale;
-        notifyObservers();
-    }
-
-    public float getAnimRotationValue() {
-        return mAnimRotationValue;
-    }
-
-    public void setAnimRotation(float rotation) {
-        mAnimRotationValue = mCurrentAnimRotationStartValue + rotation;
-        notifyObservers();
-    }
-
-    public void setAnimFraction(float fraction) {
-        mAnimFraction = fraction;
-    }
-
-    public float getAnimFraction() {
-        return mAnimFraction;
-    }
-
     public boolean onGoingNewLookAnimation() {
         return mOnGoingNewLookAnimation;
     }
@@ -381,74 +453,6 @@ public class MasterImage implements RenderingRequestCaller {
     public void resetAnimBitmap() {
         mBitmapCache.cache(mPreviousImage);
         mPreviousImage = null;
-    }
-
-    public void onNewLook(FilterRepresentation newRepresentation) {
-        if (getFilteredImage() == null) {
-            return;
-        }
-        if (mAnimator != null) {
-            mAnimator.cancel();
-            if (mCurrentLookAnimation == ROTATE_ANIMATION) {
-                mCurrentAnimRotationStartValue += 90;
-            }
-        } else {
-            resetAnimBitmap();
-            mPreviousImage = mBitmapCache.getBitmapCopy(getFilteredImage(), BitmapCache.NEW_LOOK);
-        }
-        if (newRepresentation instanceof FilterUserPresetRepresentation) {
-            mCurrentLookAnimation = CIRCLE_ANIMATION;
-            mAnimator = ValueAnimator.ofFloat(0, 1);
-            mAnimator.setDuration(650);
-        }
-        if (newRepresentation instanceof FilterRotateRepresentation) {
-            mCurrentLookAnimation = ROTATE_ANIMATION;
-            mAnimator = ValueAnimator.ofFloat(0, 90);
-            mAnimator.setDuration(500);
-        }
-        if (newRepresentation instanceof FilterMirrorRepresentation) {
-            mCurrentLookAnimation = MIRROR_ANIMATION;
-            mAnimator = ValueAnimator.ofFloat(1, 0, -1);
-            mAnimator.setDuration(500);
-        }
-        mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                if (mCurrentLookAnimation == CIRCLE_ANIMATION) {
-                    setMaskScale((Float) animation.getAnimatedValue());
-                } else if (mCurrentLookAnimation == ROTATE_ANIMATION
-                        || mCurrentLookAnimation == MIRROR_ANIMATION) {
-                    setAnimRotation((Float) animation.getAnimatedValue());
-                    setAnimFraction(animation.getAnimatedFraction());
-                }
-            }
-        });
-        mAnimator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                mOnGoingNewLookAnimation = true;
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mOnGoingNewLookAnimation = false;
-                mCurrentAnimRotationStartValue = 0;
-                mAnimator = null;
-                notifyObservers();
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-        mAnimator.start();
-        notifyObservers();
     }
 
     public void notifyObservers() {
@@ -464,33 +468,21 @@ public class MasterImage implements RenderingRequestCaller {
         ImagePreset newPresetGeometryOnly = new ImagePreset(mPreset);
         newPresetGeometryOnly.setDoApplyFilters(false);
         newPresetGeometryOnly.setDoApplyGeometry(true);
-        if (force || mGeometryOnlyPreset == null
-                || !newPresetGeometryOnly.equals(mGeometryOnlyPreset)) {
+        if (force || mGeometryOnlyPreset == null || !newPresetGeometryOnly.equals(mGeometryOnlyPreset)) {
             mGeometryOnlyPreset = newPresetGeometryOnly;
-            RenderingRequest.post(mActivity, null,
-                    mGeometryOnlyPreset, RenderingRequest.GEOMETRY_RENDERING, this);
+            RenderingRequest.post(mActivity, null, mGeometryOnlyPreset, RenderingRequest.GEOMETRY_RENDERING, this);
         }
         ImagePreset newPresetFiltersOnly = new ImagePreset(mPreset);
         newPresetFiltersOnly.setDoApplyFilters(true);
         newPresetFiltersOnly.setDoApplyGeometry(false);
-        if (force || mFiltersOnlyPreset == null
-                || !newPresetFiltersOnly.same(mFiltersOnlyPreset)) {
+        if (force || mFiltersOnlyPreset == null || !newPresetFiltersOnly.same(mFiltersOnlyPreset)) {
             mFiltersOnlyPreset = newPresetFiltersOnly;
-            RenderingRequest.post(mActivity, null,
-                    mFiltersOnlyPreset, RenderingRequest.FILTERS_RENDERING, this);
+            RenderingRequest.post(mActivity, null, mFiltersOnlyPreset, RenderingRequest.FILTERS_RENDERING, this);
         }
     }
 
     public void updatePresets(boolean force) {
         invalidatePreview();
-    }
-
-    public FilterRepresentation getCurrentFilterRepresentation() {
-        return mCurrentFilterRepresentation;
-    }
-
-    public void setCurrentFilterRepresentation(FilterRepresentation currentFilterRepresentation) {
-        mCurrentFilterRepresentation = currentFilterRepresentation;
     }
 
     public void invalidateFiltersOnly() {
@@ -518,7 +510,6 @@ public class MasterImage implements RenderingRequestCaller {
         if (mPreset == null) {
             return;
         }
-
         mPreviewPreset.enqueuePreset(mPreset);
         mPreviewBuffer.invalidate();
         invalidatePartialPreview();
@@ -544,11 +535,9 @@ public class MasterImage implements RenderingRequestCaller {
     }
 
     public Matrix computeImageToScreen(Bitmap bitmapToDraw,
-                                       float rotate,
-                                       boolean applyGeometry) {
-        if (getOriginalBounds() == null
-                || mImageShowSize.x == 0
-                || mImageShowSize.y == 0) {
+            float rotate,
+            boolean applyGeometry) {
+        if (getOriginalBounds() == null || mImageShowSize.x == 0 || mImageShowSize.y == 0) {
             return null;
         }
 
@@ -558,16 +547,13 @@ public class MasterImage implements RenderingRequestCaller {
         float translateY = 0;
 
         if (applyGeometry) {
-            GeometryMathUtils.GeometryHolder holder = GeometryMathUtils.unpackGeometry(
-                    mPreset.getGeometryFilters());
+            GeometryMathUtils.GeometryHolder holder = GeometryMathUtils.unpackGeometry(mPreset.getGeometryFilters());
             m = GeometryMathUtils.getCropSelectionToScreenMatrix(null, holder,
                     getOriginalBounds().width(), getOriginalBounds().height(),
                     mImageShowSize.x, mImageShowSize.y);
         } else if (bitmapToDraw != null) {
             m = new Matrix();
-            RectF size = new RectF(0, 0,
-                    bitmapToDraw.getWidth(),
-                    bitmapToDraw.getHeight());
+            RectF size = new RectF(0, 0, bitmapToDraw.getWidth(), bitmapToDraw.getHeight());
             scale = mImageShowSize.x / size.width();
             if (size.width() < size.height()) {
                 scale = mImageShowSize.y / size.height();
@@ -583,12 +569,18 @@ public class MasterImage implements RenderingRequestCaller {
         m.postRotate(rotate, mImageShowSize.x / 2.0f, mImageShowSize.y / 2.0f);
         m.postTranslate(translateX, translateY);
         m.postTranslate(mShadowMargin, mShadowMargin);
-        m.postScale(getScaleFactor(), getScaleFactor(),
-                mImageShowSize.x / 2.0f,
-                mImageShowSize.y / 2.0f);
+        m.postScale(getScaleFactor(), getScaleFactor(), mImageShowSize.x / 2.0f, mImageShowSize.y / 2.0f);
         m.postTranslate(translation.x * getScaleFactor(),
-                        translation.y * getScaleFactor());
+                translation.y * getScaleFactor());
         return m;
+    }
+
+    public FilterRepresentation getCurrentFilterRepresentation() {
+        return mCurrentFilterRepresentation;
+    }
+
+    public void setCurrentFilterRepresentation(FilterRepresentation currentFilterRepresentation) {
+        mCurrentFilterRepresentation = currentFilterRepresentation;
     }
 
     private Matrix getImageToScreenMatrix(boolean reflectRotation) {
@@ -617,17 +609,11 @@ public class MasterImage implements RenderingRequestCaller {
     }
 
     public void needsUpdateHighResPreview() {
-        if (!mSupportsHighRes) {
+        if (!mSupportsHighRes || mActivity.getProcessingService() == null || mPreset == null) {
             return;
         }
-        if (mActivity.getProcessingService() == null) {
-            return;
-        }
-        if (mPreset == null) {
-            return;
-        }
-        mActivity.getProcessingService().postHighresRenderingRequest(mPreset,
-                getScaleFactor(), this);
+
+        mActivity.getProcessingService().postHighresRenderingRequest(mPreset, getScaleFactor(), this);
         invalidateHighresPreview();
     }
 
@@ -645,58 +631,44 @@ public class MasterImage implements RenderingRequestCaller {
         }
         Matrix screenToOriginal = new Matrix();
         originalToScreen.invert(screenToOriginal);
-        RectF bounds = new RectF(0, 0,
-                mImageShowSize.x + 2 * mShadowMargin,
-                mImageShowSize.y + 2 * mShadowMargin);
+        RectF bounds = new RectF(0, 0, mImageShowSize.x + 2 * mShadowMargin, mImageShowSize.y + 2 * mShadowMargin);
         screenToOriginal.mapRect(bounds);
         Rect rBounds = new Rect();
         bounds.roundOut(rBounds);
 
-        mActivity.getProcessingService().postFullresRenderingRequest(mPreset,
-                getScaleFactor(), rBounds,
+        mActivity.getProcessingService().postFullresRenderingRequest(mPreset, getScaleFactor(), rBounds,
                 new Rect(0, 0, mImageShowSize.x, mImageShowSize.y), this);
         invalidatePartialPreview();
     }
 
-    @Override
-    public void available(RenderingRequest request) {
-        if (request.getBitmap() == null) {
-            return;
-        }
-
-        boolean needsCheckModification = false;
-        if (request.getType() == RenderingRequest.GEOMETRY_RENDERING) {
-            mBitmapCache.cache(mGeometryOnlyBitmap);
-            mGeometryOnlyBitmap = request.getBitmap();
-            needsCheckModification = true;
-        }
-        if (request.getType() == RenderingRequest.FILTERS_RENDERING) {
-            mBitmapCache.cache(mFiltersOnlyBitmap);
-            mFiltersOnlyBitmap = request.getBitmap();
-            notifyObservers();
-            needsCheckModification = true;
-        }
-        if (request.getType() == RenderingRequest.PARTIAL_RENDERING
-                && request.getScaleFactor() == getScaleFactor()) {
-            mBitmapCache.cache(mPartialBitmap);
-            mPartialBitmap = request.getBitmap();
-            mPartialBounds.set(request.getBounds());
-            notifyObservers();
-            needsCheckModification = true;
-        }
-        if (request.getType() == RenderingRequest.HIGHRES_RENDERING) {
-            mBitmapCache.cache(mHighresBitmap);
-            mHighresBitmap = request.getBitmap();
-            notifyObservers();
-            needsCheckModification = true;
-        }
-        if (needsCheckModification) {
-            mActivity.enableSave(hasModifications());
-        }
-    }
-
     public static void reset() {
         sMasterImage = null;
+    }
+
+    public float getMaskScale() {
+        return mMaskScale;
+    }
+
+    public void setMaskScale(float scale) {
+        mMaskScale = scale;
+        notifyObservers();
+    }
+
+    public float getAnimRotationValue() {
+        return mAnimRotationValue;
+    }
+
+    public void setAnimRotation(float rotation) {
+        mAnimRotationValue = mCurrentAnimRotationStartValue + rotation;
+        notifyObservers();
+    }
+
+    public void setAnimFraction(float fraction) {
+        mAnimFraction = fraction;
+    }
+
+    public float getAnimFraction() {
+        return mAnimFraction;
     }
 
     public float getScaleFactor() {
@@ -704,10 +676,7 @@ public class MasterImage implements RenderingRequestCaller {
     }
 
     public void setScaleFactor(float scaleFactor) {
-        if (DISABLEZOOM) {
-            return;
-        }
-        if (scaleFactor == mScaleFactor) {
+        if (DISABLEZOOM || scaleFactor == mScaleFactor) {
             return;
         }
         mScaleFactor = scaleFactor;
@@ -748,8 +717,7 @@ public class MasterImage implements RenderingRequestCaller {
     }
 
     public Bitmap getTemporaryThumbnailBitmap() {
-        if (mTemporaryThumbnail == null
-                && getOriginalBitmapSmall() != null) {
+        if (mTemporaryThumbnail == null && getOriginalBitmapSmall() != null) {
             mTemporaryThumbnail = getOriginalBitmapSmall().copy(Bitmap.Config.ARGB_8888, true);
             Canvas canvas = new Canvas(mTemporaryThumbnail);
             canvas.drawARGB(200, 80, 80, 80);
@@ -774,6 +742,10 @@ public class MasterImage implements RenderingRequestCaller {
 
     public void setMaxScaleFactor(float maxScaleFactor) {
         mMaxScaleFactor = maxScaleFactor;
+    }
+
+    public void setSupportsHighRes(boolean value) {
+        mSupportsHighRes = value;
     }
 
     public boolean supportsHighRes() {

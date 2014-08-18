@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class UserPresetsManager implements Handler.Callback {
 
-    private static final String LOGTAG = "UserPresetsManager";
+    private static final String TAG = "UserPresetsManager";
 
     private FilterShowActivity mActivity;
     private HandlerThread mHandlerThread = null;
@@ -59,8 +59,7 @@ public class UserPresetsManager implements Handler.Callback {
 
     public UserPresetsManager(FilterShowActivity context) {
         mActivity = context;
-        mHandlerThread = new HandlerThread(LOGTAG,
-                android.os.Process.THREAD_PRIORITY_BACKGROUND);
+        mHandlerThread = new HandlerThread(TAG, android.os.Process.THREAD_PRIORITY_BACKGROUND);
         mHandlerThread.start();
         mProcessingHandler = new Handler(mHandlerThread.getLooper(), this);
         mUserPresets = new FilterStackSource(mActivity);
@@ -123,8 +122,7 @@ public class UserPresetsManager implements Handler.Callback {
     }
 
     private void resultLoad(Message msg) {
-        mRepresentations =
-                (ArrayList<FilterUserPresetRepresentation>) msg.obj;
+        mRepresentations = (ArrayList<FilterUserPresetRepresentation>) msg.obj;
         mActivity.updateUserPresetsFromManager();
     }
 

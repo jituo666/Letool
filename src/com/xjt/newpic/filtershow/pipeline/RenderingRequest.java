@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.xjt.newpic.filtershow.pipeline;
 
@@ -27,6 +12,7 @@ import com.xjt.newpic.filtershow.filters.FiltersManager;
 import com.xjt.newpic.filtershow.imageshow.MasterImage;
 
 public class RenderingRequest {
+
     private static final String LOGTAG = "RenderingRequest";
     private boolean mIsDirect = false;
     private Bitmap mBitmap = null;
@@ -48,27 +34,22 @@ public class RenderingRequest {
 
     private static final Bitmap.Config mConfig = Bitmap.Config.ARGB_8888;
 
-    public static void post(Context context, Bitmap source, ImagePreset preset,
-                            int type, RenderingRequestCaller caller) {
+    public static void post(Context context, Bitmap source, ImagePreset preset, int type, RenderingRequestCaller caller) {
         RenderingRequest.post(context, source, preset, type, caller, null, null);
     }
 
     public static void post(Context context, Bitmap source, ImagePreset preset, int type,
-                            RenderingRequestCaller caller, Rect bounds, Rect destination) {
+            RenderingRequestCaller caller, Rect bounds, Rect destination) {
         if (((type != PARTIAL_RENDERING && type != HIGHRES_RENDERING
                 && type != GEOMETRY_RENDERING && type != FILTERS_RENDERING) && source == null)
                 || preset == null || caller == null) {
-            LLog.v(LOGTAG, "something null: source: " + source
-                    + " or preset: " + preset + " or caller: " + caller);
+            LLog.v(LOGTAG, "something null: source: " + source + " or preset: " + preset + " or caller: " + caller);
             return;
         }
         RenderingRequest request = new RenderingRequest();
         Bitmap bitmap = null;
-        if (type == FULL_RENDERING
-                || type == ICON_RENDERING
-                || type == STYLE_ICON_RENDERING) {
-            CachingPipeline pipeline = new CachingPipeline(
-                    FiltersManager.getManager(), "Icon");
+        if (type == FULL_RENDERING || type == ICON_RENDERING || type == STYLE_ICON_RENDERING) {
+            CachingPipeline pipeline = new CachingPipeline(FiltersManager.getManager(), "Icon");
             bitmap = pipeline.renderGeometryIcon(source, preset);
         } else if (type != PARTIAL_RENDERING && type != HIGHRES_RENDERING
                 && type != GEOMETRY_RENDERING && type != FILTERS_RENDERING) {
@@ -94,11 +75,9 @@ public class RenderingRequest {
     }
 
     public static void postIconRequest(Context context, int w, int h,
-                                       ImagePreset preset,
-                                       RenderingRequestCaller caller) {
+            ImagePreset preset, RenderingRequestCaller caller) {
         if (preset == null || caller == null) {
-            LLog.v(LOGTAG, "something null, preset: "
-                    + preset + " or caller: " + caller);
+            LLog.v(LOGTAG, "something null, preset: " + preset + " or caller: " + caller);
             return;
         }
         RenderingRequest request = new RenderingRequest();
@@ -121,8 +100,7 @@ public class RenderingRequest {
     }
 
     public void markAvailable() {
-        if (mBitmap == null || mImagePreset == null
-                || mCaller == null) {
+        if (mBitmap == null || mImagePreset == null || mCaller == null) {
             return;
         }
         mCaller.available(this);

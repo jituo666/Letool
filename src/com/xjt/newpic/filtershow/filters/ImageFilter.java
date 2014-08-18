@@ -17,8 +17,7 @@ public abstract class ImageFilter implements Cloneable {
     private final String LOGTAG = "ImageFilter";
     protected static final boolean SIMPLE_ICONS = true;
     // TODO: Temporary, for dogfood note memory issues with toasts for better
-    // feedback. Remove this when filters actually work in low memory
-    // situations.
+    // feedback. Remove this when filters actually work in low memory situations.
     private static Activity sActivity = null;
 
     public static void setActivityForMemoryToasts(Activity activity) {
@@ -85,9 +84,8 @@ public abstract class ImageFilter implements Cloneable {
     }
 
     public void setGeneralParameters() {
-        // should implement in subclass which like to transport
-        // some information to other filters. (like the style setting from RetroLux
-        // and Film to FixedFrame)
+        // should implement in subclass which like to transport some information to other filters. 
+        // (like the style setting from RetroLux  and Film to FixedFrame)
         mEnvironment.clearGeneralParameters();
     }
 }
