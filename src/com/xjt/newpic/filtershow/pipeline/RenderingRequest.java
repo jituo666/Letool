@@ -13,7 +13,7 @@ import com.xjt.newpic.filtershow.imageshow.MasterImage;
 
 public class RenderingRequest {
 
-    private static final String LOGTAG = "RenderingRequest";
+    private static final String TAG = RenderingRequest.class.getSimpleName();
     private boolean mIsDirect = false;
     private Bitmap mBitmap = null;
     private ImagePreset mImagePreset = null;
@@ -43,7 +43,7 @@ public class RenderingRequest {
         if (((type != PARTIAL_RENDERING && type != HIGHRES_RENDERING
                 && type != GEOMETRY_RENDERING && type != FILTERS_RENDERING) && source == null)
                 || preset == null || caller == null) {
-            LLog.v(LOGTAG, "something null: source: " + source + " or preset: " + preset + " or caller: " + caller);
+            LLog.v(TAG, "something null: source: " + source + " or preset: " + preset + " or caller: " + caller);
             return;
         }
         RenderingRequest request = new RenderingRequest();
@@ -77,7 +77,7 @@ public class RenderingRequest {
     public static void postIconRequest(Context context, int w, int h,
             ImagePreset preset, RenderingRequestCaller caller) {
         if (preset == null || caller == null) {
-            LLog.v(LOGTAG, "something null, preset: " + preset + " or caller: " + caller);
+            LLog.v(TAG, "something null, preset: " + preset + " or caller: " + caller);
             return;
         }
         RenderingRequest request = new RenderingRequest();

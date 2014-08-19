@@ -54,6 +54,7 @@
             android:name="com.xjt.newpic.filtershow.FilterShowActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_filter_show"
+            android:screenOrientation="portrait"
             android:theme="@style/MainTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.EDIT" />
@@ -63,7 +64,7 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
             <intent-filter>
-                <action android:name="action_nextgen_edit" />
+                <action android:name="com.xjt.newpic.edit" />
 
                 <category android:name="android.intent.category.DEFAULT" />
 
@@ -74,6 +75,7 @@
             android:name="com.xjt.newpic.filtershow.crop.CropActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/crop"
+            android:screenOrientation="portrait"
             android:theme="@style/MainTheme" >
             <intent-filter android:label="@string/crop_label" >
                 <action android:name="com.android.camera.action.CROP" />

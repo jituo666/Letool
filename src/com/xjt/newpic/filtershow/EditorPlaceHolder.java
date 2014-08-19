@@ -3,8 +3,6 @@ package com.xjt.newpic.filtershow;
 import android.view.View;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
-
-import com.xjt.newpic.filtershow.cache.ImageLoader;
 import com.xjt.newpic.filtershow.editors.Editor;
 import com.xjt.newpic.filtershow.imageshow.ImageShow;
 
@@ -12,7 +10,7 @@ import java.util.HashMap;
 import java.util.Vector;
 
 public class EditorPlaceHolder {
-    private static final String LOGTAG = "EditorPlaceHolder";
+    private static final String TAG = "EditorPlaceHolder";
 
     private FilterShowActivity mActivity = null;
     private FrameLayout mContainer = null;

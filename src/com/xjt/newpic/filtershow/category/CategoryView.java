@@ -21,12 +21,13 @@ import com.xjt.newpic.filtershow.ui.SelectionRenderer;
 public class CategoryView extends IconView implements View.OnClickListener, SwipableView {
 
     private static final String TAG = CategoryView.class.getSimpleName();
+
     public static final int VERTICAL = 0;
     public static final int HORIZONTAL = 1;
     private Paint mPaint = new Paint();
     private Action mAction;
     private Paint mSelectPaint;
-    CategoryAdapter mAdapter;
+    private CategoryAdapter mAdapter;
     private int mSelectionStroke;
     private Paint mBorderPaint;
     private int mBorderStroke;

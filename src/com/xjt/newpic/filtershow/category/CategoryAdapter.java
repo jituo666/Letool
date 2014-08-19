@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.xjt.newpic.filtershow.category;
 
@@ -30,12 +15,13 @@ import com.xjt.newpic.filtershow.pipeline.ImagePreset;
 
 public class CategoryAdapter extends ArrayAdapter<Action> {
 
-    private static final String LOGTAG = "CategoryAdapter";
-    private int mItemHeight;
+    private static final String TAG = CategoryAdapter.class.getSimpleName();
+
     private View mContainer;
+    private int mItemHeight;
     private int mItemWidth = ListView.LayoutParams.MATCH_PARENT;
     private int mSelectedPosition;
-    int mCategory;
+    private int mCategory;
     private int mOrientation;
     private boolean mShowAddButton = false;
     private String mAddButtonText;
@@ -105,12 +91,10 @@ public class CategoryAdapter extends ArrayAdapter<Action> {
                 height = height / 2;
             }
         }
-        if (action.getType() == Action.ADD_ACTION
-                && mOrientation == CategoryView.VERTICAL) {
+        if (action.getType() == Action.ADD_ACTION && mOrientation == CategoryView.VERTICAL) {
             height = height / 2;
         }
-        view.setLayoutParams(
-                new ListView.LayoutParams(width, height));
+        view.setLayoutParams(new ListView.LayoutParams(width, height));
         view.setTag(position);
         view.invalidate();
         return view;
@@ -130,14 +114,8 @@ public class CategoryAdapter extends ArrayAdapter<Action> {
     }
 
     private void invalidateView(int position) {
-        View child = null;
-        if (mContainer instanceof ListView) {
-            ListView lv = (ListView) mContainer;
-            child = lv.getChildAt(position - lv.getFirstVisiblePosition());
-        } else {
-            CategoryTrack ct = (CategoryTrack) mContainer;
-            child = ct.getChildAt(position);
-        }
+        CategoryTrack ct = (CategoryTrack) mContainer;
+        View child = ct.getChildAt(position);
         if (child != null) {
             child.invalidate();
         }
@@ -154,8 +132,7 @@ public class CategoryAdapter extends ArrayAdapter<Action> {
     public FilterRepresentation getTinyPlanet() {
         for (int i = 0; i < getCount(); i++) {
             Action action = getItem(i);
-            if (action.getRepresentation() != null
-                    && action.getRepresentation()
+            if (action.getRepresentation() != null && action.getRepresentation()
                     instanceof FilterTinyPlanetRepresentation) {
                 return action.getRepresentation();
             }
@@ -166,8 +143,7 @@ public class CategoryAdapter extends ArrayAdapter<Action> {
     public void removeTinyPlanet() {
         for (int i = 0; i < getCount(); i++) {
             Action action = getItem(i);
-            if (action.getRepresentation() != null
-                    && action.getRepresentation()
+            if (action.getRepresentation() != null && action.getRepresentation()
                     instanceof FilterTinyPlanetRepresentation) {
                 super.remove(action);
                 return;
@@ -177,8 +153,7 @@ public class CategoryAdapter extends ArrayAdapter<Action> {
 
     @Override
     public void remove(Action action) {
-        if (!(mCategory == MainPanel.VERSIONS
-                || mCategory == MainPanel.LOOKS)) {
+        if (!(mCategory == MainPanel.VERSIONS || mCategory == MainPanel.LOOKS)) {
             return;
         }
         super.remove(action);
@@ -217,8 +192,7 @@ public class CategoryAdapter extends ArrayAdapter<Action> {
                 if (itemRep == null) {
                     continue;
                 }
-                if (rep.getName().equalsIgnoreCase(
-                        itemRep.getName())) {
+                if (rep.getName().equalsIgnoreCase(itemRep.getName())) {
                     selected = i;
                     break;
                 }

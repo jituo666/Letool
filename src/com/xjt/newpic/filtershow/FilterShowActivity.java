@@ -87,7 +87,6 @@ import com.xjt.newpic.filtershow.tools.SaveImage;
 import com.xjt.newpic.filtershow.tools.XmpPresets;
 import com.xjt.newpic.filtershow.tools.XmpPresets.XMresults;
 import com.xjt.newpic.filtershow.ui.FramedTextButton;
-import com.xjt.newpic.fragment.FullImageFragment;
 import com.xjt.newpic.imagedata.utils.LetoolBitmapPool;
 import com.xjt.newpic.metadata.source.LocalAlbum;
 import com.xjt.newpic.surpport.PopupMenuItem;
@@ -102,14 +101,17 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 public class FilterShowActivity extends FragmentActivity implements OnItemClickListener, OnActionModeListener,
-        PopupMenu.OnDismissListener, PopupMenu.OnMenuItemClickListener, DialogInterface.OnShowListener, DialogInterface.OnDismissListener {
+        PopupMenu.OnDismissListener, PopupMenu.OnMenuItemClickListener {
 
     private static final String TAG = FilterShowActivity.class.getSimpleName();
+
     private static final long LIMIT_SUPPORTS_HIGHRES = 134217728; // 128Mb
 
     public static final String TINY_PLANET_ACTION = "com.android.camera.action.TINY_PLANET";
-    public static final String LAUNCH_FULLSCREEN = "launch-fullscreen";
+    public static final String FILTER_EDIT_ACTION = "com.xjt.newpic.edit";
+
     public static final boolean RESET_TO_LOADED = false;
+
     private static final int SELECT_PICTURE = 1;
 
     private static final int POPUP_MENU_RESET = 0;
@@ -145,7 +147,7 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
     private CategoryAdapter mCategoryGeometryAdapter = null;
     private CategoryAdapter mCategoryFiltersAdapter = null;
     private CategoryAdapter mCategoryVersionsAdapter = null;
-    private int mCurrentPanel = MainPanel.LOOKS;
+    private int mCurrentPanel = MainPanel.FILTERS;
     private Vector<FilterUserPresetRepresentation> mVersions = new Vector<FilterUserPresetRepresentation>();
     private int mVersionsCounter = 0;
 
@@ -156,7 +158,6 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
     private float mSwipeStartY = 0;
 
     private boolean mIsBound = false;
-    private DialogInterface mCurrentDialog = null;
     private PopupMenu mCurrentMenu = null;
     private boolean mLoadingVisible = true;
     private LetoolTopBar mTopBar;
@@ -201,7 +202,7 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
          * we know will be running in our own process (and thus won't be
          * supporting component replacement by other applications).
          */
-        bindService(new Intent(FilterShowActivity.this, ProcessingService.class), mConnection, Context.BIND_AUTO_CREATE);
+        bindService(new Intent(this, ProcessingService.class), mConnection, Context.BIND_AUTO_CREATE);
         mIsBound = true;
     }
 
@@ -212,36 +213,24 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         }
     }
 
-    public void initActionBar() {
-        mTopBar = new LetoolTopBar(this, (ViewGroup) findViewById(R.id.letool_top_bar_container));
-        mTopBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_IMAGE_EDIT, this);
-        mTopBar.setTitleIcon(R.drawable.ic_action_previous_item);
-        View operationPanel = mTopBar.getActionPanel();
-        ImageView undo = (ImageView) operationPanel.findViewById(R.id.action_undo);
-        ImageView redo = (ImageView) operationPanel.findViewById(R.id.action_redo);
-        mAccept = operationPanel.findViewById(R.id.action_accept);
-        mMore = (ImageView) operationPanel.findViewById(R.id.action_more);
-        mMasterImage.getHistory().setMenuItems(undo, redo, redo);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         clearGalleryBitmapPool();
         doBindService();
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.GRAY));
         setContentView(R.layout.filtershow_splashscreen);
     }
 
     public void updateUIAfterServiceStarted() {
-        MasterImage.setMaster(mMasterImage);
+        getWindow().setBackgroundDrawable(new ColorDrawable(0));
         ImageFilter.setActivityForMemoryToasts(this);
         mUserPresetsManager = new UserPresetsManager(this);
         mUserPresetsAdapter = new UserPresetsAdapter(this);
         setupMasterImage();
         setDefaultValues();
         fillEditors();
-        getWindow().setBackgroundDrawable(new ColorDrawable(0));
         loadXML();
         fillCategories();
         loadMainPanel();
@@ -264,14 +253,25 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         mEditorPlaceHolder.addEditor(new EditorStraighten());
     }
 
+    public void initActionBar() {
+        mTopBar = new LetoolTopBar(this, (ViewGroup) findViewById(R.id.letool_top_bar_container));
+        mTopBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_IMAGE_EDIT, this);
+        mTopBar.setTitleIcon(R.drawable.ic_action_previous_item);
+        View operationPanel = mTopBar.getActionPanel();
+        ImageView undo = (ImageView) operationPanel.findViewById(R.id.action_undo);
+        ImageView redo = (ImageView) operationPanel.findViewById(R.id.action_redo);
+        mAccept = operationPanel.findViewById(R.id.action_accept);
+        mMore = (ImageView) operationPanel.findViewById(R.id.action_more);
+        mMasterImage.getHistory().setMenuItems(undo, redo, redo);
+    }
+
     private void loadXML() {
         setContentView(R.layout.filtershow_activity);
         initActionBar();
         mImageShow = (ImageShow) findViewById(R.id.imageShow);
         mImageViews.add(mImageShow);
-        setupEditors();
-        mEditorPlaceHolder.hide();
         mImageShow.attach();
+        setupEditors();
     }
 
     public void fillCategories() {
@@ -281,6 +281,30 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         fillTools();
         fillEffects();
         fillVersions();
+    }
+
+    private void fillBorders() {
+        FiltersManager filtersManager = FiltersManager.getManager();
+        ArrayList<FilterRepresentation> borders = filtersManager.getBorders();
+
+        for (int i = 0; i < borders.size(); i++) {
+            FilterRepresentation filter = borders.get(i);
+            filter.setName(getString(R.string.borders));
+            if (i == 0) {
+                filter.setName(getString(R.string.none));
+            }
+        }
+
+        if (mCategoryBordersAdapter != null) {
+            mCategoryBordersAdapter.clear();
+        }
+        mCategoryBordersAdapter = new CategoryAdapter(this);
+        for (FilterRepresentation representation : borders) {
+            if (representation.getTextId() != 0) {
+                representation.setName(getString(representation.getTextId()));
+            }
+            mCategoryBordersAdapter.add(new Action(this, representation, Action.FULL_VIEW));
+        }
     }
 
     public void loadMainPanel() {
@@ -338,20 +362,6 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         mCategoryVersionsAdapter.setShowAddButton(true);
     }
 
-    public void registerAction(Action action) {
-        if (mActions.contains(action)) {
-            return;
-        }
-        mActions.add(action);
-    }
-
-    private void loadActions() {
-        for (int i = 0; i < mActions.size(); i++) {
-            Action action = mActions.get(i);
-            action.setImageFrame(new Rect(0, 0, 96, 96), 0);
-        }
-    }
-
     public void updateVersions() {
         mCategoryVersionsAdapter.clear();
         FilterUserPresetRepresentation originalRep = new FilterUserPresetRepresentation(
@@ -383,6 +393,32 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         updateVersions();
     }
 
+    private void fillLooks() {
+        FiltersManager filtersManager = FiltersManager.getManager();
+        ArrayList<FilterRepresentation> filtersRepresentations = filtersManager.getLooks();
+
+        if (mCategoryLooksAdapter != null) {
+            mCategoryLooksAdapter.clear();
+        }
+        mCategoryLooksAdapter = new CategoryAdapter(this);
+        int verticalItemHeight = (int) getResources().getDimension(R.dimen.action_item_height);
+        mCategoryLooksAdapter.setItemHeight(verticalItemHeight);
+        for (FilterRepresentation representation : filtersRepresentations) {
+            mCategoryLooksAdapter.add(new Action(this, representation, Action.FULL_VIEW));
+        }
+        if (mUserPresetsManager.getRepresentations() == null || mUserPresetsManager.getRepresentations().size() == 0) {
+            mCategoryLooksAdapter.add(new Action(this, Action.ADD_ACTION));
+        }
+
+        Fragment panel = getSupportFragmentManager().findFragmentByTag(MainPanel.FRAGMENT_TAG);
+        if (panel != null) {
+            if (panel instanceof MainPanel) {
+                MainPanel mainPanel = (MainPanel) panel;
+                mainPanel.loadCategoryLookPanel(true);
+            }
+        }
+    }
+
     public void removeLook(Action action) {
         FilterUserPresetRepresentation rep = (FilterUserPresetRepresentation) action.getRepresentation();
         if (rep == null) {
@@ -390,6 +426,72 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         }
         mUserPresetsManager.delete(rep.getId());
         updateUserPresetsFromManager();
+    }
+
+    public void setDefaultPreset() {
+        // Default preset (original)
+        ImagePreset preset = new ImagePreset(); // empty
+        mMasterImage.setPreset(preset, preset.getLastRepresentation(), true);
+    }
+
+    public void addNewPreset() {
+        DialogFragment dialog = new PresetManagementDialog();
+        dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
+    }
+
+    public void updateUserPresetsFromAdapter(UserPresetsAdapter adapter) {
+        ArrayList<FilterUserPresetRepresentation> representations = adapter.getDeletedRepresentations();
+        for (FilterUserPresetRepresentation representation : representations) {
+            deletePreset(representation.getId());
+        }
+        ArrayList<FilterUserPresetRepresentation> changedRepresentations = adapter.getChangedRepresentations();
+        for (FilterUserPresetRepresentation representation : changedRepresentations) {
+            updatePreset(representation);
+        }
+        adapter.clearDeletedRepresentations();
+        adapter.clearChangedRepresentations();
+        loadUserPresets();
+    }
+
+    public void loadUserPresets() {
+        mUserPresetsManager.load();
+        updateUserPresetsFromManager();
+    }
+
+    public void updateUserPresetsFromManager() {
+        ArrayList<FilterUserPresetRepresentation> presets = mUserPresetsManager.getRepresentations();
+        if (presets == null) {
+            return;
+        }
+        if (mCategoryLooksAdapter != null) {
+            fillLooks();
+        }
+        if (presets.size() > 0) {
+            mCategoryLooksAdapter.add(new Action(this, Action.SPACER));
+        }
+        mUserPresetsAdapter.clear();
+        for (int i = 0; i < presets.size(); i++) {
+            FilterUserPresetRepresentation representation = presets.get(i);
+            mCategoryLooksAdapter.add(new Action(this, representation, Action.FULL_VIEW, true));
+            mUserPresetsAdapter.add(new Action(this, representation, Action.FULL_VIEW));
+        }
+        if (presets.size() > 0) {
+            mCategoryLooksAdapter.add(new Action(this, Action.ADD_ACTION));
+        }
+        mCategoryLooksAdapter.notifyDataSetChanged();
+        mCategoryLooksAdapter.notifyDataSetInvalidated();
+    }
+
+    public void saveCurrentImagePreset(String name) {
+        mUserPresetsManager.save(MasterImage.getImage().getPreset(), name);
+    }
+
+    private void deletePreset(int id) {
+        mUserPresetsManager.delete(id);
+    }
+
+    private void updatePreset(FilterUserPresetRepresentation representation) {
+        mUserPresetsManager.update(representation);
     }
 
     private void fillEffects() {
@@ -429,34 +531,15 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         }
     }
 
-    private void processIntent() {
-        Intent intent = getIntent();
-        if (intent.getBooleanExtra(LAUNCH_FULLSCREEN, false)) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }
-
-        mAction = intent.getAction();
-        mSelectedImageUri = intent.getData();
-        Uri loadUri = mSelectedImageUri;
-        if (mOriginalImageUri != null) {
-            loadUri = mOriginalImageUri;
-        }
-        if (loadUri != null) {
-            startLoadBitmap(loadUri);
-        } else {
-            pickImage();
-        }
-    }
-
     private void setupEditors() {
         mEditorPlaceHolder.setContainer((FrameLayout) findViewById(R.id.editorContainer));
         EditorManager.addEditors(mEditorPlaceHolder);
         mEditorPlaceHolder.setOldViews(mImageViews);
+        mEditorPlaceHolder.hide();
     }
 
     private void setDefaultValues() {
         Resources res = getResources();
-
         // TODO: get those values from XML.
         FramedTextButton.setTextSize((int) getPixelsFromDip(14));
         FramedTextButton.setTrianglePadding((int) getPixelsFromDip(4));
@@ -470,6 +553,21 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         mOriginalImageUri = null;
     }
 
+    private void processIntent() {
+        Intent intent = getIntent();
+        mAction = intent.getAction();
+        mSelectedImageUri = intent.getData();
+        Uri loadUri = mSelectedImageUri;
+        if (mOriginalImageUri != null) {
+            loadUri = mOriginalImageUri;
+        }
+        if (loadUri != null) {
+            startLoadBitmap(loadUri);
+        } else {
+            pickImage();
+        }
+    }
+
     private void startLoadBitmap(Uri uri) {
         final View imageShow = findViewById(R.id.imageShow);
         imageShow.setVisibility(View.INVISIBLE);
@@ -477,30 +575,6 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         mShowingTinyPlanet = false;
         mLoadBitmapTask = new LoadBitmapTask();
         mLoadBitmapTask.execute(uri);
-    }
-
-    private void fillBorders() {
-        FiltersManager filtersManager = FiltersManager.getManager();
-        ArrayList<FilterRepresentation> borders = filtersManager.getBorders();
-
-        for (int i = 0; i < borders.size(); i++) {
-            FilterRepresentation filter = borders.get(i);
-            filter.setName(getString(R.string.borders));
-            if (i == 0) {
-                filter.setName(getString(R.string.none));
-            }
-        }
-
-        if (mCategoryBordersAdapter != null) {
-            mCategoryBordersAdapter.clear();
-        }
-        mCategoryBordersAdapter = new CategoryAdapter(this);
-        for (FilterRepresentation representation : borders) {
-            if (representation.getTextId() != 0) {
-                representation.setName(getString(representation.getTextId()));
-            }
-            mCategoryBordersAdapter.add(new Action(this, representation, Action.FULL_VIEW));
-        }
     }
 
     public UserPresetsAdapter getUserPresetsAdapter() {
@@ -647,7 +721,7 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
     }
 
     public boolean isSimpleEditAction() {
-        return !FullImageFragment.ACTION_NEXTGEN_EDIT.equalsIgnoreCase(mAction);
+        return !FILTER_EDIT_ACTION.equalsIgnoreCase(mAction);
     }
 
     //pop up menu callback
@@ -673,17 +747,6 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         }
         mCurrentMenu.setOnDismissListener(null);
         mCurrentMenu = null;
-    }
-
-    //dialog callback
-    @Override
-    public void onDismiss(DialogInterface dialogInterface) {
-        mCurrentDialog = null;
-    }
-
-    @Override
-    public void onShow(DialogInterface dialog) {
-        mCurrentDialog = dialog;
     }
 
     public void toggleInformationPanel() {
@@ -845,6 +908,20 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         }).execute();
     }
 
+    public void registerAction(Action action) {
+        if (mActions.contains(action)) {
+            return;
+        }
+        mActions.add(action);
+    }
+
+    private void loadActions() {
+        for (int i = 0; i < mActions.size(); i++) {
+            Action action = mActions.get(i);
+            action.setImageFrame(new Rect(0, 0, 96, 96), 0);
+        }
+    }
+
     @Override
     protected void onDestroy() {
         if (mLoadBitmapTask != null) {
@@ -922,102 +999,10 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         printer.printBitmap("ImagePrint", bitmap);
     }
 
-    public void addNewPreset() {
-        DialogFragment dialog = new PresetManagementDialog();
-        dialog.show(getSupportFragmentManager(), "NoticeDialogFragment");
-    }
-
-    public void updateUserPresetsFromAdapter(UserPresetsAdapter adapter) {
-        ArrayList<FilterUserPresetRepresentation> representations = adapter.getDeletedRepresentations();
-        for (FilterUserPresetRepresentation representation : representations) {
-            deletePreset(representation.getId());
-        }
-        ArrayList<FilterUserPresetRepresentation> changedRepresentations = adapter.getChangedRepresentations();
-        for (FilterUserPresetRepresentation representation : changedRepresentations) {
-            updatePreset(representation);
-        }
-        adapter.clearDeletedRepresentations();
-        adapter.clearChangedRepresentations();
-        loadUserPresets();
-    }
-
-    public void loadUserPresets() {
-        mUserPresetsManager.load();
-        updateUserPresetsFromManager();
-    }
-
-    public void updateUserPresetsFromManager() {
-        ArrayList<FilterUserPresetRepresentation> presets = mUserPresetsManager.getRepresentations();
-        if (presets == null) {
-            return;
-        }
-        if (mCategoryLooksAdapter != null) {
-            fillLooks();
-        }
-        if (presets.size() > 0) {
-            mCategoryLooksAdapter.add(new Action(this, Action.SPACER));
-        }
-        mUserPresetsAdapter.clear();
-        for (int i = 0; i < presets.size(); i++) {
-            FilterUserPresetRepresentation representation = presets.get(i);
-            mCategoryLooksAdapter.add(new Action(this, representation, Action.FULL_VIEW, true));
-            mUserPresetsAdapter.add(new Action(this, representation, Action.FULL_VIEW));
-        }
-        if (presets.size() > 0) {
-            mCategoryLooksAdapter.add(new Action(this, Action.ADD_ACTION));
-        }
-        mCategoryLooksAdapter.notifyDataSetChanged();
-        mCategoryLooksAdapter.notifyDataSetInvalidated();
-    }
-
-    public void saveCurrentImagePreset(String name) {
-        mUserPresetsManager.save(MasterImage.getImage().getPreset(), name);
-    }
-
-    private void deletePreset(int id) {
-        mUserPresetsManager.delete(id);
-    }
-
-    private void updatePreset(FilterUserPresetRepresentation representation) {
-        mUserPresetsManager.update(representation);
-    }
-
     public void enableSave(boolean enable) {
         if (mAccept != null) {
             mAccept.setEnabled(enable);
         }
-    }
-
-    private void fillLooks() {
-        FiltersManager filtersManager = FiltersManager.getManager();
-        ArrayList<FilterRepresentation> filtersRepresentations = filtersManager.getLooks();
-
-        if (mCategoryLooksAdapter != null) {
-            mCategoryLooksAdapter.clear();
-        }
-        mCategoryLooksAdapter = new CategoryAdapter(this);
-        int verticalItemHeight = (int) getResources().getDimension(R.dimen.action_item_height);
-        mCategoryLooksAdapter.setItemHeight(verticalItemHeight);
-        for (FilterRepresentation representation : filtersRepresentations) {
-            mCategoryLooksAdapter.add(new Action(this, representation, Action.FULL_VIEW));
-        }
-        if (mUserPresetsManager.getRepresentations() == null || mUserPresetsManager.getRepresentations().size() == 0) {
-            mCategoryLooksAdapter.add(new Action(this, Action.ADD_ACTION));
-        }
-
-        Fragment panel = getSupportFragmentManager().findFragmentByTag(MainPanel.FRAGMENT_TAG);
-        if (panel != null) {
-            if (panel instanceof MainPanel) {
-                MainPanel mainPanel = (MainPanel) panel;
-                mainPanel.loadCategoryLookPanel(true);
-            }
-        }
-    }
-
-    public void setDefaultPreset() {
-        // Default preset (original)
-        ImagePreset preset = new ImagePreset(); // empty
-        mMasterImage.setPreset(preset, preset.getLastRepresentation(), true);
     }
 
     // //////////////////////////////////////////////////////////////////////////////
@@ -1044,33 +1029,6 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
             MainPanel mainPanel = (MainPanel) panel;
             mainPanel.loadCategoryVersionsPanel();
         }
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        setDefaultValues();
-        if (mMasterImage == null) {
-            return;
-        }
-        loadXML();
-        fillCategories();
-        loadMainPanel();
-
-        if (mCurrentMenu != null) {
-            mCurrentMenu.dismiss();
-            mCurrentMenu = null;
-        }
-        if (mCurrentDialog != null) {
-            mCurrentDialog.dismiss();
-            mCurrentDialog = null;
-        }
-        // mLoadBitmapTask==null implies you have looked at the intent
-        if (!mShowingTinyPlanet && (mLoadBitmapTask == null)) {
-            mCategoryFiltersAdapter.removeTinyPlanet();
-        }
-        stopLoadingIndicator();
     }
 
     public void setupMasterImage() {
@@ -1213,7 +1171,6 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         XMresults res = XmpPresets.extractXMPData(getBaseContext(), mMasterImage, getIntent().getData());
         if (res == null)
             return;
-
         mOriginalImageUri = res.originalimage;
         mOriginalPreset = res.preset;
     }

@@ -55,8 +55,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class ImageShow extends View implements OnGestureListener,
-        ScaleGestureDetector.OnScaleGestureListener,
-        OnDoubleTapListener {
+                            ScaleGestureDetector.OnScaleGestureListener,OnDoubleTapListener {
 
     private static final String LOGTAG = "ImageShow";
     private static final boolean ENABLE_ZOOMED_COMPARISON = false;

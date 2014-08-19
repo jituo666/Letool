@@ -95,9 +95,6 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
     public static final int MSG_ALBUMPAGE_RESUMED = 2;
     public static final int MSG_ALBUMPAGE_PICKED = 4;
 
-    public static final String ACTION_NEXTGEN_EDIT = "action_nextgen_edit";
-    public static final String ACTION_SIMPLE_EDIT = "action_simple_edit";
-
     private SelectionManager mSelectionManager;
 
     private GLController mGLController;
@@ -264,12 +261,11 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
         if (current == null || (current.getSupportedOperations() & MediaObject.SUPPORT_EDIT) == 0) {
             return;
         }
-        Intent intent = new Intent(ACTION_NEXTGEN_EDIT);
+        Intent intent = new Intent(FilterShowActivity.FILTER_EDIT_ACTION);
         intent.setDataAndType(current.getContentUri(), current.getMimeType()).setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         if (getActivity().getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).size() == 0) {
             intent.setAction(Intent.ACTION_EDIT);
         }
-        intent.putExtra(FilterShowActivity.LAUNCH_FULLSCREEN, true);
         getActivity().startActivity(intent);
         overrideTransitionToEditor();
     }

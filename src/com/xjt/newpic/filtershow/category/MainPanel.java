@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.filtershow.category;
 
 import android.os.Bundle;
@@ -15,7 +16,7 @@ import com.xjt.newpic.filtershow.imageshow.MasterImage;
 
 public class MainPanel extends Fragment {
 
-    private static final String LOGTAG = "MainPanel";
+    private static final String TAG = MainPanel.class.getSimpleName();
 
     private LinearLayout mMainView;
     private ImageButton looksButton;
@@ -23,7 +24,7 @@ public class MainPanel extends Fragment {
     private ImageButton geometryButton;
     private ImageButton filtersButton;
 
-    public static final String FRAGMENT_TAG = "MainPanel";
+    public static final String FRAGMENT_TAG = TAG;
     public static final int LOOKS = 0;
     public static final int BORDERS = 1;
     public static final int GEOMETRY = 2;
@@ -59,22 +60,10 @@ public class MainPanel extends Fragment {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (mMainView != null) {
-            if (mMainView.getParent() != null) {
-                ViewGroup parent = (ViewGroup) mMainView.getParent();
-                parent.removeView(mMainView);
-            }
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
 
-        mMainView = (LinearLayout) inflater.inflate(
-                R.layout.filtershow_main_panel, null, false);
+        mMainView = (LinearLayout) inflater.inflate(R.layout.filtershow_main_panel, null, false);
 
         looksButton = (ImageButton) mMainView.findViewById(R.id.fxButton);
         bordersButton = (ImageButton) mMainView.findViewById(R.id.borderButton);
@@ -82,24 +71,28 @@ public class MainPanel extends Fragment {
         filtersButton = (ImageButton) mMainView.findViewById(R.id.colorsButton);
 
         looksButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 showPanel(LOOKS);
             }
         });
         bordersButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 showPanel(BORDERS);
             }
         });
         geometryButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 showPanel(GEOMETRY);
             }
         });
         filtersButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 showPanel(FILTERS);
@@ -229,6 +222,7 @@ public class MainPanel extends Fragment {
             return;
         }
         button.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 if (mCurrentSelected == VERSIONS) {
@@ -239,6 +233,17 @@ public class MainPanel extends Fragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (mMainView != null) {
+            if (mMainView.getParent() != null) {
+                ViewGroup parent = (ViewGroup) mMainView.getParent();
+                parent.removeView(mMainView);
+            }
+        }
     }
 
 }

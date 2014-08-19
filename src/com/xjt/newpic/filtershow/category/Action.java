@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.filtershow.category;
 
 import android.graphics.Bitmap;
@@ -18,12 +19,13 @@ import com.xjt.newpic.filtershow.pipeline.RenderingRequestCaller;
 
 public class Action implements RenderingRequestCaller {
 
-    private static final String LOGTAG = "Action";
+    private static final String TAG = Action.class.getSimpleName();
+
     private FilterRepresentation mRepresentation;
     private String mName;
     private Rect mImageFrame;
     private Bitmap mImage;
-    private ArrayAdapter mAdapter;
+    private ArrayAdapter<?> mAdapter;
     public static final int FULL_VIEW = 0;
     public static final int CROP_VIEW = 1;
     public static final int ADD_ACTION = 2;
@@ -36,12 +38,10 @@ public class Action implements RenderingRequestCaller {
     private int mTextSize = 32;
     private boolean mIsDoubleAction = false;
 
-    public Action(FilterShowActivity context, FilterRepresentation representation, int type,
-                  boolean canBeRemoved) {
+    public Action(FilterShowActivity context, FilterRepresentation representation, int type, boolean canBeRemoved) {
         this(context, representation, type);
         mCanBeRemoved = canBeRemoved;
-        mTextSize = context.getResources().getDimensionPixelSize(
-                R.dimen.category_panel_text_size);
+        mTextSize = context.getResources().getDimensionPixelSize(R.dimen.category_panel_text_size);
     }
 
     public Action(FilterShowActivity context, FilterRepresentation representation, int type) {
@@ -120,7 +120,7 @@ public class Action implements RenderingRequestCaller {
         mImage = image;
     }
 
-    public void setAdapter(ArrayAdapter adapter) {
+    public void setAdapter(ArrayAdapter<?> adapter) {
         mAdapter = adapter;
     }
 
@@ -162,9 +162,7 @@ public class Action implements RenderingRequestCaller {
             return;
         }
         if (mRepresentation.getOverlayId() != 0 && mOverlayBitmap == null) {
-            mOverlayBitmap = BitmapFactory.decodeResource(
-                    mContext.getResources(),
-                    mRepresentation.getOverlayId());
+            mOverlayBitmap = BitmapFactory.decodeResource(mContext.getResources(), mRepresentation.getOverlayId());
         }
         if (mOverlayBitmap != null) {
             if (getRepresentation().getFilterType() == FilterRepresentation.TYPE_BORDER) {

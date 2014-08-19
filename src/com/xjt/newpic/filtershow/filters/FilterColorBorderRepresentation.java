@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.filtershow.filters;
 
 import android.graphics.Color;
@@ -12,7 +13,9 @@ import com.xjt.newpic.surpport.JsonWriter;
 import java.io.IOException;
 
 public class FilterColorBorderRepresentation extends FilterRepresentation {
-    private static final String LOGTAG = "FilterColorBorderRepresentation";
+
+    private static final String TAG = FilterColorBorderRepresentation.class.getSimpleName();
+
     private static final String SERIALIZATION_NAME = "COLORBORDER";
 
     public static final int PARAM_SIZE = 0;
@@ -45,12 +48,13 @@ public class FilterColorBorderRepresentation extends FilterRepresentation {
         mParamColor.setValue(color);
         mParamSize.setValue(size);
         mParamRadius.setValue(radius);
-        mParamColor.setColorpalette(new int[]{
+        mParamColor.setColorpalette(new int[] {
                 DEFAULT_MENU_COLOR1,
                 DEFAULT_MENU_COLOR2,
                 DEFAULT_MENU_COLOR3,
                 DEFAULT_MENU_COLOR4,
-                DEFAULT_MENU_COLOR5});
+                DEFAULT_MENU_COLOR5
+        });
     }
 
     public String toString() {

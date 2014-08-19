@@ -11,10 +11,11 @@ import com.xjt.newpic.filtershow.imageshow.MasterImage;
 import com.xjt.newpic.filtershow.pipeline.FilterEnvironment;
 
 public abstract class ImageFilter implements Cloneable {
+    
+    private final String TAG = ImageFilter.class.getSimpleName();
+    
     private FilterEnvironment mEnvironment = null;
-
     protected String mName = "Original";
-    private final String LOGTAG = "ImageFilter";
     protected static final boolean SIMPLE_ICONS = true;
     // TODO: Temporary, for dogfood note memory issues with toasts for better
     // feedback. Remove this when filters actually work in low memory situations.

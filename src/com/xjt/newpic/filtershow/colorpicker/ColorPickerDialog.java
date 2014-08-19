@@ -90,7 +90,6 @@ public class ColorPickerDialog extends Dialog   {
             @Override
             public void setColor(float[] hsvo) {
                 System.arraycopy(hsvo, 0, mHSVO, 0, mHSVO.length);
-                int color = Color.HSVToColor(hsvo);
                 setButtonColor(mSelectedButton, hsvo);
             }
 
@@ -102,8 +101,6 @@ public class ColorPickerDialog extends Dialog   {
         for (int i = 0; i < c.length; i++) {
             c[i].addColorListener(colorListener);
         }
-        setOnShowListener((FilterShowActivity) context);
-        setOnDismissListener((FilterShowActivity) context);
     }
 
     void toggleClick(ToggleButton v, int[] buttons, boolean isChecked) {

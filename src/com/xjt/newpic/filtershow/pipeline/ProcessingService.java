@@ -1,6 +1,6 @@
+
 package com.xjt.newpic.filtershow.pipeline;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
@@ -11,6 +11,7 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 
 import com.xjt.newpic.R;
 import com.xjt.newpic.filtershow.FilterShowActivity;
@@ -22,11 +23,13 @@ import com.xjt.newpic.filtershow.tools.SaveImage;
 import java.io.File;
 
 public class ProcessingService extends Service {
-    private static final String LOGTAG = "ProcessingService";
+
+    private static final String TAG = ProcessingService.class.getSimpleName();
+
     private static final boolean SHOW_IMAGE = false;
+    private NotificationManager mNotifyMgr = null;
+    private NotificationCompat.Builder mBuilder = null;
     private int mNotificationId;
-//    private NotificationManager mNotifyMgr = null;
-//    private Notification.Builder mBuilder = null;
 
     private static final String PRESET = "preset";
     private static final String QUALITY = "quality";
@@ -88,7 +91,7 @@ public class ProcessingService extends Service {
     }
 
     public void postFullresRenderingRequest(ImagePreset preset, float scaleFactor,
-                                            Rect bounds, Rect destination, RenderingRequestCaller caller) {
+            Rect bounds, Rect destination, RenderingRequestCaller caller) {
         RenderingRequest request = new RenderingRequest();
         ImagePreset passedPreset = new ImagePreset(preset);
         request.setOriginalImagePreset(preset);
@@ -117,6 +120,7 @@ public class ProcessingService extends Service {
     }
 
     public class LocalBinder extends Binder {
+
         public ProcessingService getService() {
             return ProcessingService.this;
         }
@@ -126,17 +130,14 @@ public class ProcessingService extends Service {
             Uri selectedImageUri, Uri sourceImageUri, boolean doFlatten, int quality,
             float sizeFactor, boolean needsExit) {
         Intent processIntent = new Intent(context, ProcessingService.class);
-        processIntent.putExtra(ProcessingService.SOURCE_URI,
-                sourceImageUri.toString());
-        processIntent.putExtra(ProcessingService.SELECTED_URI,
-                selectedImageUri.toString());
+        processIntent.putExtra(ProcessingService.SOURCE_URI, sourceImageUri.toString());
+        processIntent.putExtra(ProcessingService.SELECTED_URI, selectedImageUri.toString());
         processIntent.putExtra(ProcessingService.QUALITY, quality);
         processIntent.putExtra(ProcessingService.SIZE_FACTOR, sizeFactor);
         if (destination != null) {
             processIntent.putExtra(ProcessingService.DESTINATION_FILE, destination.toString());
         }
-        processIntent.putExtra(ProcessingService.PRESET,
-                preset.getJsonString(ImagePreset.JASON_SAVED));
+        processIntent.putExtra(ProcessingService.PRESET, preset.getJsonString(ImagePreset.JASON_SAVED));
         processIntent.putExtra(ProcessingService.SAVING, true);
         processIntent.putExtra(ProcessingService.EXIT, needsExit);
         if (doFlatten) {
@@ -144,7 +145,6 @@ public class ProcessingService extends Service {
         }
         return processIntent;
     }
-
 
     @Override
     public void onCreate() {
@@ -163,17 +163,22 @@ public class ProcessingService extends Service {
     }
 
     @Override
-    public void onDestroy() {
-        tearDownPipeline();
-        mProcessingTaskController.quit();
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
+
+    public void onStart() {
+        mNeedsAlive = true;
+        if (!mSaving && mFiltershowActivity != null) {
+            mFiltershowActivity.updateUIAfterServiceStarted();
+        }
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         mNeedsAlive = true;
         if (intent != null && intent.getBooleanExtra(SAVING, false)) {
-            // we save using an intent to keep the service around after the
-            // activity has been destroyed.
+            // we save using an intent to keep the service around after the activity has been destroyed.
             String presetJson = intent.getStringExtra(PRESET);
             String source = intent.getStringExtra(SOURCE_URI);
             String selected = intent.getStringExtra(SELECTED_URI);
@@ -202,43 +207,35 @@ public class ProcessingService extends Service {
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
-        return mBinder;
-    }
-
-    public void onStart() {
-        mNeedsAlive = true;
-        if (!mSaving && mFiltershowActivity != null) {
-            mFiltershowActivity.updateUIAfterServiceStarted();
-        }
+    public void onDestroy() {
+        tearDownPipeline();
+        mProcessingTaskController.quit();
     }
 
     public void handleSaveRequest(Uri sourceUri, Uri selectedUri,
             File destinationFile, ImagePreset preset, Bitmap previewImage,
             boolean flatten, int quality, float sizeFactor, boolean exit) {
-//        mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//        mNotifyMgr.cancelAll();
-//
-//        mBuilder = new Notification.Builder(this).setSmallIcon(R.drawable.filtershow_button_fx).setContentTitle(getString(R.string.filtershow_notification_label)).setContentText(getString(R.string.filtershow_notification_message));
-//
-//        startForeground(mNotificationId, mBuilder.getNotification());
-
+        mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotifyMgr.cancelAll();
+        mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.filtershow_button_fx)
+                .setContentTitle(getString(R.string.filtershow_notification_label))
+                .setContentText(getString(R.string.filtershow_notification_message));
+        startForeground(mNotificationId, mBuilder.build());
         updateProgress(SaveImage.MAX_PROCESSING_STEPS, 0);
 
         // Process the image
-
         mImageSavingTask.saveImage(sourceUri, selectedUri, destinationFile,
                 preset, previewImage, flatten, quality, sizeFactor, exit);
     }
 
     public void updateNotificationWithBitmap(Bitmap bitmap) {
-//        mBuilder.setLargeIcon(bitmap);
-//        mNotifyMgr.notify(mNotificationId, mBuilder.getNotification());
+        mBuilder.setLargeIcon(bitmap);
+        mNotifyMgr.notify(mNotificationId, mBuilder.build());
     }
 
     public void updateProgress(int max, int current) {
-//        mBuilder.setProgress(max, current, false);
-//        mNotifyMgr.notify(mNotificationId, mBuilder.getNotification());
+        mBuilder.setProgress(max, current, false);
+        mNotifyMgr.notify(mNotificationId, mBuilder.build());
     }
 
     public void completePreviewSaveImage(Uri result, boolean exit) {
@@ -254,7 +251,7 @@ public class ProcessingService extends Service {
             viewImage.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(viewImage);
         }
-        //mNotifyMgr.cancel(mNotificationId);
+        mNotifyMgr.cancel(mNotificationId);
         if (!exit) {
             stopForeground(true);
             stopSelf();
