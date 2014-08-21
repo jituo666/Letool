@@ -91,8 +91,7 @@ public class IconView extends View {
             x = (int) ((getWidth() - textWidth) / 2.0f);
         }
         if (x < 0) {
-            // If the text takes more than the view width, justify to the left.
-            x = mMargin;
+            x = mMargin;// If the text takes more than the view width, justify to the left.
         }
         int y = getHeight() - 2 * mMargin;
         canvas.drawText(text, x, y, mPaint);
@@ -176,8 +175,6 @@ public class IconView extends View {
 
     @Override
     public void onDraw(Canvas canvas) {
-
-        LLog.i(TAG, getWidth() + "------------drawText x:" + canvas.getWidth() + " y:" + canvas.getHeight());
         mPaint.reset();
         mPaint.setAntiAlias(true);
         mPaint.setFilterBitmap(true);

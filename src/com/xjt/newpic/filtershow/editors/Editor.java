@@ -52,10 +52,7 @@ public class Editor implements OnSeekBarChangeListener {
         int count = menu.size();
         for (int i = 0; i < count; i++) {
             PopupMenuItem item = menu.getItem(i);
-            LLog.i(TAG, count + "---------hackFixStrings-----:" + i + " " + (item == null));
             if (item != null) {
-
-                LLog.i(TAG, "---------hackFixStrings str    -----:" + (item.getTitle() == null));
                 item.setTitle(item.getTitle().toString().toUpperCase());
             }
         }
@@ -98,7 +95,6 @@ public class Editor implements OnSeekBarChangeListener {
      * @param editControl this is the black area for sliders etc
      */
     public void setUtilityPanelUI(View actionButton, View editControl) {
-
         Context context = editControl.getContext();
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout lp = (LinearLayout) inflater.inflate(R.layout.filtershow_seekbar, (ViewGroup) editControl, true);

@@ -1,30 +1,16 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.xjt.newpic.filtershow.crop;
 
 import android.graphics.Rect;
 import android.graphics.RectF;
 
+import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.filtershow.imageshow.GeometryMathUtils;
 
 public class CropObject {
+
+    private static final String TAG = CropObject.class.getSimpleName();
     private BoundedRect mBoundedRect;
-    private float mAspectWidth = 1;
-    private float mAspectHeight = 1;
     private boolean mFixAspectRatio = false;
     private float mRotation = 0;
     private float mTouchTolerance = 45;
@@ -97,8 +83,6 @@ public class CropObject {
         if (inner.width() < mMinSideSize || inner.height() < mMinSideSize) {
             return false;
         }
-        mAspectWidth = width;
-        mAspectHeight = height;
         mFixAspectRatio = true;
         mBoundedRect.setInner(inner);
         clearSelectState();
@@ -194,13 +178,13 @@ public class CropObject {
         float minWidthHeight = mMinSideSize;
 
         int movingEdges = mMovingEdges;
+
         if (movingEdges == MOVE_BLOCK) {
             mBoundedRect.moveInner(dX, dY);
             return true;
         } else {
             float dx = 0;
             float dy = 0;
-
             if ((movingEdges & MOVE_LEFT) != 0) {
                 dx = Math.min(crop.left + dX, crop.right - minWidthHeight) - crop.left;
             }
@@ -208,12 +192,10 @@ public class CropObject {
                 dy = Math.min(crop.top + dY, crop.bottom - minWidthHeight) - crop.top;
             }
             if ((movingEdges & MOVE_RIGHT) != 0) {
-                dx = Math.max(crop.right + dX, crop.left + minWidthHeight)
-                        - crop.right;
+                dx = Math.max(crop.right + dX, crop.left + minWidthHeight) - crop.right;
             }
             if ((movingEdges & MOVE_BOTTOM) != 0) {
-                dy = Math.max(crop.bottom + dY, crop.top + minWidthHeight)
-                        - crop.bottom;
+                dy = Math.max(crop.bottom + dY, crop.top + minWidthHeight) - crop.bottom;
             }
 
             if (mFixAspectRatio) {
@@ -238,7 +220,6 @@ public class CropObject {
                 dx = sp * bUnit[0];
                 dy = sp * bUnit[1];
                 RectF newCrop = fixedCornerResize(crop, movingEdges, dx, dy);
-
                 mBoundedRect.fixedAspectResizeInner(newCrop);
             } else {
                 if ((movingEdges & MOVE_LEFT) != 0) {

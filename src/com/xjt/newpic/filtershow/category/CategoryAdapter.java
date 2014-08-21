@@ -4,11 +4,10 @@ package com.xjt.newpic.filtershow.category;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.xjt.newpic.R;
-import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.filtershow.FilterShowActivity;
 import com.xjt.newpic.filtershow.filters.FilterRepresentation;
 import com.xjt.newpic.filtershow.filters.FilterTinyPlanetRepresentation;
@@ -20,7 +19,7 @@ public class CategoryAdapter extends ArrayAdapter<Action> {
 
     private View mContainer;
     private int mItemHeight;
-    private int mItemWidth = LayoutParams.MATCH_PARENT;
+    private int mItemWidth = ListView.LayoutParams.MATCH_PARENT;
     private int mSelectedPosition;
     private int mCategory;
     private int mOrientation;
@@ -96,7 +95,7 @@ public class CategoryAdapter extends ArrayAdapter<Action> {
             height = height / 2;
         }
 
-        view.setLayoutParams(new LayoutParams(width, height));
+        view.setLayoutParams(new ListView.LayoutParams(width, height));
         view.setTag(position);
         view.invalidate();
         return view;

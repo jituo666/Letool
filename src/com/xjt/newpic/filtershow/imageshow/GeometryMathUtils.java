@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2012 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.xjt.newpic.filtershow.imageshow;
 
@@ -22,7 +7,6 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.util.Log;
 
 import com.xjt.newpic.filtershow.cache.BitmapCache;
 import com.xjt.newpic.filtershow.cache.ImageLoader;
@@ -39,13 +23,17 @@ import java.util.Collection;
 import java.util.Iterator;
 
 public final class GeometryMathUtils {
-    private static final String TAG = "GeometryMathUtils";
+
+    private static final String TAG = GeometryMathUtils.class.getSimpleName();
+
     public static final float SHOW_SCALE = .9f;
 
-    private GeometryMathUtils() {};
+    private GeometryMathUtils() {
+    };
 
     // Holder class for Geometry data.
     public static final class GeometryHolder {
+
         public Rotation rotation = FilterRotateRepresentation.getNil();
         public float straighten = FilterStraightenRepresentation.getNil();
         public RectF crop = FilterCropRepresentation.getNil();
@@ -82,7 +70,7 @@ public final class GeometryMathUtils {
             }
             GeometryHolder h = (GeometryHolder) o;
             return rotation == h.rotation && straighten == h.straighten &&
-                    ((crop == null && h.crop == null) || (crop != null && crop.equals(h.crop))) &&
+                    ((crop == null && h.crop == null) || (crop != null && RectFequals(crop,h.crop))) &&
                     mirror == h.mirror;
         }
 
@@ -256,8 +244,7 @@ public final class GeometryMathUtils {
         return holder;
     }
 
-    public static void unpackGeometry(GeometryHolder out,
-            Collection<FilterRepresentation> geometry) {
+    public static void unpackGeometry(GeometryHolder out, Collection<FilterRepresentation> geometry) {
         out.wipe();
         // Get geometry data from filters
         for (FilterRepresentation r : geometry) {
@@ -266,8 +253,7 @@ public final class GeometryMathUtils {
             }
             if (r.getSerializationName() == FilterRotateRepresentation.SERIALIZATION_NAME) {
                 out.rotation = ((FilterRotateRepresentation) r).getRotation();
-            } else if (r.getSerializationName() ==
-                    FilterStraightenRepresentation.SERIALIZATION_NAME) {
+            } else if (r.getSerializationName() == FilterStraightenRepresentation.SERIALIZATION_NAME) {
                 out.straighten = ((FilterStraightenRepresentation) r).getStraighten();
             } else if (r.getSerializationName() == FilterCropRepresentation.SERIALIZATION_NAME) {
                 ((FilterCropRepresentation) r).getCrop(out.crop);
@@ -291,16 +277,13 @@ public final class GeometryMathUtils {
         }
     }
 
-    public static void initializeHolder(GeometryHolder outHolder,
-            FilterRepresentation currentLocal) {
-        Collection<FilterRepresentation> geometry = MasterImage.getImage().getPreset()
-                .getGeometryFilters();
+    public static void initializeHolder(GeometryHolder outHolder, FilterRepresentation currentLocal) {
+        Collection<FilterRepresentation> geometry = MasterImage.getImage().getPreset().getGeometryFilters();
         replaceInstances(geometry, currentLocal);
         unpackGeometry(outHolder, geometry);
     }
 
-    public static Rect finalGeometryRect(int width, int height,
-                                         Collection<FilterRepresentation> geometry) {
+    public static Rect finalGeometryRect(int width, int height, Collection<FilterRepresentation> geometry) {
         GeometryHolder holder = unpackGeometry(geometry);
         RectF crop = getTrueCropRect(holder, width, height);
         Rect frame = new Rect();
@@ -317,8 +300,7 @@ public final class GeometryMathUtils {
         Matrix m = getCropSelectionToScreenMatrix(null, holder, width, height, frame.width(),
                 frame.height());
         BitmapCache bitmapCache = MasterImage.getImage().getBitmapCache();
-        Bitmap temp = bitmapCache.getBitmap(frame.width(),
-                frame.height(), BitmapCache.UTIL_GEOMETRY);
+        Bitmap temp = bitmapCache.getBitmap(frame.width(), frame.height(), BitmapCache.UTIL_GEOMETRY);
         Canvas canvas = new Canvas(temp);
         Paint paint = new Paint();
         paint.setAntiAlias(true);
@@ -336,8 +318,8 @@ public final class GeometryMathUtils {
     }
 
     public static Matrix getPartialToScreenMatrix(Collection<FilterRepresentation> geometry,
-                                                  Rect originalBounds, float w, float h,
-                                                  float pw, float ph) {
+            Rect originalBounds, float w, float h,
+            float pw, float ph) {
         GeometryHolder holder = unpackGeometry(geometry);
         RectF rCrop = new RectF(0, 0, originalBounds.width(), originalBounds.height());
         float angle = holder.straighten;
@@ -486,5 +468,12 @@ public final class GeometryMathUtils {
         GeometryHolder holder = unpackGeometry(res);
         return getCropSelectionToScreenMatrix(outCrop, holder, bitmapWidth, bitmapHeight,
                 viewWidth, viewHeight);
+    }
+    
+    
+    public static boolean RectFequals(RectF a, RectF b) {
+        if (a == b) return true;
+        if (a == null || b==null || a.getClass() != b.getClass()) return false;
+        return a.left == b.left && a.top == b.top && a.right == b.right && a.bottom == b.bottom;
     }
 }

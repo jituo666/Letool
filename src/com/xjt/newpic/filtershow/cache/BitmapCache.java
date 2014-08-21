@@ -13,8 +13,7 @@ import java.util.HashMap;
 
 public class BitmapCache {
     private static final String LOGTAG = "BitmapCache";
-    private HashMap<Long, ArrayList<WeakReference<Bitmap>>>
-            mBitmapCache = new HashMap<Long, ArrayList<WeakReference<Bitmap>>>();
+    private HashMap<Long, ArrayList<WeakReference<Bitmap>>>mBitmapCache = new HashMap<Long, ArrayList<WeakReference<Bitmap>>>();
     private final int mMaxItemsPerKey = 4;
 
     private static final boolean DEBUG = false;

@@ -778,6 +778,9 @@ public class MasterImage implements RenderingRequestCaller {
     }
 
     public boolean hasTinyPlanet() {
-        return mPreset.contains(FilterRepresentation.TYPE_TINYPLANET);
+        if (mPreset != null)
+            return mPreset.contains(FilterRepresentation.TYPE_TINYPLANET);
+        else
+            return false;
     }
 }

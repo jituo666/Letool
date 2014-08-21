@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.xjt.newpic.filtershow.imageshow;
 
@@ -29,6 +14,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.xjt.newpic.R;
+import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.filtershow.crop.CropDrawingUtils;
 import com.xjt.newpic.filtershow.crop.CropMath;
 import com.xjt.newpic.filtershow.crop.CropObject;
@@ -37,6 +23,7 @@ import com.xjt.newpic.filtershow.filters.FilterCropRepresentation;
 import com.xjt.newpic.filtershow.imageshow.GeometryMathUtils.GeometryHolder;
 
 public class ImageCrop extends ImageShow {
+
     private static final String TAG = ImageCrop.class.getSimpleName();
     private RectF mImageBounds = new RectF();
     private RectF mScreenCropBounds = new RectF();
@@ -54,9 +41,11 @@ public class ImageCrop extends ImageShow {
     private float mPrevY = 0;
     private int mMinSideSize = 90;
     private int mTouchTolerance = 40;
+
     private enum Mode {
         NONE, MOVE
     }
+
     private Mode mState = Mode.NONE;
     private boolean mValidDraw = false;
     FilterCropRepresentation mLocalRep = new FilterCropRepresentation();
@@ -96,8 +85,7 @@ public class ImageCrop extends ImageShow {
     }
 
     private void internallyUpdateLocalRep(RectF crop, RectF image) {
-        FilterCropRepresentation
-                .findNormalizedCrop(crop, (int) image.width(), (int) image.height());
+        FilterCropRepresentation.findNormalizedCrop(crop, (int) image.width(), (int) image.height());
         mGeometry.crop.set(crop);
         mUpdateHolder.set(mGeometry);
         mLocalRep.setCrop(crop);
@@ -149,6 +137,7 @@ public class ImageCrop extends ImageShow {
             default:
                 break;
         }
+
         invalidate();
         return true;
     }
@@ -232,9 +221,10 @@ public class ImageCrop extends ImageShow {
         Bitmap image = master.getFiltersOnlyImage();
         int width = image.getWidth();
         int height = image.getHeight();
+
         if (mCropObj == null || !mUpdateHolder.equals(mGeometry)
                 || mImageBounds.width() != width || mImageBounds.height() != height
-                || !mLocalRep.getCrop().equals(mUpdateHolder.crop)) {
+                || !GeometryMathUtils.RectFequals(mLocalRep.getCrop(), mUpdateHolder.crop)) {
             mImageBounds.set(0, 0, width, height);
             mGeometry.set(mUpdateHolder);
             mLocalRep.setCrop(mUpdateHolder.crop);
@@ -284,17 +274,22 @@ public class ImageCrop extends ImageShow {
             mCropObj.setMinInnerSideSize(mDisplayMatrixInverse.mapRadius(mMinSideSize));
             mCropObj.setTouchTolerance(mDisplayMatrixInverse.mapRadius(mTouchTolerance));
             // drive Crop engine to clamp to crop bounds
-            int[] sides = {CropObject.MOVE_TOP,
+            int[] sides = {
+                    CropObject.MOVE_TOP,
                     CropObject.MOVE_BOTTOM,
                     CropObject.MOVE_LEFT,
-                    CropObject.MOVE_RIGHT};
+                    CropObject.MOVE_RIGHT
+            };
             int delta = Math.min(canvas.getWidth(), canvas.getHeight()) / 4;
-            int[] dy = {delta, -delta, 0, 0};
-            int[] dx = {0, 0, delta, -delta};
+            int[] dy = {
+                    delta, -delta, 0, 0
+            };
+            int[] dx = {
+                    0, 0, delta, -delta
+            };
 
             for (int i = 0; i < sides.length; i++) {
                 mCropObj.selectEdge(sides[i]);
-
                 mCropObj.moveCurrentSelection(dx[i], dy[i]);
                 mCropObj.moveCurrentSelection(-dx[i], -dy[i]);
             }
@@ -316,8 +311,7 @@ public class ImageCrop extends ImageShow {
             CropDrawingUtils.drawCropRect(canvas, mScreenCropBounds);
             CropDrawingUtils.drawShade(canvas, mScreenCropBounds);
             CropDrawingUtils.drawRuleOfThird(canvas, mScreenCropBounds);
-            CropDrawingUtils.drawIndicators(canvas, mCropIndicator, mIndicatorSize,
-                    mScreenCropBounds, mCropObj.isFixedAspect(),
+            CropDrawingUtils.drawIndicators(canvas, mCropIndicator, mIndicatorSize, mScreenCropBounds, mCropObj.isFixedAspect(),
                     decode(mCropObj.getSelectState(), mGeometry.rotation.value()));
         }
     }

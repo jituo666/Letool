@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
 import com.xjt.newpic.R;
+import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.filtershow.FilterShowActivity;
 import com.xjt.newpic.filtershow.filters.FiltersManager;
 import com.xjt.newpic.filtershow.filters.ImageFilter;
@@ -90,8 +91,7 @@ public class ProcessingService extends Service {
         mHighresRenderingRequestTask.postRenderingRequest(request);
     }
 
-    public void postFullresRenderingRequest(ImagePreset preset, float scaleFactor,
-            Rect bounds, Rect destination, RenderingRequestCaller caller) {
+    public void postFullresRenderingRequest(ImagePreset preset, float scaleFactor, Rect bounds, Rect destination, RenderingRequestCaller caller) {
         RenderingRequest request = new RenderingRequest();
         ImagePreset passedPreset = new ImagePreset(preset);
         request.setOriginalImagePreset(preset);
@@ -126,9 +126,8 @@ public class ProcessingService extends Service {
         }
     }
 
-    public static Intent getSaveIntent(Context context, ImagePreset preset, File destination,
-            Uri selectedImageUri, Uri sourceImageUri, boolean doFlatten, int quality,
-            float sizeFactor, boolean needsExit) {
+    public static Intent getSaveIntent(Context context, ImagePreset preset, File destination, Uri selectedImageUri, Uri sourceImageUri, boolean doFlatten,
+            int quality, float sizeFactor, boolean needsExit) {
         Intent processIntent = new Intent(context, ProcessingService.class);
         processIntent.putExtra(ProcessingService.SOURCE_URI, sourceImageUri.toString());
         processIntent.putExtra(ProcessingService.SELECTED_URI, selectedImageUri.toString());
@@ -212,20 +211,20 @@ public class ProcessingService extends Service {
         mProcessingTaskController.quit();
     }
 
-    public void handleSaveRequest(Uri sourceUri, Uri selectedUri,
-            File destinationFile, ImagePreset preset, Bitmap previewImage,
+    public void handleSaveRequest(Uri sourceUri, Uri selectedUri, File destinationFile, ImagePreset preset, Bitmap previewImage,
             boolean flatten, int quality, float sizeFactor, boolean exit) {
         mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNotifyMgr.cancelAll();
-        mBuilder = new NotificationCompat.Builder(this).setSmallIcon(R.drawable.filtershow_button_fx)
-                .setContentTitle(getString(R.string.filtershow_notification_label))
-                .setContentText(getString(R.string.filtershow_notification_message));
+        mBuilder = new NotificationCompat.Builder(this);
+        if (ApiHelper.AT_LEAST_11)
+            mBuilder.setSmallIcon(R.drawable.filtershow_button_fx);
+        mBuilder.setContentTitle(getString(R.string.filtershow_notification_label));
+        mBuilder.setContentText(getString(R.string.filtershow_notification_message));
         startForeground(mNotificationId, mBuilder.build());
         updateProgress(SaveImage.MAX_PROCESSING_STEPS, 0);
 
         // Process the image
-        mImageSavingTask.saveImage(sourceUri, selectedUri, destinationFile,
-                preset, previewImage, flatten, quality, sizeFactor, exit);
+        mImageSavingTask.saveImage(sourceUri, selectedUri, destinationFile, preset, previewImage, flatten, quality, sizeFactor, exit);
     }
 
     public void updateNotificationWithBitmap(Bitmap bitmap) {

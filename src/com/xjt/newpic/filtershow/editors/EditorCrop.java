@@ -85,15 +85,13 @@ public class EditorCrop extends Editor implements EditorInfo {
     @Override
     public void reflectCurrentFilter() {
         MasterImage master = MasterImage.getImage();
-        master.setCurrentFilterRepresentation(master.getPreset()
-                .getFilterWithSerializationName(FilterCropRepresentation.SERIALIZATION_NAME));
+        master.setCurrentFilterRepresentation(master.getPreset() .getFilterWithSerializationName(FilterCropRepresentation.SERIALIZATION_NAME));
         super.reflectCurrentFilter();
         FilterRepresentation rep = getLocalRepresentation();
         if (rep == null || rep instanceof FilterCropRepresentation) {
             mImageCrop.setFilterCropRepresentation((FilterCropRepresentation) rep);
         } else {
-            Log.w(TAG, "Could not reflect current filter, not of type: "
-                    + FilterCropRepresentation.class.getSimpleName());
+            Log.w(TAG, "Could not reflect current filter, not of type: " + FilterCropRepresentation.class.getSimpleName());
         }
         mImageCrop.invalidate();
     }

@@ -26,8 +26,7 @@ public class TiledTexture implements Texture {
     private static final int TILE_SIZE = CONTENT_SIZE + 2 * BORDER_SIZE;
     private static final int INIT_CAPACITY = 8;
 
-    // We are targeting at 60fps, so we have 16ms for each frame.
-    // In this 16ms, we use about 4~8 ms to upload tiles.
+    // We are targeting at 60fps, so we have 16ms for each frame. In this 16ms, we use about 4~8 ms to upload tiles.
     private static final long UPLOAD_TILE_LIMIT = 4; // ms
 
     private static Tile sFreeTileHead = null;
