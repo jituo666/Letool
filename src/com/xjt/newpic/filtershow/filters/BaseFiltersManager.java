@@ -189,13 +189,11 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
         mLooks.add(nullFx);
 
         for (int i = 0; i < drawid.length; i++) {
-            FilterFxRepresentation fx = new FilterFxRepresentation(
-                    context.getString(fxNameid[i]), drawid[i], fxNameid[i]);
+            FilterFxRepresentation fx = new FilterFxRepresentation(context.getString(fxNameid[i]), drawid[i], fxNameid[i]);
             fx.setSerializationName(serializationNames[i]);
             ImagePreset preset = new ImagePreset();
             preset.addFilter(fx);
-            FilterUserPresetRepresentation rep = new FilterUserPresetRepresentation(
-                    context.getString(fxNameid[i]), preset, -1);
+            FilterUserPresetRepresentation rep = new FilterUserPresetRepresentation(context.getString(fxNameid[i]), preset, -1);
             mLooks.add(rep);
             addRepresentation(fx);
         }

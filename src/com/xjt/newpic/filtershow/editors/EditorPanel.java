@@ -3,7 +3,6 @@ package com.xjt.newpic.filtershow.editors;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import android.widget.LinearLayout;
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.filtershow.FilterShowActivity;
-import com.xjt.newpic.filtershow.category.MainPanel;
 import com.xjt.newpic.filtershow.history.HistoryManager;
 import com.xjt.newpic.filtershow.imageshow.MasterImage;
 
@@ -72,13 +70,11 @@ public class EditorPanel extends Fragment {
                 activity.backToMain();
             }
         });
-        //Button toggleState = (Button) mMainView.findViewById(R.id.toggle_state);
         mEditor = activity.getEditor(mEditorID);
         if (mEditor != null) {
             mEditor.setUpEditorUI(actionControl, editControl, editTitle, null);
             mEditor.reflectCurrentFilter();
             if (mEditor.useUtilityPanel()) {
-
                 mEditor.openUtilityPanel((LinearLayout) actionControl);
             }
         }

@@ -83,7 +83,6 @@ public class EditorGrad extends ParametricEditor implements OnSeekBarChangeListe
     @Override
     public void openUtilityPanel(final LinearLayout accessoryViewList) {
         Button view = (Button) accessoryViewList.findViewById(R.id.applyEffect);
-
         view.setText(mContext.getString(R.string.editor_grad_brightness));
         view.setOnClickListener(new OnClickListener() {
 

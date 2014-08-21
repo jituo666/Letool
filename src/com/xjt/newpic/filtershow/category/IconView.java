@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.filtershow.category;
 
 import android.content.Context;
@@ -16,8 +17,11 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 import com.xjt.newpic.R;
+import com.xjt.newpic.common.LLog;
 
 public class IconView extends View {
+
+    private static final String TAG = IconView.class.getSimpleName();
 
     public static final int VERTICAL = 0;
     public static final int HORIZONTAL = 1;
@@ -34,6 +38,11 @@ public class IconView extends View {
     private String mText;
     private boolean mUseOnlyDrawable = false;
 
+    public IconView(Context context) {
+        super(context);
+        setup(context);
+    }
+
     public IconView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setup(context);
@@ -42,11 +51,6 @@ public class IconView extends View {
         Bitmap bitmap = BitmapFactory.decodeStream(res.openRawResource(bitmapRsc));
         setBitmap(bitmap);
         setUseOnlyDrawable(true);
-    }
-
-    public IconView(Context context) {
-        super(context);
-        setup(context);
     }
 
     private void setup(Context context) {
@@ -82,16 +86,15 @@ public class IconView extends View {
             return;
         }
         float textWidth = mPaint.measureText(text);
-        int x = (int) (canvas.getWidth() - textWidth - 2*mMargin);
+        int x = (int) (getWidth() - textWidth - 2 * mMargin);
         if (needsCenterText()) {
-            x = (int) ((canvas.getWidth() - textWidth) / 2.0f);
+            x = (int) ((getWidth() - textWidth) / 2.0f);
         }
         if (x < 0) {
-            // If the text takes more than the view width,
-            // justify to the left.
+            // If the text takes more than the view width, justify to the left.
             x = mMargin;
         }
-        int y = canvas.getHeight() - 2*mMargin;
+        int y = getHeight() - 2 * mMargin;
         canvas.drawText(text, x, y, mPaint);
     }
 
@@ -151,7 +154,7 @@ public class IconView extends View {
     }
 
     @Override
-    public CharSequence getContentDescription () {
+    public CharSequence getContentDescription() {
         return mText;
     }
 
@@ -161,19 +164,20 @@ public class IconView extends View {
 
     public void computeBitmapBounds() {
         if (mUseOnlyDrawable) {
-            mBitmapBounds = new Rect(mMargin/2, mMargin, getWidth() - mMargin/2,
-                    getHeight() - mTextSize - 2*mMargin);
+            mBitmapBounds = new Rect(mMargin / 2, mMargin, getWidth() - mMargin / 2, getHeight() - mTextSize - 2 * mMargin);
         } else {
             if (getOrientation() == VERTICAL && isHalfImage()) {
-                mBitmapBounds = new Rect(mMargin/2, mMargin, getWidth()/2, getHeight());
+                mBitmapBounds = new Rect(mMargin / 2, mMargin, getWidth() / 2, getHeight());
             } else {
-                mBitmapBounds = new Rect(mMargin/2, mMargin, getWidth() - mMargin/2, getHeight());
+                mBitmapBounds = new Rect(mMargin / 2, mMargin, getWidth() - mMargin / 2, getHeight());
             }
         }
     }
 
     @Override
     public void onDraw(Canvas canvas) {
+
+        LLog.i(TAG, getWidth() + "------------drawText x:" + canvas.getWidth() + " y:" + canvas.getHeight());
         mPaint.reset();
         mPaint.setAntiAlias(true);
         mPaint.setFilterBitmap(true);
@@ -186,8 +190,7 @@ public class IconView extends View {
             Matrix m = new Matrix();
             if (mUseOnlyDrawable) {
                 mPaint.setFilterBitmap(true);
-                m.setRectToRect(new RectF(0, 0, mBitmap.getWidth(), mBitmap.getHeight()),
-                        new RectF(mBitmapBounds), Matrix.ScaleToFit.CENTER);
+                m.setRectToRect(new RectF(0, 0, mBitmap.getWidth(), mBitmap.getHeight()), new RectF(mBitmapBounds), Matrix.ScaleToFit.CENTER);
             } else {
                 float scaleWidth = mBitmapBounds.width() / (float) mBitmap.getWidth();
                 float scaleHeight = mBitmapBounds.height() / (float) mBitmap.getHeight();
@@ -209,12 +212,11 @@ public class IconView extends View {
             int endColor = Color.argb(200, 0, 0, 0);
             float start = getHeight() - 2 * mMargin - 2 * mTextSize;
             float end = getHeight();
-            Shader shader = new LinearGradient(0, start, 0, end, startColor,
-                    endColor, Shader.TileMode.CLAMP);
+            Shader shader = new LinearGradient(0, start, 0, end, startColor, endColor, Shader.TileMode.CLAMP);
             mPaint.setShader(shader);
             float startGradient = 0;
             if (getOrientation() == VERTICAL && isHalfImage()) {
-                startGradient = getWidth()/2;
+                startGradient = getWidth() / 2;
             }
             canvas.drawRect(new RectF(startGradient, start, getWidth(), end), mPaint);
             mPaint.setShader(null);

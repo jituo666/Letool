@@ -109,9 +109,7 @@ public class CategoryView extends IconView implements View.OnClickListener, Swip
         }
         super.onDraw(canvas);
         if (mAdapter.isSelected(this)) {
-            SelectionRenderer.drawSelection(canvas, 0, 0,
-                    getWidth(), getHeight(),
-                    mSelectionStroke, mSelectPaint, mBorderStroke, mBorderPaint);
+            SelectionRenderer.drawSelection(canvas, 0, 0, getWidth(), getHeight(), mSelectionStroke, mSelectPaint, mBorderStroke, mBorderPaint);
         }
     }
 

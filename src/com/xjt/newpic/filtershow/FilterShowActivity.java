@@ -21,7 +21,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -40,6 +39,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.xjt.newpic.R;
 import com.xjt.newpic.filtershow.cache.ImageLoader;
 import com.xjt.newpic.filtershow.category.Action;
@@ -147,7 +147,7 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
     private CategoryAdapter mCategoryGeometryAdapter = null;
     private CategoryAdapter mCategoryFiltersAdapter = null;
     private CategoryAdapter mCategoryVersionsAdapter = null;
-    private int mCurrentPanel = MainPanel.FILTERS;
+    private int mCurrentPanel = MainPanel.LOOKS;
     private Vector<FilterUserPresetRepresentation> mVersions = new Vector<FilterUserPresetRepresentation>();
     private int mVersionsCounter = 0;
 
@@ -341,14 +341,14 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
             doAnimation = true;
         }
         if (doAnimation && main != null && main instanceof MainPanel) {
-            //            MainPanel mainPanel = (MainPanel) main;
-            //            View container = mainPanel.getView().findViewById(R.id.category_panel_container);
-            //            View bottom = mainPanel.getView().findViewById(R.id.bottom_panel);
-            //            int panelHeight = container.getHeight() + bottom.getHeight();
-            //            ViewPropertyAnimator anim = mainPanel.getView().animate();
-            //            anim.translationY(panelHeight).start();
-            final Handler handler = new Handler();
-            handler.postDelayed(showEditor, 0);
+//            MainPanel mainPanel = (MainPanel) main;
+//            View container = mainPanel.getView().findViewById(R.id.category_panel_container);
+//            View bottom = mainPanel.getView().findViewById(R.id.bottom_panel);
+//            int panelHeight = container.getHeight() + bottom.getHeight();
+//            ViewPropertyAnimator anim = mainPanel.getView().animate();
+//            anim.translationY(panelHeight).start();
+//            final Handler handler = new Handler();
+//            handler.postDelayed(showEditor, 0);
         } else {
             showEditor.run();
         }
@@ -638,11 +638,9 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         } else {
             if (filterRepresentation.allowsSingleInstanceOnly()) {
                 // Don't just update the filter representation. Centralize the
-                // logic in the addFilter(), such that we can keep "None" as
-                // null.
+                // logic in the addFilter(), such that we can keep "None" as null.
                 if (!representation.equals(filterRepresentation)) {
-                    // Only do this if the filter isn't the same
-                    // (state panel clicks can lead us here)
+                    // Only do this if the filter isn't the same (state panel clicks can lead us here)
                     copy.removeFilter(representation);
                     copy.addFilter(filterRepresentation);
                 }

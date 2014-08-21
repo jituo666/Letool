@@ -32,7 +32,6 @@ import android.graphics.Shader;
 import android.graphics.drawable.NinePatchDrawable;
 import android.support.v4.widget.EdgeEffectCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.OnGestureListener;
@@ -54,10 +53,9 @@ import com.xjt.newpic.filtershow.tools.SaveImage;
 import java.io.File;
 import java.util.ArrayList;
 
-public class ImageShow extends View implements OnGestureListener,
-                            ScaleGestureDetector.OnScaleGestureListener,OnDoubleTapListener {
+public class ImageShow extends View implements OnGestureListener, ScaleGestureDetector.OnScaleGestureListener,OnDoubleTapListener {
 
-    private static final String LOGTAG = "ImageShow";
+    private static final String TAG = ImageShow.class.getSimpleName();
     private static final boolean ENABLE_ZOOMED_COMPARISON = false;
 
     protected Paint mPaint = new Paint();
@@ -255,15 +253,11 @@ public class ImageShow extends View implements OnGestureListener,
         mPaint.reset();
         mPaint.setAntiAlias(true);
         mPaint.setFilterBitmap(true);
-        MasterImage.getImage().setImageShowSize(
-                getWidth() - 2*mShadowMargin,
-                getHeight() - 2*mShadowMargin);
-
+        MasterImage.getImage().setImageShowSize(getWidth() - 2*mShadowMargin,getHeight() - 2*mShadowMargin);
         MasterImage img = MasterImage.getImage();
         // Hide the loading indicator as needed
         if (mActivity.isLoadingVisible() && getFilteredImage() != null) {
-            if ((img.getLoadedPreset() == null)
-                    || (img.getLoadedPreset() != null
+            if ((img.getLoadedPreset() == null) || (img.getLoadedPreset() != null
                     && img.getLoadedPreset().equals(img.getCurrentPreset()))) {
                 mActivity.stopLoadingIndicator();
             } else if (img.getLoadedPreset() != null) {

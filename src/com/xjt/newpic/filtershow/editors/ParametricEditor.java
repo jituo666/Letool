@@ -11,10 +11,13 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
 import com.xjt.newpic.R;
+import com.xjt.newpic.common.ApiHelper;
+import com.xjt.newpic.filtershow.controller.ActionSlider;
 import com.xjt.newpic.filtershow.controller.BasicSlider;
 import com.xjt.newpic.filtershow.controller.ColorChooser;
 import com.xjt.newpic.filtershow.controller.Control;
 import com.xjt.newpic.filtershow.controller.Parameter;
+import com.xjt.newpic.filtershow.controller.ParameterActionAndInt;
 import com.xjt.newpic.filtershow.controller.ParameterBrightness;
 import com.xjt.newpic.filtershow.controller.ParameterColor;
 import com.xjt.newpic.filtershow.controller.ParameterHue;
@@ -54,9 +57,13 @@ public class ParametricEditor extends Editor {
         portraitMap.put(ParameterOpacity.sParameterType, SliderOpacity.class);
         portraitMap.put(ParameterBrightness.sParameterType, SliderBrightness.class);
         portraitMap.put(ParameterColor.sParameterType, ColorChooser.class);
-
         portraitMap.put(ParameterInteger.sParameterType, BasicSlider.class);
-        //        portraitMap.put(ParameterActionAndInt.sParameterType, ActionSlider.class);
+        if (ApiHelper.AT_LEAST_14) {
+            portraitMap.put(ParameterActionAndInt.sParameterType, ActionSlider.class);
+        } else {
+            portraitMap.put(ParameterActionAndInt.sParameterType, BasicSlider.class);
+        }
+
         portraitMap.put(ParameterStyles.sParameterType, StyleChooser.class);
     }
 

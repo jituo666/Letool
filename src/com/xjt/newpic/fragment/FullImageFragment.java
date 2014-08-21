@@ -67,7 +67,6 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
     private static final int MSG_ON_FULL_SCREEN_CHANGED = 4;
     private static final int MSG_UNFREEZE_GLROOT = 6;
     private static final int MSG_REFRESH_BOTTOM_CONTROLS = 8;
-    private static final int MSG_ON_CAMERA_CENTER = 9;
     private static final int MSG_ON_UPDATE_TITLE = 10;
     private static final int MSG_REFRESH_IMAGE = 11;
     private static final int MSG_UPDATE_PHOTO_UI = 12;
@@ -120,7 +119,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
 
     private LetoolContext mLetoolContext;
 
-    private Handler mHandler;
+    private static Handler mHandler;
 
     public static interface Model extends FullImageView.Model {
 
@@ -234,8 +233,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
 
     @Override
     public void onFullScreenChanged(boolean full) {
-        Message m = mHandler.obtainMessage(MSG_ON_FULL_SCREEN_CHANGED, full ? 1
-                : 0, 0);
+        Message m = mHandler.obtainMessage(MSG_ON_FULL_SCREEN_CHANGED, full ? 1 : 0, 0);
         m.sendToTarget();
     }
 
@@ -253,7 +251,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
     }
 
     private void overrideTransitionToEditor() {
-        getActivity().overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+        getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     private void launchPhotoEditor() {
@@ -395,9 +393,6 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
                         } else {
                             mHandler.sendEmptyMessageDelayed(MSG_UPDATE_DEFERRED, nextUpdate);
                         }
-                        break;
-                    }
-                    case MSG_ON_CAMERA_CENTER: {
                         break;
                     }
                     case MSG_ON_UPDATE_TITLE: {
