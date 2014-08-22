@@ -118,9 +118,9 @@ public class ViewEdgeEffect {
      * Construct a new EdgeEffect with a theme appropriate for the provided context.
      * @param context Context used to provide theming and resource information for the EdgeEffect
      */
-    public ViewEdgeEffect(Context context) {
-        mEdge = new Drawable(context, R.drawable.overscroll_edge);
-        mGlow = new Drawable(context, R.drawable.overscroll_glow);
+    public ViewEdgeEffect(Context context, Drawable edge, Drawable glow) {
+        mEdge = edge;
+        mGlow = glow;
 
         mMinWidth = (int) (context.getResources().getDisplayMetrics().density * MIN_WIDTH + 0.5f);
         mInterpolator = new DecelerateInterpolator();
@@ -393,7 +393,7 @@ public class ViewEdgeEffect {
         }
     }
 
-    private static class Drawable extends ResourceTexture {
+    public static class Drawable extends ResourceTexture {
         private Rect mBounds = new Rect();
         private int mAlpha = 255;
 

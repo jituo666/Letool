@@ -1,10 +1,10 @@
+
 package com.xjt.newpic.adapters;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapRegionDecoder;
 import android.os.Handler;
 import android.os.Message;
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,16 +53,16 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
     private static final int BIT_SCREEN_NAIL = 1;
     private static final int BIT_FULL_IMAGE = 2;
 
-    // sImageFetchSeq is the fetching sequence for images.
-    // We want to fetch the current screennail first (offset = 0), the next
-    // screennail (offset = +1), then the previous screennail (offset = -1) etc.
-    // After all the screennail are fetched, we fetch the full images (only some
-    // of them because of we don't want to use too much memory).
+    // sImageFetchSeq is the fetching sequence for images.We want to fetch the current screennail first (offset = 0), the next
+    // screennail (offset = +1), then the previous screennail (offset = -1) etc. After all the screennail are fetched, 
+    // we fetch the full images (only some of them because of we don't want to use too much memory).
     private static ImageFetch[] sImageFetchSeq;
 
     private static class ImageFetch {
+
         int indexOffset;
         int imageBit;
+
         public ImageFetch(int offset, int bit) {
             indexOffset = offset;
             imageBit = bit;
@@ -87,40 +87,32 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
     private final TileImageViewAdapter mTileProvider = new TileImageViewAdapter();
 
     // PhotoDataAdapter caches MediaItems (data) and ImageEntries (image).
-    //
     // The MediaItems are stored in the mData array, which has DATA_CACHE_SIZE
     // entries. The valid index range are [mContentStart, mContentEnd). We keep
     // mContentEnd - mContentStart <= DATA_CACHE_SIZE, so we can use
-    // (i % DATA_CACHE_SIZE) as index to the array.
-    //
-    // The valid MediaItem window size (mContentEnd - mContentStart) may be
+    // (i % DATA_CACHE_SIZE) as index to the array. The valid MediaItem window size (mContentEnd - mContentStart) may be
     // smaller than DATA_CACHE_SIZE because we only update the window and reload
-    // the MediaItems when there are significant changes to the window position
-    // (>= MIN_LOAD_COUNT).
+    // the MediaItems when there are significant changes to the window position (>= MIN_LOAD_COUNT).
     private final MediaItem mData[] = new MediaItem[DATA_CACHE_SIZE];
     private int mContentStart = 0;
     private int mContentEnd = 0;
 
     // The ImageCache is a MediaPath-to-ImageEntry map. It only holds the
-    // ImageEntries in the range of [mActiveStart, mActiveEnd).  We also keep
-    // mActiveEnd - mActiveStart <= IMAGE_CACHE_SIZE.  Besides, the
-    // [mActiveStart, mActiveEnd) range must be contained within
-    // the [mContentStart, mContentEnd) range.
+    // ImageEntries in the range of [mActiveStart, mActiveEnd).  We also keep mActiveEnd - mActiveStart <= IMAGE_CACHE_SIZE.  Besides, the
+    // [mActiveStart, mActiveEnd) range must be contained within the [mContentStart, mContentEnd) range.
     private HashMap<MediaPath, ImageEntry> mImageCache =
             new HashMap<MediaPath, ImageEntry>();
     private int mActiveStart = 0;
     private int mActiveEnd = 0;
 
-    // mCurrentIndex is the "center" image the user is viewing. The change of
-    // mCurrentIndex triggers the data loading and image loading.
+    // mCurrentIndex is the "center" image the user is viewing. The change of mCurrentIndex triggers the data loading and image loading.
     private int mCurrentIndex;
 
     // mChanges keeps the version number (of MediaItem) about the images. If any
     // of the version number changes, we notify the view. This is used after a
     // database reload or mCurrentIndex changes.
     private final long mChanges[] = new long[IMAGE_CACHE_SIZE];
-    // mPaths keeps the corresponding MediaPath (of MediaItem) for the images. This
-    // is used to determine the item movement.
+    // mPaths keeps the corresponding MediaPath (of MediaItem) for the images. This is used to determine the item movement.
     private final MediaPath mPaths[] = new MediaPath[IMAGE_CACHE_SIZE];
 
     private final Handler mMainHandler;
@@ -141,6 +133,7 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
     private MediaPath mFocusHintPath = null;
 
     public interface DataListener extends DataLoadingListener {
+
         public void onPhotoChanged(int index, MediaItem item);
     }
 
@@ -150,10 +143,8 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
     private final TiledTexture.Uploader mUploader;
 
     // The path of the current viewing item will be stored in mItemPath.
-    // If mItemPath is not null, mCurrentIndex is only a hint for where we
-    // can find the item. If mItemPath is null, then we use the mCurrentIndex to
-    // find the image being viewed. cameraIndex is the index of the camera
-    // preview. If cameraIndex < 0, there is no camera preview.
+    // If mItemPath is not null, mCurrentIndex is only a hint for where we can find the item. If mItemPath is null, then we use the mCurrentIndex to
+    // find the image being viewed. cameraIndex is the index of the camera preview. If cameraIndex < 0, there is no camera preview.
     public FullImageDataAdapter(LetoolContext activity, FullImageView view, MediaSet mediaSet, MediaPath itemPath, int indexHint) {
         mSource = Utils.checkNotNull(mediaSet);
         mPhotoView = Utils.checkNotNull(view);
@@ -167,6 +158,7 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
         mUploader = new TiledTexture.Uploader(activity.getGLController());
 
         mMainHandler = new SynchronizedHandler(activity.getGLController()) {
+
             @Override
             public void handleMessage(Message message) {
                 switch (message.what) {
@@ -189,7 +181,8 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
                         updateImageRequests();
                         return;
                     }
-                    default: throw new AssertionError();
+                    default:
+                        throw new AssertionError();
                 }
             }
         };
@@ -197,7 +190,8 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
     }
 
     private MediaItem getItemInternal(int index) {
-        if (index < 0 || index >= mSize) return null;
+        if (index < 0 || index >= mSize)
+            return null;
         if (index >= mContentStart && index < mContentEnd) {
             return mData[index % DATA_CACHE_SIZE];
         }
@@ -206,13 +200,15 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
 
     private long getVersion(int index) {
         MediaItem item = getItemInternal(index);
-        if (item == null) return MediaObject.INVALID_DATA_VERSION;
+        if (item == null)
+            return MediaObject.INVALID_DATA_VERSION;
         return item.getDataVersion();
     }
 
     private MediaPath getPath(int index) {
         MediaItem item = getItemInternal(index);
-        if (item == null) return null;
+        if (item == null)
+            return null;
         return item.getPath();
     }
 
@@ -227,10 +223,10 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
             }
         }
 
-        if (!changed) return;
+        if (!changed)
+            return;
 
-        // Now calculate the fromIndex array. fromIndex represents the item
-        // movement. It records the index where the picture come from. The
+        // Now calculate the fromIndex array. fromIndex represents the item movement. It records the index where the picture come from. The
         // special value Integer.MAX_VALUE means it's a new picture.
         final int N = IMAGE_CACHE_SIZE;
         int fromIndex[] = new int[N];
@@ -274,7 +270,8 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
         ScreenNail screenNail = future.get();
 
         if (entry == null || entry.screenNailTask != future) {
-            if (screenNail != null) screenNail.recycle();
+            if (screenNail != null)
+                screenNail.recycle();
             return;
         }
 
@@ -295,7 +292,8 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
 
         for (int i = -SCREEN_NAIL_MAX; i <= SCREEN_NAIL_MAX; ++i) {
             if (path == getPath(mCurrentIndex + i)) {
-                if (i == 0) updateTileProvider(entry);
+                if (i == 0)
+                    updateTileProvider(entry);
                 mPhotoView.notifyImageChange(i);
                 break;
             }
@@ -308,7 +306,8 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
         ImageEntry entry = mImageCache.get(path);
         if (entry == null || entry.fullImageTask != future) {
             BitmapRegionDecoder fullImage = future.get();
-            if (fullImage != null) fullImage.recycle();
+            if (fullImage != null)
+                fullImage.recycle();
             return;
         }
 
@@ -348,9 +347,12 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
         mSource.removeContentListener(mSourceListener);
 
         for (ImageEntry entry : mImageCache.values()) {
-            if (entry.fullImageTask != null) entry.fullImageTask.cancel();
-            if (entry.screenNailTask != null) entry.screenNailTask.cancel();
-            if (entry.screenNail != null) entry.screenNail.recycle();
+            if (entry.fullImageTask != null)
+                entry.fullImageTask.cancel();
+            if (entry.screenNailTask != null)
+                entry.screenNailTask.cancel();
+            if (entry.screenNail != null)
+                entry.screenNail.recycle();
         }
         mImageCache.clear();
         mTileProvider.clear();
@@ -360,7 +362,8 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
     }
 
     private MediaItem getItem(int index) {
-        if (index < 0 || index >= mSize || !mIsActive) return null;
+        if (index < 0 || index >= mSize || !mIsActive)
+            return null;
         Utils.assertTrue(index >= mActiveStart && index < mActiveEnd);
 
         if (index >= mContentStart && index < mContentEnd) {
@@ -370,7 +373,8 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
     }
 
     private void updateCurrentIndex(int index) {
-        if (mCurrentIndex == index) return;
+        if (mCurrentIndex == index)
+            return;
         mCurrentIndex = index;
         updateSlidingWindow();
 
@@ -390,18 +394,22 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
 
     private void uploadScreenNail(int offset) {
         int index = mCurrentIndex + offset;
-        if (index < mActiveStart || index >= mActiveEnd) return;
+        if (index < mActiveStart || index >= mActiveEnd)
+            return;
 
         MediaItem item = getItem(index);
-        if (item == null) return;
+        if (item == null)
+            return;
 
         ImageEntry e = mImageCache.get(item.getPath());
-        if (e == null) return;
+        if (e == null)
+            return;
 
         ScreenNail s = e.screenNail;
         if (s instanceof TiledScreenNail) {
             TiledTexture t = ((TiledScreenNail) s).getTexture();
-            if (t != null && !t.isReady()) mUploader.addTexture(t);
+            if (t != null && !t.isReady())
+                mUploader.addTexture(t);
         }
     }
 
@@ -422,20 +430,24 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
     @Override
     public ScreenNail getScreenNail(int offset) {
         int index = mCurrentIndex + offset;
-        if (index < 0 || index >= mSize || !mIsActive) return null;
+        if (index < 0 || index >= mSize || !mIsActive)
+            return null;
         Utils.assertTrue(index >= mActiveStart && index < mActiveEnd);
 
         MediaItem item = getItem(index);
-        if (item == null) return null;
+        if (item == null)
+            return null;
 
         ImageEntry entry = mImageCache.get(item.getPath());
-        if (entry == null) return null;
+        if (entry == null)
+            return null;
 
         // Create a default ScreenNail if the real one is not available yet,
         // except for camera that a black screen is better than a gray tile.
         if (entry.screenNail == null && !isCamera(offset)) {
             entry.screenNail = newPlaceholderScreenNail(item);
-            if (offset == 0) updateTileProvider(entry);
+            if (offset == 0)
+                updateTileProvider(entry);
         }
 
         return entry.screenNail;
@@ -499,9 +511,12 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
     @Override
     public int getLoadingState(int offset) {
         ImageEntry entry = mImageCache.get(getPath(mCurrentIndex + offset));
-        if (entry == null) return LOADING_INIT;
-        if (entry.failToLoad) return LOADING_FAIL;
-        if (entry.screenNail != null) return LOADING_COMPLETE;
+        if (entry == null)
+            return LOADING_INIT;
+        if (entry.failToLoad)
+            return LOADING_FAIL;
+        if (entry.screenNail != null)
+            return LOADING_COMPLETE;
         return LOADING_INIT;
     }
 
@@ -551,7 +566,8 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
 
     @Override
     public void setCurrentPhoto(MediaPath path, int indexHint) {
-        if (mItemPath == path) return;
+        if (mItemPath == path)
+            return;
         mItemPath = path;
         mCurrentIndex = indexHint;
         updateSlidingWindow();
@@ -561,7 +577,8 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
         // We need to reload content if the path doesn't match.
         MediaItem item = getMediaItem(0);
         if (item != null && item.getPath() != path) {
-            if (mReloadTask != null) mReloadTask.notifyDirty();
+            if (mReloadTask != null)
+                mReloadTask.notifyDirty();
         }
     }
 
@@ -608,7 +625,8 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
                 0, Math.max(0, mSize - IMAGE_CACHE_SIZE));
         int end = Math.min(mSize, start + IMAGE_CACHE_SIZE);
 
-        if (mActiveStart == start && mActiveEnd == end) return;
+        if (mActiveStart == start && mActiveEnd == end)
+            return;
 
         mActiveStart = start;
         mActiveEnd = end;
@@ -626,12 +644,14 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
             }
             mContentStart = start;
             mContentEnd = end;
-            if (mReloadTask != null) mReloadTask.notifyDirty();
+            if (mReloadTask != null)
+                mReloadTask.notifyDirty();
         }
     }
 
     private void updateImageRequests() {
-        if (!mIsActive) return;
+        if (!mIsActive)
+            return;
 
         int currentIndex = mCurrentIndex;
         MediaItem item = mData[currentIndex % DATA_CACHE_SIZE];
@@ -645,9 +665,11 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
         for (int i = 0; i < sImageFetchSeq.length; i++) {
             int offset = sImageFetchSeq[i].indexOffset;
             int bit = sImageFetchSeq[i].imageBit;
-            if (bit == BIT_FULL_IMAGE && !mNeedFullImage) continue;
+            if (bit == BIT_FULL_IMAGE && !mNeedFullImage)
+                continue;
             task = startTaskIfNeeded(currentIndex + offset, bit);
-            if (task != null) break;
+            if (task != null)
+                break;
         }
 
         // 2. Cancel everything else.
@@ -666,6 +688,7 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
     }
 
     private class ScreenNailJob implements Job<ScreenNail> {
+
         private MediaItem mItem;
 
         public ScreenNailJob(MediaItem item) {
@@ -677,25 +700,28 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
             // We try to get a ScreenNail first, if it fails, we fallback to get
             // a Bitmap and then wrap it in a BitmapScreenNail instead.
             ScreenNail s = mItem.getScreenNail();
-            if (s != null) return s;
+            if (s != null)
+                return s;
 
             // If this is a temporary item, don't try to get its bitmap because
             // it won't be available. We will get its bitmap after a data reload.
-/*            if (isTemporaryItem(mItem)) {
-                return newPlaceholderScreenNail(mItem);
-            }*/
+            /*            if (isTemporaryItem(mItem)) {
+                            return newPlaceholderScreenNail(mItem);
+                        }*/
 
             Bitmap bitmap = mItem.requestImage(MediaItem.TYPE_THUMBNAIL).run(jc);
-            if (jc.isCancelled()) return null;
+            if (jc.isCancelled())
+                return null;
             if (bitmap != null) {
                 bitmap = BitmapUtils.rotateBitmap(bitmap,
-                    mItem.getRotation() - mItem.getFullImageRotation(), true);
+                        mItem.getRotation() - mItem.getFullImageRotation(), true);
             }
             return bitmap == null ? null : new TiledScreenNail(bitmap);
         }
     }
 
     private class FullImageJob implements Job<BitmapRegionDecoder> {
+
         private MediaItem mItem;
 
         public FullImageJob(MediaItem item) {
@@ -704,9 +730,9 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
 
         @Override
         public BitmapRegionDecoder run(JobContext jc) {
-/*            if (isTemporaryItem(mItem)) {
-                return null;
-            }*/
+            /*            if (isTemporaryItem(mItem)) {
+                            return null;
+                        }*/
             return mItem.requestLargeImage().run(jc);
         }
     }
@@ -718,19 +744,19 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
     // yet. When the image or video data is actually saved, we will get
     // notification from MediaProvider, reload data, and show the actual image
     // or video data.
-/*    private boolean isTemporaryItem(MediaItem mediaItem) {
-        // Must be an item in camera roll.
-        if (!(mediaItem instanceof LocalMediaItem)) return false;
-        LocalMediaItem item = (LocalMediaItem) mediaItem;
-        if (item.getBucketId() != MediaSetUtils.CAMERA_BUCKET_ID) return false;
-        // Must have no size, but must have width and height information
-        if (item.getSize() != 0) return false;
-        if (item.getWidth() == 0) return false;
-        if (item.getHeight() == 0) return false;
-        // Must be created in the last 10 seconds.
-        if (item.getDateInMs() - System.currentTimeMillis() > 10000) return false;
-        return true;
-    }*/
+    /*    private boolean isTemporaryItem(MediaItem mediaItem) {
+            // Must be an item in camera roll.
+            if (!(mediaItem instanceof LocalMediaItem)) return false;
+            LocalMediaItem item = (LocalMediaItem) mediaItem;
+            if (item.getBucketId() != MediaSetUtils.CAMERA_BUCKET_ID) return false;
+            // Must have no size, but must have width and height information
+            if (item.getSize() != 0) return false;
+            if (item.getWidth() == 0) return false;
+            if (item.getHeight() == 0) return false;
+            // Must be created in the last 10 seconds.
+            if (item.getDateInMs() - System.currentTimeMillis() > 10000) return false;
+            return true;
+        }*/
 
     // Create a default ScreenNail when a ScreenNail is needed, but we don't yet
     // have one available (because the image data is still being saved, or the
@@ -743,10 +769,12 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
 
     // Returns the task if we started the task or the task is already started.
     private Future<?> startTaskIfNeeded(int index, int which) {
-        if (index < mActiveStart || index >= mActiveEnd) return null;
+        if (index < mActiveStart || index >= mActiveEnd)
+            return null;
 
         ImageEntry entry = mImageCache.get(getPath(index));
-        if (entry == null) return null;
+        if (entry == null)
+            return null;
         MediaItem item = mData[index % DATA_CACHE_SIZE];
         Utils.assertTrue(item != null);
         long version = item.getDataVersion();
@@ -784,7 +812,8 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
         HashSet<MediaPath> toBeRemoved = new HashSet<MediaPath>(mImageCache.keySet());
         for (int i = mActiveStart; i < mActiveEnd; ++i) {
             MediaItem item = mData[i % DATA_CACHE_SIZE];
-            if (item == null) continue;
+            if (item == null)
+                continue;
             MediaPath path = item.getPath();
             ImageEntry entry = mImageCache.get(path);
             toBeRemoved.remove(path);
@@ -815,15 +844,19 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
         // Clear the data and requests for ImageEntries outside the new window.
         for (MediaPath path : toBeRemoved) {
             ImageEntry entry = mImageCache.remove(path);
-            if (entry.fullImageTask != null) entry.fullImageTask.cancel();
-            if (entry.screenNailTask != null) entry.screenNailTask.cancel();
-            if (entry.screenNail != null) entry.screenNail.recycle();
+            if (entry.fullImageTask != null)
+                entry.fullImageTask.cancel();
+            if (entry.screenNailTask != null)
+                entry.screenNailTask.cancel();
+            if (entry.screenNail != null)
+                entry.screenNail.recycle();
         }
 
         updateScreenNailUploadQueue();
     }
 
     private class FullImageListener implements Runnable, FutureListener<BitmapRegionDecoder> {
+
         private final MediaPath mPath;
         private Future<BitmapRegionDecoder> mFuture;
 
@@ -845,6 +878,7 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
 
     private class ScreenNailListener
             implements Runnable, FutureListener<ScreenNail> {
+
         private final MediaPath mPath;
         private Future<ScreenNail> mFuture;
 
@@ -866,6 +900,7 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
     }
 
     private static class ImageEntry {
+
         public BitmapRegionDecoder fullImage;
         public ScreenNail screenNail;
         public Future<ScreenNail> screenNailTask;
@@ -876,9 +911,11 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
     }
 
     private class SourceListener implements ContentListener {
+
         @Override
         public void onContentDirty() {
-            if (mReloadTask != null) mReloadTask.notifyDirty();
+            if (mReloadTask != null)
+                mReloadTask.notifyDirty();
         }
     }
 
@@ -896,6 +933,7 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
     }
 
     private static class UpdateInfo {
+
         public long version;
         public boolean reloadContent;
         public MediaPath target;
@@ -911,7 +949,8 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
 
         private boolean needContentReload() {
             for (int i = mContentStart, n = mContentEnd; i < n; ++i) {
-                if (mData[i % DATA_CACHE_SIZE] == null) return true;
+                if (mData[i % DATA_CACHE_SIZE] == null)
+                    return true;
             }
             MediaItem current = mData[mCurrentIndex % DATA_CACHE_SIZE];
             return current == null || current.getPath() != mItemPath;
@@ -933,6 +972,7 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
     }
 
     private class UpdateContent implements Callable<Void> {
+
         UpdateInfo mUpdateInfo;
 
         public UpdateContent(UpdateInfo updateInfo) {
@@ -946,8 +986,10 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
 
             if (info.size != mSize) {
                 mSize = info.size;
-                if (mContentEnd > mSize) mContentEnd = mSize;
-                if (mActiveEnd > mSize) mActiveEnd = mSize;
+                if (mContentEnd > mSize)
+                    mContentEnd = mSize;
+                if (mActiveEnd > mSize)
+                    mActiveEnd = mSize;
             }
 
             mCurrentIndex = info.indexHint;
@@ -959,7 +1001,8 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
                 int dataIndex = start % DATA_CACHE_SIZE;
                 for (int i = start; i < end; ++i) {
                     mData[dataIndex] = info.items.get(i - info.contentStart);
-                    if (++dataIndex == DATA_CACHE_SIZE) dataIndex = 0;
+                    if (++dataIndex == DATA_CACHE_SIZE)
+                        dataIndex = 0;
                 }
             }
 
@@ -981,13 +1024,15 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
     }
 
     private class ReloadTask extends Thread {
+
         private volatile boolean mActive = true;
         private volatile boolean mDirty = true;
 
         private boolean mIsLoading = false;
 
         private void updateLoading(boolean loading) {
-            if (mIsLoading == loading) return;
+            if (mIsLoading == loading)
+                return;
             mIsLoading = loading;
             mMainHandler.sendEmptyMessage(loading ? MSG_LOAD_START : MSG_LOAD_FINISH);
         }
@@ -1010,7 +1055,8 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
                     info.reloadContent = true;
                     info.size = mSource.updateMediaSet();
                 }
-                if (!info.reloadContent) continue;
+                if (!info.reloadContent)
+                    continue;
                 info.items = mSource.getMediaItem(info.contentStart, info.contentEnd);
 
                 int index = MediaSet.INDEX_NOT_FOUND;
@@ -1048,7 +1094,8 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
 
                 // Don't change index if mSize == 0
                 if (info.size > 0) {
-                    if (index >= info.size) index = info.size - 1;
+                    if (index >= info.size)
+                        index = info.size - 1;
                     info.indexHint = index;
                 }
                 LLog.i(TAG, "----------------ReloadTask------------ReloadTask----------:" + index + " :" + info.size);
@@ -1073,13 +1120,15 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
         }
 
         private int findIndexOfTarget(UpdateInfo info) {
-            if (info.target == null) return info.indexHint;
+            if (info.target == null)
+                return info.indexHint;
             ArrayList<MediaItem> items = info.items;
 
             // First, try to find the item in the data just loaded
             if (items != null) {
                 int i = findIndexOfPathInCache(info, info.target);
-                if (i != MediaSet.INDEX_NOT_FOUND) return i;
+                if (i != MediaSet.INDEX_NOT_FOUND)
+                    return i;
             }
 
             // Not found, find it in mSource.

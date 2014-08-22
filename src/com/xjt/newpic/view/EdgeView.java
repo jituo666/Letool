@@ -1,13 +1,17 @@
+
 package com.xjt.newpic.view;
 
 import android.content.Context;
 import android.opengl.Matrix;
 
+import com.xjt.newpic.R;
 import com.xjt.newpic.views.opengl.GLESCanvas;
 import com.xjt.newpic.views.utils.ViewEdgeEffect;
+import com.xjt.newpic.views.utils.ViewEdgeEffect.Drawable;
 
 // EdgeView draws EdgeEffect (blue glow) at four sides of the view.
 public class EdgeView extends GLView {
+
     @SuppressWarnings("unused")
     private static final String TAG = "EdgeView";
 
@@ -18,8 +22,7 @@ public class EdgeView extends GLView {
     public static final int RIGHT = 3;
 
     // Each edge effect has a transform matrix, and each matrix has 16 elements.
-    // We put all the elements in one array. These constants specify the
-    // starting index of each matrix.
+    // We put all the elements in one array. These constants specify the starting index of each matrix.
     private static final int TOP_M = TOP * 16;
     private static final int LEFT_M = LEFT * 16;
     private static final int BOTTOM_M = BOTTOM * 16;
@@ -28,16 +31,35 @@ public class EdgeView extends GLView {
     private ViewEdgeEffect[] mEffect = new ViewEdgeEffect[4];
     private float[] mMatrix = new float[4 * 16];
 
+    private Context mContext;
+    Drawable mEdge;
+    Drawable mGlow;
+
     public EdgeView(Context context) {
+        mContext = context;
+    }
+
+    public void prepareDrawables() {
+        mEdge = new Drawable(mContext, R.drawable.overscroll_edge);
+        mGlow = new Drawable(mContext, R.drawable.overscroll_glow);
         for (int i = 0; i < 4; i++) {
-            mEffect[i] = new ViewEdgeEffect(context);
+            mEffect[i] = new ViewEdgeEffect(mContext, mEdge, mGlow);
+        }
+    }
+
+    public void freeDrawables() {
+        mEdge.recycle();
+        mGlow.recycle();
+        for (int i = 0; i < 4; i++) {
+            mEffect[i] = null;
         }
     }
 
     @Override
     protected void onLayout(
             boolean changeSize, int left, int top, int right, int bottom) {
-        if (!changeSize) return;
+        if (!changeSize)
+            return;
 
         int w = right - left;
         int h = bottom - top;
@@ -87,7 +109,7 @@ public class EdgeView extends GLView {
     // offset is in pixels. direction is one of {TOP, LEFT, BOTTOM, RIGHT}.
     public void onPull(int offset, int direction) {
         int fullLength = ((direction & 1) == 0) ? getWidth() : getHeight();
-        mEffect[direction].onPull((float)offset / fullLength);
+        mEffect[direction].onPull((float) offset / fullLength);
         if (!mEffect[direction].isFinished()) {
             invalidate();
         }

@@ -19,11 +19,9 @@
     <application
         android:name="com.xjt.newpic.LetoolAppImpl"
         android:allowBackup="false"
-        android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:largeHeap="true"
-        android:logo="@drawable/ic_launcher" >
+        android:debuggable="true"
+        android:label="@string/app_name">
         <activity
             android:name="com.xjt.newpic.activities.LetoolMainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"

@@ -71,28 +71,13 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
     private static final int MSG_REFRESH_IMAGE = 11;
     private static final int MSG_UPDATE_PHOTO_UI = 12;
     private static final int MSG_UPDATE_DEFERRED = 14;
-    private static final int MSG_UPDATE_SHARE_URI = 15;
-    private static final int MSG_UPDATE_PANORAMA_UI = 16;
 
     private static final int UNFREEZE_GLROOT_TIMEOUT = 250;
 
-    public static final String KEY_MEDIA_SET_PATH = "media-set-path";
-    public static final String KEY_MEDIA_ITEM_PATH = "media-item-path";
     public static final String KEY_INDEX_HINT = "index-hint";
     public static final String KEY_OPEN_ANIMATION_RECT = "open-animation-rect";
-    public static final String KEY_APP_BRIDGE = "app-bridge";
-    public static final String KEY_TREAT_BACK_AS_UP = "treat-back-as-up";
     public static final String KEY_START_IN_FILMSTRIP = "start-in-filmstrip";
-    public static final String KEY_RETURN_INDEX_HINT = "return-index-hint";
-    public static final String KEY_SHOW_WHEN_LOCKED = "show_when_locked";
-    public static final String KEY_IN_CAMERA_ROLL = "in_camera_roll";
-    public static final String KEY_READONLY = "read-only";
-
     public static final String KEY_ALBUMPAGE_TRANSITION = "albumpage-transition";
-    public static final int MSG_ALBUMPAGE_NONE = 0;
-    public static final int MSG_ALBUMPAGE_STARTED = 1;
-    public static final int MSG_ALBUMPAGE_RESUMED = 2;
-    public static final int MSG_ALBUMPAGE_PICKED = 4;
 
     private SelectionManager mSelectionManager;
 
@@ -285,6 +270,11 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
             //                showDetails();
             //            }
             launchPhotoEditor();
+            //            Intent it = new Intent();
+            //            it.setClass(getActivity(), SettingsActivity.class);
+            //            it.putExtra(SettingsActivity.KEY_FROM_TIP, true);
+            //            this.getActivity().startActivity(it);
+
         } else if (v.getId() == R.id.action_delete) {
             SingleDeleteMediaListener cdl = new SingleDeleteMediaListener(
                     getActivity(), mCurrentPhoto.getPath(), mLetoolContext.getDataManager(),
@@ -409,12 +399,6 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
                         updateUIForCurrentPhoto();
                         break;
                     }
-                    case MSG_UPDATE_SHARE_URI: {
-                        break;
-                    }
-                    case MSG_UPDATE_PANORAMA_UI: {
-                        break;
-                    }
                     default:
                         throw new AssertionError(message.what);
                 }
@@ -444,8 +428,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
             mMediaSet = mLetoolContext.getDataManager().getMediaSet(new MediaPath(albumMediaPath, albumId));
         } else {
             boolean isImage = mLetoolContext.isImageBrwosing();
-            mMediaSet = new LocalAlbum(new MediaPath(
-                    data.getString(LocalMediaActivity.KEY_MEDIA_PATH), MediaSetUtils.getBucketsIds()[0]),
+            mMediaSet = new LocalAlbum(new MediaPath(data.getString(LocalMediaActivity.KEY_MEDIA_PATH), MediaSetUtils.getBucketsIds()[0]),
                     (LetoolApp) getActivity().getApplication(),
                     MediaSetUtils.getBucketsIds(), isImage, getString(isImage ? R.string.common_picture : R.string.common_video));
         }
@@ -535,8 +518,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
     private void showDetails() {
         mShowDetails = true;
         if (mDetailsHelper == null) {
-            mDetailsHelper = new DetailsHelper(mLetoolContext, mRootPane,
-                    new MyDetailsSource());
+            mDetailsHelper = new DetailsHelper(mLetoolContext, mRootPane,  new MyDetailsSource());
             mDetailsHelper.setCloseListener(new CloseListener() {
 
                 @Override

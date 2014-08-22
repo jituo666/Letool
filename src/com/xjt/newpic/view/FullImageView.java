@@ -8,7 +8,6 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Message;
-import android.util.FloatMath;
 import android.view.MotionEvent;
 import android.view.animation.AccelerateInterpolator;
 
@@ -27,10 +26,8 @@ import com.xjt.newpic.utils.RangeArray;
 import com.xjt.newpic.utils.Utils;
 import com.xjt.newpic.views.layout.FullImageLayout;
 import com.xjt.newpic.views.opengl.GLESCanvas;
-import com.xjt.newpic.views.opengl.ResourceTexture;
 import com.xjt.newpic.views.opengl.ScreenNail;
 import com.xjt.newpic.views.opengl.StringTexture;
-import com.xjt.newpic.views.opengl.Texture;
 import com.xjt.newpic.views.opengl.TiledScreenNail;
 import com.xjt.newpic.views.utils.GestureRecognizer;
 
@@ -38,7 +35,6 @@ import java.lang.ref.WeakReference;
 
 public class FullImageView extends GLView {
 
-    @SuppressWarnings("unused")
     private static final String TAG = FullImageView.class.getSimpleName();
     private final int mPlaceholderColor;
 
@@ -1201,8 +1197,7 @@ public class FullImageView extends GLView {
                 if (mTouchBoxIndex < mPrevBound || mTouchBoxIndex > mNextBound) {
                     mTouchBoxIndex = Integer.MAX_VALUE;
                 } else {
-                    mTouchBoxDeletable =
-                            mPictures.get(mTouchBoxIndex).isDeletable();
+                    mTouchBoxDeletable = mPictures.get(mTouchBoxIndex).isDeletable();
                 }
             } else {
                 mTouchBoxIndex = Integer.MAX_VALUE;
@@ -1217,10 +1212,8 @@ public class FullImageView extends GLView {
             mHolding &= ~HOLD_TOUCH_DOWN;
             mEdgeView.onRelease();
 
-            // If we scrolled in Y direction far enough, treat it as a delete
-            // gesture.
-            if (mFilmMode && mScrolledAfterDown && !mFirstScrollX
-                    && mTouchBoxIndex != Integer.MAX_VALUE) {
+            // If we scrolled in Y direction far enough, treat it as a delete gesture.
+            if (mFilmMode && mScrolledAfterDown && !mFirstScrollX && mTouchBoxIndex != Integer.MAX_VALUE) {
                 Rect r = mPositionController.getPosition(mTouchBoxIndex);
                 int h = getHeight();
                 if (Math.abs(r.centerY() - h * 0.5f) > 0.4f * h) {
@@ -1272,6 +1265,7 @@ public class FullImageView extends GLView {
     ////////////////////////////////////////////////////////////////////////////
 
     public void pause() {
+        mEdgeView.freeDrawables();
         mPositionController.skipAnimation();
         mTileView.freeTextures();
         for (int i = -SCREEN_NAIL_MAX; i <= SCREEN_NAIL_MAX; i++) {
@@ -1280,6 +1274,7 @@ public class FullImageView extends GLView {
     }
 
     public void resume() {
+        mEdgeView.prepareDrawables();
         mTileView.prepareTextures();
         mPositionController.skipToFinalPosition();
     }
