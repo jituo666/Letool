@@ -1011,7 +1011,7 @@ public class FullImageView extends GLView {
             if (Math.abs(delta) >= size) {
                 delta = delta > 0 ? maxScrollDistance : -maxScrollDistance;
             } else {
-                delta = maxScrollDistance * FloatMath.sin((delta / size) * (float) (Math.PI / 2));
+                delta = maxScrollDistance * (float)Math.sin((delta / size) * (float) (Math.PI / 2));
             }
             return (int) (delta + 0.5f);
         }

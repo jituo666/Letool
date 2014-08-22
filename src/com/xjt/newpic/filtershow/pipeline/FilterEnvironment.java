@@ -1,23 +1,7 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.xjt.newpic.filtershow.pipeline;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
+import android.support.v4.util.LongSparseArray;
 import android.support.v8.renderscript.Allocation;
 
 import com.xjt.newpic.common.LLog;
@@ -27,11 +11,9 @@ import com.xjt.newpic.filtershow.filters.FilterUserPresetRepresentation;
 import com.xjt.newpic.filtershow.filters.FiltersManagerInterface;
 import com.xjt.newpic.filtershow.filters.ImageFilter;
 
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
 
 public class FilterEnvironment {
-    private static final String LOGTAG = "FilterEnvironment";
+    private static final String TAG = FilterEnvironment.class.getSimpleName();
     private ImagePreset mImagePreset;
     private float mScaleFactor;
     private int mQuality;
@@ -52,8 +34,7 @@ public class FilterEnvironment {
         this.mStop = stop;
     }
 
-    private HashMap<Integer, Integer>
-                    generalParameters = new HashMap<Integer, Integer>();
+    private LongSparseArray<Integer> generalParameters = new LongSparseArray<Integer>();
 
     public void setBitmapCache(BitmapCache cache) {
         mBitmapCache = cache;
@@ -128,7 +109,7 @@ public class FilterEnvironment {
         }
         ImageFilter filter = mFiltersManager.getFilterForRepresentation(representation);
         if (filter == null){
-            LLog.e(LOGTAG,"No ImageFilter for "+representation.getSerializationName());
+            LLog.e(TAG,"No ImageFilter for "+representation.getSerializationName());
         }
         filter.useRepresentation(representation);
         filter.setEnvironment(this);
@@ -154,7 +135,7 @@ public class FilterEnvironment {
     }
 
     public synchronized Integer getGeneralParameter(int id) {
-        if (generalParameters == null || !generalParameters.containsKey(id)) {
+        if (generalParameters == null || generalParameters.indexOfValue(id) < 0) {
             return null;
         }
         return generalParameters.get(id);
@@ -162,7 +143,7 @@ public class FilterEnvironment {
 
     public synchronized void setGeneralParameter(int id, int value) {
         if (generalParameters == null) {
-            generalParameters = new HashMap<Integer, Integer>();
+            generalParameters = new LongSparseArray<Integer>();
         }
 
         generalParameters.put(id, value);

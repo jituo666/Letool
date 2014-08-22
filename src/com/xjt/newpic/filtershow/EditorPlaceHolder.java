@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.filtershow;
 
 import android.view.View;
@@ -10,7 +11,8 @@ import java.util.HashMap;
 import java.util.Vector;
 
 public class EditorPlaceHolder {
-    private static final String TAG = "EditorPlaceHolder";
+
+    private static final String TAG = EditorPlaceHolder.class.getSimpleName();
 
     private FilterShowActivity mActivity = null;
     private FrameLayout mContainer = null;

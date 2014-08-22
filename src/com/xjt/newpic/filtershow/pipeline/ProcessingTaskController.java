@@ -4,9 +4,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.support.v4.util.LongSparseArray;
 import android.util.Log;
-
-import java.util.HashMap;
 
 public class ProcessingTaskController implements Handler.Callback {
     private static final String LOGTAG = "ProcessingTaskController";
@@ -15,7 +14,7 @@ public class ProcessingTaskController implements Handler.Callback {
     private HandlerThread mHandlerThread = null;
     private Handler mProcessingHandler = null;
     private int mCurrentType;
-    private HashMap<Integer, ProcessingTask> mTasks = new HashMap<Integer, ProcessingTask>();
+    private LongSparseArray<ProcessingTask> mTasks = new LongSparseArray<ProcessingTask>();
 
     public final static int RESULT = 1;
     public final static int UPDATE = 2;

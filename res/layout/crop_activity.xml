@@ -15,39 +15,23 @@
      limitations under the License.
 -->
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/mainView">
+    android:layout_height="match_parent" >
 
-    <LinearLayout
-        android:id="@+id/mainPanel"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical" >
+    <com.xjt.newpic.filtershow.crop.CropView
+        android:id="@+id/cropView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" >
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@android:color/transparent"
+        android:indeterminate="true"
+        android:indeterminateOnly="true" />
 
-            <com.xjt.newpic.filtershow.crop.CropView
-                android:id="@+id/cropView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <ProgressBar
-                android:id="@+id/loading"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:indeterminate="true"
-                android:indeterminateOnly="true"
-                android:background="@android:color/transparent" />
-
-        </FrameLayout>
-
-    </LinearLayout>
-
-</FrameLayout>
+</merge>

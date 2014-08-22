@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2012 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.xjt.newpic.filtershow.filters;
 
@@ -23,16 +8,14 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-
-import java.util.HashMap;
+import android.support.v4.util.LongSparseArray;
 
 public class ImageFilterBorder extends ImageFilter {
-    private static final float NINEPATCH_ICON_SCALING = 10;
-    private static final float BITMAP_ICON_SCALING = 1 / 3.0f;
+
     private FilterImageBorderRepresentation mParameters = null;
     private Resources mResources = null;
 
-    private HashMap<Integer, Drawable> mDrawables = new HashMap<Integer, Drawable>();
+    private LongSparseArray<Drawable> mDrawables = new LongSparseArray<Drawable>();
 
     public ImageFilterBorder() {
         mName = "Border";
@@ -48,10 +31,10 @@ public class ImageFilterBorder extends ImageFilter {
     }
 
     public void freeResources() {
-       mDrawables.clear();
+        mDrawables.clear();
     }
 
-    public Bitmap applyHelper(Bitmap bitmap, float scale1, float scale2 ) {
+    public Bitmap applyHelper(Bitmap bitmap, float scale1, float scale2) {
         int w = bitmap.getWidth();
         int h = bitmap.getHeight();
         Rect bounds = new Rect(0, 0, (int) (w * scale1), (int) (h * scale1));

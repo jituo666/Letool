@@ -2,6 +2,7 @@ package com.xjt.newpic.filtershow.cache;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 
 import com.xjt.newpic.filtershow.pipeline.Buffer;
@@ -9,11 +10,10 @@ import com.xjt.newpic.filtershow.pipeline.CacheProcessing;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class BitmapCache {
-    private static final String LOGTAG = "BitmapCache";
-    private HashMap<Long, ArrayList<WeakReference<Bitmap>>>mBitmapCache = new HashMap<Long, ArrayList<WeakReference<Bitmap>>>();
+    private static final String TAG = BitmapCache.class.getSimpleName();
+    private LongSparseArray< ArrayList<WeakReference<Bitmap>>>mBitmapCache = new LongSparseArray<ArrayList<WeakReference<Bitmap>>>();
     private final int mMaxItemsPerKey = 4;
 
     private static final boolean DEBUG = false;
@@ -46,7 +46,7 @@ public class BitmapCache {
         for (int i = 0; i < mBitmapTracking.size(); i++) {
             BitmapTracking tracking = mBitmapTracking.get(i);
             if (tracking.bitmap == bitmap) {
-                Log.e(LOGTAG, "giving a bitmap already given!!!");
+                Log.e(TAG, "giving a bitmap already given!!!");
             }
         }
         BitmapTracking tracking = new BitmapTracking();
@@ -90,10 +90,10 @@ public class BitmapCache {
         if (!DEBUG) {
             return;
         }
-        Log.v(LOGTAG, "\n--- showBitmap --- ");
+        Log.v(TAG, "\n--- showBitmap --- ");
         for (int i = 0; i < TRACKING_COUNT; i++) {
             if (mTracking[i] != 0) {
-                Log.v(LOGTAG, getTrackingName(i) + " => " + mTracking[i]);
+                Log.v(TAG, getTrackingName(i) + " => " + mTracking[i]);
             }
         }
     }
@@ -115,14 +115,14 @@ public class BitmapCache {
             return true;
         }
         if (mCacheProcessing != null && mCacheProcessing.contains(bitmap)) {
-            Log.e(LOGTAG, "Trying to cache a bitmap still used in the pipeline");
+            Log.e(TAG, "Trying to cache a bitmap still used in the pipeline");
             return false;
         }
         if (DEBUG) {
             untrack(bitmap);
         }
         if (!bitmap.isMutable()) {
-            Log.e(LOGTAG, "Trying to cache a non mutable bitmap");
+            Log.e(TAG, "Trying to cache a non mutable bitmap");
             return true;
         }
         Long key = calcKey(bitmap.getWidth(), bitmap.getHeight());
@@ -178,7 +178,7 @@ public class BitmapCache {
         if (DEBUG) {
             track(bitmap, type);
             if (mCacheProcessing != null && mCacheProcessing.contains(bitmap)) {
-                Log.e(LOGTAG, "Trying to give a bitmap used in the pipeline");
+                Log.e(TAG, "Trying to give a bitmap used in the pipeline");
             }
         }
         return bitmap;
