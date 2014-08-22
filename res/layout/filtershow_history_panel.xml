@@ -38,7 +38,7 @@
     <ListView
             android:id="@+id/operationsList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:padding="10dip"
             android:divider="@android:color/transparent"

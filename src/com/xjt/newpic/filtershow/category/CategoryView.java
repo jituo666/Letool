@@ -13,6 +13,7 @@ import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.nineoldandroids.view.ViewHelper;
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.filtershow.FilterShowActivity;
@@ -169,6 +170,9 @@ public class CategoryView extends IconView implements View.OnClickListener, Swip
             if (ApiHelper.AT_LEAST_11) {
                 setTranslationX(0);
                 setTranslationY(0);
+            } else {
+                ViewHelper.setTranslationX(this, 0);
+                ViewHelper.setTranslationY(this, 0);
             }
         }
         if (event.getActionMasked() == MotionEvent.ACTION_MOVE) {

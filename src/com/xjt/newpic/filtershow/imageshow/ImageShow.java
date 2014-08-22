@@ -374,15 +374,13 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
             float centerY = dp.centerY();
             boolean needsToDrawImage = true;
 
-            if (master.getCurrentLookAnimation()
-                == MasterImage.CIRCLE_ANIMATION) {
+            if (master.getCurrentLookAnimation() == MasterImage.CIRCLE_ANIMATION) {
                 float maskScale = MasterImage.getImage().getMaskScale();
                 if (maskScale >= 0.0f) {
                     float maskW = sMask.getWidth() / 2.0f;
                     float maskH = sMask.getHeight() / 2.0f;
                     Point point = mActivity.hintTouchPoint(this);
-                    float maxMaskScale = 2 * Math.max(getWidth(), getHeight())
-                            / Math.min(maskW, maskH);
+                    float maxMaskScale = 2 * Math.max(getWidth(), getHeight()) / Math.min(maskW, maskH);
                     maskScale = maskScale * maxMaskScale;
                     float x = point.x - maskW * maskScale;
                     float y = point.y - maskH * maskScale;
@@ -406,8 +404,7 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
                     canvas.drawBitmap(sMask, 0, 0, mMaskPaint);
                     needsToDrawImage = false;
                 }
-            } else if (master.getCurrentLookAnimation()
-                == MasterImage.ROTATE_ANIMATION) {
+            } else if (master.getCurrentLookAnimation() == MasterImage.ROTATE_ANIMATION) {
                 Rect d1 = computeImageBounds(master.getPreviousImage().getHeight(),
                         master.getPreviousImage().getWidth());
                 Rect d2 = computeImageBounds(master.getPreviousImage().getWidth(),
@@ -417,8 +414,7 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
                         + (finalScale * master.getAnimFraction());
                 canvas.rotate(master.getAnimRotationValue(), centerX, centerY);
                 canvas.scale(finalScale, finalScale, centerX, centerY);
-            } else if (master.getCurrentLookAnimation()
-                == MasterImage.MIRROR_ANIMATION) {
+            } else if (master.getCurrentLookAnimation() == MasterImage.MIRROR_ANIMATION) {
                 if (master.getCurrentFilterRepresentation() instanceof FilterMirrorRepresentation) {
                     FilterMirrorRepresentation rep =
                             (FilterMirrorRepresentation) master.getCurrentFilterRepresentation();

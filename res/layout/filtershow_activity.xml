@@ -101,8 +101,8 @@
 
         <com.xjt.newpic.filtershow.category.CategorySelected
             android:id="@+id/categorySelectedIndicator"
-            android:layout_width="@dimen/category_panel_icon_size"
-            android:layout_height="@dimen/category_panel_icon_size"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:visibility="invisible" />
     </FrameLayout>
 

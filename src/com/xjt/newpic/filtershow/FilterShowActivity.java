@@ -1,7 +1,6 @@
 
 package com.xjt.newpic.filtershow;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
@@ -40,7 +39,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.nineoldandroids.view.ViewHelper;
 import com.xjt.newpic.R;
+import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.filtershow.cache.ImageLoader;
 import com.xjt.newpic.filtershow.category.Action;
 import com.xjt.newpic.filtershow.category.CategoryAdapter;
@@ -341,14 +342,14 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
             doAnimation = true;
         }
         if (doAnimation && main != null && main instanceof MainPanel) {
-//            MainPanel mainPanel = (MainPanel) main;
-//            View container = mainPanel.getView().findViewById(R.id.category_panel_container);
-//            View bottom = mainPanel.getView().findViewById(R.id.bottom_panel);
-//            int panelHeight = container.getHeight() + bottom.getHeight();
-//            ViewPropertyAnimator anim = mainPanel.getView().animate();
-//            anim.translationY(panelHeight).start();
-//            final Handler handler = new Handler();
-//            handler.postDelayed(showEditor, 0);
+            //            MainPanel mainPanel = (MainPanel) main;
+            //            View container = mainPanel.getView().findViewById(R.id.category_panel_container);
+            //            View bottom = mainPanel.getView().findViewById(R.id.bottom_panel);
+            //            int panelHeight = container.getHeight() + bottom.getHeight();
+            //            ViewPropertyAnimator anim = mainPanel.getView().animate();
+            //            anim.translationY(panelHeight).start();
+            //            final Handler handler = new Handler();
+            //            handler.postDelayed(showEditor, 0);
         } else {
             showEditor.run();
         }
@@ -1201,21 +1202,22 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
                 float distance = mHandledSwipeView.getHeight();
                 if (direction == CategoryView.VERTICAL) {
                     delta = ev.getX() - mSwipeStartX;
-                    //mHandledSwipeView.setTranslationX(delta);
+                    ViewHelper.setTranslationX(mHandledSwipeView, delta);
                     distance = mHandledSwipeView.getWidth();
                 } else {
-                    //mHandledSwipeView.setTranslationY(delta);
+                    ViewHelper.setTranslationY(mHandledSwipeView, delta);
                 }
                 delta = Math.abs(delta);
                 float transparency = Math.min(1, delta / distance);
-                //mHandledSwipeView.setAlpha(1.f - transparency);
+
+                ViewHelper.setAlpha(mHandledSwipeView, 1.f - transparency);
                 mHandledSwipeViewLastDelta = delta;
             }
-            if (ev.getActionMasked() == MotionEvent.ACTION_CANCEL
-                    || ev.getActionMasked() == MotionEvent.ACTION_UP) {
-                //mHandledSwipeView.setTranslationX(0);
-                //mHandledSwipeView.setTranslationY(0);
-                //mHandledSwipeView.setAlpha(1.f);
+            if (ev.getActionMasked() == MotionEvent.ACTION_CANCEL || ev.getActionMasked() == MotionEvent.ACTION_UP) {
+
+                ViewHelper.setTranslationX(mHandledSwipeView, 0);
+                ViewHelper.setTranslationY(mHandledSwipeView, 0);
+                ViewHelper.setAlpha(mHandledSwipeView, 1.f);
                 mHandlingSwipeButton = false;
                 float distance = mHandledSwipeView.getHeight();
                 if (direction == CategoryView.VERTICAL) {
@@ -1240,30 +1242,15 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         return new Point(x, y);
     }
 
-    @SuppressLint("NewApi")
     public void startTouchAnimation(View target, float x, float y) {
         final CategorySelected hint = (CategorySelected) findViewById(R.id.categorySelectedIndicator);
+        hint.setVisibility(View.VISIBLE);
         int location[] = new int[2];
         target.getLocationOnScreen(location);
         mHintTouchPoint.x = (int) (location[0] + x);
         mHintTouchPoint.y = (int) (location[1] + y);
-        int locationHint[] = new int[2];
-        ((View) hint.getParent()).getLocationOnScreen(locationHint);
-        int dx = (int) (x - (hint.getWidth()) / 2);
-        int dy = (int) (y - (hint.getHeight()) / 2);
-        //        hint.setTranslationX(location[0] - locationHint[0] + dx);
-        //        hint.setTranslationY(location[1] - locationHint[1] + dy);
-        hint.setVisibility(View.VISIBLE);
-        //        hint.animate().scaleX(2).scaleY(2).alpha(0).withEndAction(new Runnable() {
-        //
-        //            @Override
-        //            public void run() {
-        //                hint.setVisibility(View.INVISIBLE);
-        //                hint.setScaleX(1);
-        //                hint.setScaleY(1);
-        //                hint.setAlpha(1);
-        //            }
-        //        });
+        hint.setCircleCenter(new Point(location[0] + target.getWidth() / 2, location[1]));
+        hint.startWaveAnimator();
     }
 
     @Override
