@@ -11,14 +11,12 @@ import android.provider.MediaStore.Video;
 import android.provider.MediaStore.Video.VideoColumns;
 
 import com.xjt.newpic.LetoolApp;
-import com.xjt.newpic.R;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.metadata.DataManager;
 import com.xjt.newpic.metadata.DataNotifier;
 import com.xjt.newpic.metadata.MediaItem;
 import com.xjt.newpic.metadata.MediaPath;
 import com.xjt.newpic.metadata.MediaSet;
-import com.xjt.newpic.metadata.MediaSetUtils;
 import com.xjt.newpic.metadata.image.LocalImage;
 import com.xjt.newpic.metadata.image.LocalMediaItem;
 import com.xjt.newpic.metadata.video.LocalVideo;
@@ -147,7 +145,7 @@ public class LocalAlbum extends MediaSet {
                 return 0;
             }
         }
-        LLog.i(TAG, "----------------updateCursor Count:" + mCursor.getCount() + " spend " + (System.currentTimeMillis() - time));
+        //LLog.i(TAG, "----------------updateCursor Count:" + mCursor.getCount() + " spend " + (System.currentTimeMillis() - time));
         return mCursor.getCount();
     }
 

@@ -896,15 +896,14 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
     }
 
     private void clearGalleryBitmapPool() {
-        (new AsyncTask<Void, Void, Void>() {
+        new AsyncTask<Void, Void, Void>() {
 
             @Override
             protected Void doInBackground(Void... params) {
-                // Free memory held in Gallery's Bitmap pool.  May be O(n) for n bitmaps.
                 LetoolBitmapPool.getInstance().clear();
                 return null;
             }
-        }).execute();
+        }.execute();
     }
 
     public void registerAction(Action action) {
@@ -1038,7 +1037,7 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         mMasterImage.setHistoryManager(historyManager);
         mMasterImage.setActivity(this);
 
-        if (Runtime.getRuntime().maxMemory() > LIMIT_SUPPORTS_HIGHRES) {
+        if (Runtime.getRuntime().maxMemory() >= LIMIT_SUPPORTS_HIGHRES) {
             mMasterImage.setSupportsHighRes(true);
         } else {
             mMasterImage.setSupportsHighRes(false);

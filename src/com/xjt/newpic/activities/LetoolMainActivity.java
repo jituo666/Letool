@@ -13,6 +13,8 @@ import com.xjt.newpic.stat.StatConstants;
  */
 public class LetoolMainActivity extends LocalMediaActivity {
 
+    private static final String TAG = LetoolMainActivity.class.getSimpleName();
+
     @Override
     protected void onCreate(Bundle b) {
 
@@ -28,7 +30,7 @@ public class LetoolMainActivity extends LocalMediaActivity {
         //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_ALI); // "LETOOL0000001005";//阿里淘宝
         //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_ANZHI); // "LETOOL0000001006";//安智
         //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_MUMAYI); // "LETOOL0000001007";//木蚂蚁
-        //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_ANZHUO); // "LETOOL0000001008";//安卓 
+        //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_ANZHUO); // "LETOOL0000001008";//安卓
         //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_XIAOMI); // "LETOOL0000001009";//小米
         //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_JIFENG);// "LETOOL0000001010";//机峰
         //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_YINGYONGHUI); // "LETOOL0000001011";//应用汇

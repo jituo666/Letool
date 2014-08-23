@@ -1,5 +1,7 @@
+
 package com.xjt.newpic.imagedata.utils;
 
+import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.imagedata.utils.SparseArrayBitmapPool.Node;
 
 import android.graphics.Bitmap;
@@ -8,12 +10,15 @@ import android.util.Pools.Pool;
 import android.util.Pools.SynchronizedPool;
 
 /**
- * Pool allowing the efficient reuse of bitmaps in order to avoid long garbage
- * collection pauses.
+ * Pool allowing the efficient reuse of bitmaps in order to avoid long garbage collection pauses.
  */
 public class LetoolBitmapPool {
 
-    private static final int CAPACITY_BYTES = 20 * 1024 * 1024;
+    private static final String TAG = LetoolBitmapPool.class.getSimpleName();
+
+    private static final int CAPACITY_BYTES_THREHOLD = 64 * 1024 * 1024;
+    private static final int CAPACITY_BYTES_LARGE = 20 * 1024 * 1024;
+    private static final int CAPACITY_BYTES_SMALL = 12 * 1024 * 1024;
 
     // We found that Gallery uses bitmaps that are either square (for example,
     // tiles of large images or square thumbnails), match one of the common
@@ -31,21 +36,27 @@ public class LetoolBitmapPool {
     private static final int POOL_INDEX_PHOTO = 1;
     private static final int POOL_INDEX_MISC = 2;
 
-    private static final Point[] COMMON_PHOTO_ASPECT_RATIOS = { new Point(4, 3), new Point(3, 2), new Point(16, 9) };
+    private static final Point[] COMMON_PHOTO_ASPECT_RATIOS = {
+            new Point(4, 3), new Point(3, 2), new Point(16, 9)
+    };
 
     private int mCapacityBytes;
     private SparseArrayBitmapPool[] mPools;
     private Pool<Node> mSharedNodePool = new SynchronizedPool<Node>(128);
 
-    private LetoolBitmapPool(int capacityBytes) {
+    private LetoolBitmapPool() {
+        if (Runtime.getRuntime().maxMemory() > CAPACITY_BYTES_THREHOLD) {
+            mCapacityBytes = CAPACITY_BYTES_LARGE;
+        } else {
+            mCapacityBytes = CAPACITY_BYTES_SMALL;
+        }
         mPools = new SparseArrayBitmapPool[3];
-        mPools[POOL_INDEX_SQUARE] = new SparseArrayBitmapPool(capacityBytes / 3, mSharedNodePool);
-        mPools[POOL_INDEX_PHOTO] = new SparseArrayBitmapPool(capacityBytes / 3, mSharedNodePool);
-        mPools[POOL_INDEX_MISC] = new SparseArrayBitmapPool(capacityBytes / 3, mSharedNodePool);
-        mCapacityBytes = capacityBytes;
+        mPools[POOL_INDEX_SQUARE] = new SparseArrayBitmapPool(mCapacityBytes / 3, mSharedNodePool);
+        mPools[POOL_INDEX_PHOTO] = new SparseArrayBitmapPool(mCapacityBytes / 3, mSharedNodePool);
+        mPools[POOL_INDEX_MISC] = new SparseArrayBitmapPool(mCapacityBytes / 3, mSharedNodePool);
     }
 
-    private static LetoolBitmapPool sInstance = new LetoolBitmapPool(CAPACITY_BYTES);
+    private static LetoolBitmapPool sInstance = new LetoolBitmapPool();
 
     public static LetoolBitmapPool getInstance() {
         return sInstance;

@@ -282,10 +282,8 @@ public class ThumbnailView extends GLView {
         canvas.translate(mScrollX, mScrollY);
         renderChild(canvas, mScrollBar);
         if (more) {
-            LLog.i(TAG, "-----1-------more:" + more);
             invalidate();
         } else {
-            LLog.i(TAG, "------2------more:" + more);
         }
     }
 
