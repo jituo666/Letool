@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2012 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.xjt.newpic.filtershow.filters;
 
@@ -23,7 +8,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 public class ImageFilterFx extends ImageFilter {
-    private static final String LOGTAG = "ImageFilterFx";
+
+    private static final String TAG = ImageFilterFx.class.getSimpleName();
     private FilterFxRepresentation mParameters = null;
     private Bitmap mFxBitmap = null;
     private Resources mResources = null;
@@ -34,7 +20,8 @@ public class ImageFilterFx extends ImageFilter {
 
     @Override
     public void freeResources() {
-        if (mFxBitmap != null) mFxBitmap.recycle();
+        if (mFxBitmap != null)
+            mFxBitmap.recycle();
         mFxBitmap = null;
     }
 
@@ -52,9 +39,7 @@ public class ImageFilterFx extends ImageFilter {
         return mParameters;
     }
 
-    native protected void nativeApplyFilter(Bitmap bitmap, int w, int h,
-                                            Bitmap fxBitmap, int fxw, int fxh,
-                                            int start, int end);
+    native protected void nativeApplyFilter(Bitmap bitmap, int w, int h, Bitmap fxBitmap, int fxw, int fxh, int start, int end);
 
     @Override
     public Bitmap apply(Bitmap bitmap, float scaleFactor, int quality) {
@@ -77,7 +62,7 @@ public class ImageFilterFx extends ImageFilter {
             if (mFxBitmapId != 0) {
                 mFxBitmap = BitmapFactory.decodeResource(mResources, mFxBitmapId, o);
             } else {
-                LLog.w(LOGTAG, "bad resource for filter: " + mName);
+                LLog.w(TAG, "bad resource for filter: " + mName);
             }
         }
 

@@ -1,14 +1,17 @@
+
 package com.xjt.newpic.filtershow.pipeline;
+
+import com.xjt.newpic.common.LLog;
 
 import android.content.Context;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 import android.support.v4.util.LongSparseArray;
-import android.util.Log;
 
 public class ProcessingTaskController implements Handler.Callback {
-    private static final String LOGTAG = "ProcessingTaskController";
+
+    private static final String TAG = ProcessingTaskController.class.getSimpleName();
 
     private Context mContext;
     private HandlerThread mHandlerThread = null;
@@ -20,6 +23,7 @@ public class ProcessingTaskController implements Handler.Callback {
     public final static int UPDATE = 2;
 
     private final Handler mResultHandler = new Handler() {
+
         @Override
         public void handleMessage(Message msg) {
             ProcessingTask task = mTasks.get(msg.what);
@@ -29,7 +33,7 @@ public class ProcessingTaskController implements Handler.Callback {
                 } else if (msg.arg1 == UPDATE) {
                     task.onUpdate((ProcessingTask.Update) msg.obj);
                 } else {
-                    Log.w(LOGTAG, "received unknown message! " + msg.arg1);
+                    LLog.w(TAG, "received unknown message! " + msg.arg1);
                 }
             }
         }
@@ -47,7 +51,7 @@ public class ProcessingTaskController implements Handler.Callback {
 
     public ProcessingTaskController(Context context) {
         mContext = context;
-        mHandlerThread = new HandlerThread("ProcessingTaskController",android.os.Process.THREAD_PRIORITY_FOREGROUND);
+        mHandlerThread = new HandlerThread("ProcessingTaskController", android.os.Process.THREAD_PRIORITY_FOREGROUND);
         mHandlerThread.start();
         mProcessingHandler = new Handler(mHandlerThread.getLooper(), this);
     }

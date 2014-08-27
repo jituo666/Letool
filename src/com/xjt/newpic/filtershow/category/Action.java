@@ -197,8 +197,7 @@ public class Action implements RenderingRequestCaller {
     }
 
     public void clearBitmap() {
-        if (mImage != null
-                && mImage != MasterImage.getImage().getTemporaryThumbnailBitmap()) {
+        if (mImage != null && mImage != MasterImage.getImage().getTemporaryThumbnailBitmap()) {
             MasterImage.getImage().getBitmapCache().cache(mImage);
         }
         mImage = null;

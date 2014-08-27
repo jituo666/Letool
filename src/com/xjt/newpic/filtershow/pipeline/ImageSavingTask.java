@@ -1,27 +1,8 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.xjt.newpic.filtershow.pipeline;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.net.Uri;
 
-import com.xjt.newpic.R;
 import com.xjt.newpic.filtershow.cache.ImageLoader;
 import com.xjt.newpic.filtershow.filters.FiltersManager;
 import com.xjt.newpic.filtershow.tools.SaveImage;
@@ -92,13 +73,11 @@ public class ImageSavingTask extends ProcessingTask {
         ImagePreset preset = request.preset;
         boolean flatten = request.flatten;
         final boolean exit = request.exit;
-        // We create a small bitmap showing the result that we can
-        // give to the notification
+        // We create a small bitmap showing the result that we can give to the notification
         UpdateBitmap updateBitmap = new UpdateBitmap();
         updateBitmap.bitmap = createNotificationBitmap(previewImage, sourceUri, preset);
         postUpdate(updateBitmap);
-        SaveImage saveImage = new SaveImage(mProcessingService, sourceUri,
-                selectedUri, destinationFile, previewImage,
+        SaveImage saveImage = new SaveImage(mProcessingService, sourceUri, selectedUri, destinationFile, previewImage,
                 new SaveImage.Callback() {
                     @Override
                     public void onPreviewSaved(Uri uri){
@@ -116,8 +95,7 @@ public class ImageSavingTask extends ProcessingTask {
                         postUpdate(updateProgress);
                     }
                 });
-        Uri uri = saveImage.processAndSaveImage(preset, flatten,
-                request.quality, request.sizeFactor, request.exit);
+        Uri uri = saveImage.processAndSaveImage(preset, flatten,request.quality, request.sizeFactor, request.exit);
         URIResult result = new URIResult();
         result.uri = uri;
         result.exit = request.exit;
@@ -150,11 +128,9 @@ public class ImageSavingTask extends ProcessingTask {
     private Bitmap createNotificationBitmap(Bitmap preview, Uri sourceUri, ImagePreset preset) {
         int notificationBitmapSize = 32;//Resources(R.dimen.notification_large_icon_width);
         if (preview != null) {
-            return Bitmap.createScaledBitmap(preview,
-                    notificationBitmapSize, notificationBitmapSize, true);
+            return Bitmap.createScaledBitmap(preview, notificationBitmapSize, notificationBitmapSize, true);
         }
-        Bitmap bitmap = ImageLoader.loadConstrainedBitmap(sourceUri, getContext(),
-                notificationBitmapSize, null, true);
+        Bitmap bitmap = ImageLoader.loadConstrainedBitmap(sourceUri, getContext(), notificationBitmapSize, null, true);
         CachingPipeline pipeline = new CachingPipeline(FiltersManager.getManager(), "Thumb");
         return pipeline.renderFinalImage(bitmap, preset);
     }

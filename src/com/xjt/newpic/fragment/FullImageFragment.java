@@ -386,7 +386,8 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
                         break;
                     }
                     case MSG_ON_UPDATE_TITLE: {
-                        updateActionBarMessage(getString(R.string.full_image_browse, Math.min(mCurrentIndex + 1, mTotalCount), mTotalCount));
+                        if (isAdded())
+                            updateActionBarMessage(getString(R.string.full_image_browse, Math.min(mCurrentIndex + 1, mTotalCount), mTotalCount));
                         break;
                     }
                     case MSG_REFRESH_IMAGE: {

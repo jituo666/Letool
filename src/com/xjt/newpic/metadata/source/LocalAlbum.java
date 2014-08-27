@@ -111,7 +111,7 @@ public class LocalAlbum extends MediaSet {
                 list.add(item);
             } while (++i < count && mCursor.moveToNext());
         }
-        LLog.w(TAG, "getMediaItem with count:" + count + " spend " + (System.currentTimeMillis() - time));
+        // LLog.w(TAG, "getMediaItem with count:" + count + " spend " + (System.currentTimeMillis() - time));
         return list;
     }
 
@@ -235,20 +235,20 @@ public class LocalAlbum extends MediaSet {
         }
         return count;
     }
-    
+
     public static String getLocalizedName(Resources res, int bucketId, String name) {
-//        if (bucketId == MediaSetUtils.CAMERA_BUCKET_ID) {
-//            return res.getString(R.string.folder_camera);
-//        } else if (bucketId == MediaSetUtils.DOWNLOAD_BUCKET_ID) {
-//            return res.getString(R.string.folder_download);
-//        } else if (bucketId == MediaSetUtils.IMPORTED_BUCKET_ID) {
-//            return res.getString(R.string.folder_imported);
-//        } else if (bucketId == MediaSetUtils.SNAPSHOT_BUCKET_ID) {
-//            return res.getString(R.string.folder_screenshot);
-//        } else if (bucketId == MediaSetUtils.EDITED_ONLINE_PHOTOS_BUCKET_ID) {
-//            return res.getString(R.string.folder_edited_online_photos);
-//        } else {
-            return name;
-//        }
+        //        if (bucketId == MediaSetUtils.CAMERA_BUCKET_ID) {
+        //            return res.getString(R.string.folder_camera);
+        //        } else if (bucketId == MediaSetUtils.DOWNLOAD_BUCKET_ID) {
+        //            return res.getString(R.string.folder_download);
+        //        } else if (bucketId == MediaSetUtils.IMPORTED_BUCKET_ID) {
+        //            return res.getString(R.string.folder_imported);
+        //        } else if (bucketId == MediaSetUtils.SNAPSHOT_BUCKET_ID) {
+        //            return res.getString(R.string.folder_screenshot);
+        //        } else if (bucketId == MediaSetUtils.EDITED_ONLINE_PHOTOS_BUCKET_ID) {
+        //            return res.getString(R.string.folder_edited_online_photos);
+        //        } else {
+        return name;
+        //        }
     }
 }

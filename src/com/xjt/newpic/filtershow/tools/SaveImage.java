@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2010 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.xjt.newpic.filtershow.tools;
 
@@ -57,17 +42,21 @@ import java.util.TimeZone;
  * Handles saving edited photo
  */
 public class SaveImage {
-    private static final String LOGTAG = "SaveImage";
+
+    private static final String TAG = SaveImage.class.getSimpleName();
 
     /**
      * Callback for updates
      */
     public interface Callback {
+
         void onPreviewSaved(Uri uri);
+
         void onProgress(int max, int current);
     }
 
     public interface ContentResolverQueryCallback {
+
         void onCursorResult(Cursor cursor);
     }
 
@@ -129,8 +118,7 @@ public class SaveImage {
      * @param callback Let the caller know the saving has completed.
      * @return the newSourceUri
      */
-    public SaveImage(Context context, Uri sourceUri, Uri selectedImageUri,
-                     File destination, Bitmap previewImage, Callback callback)  {
+    public SaveImage(Context context, Uri sourceUri, Uri selectedImageUri, File destination, Bitmap previewImage, Callback callback) {
         mContext = context;
         mSourceUri = sourceUri;
         mCallback = callback;
@@ -172,19 +160,20 @@ public class SaveImage {
      * @param contentResolver The application's contentResolver
      * @param srcContentUri The content Uri for the source image.
      */
-    public static void deleteAuxFiles(ContentResolver contentResolver,
-            Uri srcContentUri) {
+    public static void deleteAuxFiles(ContentResolver contentResolver, Uri srcContentUri) {
         final String[] fullPath = new String[1];
-        String[] queryProjection = new String[] { ImageColumns.DATA };
+        String[] queryProjection = new String[] {
+            ImageColumns.DATA
+        };
         querySourceFromContentResolver(contentResolver,
                 srcContentUri, queryProjection,
                 new ContentResolverQueryCallback() {
+
                     @Override
                     public void onCursorResult(Cursor cursor) {
                         fullPath[0] = cursor.getString(0);
                     }
-                }
-        );
+                });
         if (fullPath[0] != null) {
             // Construct the auxiliary directory given the source file's path.
             // Then select and delete all the files starting with the same name
@@ -194,10 +183,11 @@ public class SaveImage {
             String filename = currentFile.getName();
             int firstDotPos = filename.indexOf(".");
             final String filenameNoExt = (firstDotPos == -1) ? filename :
-                filename.substring(0, firstDotPos);
+                    filename.substring(0, firstDotPos);
             File auxDir = getLocalAuxDirectory(currentFile);
             if (auxDir.exists()) {
                 FilenameFilter filter = new FilenameFilter() {
+
                     @Override
                     public boolean accept(File dir, String name) {
                         if (name.startsWith(filenameNoExt + ".")) {
@@ -226,7 +216,7 @@ public class SaveImage {
                 is = mContext.getContentResolver().openInputStream(source);
                 xmp = XmpUtilHelper.extractXMPMeta(is);
             } catch (FileNotFoundException e) {
-                Log.w(LOGTAG, "Failed to get XMP data from image: ", e);
+                Log.w(TAG, "Failed to get XMP data from image: ", e);
             } finally {
                 Utils.closeSilently(is);
             }
@@ -253,9 +243,9 @@ public class SaveImage {
                 inStream = mContext.getContentResolver().openInputStream(source);
                 exif.readExif(inStream);
             } catch (FileNotFoundException e) {
-                Log.w(LOGTAG, "Cannot find file: " + source, e);
+                Log.w(TAG, "Cannot find file: " + source, e);
             } catch (IOException e) {
-                Log.w(LOGTAG, "Cannot read exif for: " + source, e);
+                Log.w(TAG, "Cannot read exif for: " + source, e);
             } finally {
                 Utils.closeSilently(inStream);
             }
@@ -263,8 +253,7 @@ public class SaveImage {
         return exif;
     }
 
-    public boolean putExifData(File file, ExifInterface exif, Bitmap image,
-            int jpegCompressQuality) {
+    public boolean putExifData(File file, ExifInterface exif, Bitmap image, int jpegCompressQuality) {
         boolean ret = false;
         OutputStream s = null;
         try {
@@ -276,9 +265,9 @@ public class SaveImage {
             s = null;
             ret = true;
         } catch (FileNotFoundException e) {
-            Log.w(LOGTAG, "File not found: " + file.getAbsolutePath(), e);
+            Log.w(TAG, "File not found: " + file.getAbsolutePath(), e);
         } catch (IOException e) {
-            Log.w(LOGTAG, "Could not write exif: ", e);
+            Log.w(TAG, "Could not write exif: ", e);
         } finally {
             Utils.closeSilently(s);
         }
@@ -317,16 +306,13 @@ public class SaveImage {
 
     private void updateExifData(ExifInterface exif, long time) {
         // Set tags
-        exif.addDateTimeStampTag(ExifInterface.TAG_DATE_TIME, time,
-                TimeZone.getDefault());
-        exif.setTag(exif.buildTag(ExifInterface.TAG_ORIENTATION,
-                ExifInterface.Orientation.TOP_LEFT));
+        exif.addDateTimeStampTag(ExifInterface.TAG_DATE_TIME, time, TimeZone.getDefault());
+        exif.setTag(exif.buildTag(ExifInterface.TAG_ORIENTATION, ExifInterface.Orientation.TOP_LEFT));
         // Remove old thumbnail
         exif.removeCompressedThumbnail();
     }
 
-    public Uri processAndSaveImage(ImagePreset preset, boolean flatten,
-                                   int quality, float sizeFactor, boolean exit) {
+    public Uri processAndSaveImage(ImagePreset preset, boolean flatten, int quality, float sizeFactor, boolean exit) {
 
         Uri uri = null;
         if (exit) {
@@ -343,8 +329,7 @@ public class SaveImage {
         int sampleSize = 1;
 
         // If necessary, move the source file into the auxiliary directory,
-        // newSourceUri is then pointing to the new location.
-        // If no file is moved, newSourceUri will be the same as mSourceUri.
+        // newSourceUri is then pointing to the new location. If no file is moved, newSourceUri will be the same as mSourceUri.
         Uri newSourceUri = mSourceUri;
         if (!flatten) {
             newSourceUri = moveSrcToAuxIfNeeded(mSourceUri, mDestinationFile);
@@ -360,8 +345,7 @@ public class SaveImage {
                 if (putExifData(mDestinationFile, exif, mPreviewImage, quality)) {
                     putPanoramaXMPData(mDestinationFile, xmp);
                     ContentValues values = getContentValues(mContext, mSelectedImageUri, mDestinationFile, time);
-                    Object result = mContext.getContentResolver().insert(
-                            Images.Media.EXTERNAL_CONTENT_URI, values);
+                    Object result = mContext.getContentResolver().insert(Images.Media.EXTERNAL_CONTENT_URI, values);
 
                 }
             } else {
@@ -374,13 +358,11 @@ public class SaveImage {
                     putPanoramaXMPData(mDestinationFile, xmp);
                     // mDestinationFile will save the newSourceUri info in the XMP.
                     if (!flatten) {
-                        XmpPresets.writeFilterXMP(mContext, newSourceUri,
-                                mDestinationFile, preset);
+                        XmpPresets.writeFilterXMP(mContext, newSourceUri, mDestinationFile, preset);
                     }
                     // After this call, mSelectedImageUri will be actually
                     // pointing at the new file mDestinationFile.
-                    savedUri = SaveImage.linkNewFileToUri(mContext, mSelectedImageUri,
-                            mDestinationFile, time, !flatten);
+                    savedUri = SaveImage.linkNewFileToUri(mContext, mSelectedImageUri, mDestinationFile, time, !flatten);
                 }
             }
             if (mCallback != null) {
@@ -393,8 +375,7 @@ public class SaveImage {
             try {
                 updateProgress();
                 // Try to do bitmap operations, downsample if low-memory
-                Bitmap bitmap = ImageLoader.loadOrientedBitmapWithBackouts(mContext, newSourceUri,
-                        sampleSize);
+                Bitmap bitmap = ImageLoader.loadOrientedBitmapWithBackouts(mContext, newSourceUri, sampleSize);
                 if (bitmap == null) {
                     return null;
                 }
@@ -409,8 +390,7 @@ public class SaveImage {
                     bitmap = Bitmap.createScaledBitmap(bitmap, w, h, true);
                 }
                 updateProgress();
-                CachingPipeline pipeline = new CachingPipeline(FiltersManager.getManager(),
-                        "Saving");
+                CachingPipeline pipeline = new CachingPipeline(FiltersManager.getManager(), "Saving");
 
                 bitmap = pipeline.renderFinalImage(bitmap, preset);
                 updateProgress();
@@ -428,19 +408,14 @@ public class SaveImage {
                     putPanoramaXMPData(mDestinationFile, xmp);
                     // mDestinationFile will save the newSourceUri info in the XMP.
                     if (!flatten) {
-                        XmpPresets.writeFilterXMP(mContext, newSourceUri,
-                                mDestinationFile, preset);
+                        XmpPresets.writeFilterXMP(mContext, newSourceUri, mDestinationFile, preset);
                         uri = updateFile(mContext, savedUri, mDestinationFile, time);
-
                     } else {
-
                         ContentValues values = getContentValues(mContext, mSelectedImageUri, mDestinationFile, time);
-                        Object result = mContext.getContentResolver().insert(
-                                Images.Media.EXTERNAL_CONTENT_URI, values);
+                        Object result = mContext.getContentResolver().insert(Images.Media.EXTERNAL_CONTENT_URI, values);
                     }
                 }
                 updateProgress();
-
                 noBitmap = false;
             } catch (OutOfMemoryError e) {
                 // Try 5 times before failing for good.
@@ -467,12 +442,11 @@ public class SaveImage {
     private Uri moveSrcToAuxIfNeeded(Uri srcUri, File dstFile) {
         File srcFile = getLocalFileFromUri(mContext, srcUri);
         if (srcFile == null) {
-            Log.d(LOGTAG, "Source file is not a local file, no update.");
+            Log.d(TAG, "Source file is not a local file, no update.");
             return srcUri;
         }
 
-        // Get the destination directory and create the auxilliary directory
-        // if necessary.
+        // Get the destination directory and create the auxilliary directory if necessary.
         File auxDiretory = getLocalAuxDirectory(dstFile);
         if (!auxDiretory.exists()) {
             boolean success = auxDiretory.mkdirs();
@@ -488,7 +462,7 @@ public class SaveImage {
             try {
                 noMedia.createNewFile();
             } catch (IOException e) {
-                Log.e(LOGTAG, "Can't create the nomedia");
+                Log.e(TAG, "Can't create the nomedia");
                 return srcUri;
             }
         }
@@ -528,45 +502,36 @@ public class SaveImage {
         long time = System.currentTimeMillis();
         String filename = new SimpleDateFormat(TIME_STAMP_NAME).format(new Date(time));
         File saveDirectory = getFinalSaveDirectory(context, sourceUri);
-        File file = new File(saveDirectory, filename  + ".JPG");
+        File file = new File(saveDirectory, filename + ".JPG");
         return linkNewFileToUri(context, sourceUri, file, time, false);
     }
 
-    public static void saveImage(ImagePreset preset, final FilterShowActivity filterShowActivity,
-            File destination) {
+    public static void saveImage(ImagePreset preset, final FilterShowActivity filterShowActivity, File destination) {
         Uri selectedImageUri = filterShowActivity.getSelectedImageUri();
         Uri sourceImageUri = MasterImage.getImage().getUri();
         boolean flatten = false;
-        if (preset.contains(FilterRepresentation.TYPE_TINYPLANET)){
+        if (preset.contains(FilterRepresentation.TYPE_TINYPLANET)) {
             flatten = true;
         }
         Intent processIntent = ProcessingService.getSaveIntent(filterShowActivity, preset,
                 destination, selectedImageUri, sourceImageUri, flatten, 90, 1f, true);
-
         filterShowActivity.startService(processIntent);
-
         if (!filterShowActivity.isSimpleEditAction()) {
-            String toastMessage = filterShowActivity.getResources().getString(
-                    R.string.save_and_processing);
-            Toast.makeText(filterShowActivity,
-                    toastMessage,
-                    Toast.LENGTH_SHORT).show();
+            String toastMessage = filterShowActivity.getResources().getString(R.string.save_and_processing);
+            Toast.makeText(filterShowActivity, toastMessage, Toast.LENGTH_SHORT).show();
         }
     }
 
-    public static void querySource(Context context, Uri sourceUri, String[] projection,
-            ContentResolverQueryCallback callback) {
+    public static void querySource(Context context, Uri sourceUri, String[] projection, ContentResolverQueryCallback callback) {
         ContentResolver contentResolver = context.getContentResolver();
         querySourceFromContentResolver(contentResolver, sourceUri, projection, callback);
     }
 
     private static void querySourceFromContentResolver(
-            ContentResolver contentResolver, Uri sourceUri, String[] projection,
-            ContentResolverQueryCallback callback) {
+            ContentResolver contentResolver, Uri sourceUri, String[] projection, ContentResolverQueryCallback callback) {
         Cursor cursor = null;
         try {
-            cursor = contentResolver.query(sourceUri, projection, null, null,
-                    null);
+            cursor = contentResolver.query(sourceUri, projection, null, null, null);
             if ((cursor != null) && cursor.moveToNext()) {
                 callback.onCursorResult(cursor);
             }
@@ -595,13 +560,13 @@ public class SaveImage {
      */
     private static File getLocalFileFromUri(Context context, Uri srcUri) {
         if (srcUri == null) {
-            Log.e(LOGTAG, "srcUri is null.");
+            Log.e(TAG, "srcUri is null.");
             return null;
         }
 
         String scheme = srcUri.getScheme();
         if (scheme == null) {
-            Log.e(LOGTAG, "scheme is null.");
+            Log.e(TAG, "scheme is null.");
             return null;
         }
 
@@ -638,6 +603,7 @@ public class SaveImage {
         querySource(context, src, new String[] {
                 ImageColumns.DATA
         }, new ContentResolverQueryCallback() {
+
             @Override
             public void onCursorResult(Cursor cursor) {
                 trueName[0] = new File(cursor.getString(0)).getName();
@@ -663,8 +629,7 @@ public class SaveImage {
      * <code>file</code> will be inserted as a new content Uri.
      * @return the final Uri referring to the <code>file</code>.
      */
-    public static Uri linkNewFileToUri(Context context, Uri sourceUri,
-            File file, long time, boolean deleteOriginal) {
+    public static Uri linkNewFileToUri(Context context, Uri sourceUri, File file, long time, boolean deleteOriginal) {
         File oldSelectedFile = getLocalFileFromUri(context, sourceUri);
         final ContentValues values = getContentValues(context, sourceUri, file, time);
 
@@ -692,8 +657,7 @@ public class SaveImage {
         return sourceUri;
     }
 
-    private static ContentValues getContentValues(Context context, Uri sourceUri,
-                                                  File file, long time) {
+    private static ContentValues getContentValues(Context context, Uri sourceUri, File file, long time) {
         final ContentValues values = new ContentValues();
 
         time /= 1000;
@@ -706,8 +670,7 @@ public class SaveImage {
         values.put(Images.Media.ORIENTATION, 0);
         values.put(Images.Media.DATA, file.getAbsolutePath());
         values.put(Images.Media.SIZE, file.length());
-        // This is a workaround to trigger the MediaProvider to re-generate the
-        // thumbnail.
+        // This is a workaround to trigger the MediaProvider to re-generate the thumbnail.
         values.put(Images.Media.MINI_THUMB_MAGIC, 0);
 
         final String[] projection = new String[] {

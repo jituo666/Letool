@@ -1,24 +1,8 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.xjt.newpic.filtershow.pipeline;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
+import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.filtershow.cache.BitmapCache;
 import com.xjt.newpic.filtershow.filters.FilterRepresentation;
 import com.xjt.newpic.filtershow.imageshow.GeometryMathUtils;
@@ -27,8 +11,8 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 public class CacheProcessing {
-    private static final String LOGTAG = "CacheProcessing";
-    private static final boolean DEBUG = false;
+    private static final String TAG = CacheProcessing.class.getSimpleName();
+    private static final boolean DEBUG = true;
     private static final boolean NO_CACHING = false;
     private Vector<CacheStep> mSteps = new Vector<CacheStep>();
 
@@ -106,14 +90,13 @@ public class CacheProcessing {
                     geometry.add(representation);
                 }
                 if (DEBUG) {
-                    Log.v(LOGTAG, "Apply geometry to bitmap " + cacheBitmap);
+                    LLog.v(TAG, "Apply geometry to bitmap " + cacheBitmap);
                 }
                 cacheBitmap = GeometryMathUtils.applyGeometryRepresentations(geometry, cacheBitmap);
             } else {
                 for (FilterRepresentation representation : representations) {
                     if (DEBUG) {
-                        Log.v(LOGTAG, "Apply " + representation.getSerializationName()
-                                + " to bitmap " + cacheBitmap);
+                        LLog.v(TAG, "Apply " + representation.getSerializationName() + " to bitmap " + cacheBitmap);
                     }
                     cacheBitmap = environment.applyRepresentation(representation, cacheBitmap);
                 }
@@ -122,15 +105,13 @@ public class CacheProcessing {
                 environment.cache(source);
             }
             if (DEBUG) {
-                Log.v(LOGTAG, "Apply returns bitmap " + cacheBitmap);
+                LLog.v(TAG, "Apply returns bitmap " + cacheBitmap);
             }
             return cacheBitmap;
         }
     }
 
-    public Bitmap process(Bitmap originalBitmap,
-                          Vector<FilterRepresentation> filters,
-                          FilterEnvironment environment) {
+    public Bitmap process(Bitmap originalBitmap, Vector<FilterRepresentation> filters, FilterEnvironment environment) {
 
         if (filters.size() == 0) {
             return environment.getBitmapCopy(originalBitmap, BitmapCache.PREVIEW_CACHE_NO_FILTERS);
@@ -170,7 +151,7 @@ public class CacheProcessing {
             }
         }
         if (DEBUG) {
-            Log.v(LOGTAG, "similar up to index " + similarUpToIndex);
+            LLog.v(TAG, "similar up to index " + similarUpToIndex);
         }
 
         // Now, let's get the earliest cached result in our pipeline
@@ -185,13 +166,12 @@ public class CacheProcessing {
         }
 
         if (DEBUG) {
-            Log.v(LOGTAG, "found baseImageIndex: " + findBaseImageIndex + " max is "
+            LLog.v(TAG, "found baseImageIndex: " + findBaseImageIndex + " max is "
                     + mSteps.size() + " cacheBitmap: " + cacheBitmap);
         }
 
         if (NO_CACHING) {
-            cacheBitmap = environment.getBitmapCopy(originalBitmap,
-                    BitmapCache.PREVIEW_CACHE_NO_ROOT);
+            cacheBitmap = environment.getBitmapCopy(originalBitmap, BitmapCache.PREVIEW_CACHE_NO_ROOT);
             for (int i = 0; i < mSteps.size(); i++) {
                 CacheStep step = mSteps.elementAt(i);
                 Bitmap prev = cacheBitmap;
@@ -207,11 +187,10 @@ public class CacheProcessing {
         int lastPositionCached = -1;
         for (int i = findBaseImageIndex; i < mSteps.size(); i++) {
             if (i == -1 || cacheBitmap == null) {
-                cacheBitmap = environment.getBitmapCopy(originalBitmap,
-                        BitmapCache.PREVIEW_CACHE_NO_ROOT);
+                cacheBitmap = environment.getBitmapCopy(originalBitmap, BitmapCache.PREVIEW_CACHE_NO_ROOT);
                 originalCopy = cacheBitmap;
                 if (DEBUG) {
-                    Log.v(LOGTAG, "i: " + i + " cacheBitmap: " + cacheBitmap + " w: "
+                    LLog.v(TAG, "i: " + i + " cacheBitmap: " + cacheBitmap + " w: "
                             + cacheBitmap.getWidth() + " h: " + cacheBitmap.getHeight()
                             + " got from original Bitmap: " + originalBitmap + " w: "
                             + originalBitmap.getWidth() + " h: " + originalBitmap.getHeight());
@@ -223,8 +202,7 @@ public class CacheProcessing {
             CacheStep step = mSteps.elementAt(i);
             if (step.cache == null) {
                 if (DEBUG) {
-                    Log.v(LOGTAG, "i: " + i + " get new copy for cacheBitmap "
-                            + cacheBitmap + " apply...");
+                    LLog.v(TAG, "i: " + i + " get new copy for cacheBitmap " + cacheBitmap + " apply...");
                 }
                 cacheBitmap = environment.getBitmapCopy(cacheBitmap, BitmapCache.PREVIEW_CACHE);
                 cacheBitmap = step.apply(environment, cacheBitmap);
@@ -235,7 +213,7 @@ public class CacheProcessing {
         environment.cache(originalCopy);
 
         if (DEBUG) {
-            Log.v(LOGTAG, "now let's cleanup the cache...");
+            LLog.v(TAG, "now let's cleanup the cache...");
             displayNbBitmapsInCache();
         }
 
@@ -248,7 +226,7 @@ public class CacheProcessing {
         }
 
         if (DEBUG) {
-            Log.v(LOGTAG, "cleanup done...");
+            LLog.v(TAG, "cleanup done...");
             displayNbBitmapsInCache();
         }
         if (lastPositionCached != -1) {
@@ -271,25 +249,25 @@ public class CacheProcessing {
     }
 
     private void displayFilters(Vector<FilterRepresentation> filters) {
-        Log.v(LOGTAG, "------>>> Filters received");
+        LLog.v(TAG, "------>>> Filters received");
         for (int i = 0; i < filters.size(); i++) {
             FilterRepresentation filter = filters.elementAt(i);
-            Log.v(LOGTAG, "[" + i + "] - " + filter.getName());
+            LLog.v(TAG, "[" + i + "] - " + filter.getName());
         }
-        Log.v(LOGTAG, "<<<------");
+        LLog.v(TAG, "<<<------");
     }
 
     private void displaySteps(Vector<CacheStep> filters) {
-        Log.v(LOGTAG, "------>>>");
+        LLog.v(TAG, "------>>>");
         for (int i = 0; i < filters.size(); i++) {
             CacheStep newStep = filters.elementAt(i);
             CacheStep step = mSteps.elementAt(i);
             boolean similar = step.equals(newStep);
-            Log.v(LOGTAG, "[" + i + "] - " + step.getName()
+            LLog.v(TAG, "[" + i + "] - " + step.getName()
                     + " similar rep ? " + (similar ? "YES" : "NO")
                     + " -- bitmap: " + step.cache);
         }
-        Log.v(LOGTAG, "<<<------");
+        LLog.v(TAG, "<<<------");
     }
 
     private void displayNbBitmapsInCache() {
@@ -300,7 +278,7 @@ public class CacheProcessing {
                 nbBitmapsCached++;
             }
         }
-        Log.v(LOGTAG, "nb bitmaps in cache: " + nbBitmapsCached + " / " + mSteps.size());
+        LLog.v(TAG, "nb bitmaps in cache: " + nbBitmapsCached + " / " + mSteps.size());
     }
 
 }

@@ -75,7 +75,7 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
     private int mOriginalTextSize;
     private String mOriginalText;
     private boolean mZoomIn = false;
-    Point mOriginalTranslation = new Point();
+    private Point mOriginalTranslation = new Point();
     float mOriginalScale;
     float mStartFocusX, mStartFocusY;
 
@@ -241,13 +241,14 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
         mPaint.setAntiAlias(true);
         mPaint.setFilterBitmap(true);
         MasterImage.getImage().setImageShowSize(getWidth() - 2 * mShadowMargin, getHeight() - 2 * mShadowMargin);
-        MasterImage img = MasterImage.getImage();
+        MasterImage masterImage = MasterImage.getImage();
+        Bitmap filteredImage = masterImage.getFilteredImage();
         // Hide the loading indicator as needed
-        if (mActivity.isLoadingVisible() && getFilteredImage() != null) {
-            if ((img.getLoadedPreset() == null) || (img.getLoadedPreset() != null
-                    && img.getLoadedPreset().equals(img.getCurrentPreset()))) {
+        if (mActivity.isLoadingVisible() && filteredImage != null) {
+            if ((masterImage.getLoadedPreset() == null) || (masterImage.getLoadedPreset() != null
+                    && masterImage.getLoadedPreset().equals(masterImage.getCurrentPreset()))) {
                 mActivity.stopLoadingIndicator();
-            } else if (img.getLoadedPreset() != null) {
+            } else if (masterImage.getLoadedPreset() != null) {
                 return;
             }
             mActivity.stopLoadingIndicator();
@@ -257,19 +258,19 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
 
         mShadowDrawn = false;
 
-        Bitmap highresPreview = MasterImage.getImage().getHighresImage();
-        Bitmap fullHighres = MasterImage.getImage().getPartialImage();
+        Bitmap highresPreview = masterImage.getHighresImage();
+        Bitmap fullHighres = masterImage.getPartialImage();
 
-        boolean isDoingNewLookAnimation = MasterImage.getImage().onGoingNewLookAnimation();
+        boolean isDoingNewLookAnimation = masterImage.onGoingNewLookAnimation();
 
         if (highresPreview == null || isDoingNewLookAnimation) {
-            drawImageAndAnimate(canvas, getFilteredImage());
+            drawImageAndAnimate(canvas, filteredImage);
         } else {
             drawImageAndAnimate(canvas, highresPreview);
         }
 
         drawHighresImage(canvas, fullHighres);
-        drawCompareImage(canvas, getGeometryOnlyImage());
+        drawCompareImage(canvas, masterImage.getGeometryOnlyImage());
 
         canvas.restore();
 
@@ -313,29 +314,23 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
         }
     }
 
-    public void resetImageCaches(ImageShow caller) {
-        MasterImage.getImage().invalidatePreview();
+    private Rect computeImageBounds(int imageWidth, int imageHeight) {
+        float scale = GeometryMathUtils.scale(imageWidth, imageHeight, getWidth(), getHeight());
+
+        float w = imageWidth * scale;
+        float h = imageHeight * scale;
+        float ty = (getHeight() - h) / 2.0f;
+        float tx = (getWidth() - w) / 2.0f;
+        return new Rect((int) tx + mShadowMargin, (int) ty + mShadowMargin,
+                (int) (w + tx) - mShadowMargin, (int) (h + ty) - mShadowMargin);
     }
 
-    public Bitmap getFiltersOnlyImage() {
-        return MasterImage.getImage().getFiltersOnlyImage();
-    }
-
-    public Bitmap getGeometryOnlyImage() {
-        return MasterImage.getImage().getGeometryOnlyImage();
-    }
-
-    public Bitmap getFilteredImage() {
-        return MasterImage.getImage().getFilteredImage();
-    }
-
-    public void drawImageAndAnimate(Canvas canvas,
-            Bitmap image) {
+    private void drawImageAndAnimate(Canvas canvas, Bitmap image) {
         if (image == null) {
             return;
         }
-        MasterImage master = MasterImage.getImage();
-        Matrix m = master.computeImageToScreen(image, 0, false);
+        MasterImage masterImage = MasterImage.getImage();
+        Matrix m = masterImage.computeImageToScreen(image, 0, false);
         if (m == null) {
             return;
         }
@@ -346,10 +341,10 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
         m.mapRect(d);
         d.roundOut(mImageBounds);
 
-        boolean showAnimatedImage = master.onGoingNewLookAnimation();
+        boolean showAnimatedImage = masterImage.onGoingNewLookAnimation();
         if (!showAnimatedImage && mDidStartAnimation) {
             // animation ended, but do we have the correct image to show?
-            if (master.getPreset().equals(master.getCurrentPreset())) {
+            if (masterImage.getPreset().equals(masterImage.getCurrentPreset())) {
                 // we do, let's stop showing the animated image
                 mDidStartAnimation = false;
                 MasterImage.getImage().resetAnimBitmap();
@@ -364,8 +359,8 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
             canvas.save();
 
             // Animation uses the image before the change
-            Bitmap previousImage = master.getPreviousImage();
-            Matrix mp = master.computeImageToScreen(previousImage, 0, false);
+            Bitmap previousImage = masterImage.getPreviousImage();
+            Matrix mp = masterImage.computeImageToScreen(previousImage, 0, false);
             RectF dp = new RectF(0, 0, previousImage.getWidth(), previousImage.getHeight());
             mp.mapRect(dp);
             Rect previousBounds = new Rect();
@@ -374,7 +369,7 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
             float centerY = dp.centerY();
             boolean needsToDrawImage = true;
 
-            if (master.getCurrentLookAnimation() == MasterImage.CIRCLE_ANIMATION) {
+            if (masterImage.getCurrentLookAnimation() == MasterImage.CIRCLE_ANIMATION) {
                 float maskScale = MasterImage.getImage().getMaskScale();
                 if (maskScale >= 0.0f) {
                     float maskW = sMask.getWidth() / 2.0f;
@@ -404,46 +399,42 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
                     canvas.drawBitmap(sMask, 0, 0, mMaskPaint);
                     needsToDrawImage = false;
                 }
-            } else if (master.getCurrentLookAnimation() == MasterImage.ROTATE_ANIMATION) {
-                Rect d1 = computeImageBounds(master.getPreviousImage().getHeight(),
-                        master.getPreviousImage().getWidth());
-                Rect d2 = computeImageBounds(master.getPreviousImage().getWidth(),
-                        master.getPreviousImage().getHeight());
+            } else if (masterImage.getCurrentLookAnimation() == MasterImage.ROTATE_ANIMATION) {
+                Rect d1 = computeImageBounds(masterImage.getPreviousImage().getHeight(), masterImage.getPreviousImage().getWidth());
+                Rect d2 = computeImageBounds(masterImage.getPreviousImage().getWidth(), masterImage.getPreviousImage().getHeight());
                 float finalScale = d1.width() / (float) d2.height();
-                finalScale = (1.0f * (1.0f - master.getAnimFraction()))
-                        + (finalScale * master.getAnimFraction());
-                canvas.rotate(master.getAnimRotationValue(), centerX, centerY);
+                finalScale = (1.0f * (1.0f - masterImage.getAnimFraction())) + (finalScale * masterImage.getAnimFraction());
+                canvas.rotate(masterImage.getAnimRotationValue(), centerX, centerY);
                 canvas.scale(finalScale, finalScale, centerX, centerY);
-            } else if (master.getCurrentLookAnimation() == MasterImage.MIRROR_ANIMATION) {
-                if (master.getCurrentFilterRepresentation() instanceof FilterMirrorRepresentation) {
+            } else if (masterImage.getCurrentLookAnimation() == MasterImage.MIRROR_ANIMATION) {
+                if (masterImage.getCurrentFilterRepresentation() instanceof FilterMirrorRepresentation) {
                     FilterMirrorRepresentation rep =
-                            (FilterMirrorRepresentation) master.getCurrentFilterRepresentation();
+                            (FilterMirrorRepresentation) masterImage.getCurrentFilterRepresentation();
 
-                    ImagePreset preset = master.getPreset();
-                    ArrayList<FilterRepresentation> geometry =
-                            (ArrayList<FilterRepresentation>) preset.getGeometryFilters();
+                    ImagePreset preset = masterImage.getPreset();
+                    ArrayList<FilterRepresentation> geometry = (ArrayList<FilterRepresentation>) preset.getGeometryFilters();
                     GeometryMathUtils.GeometryHolder holder = null;
                     holder = GeometryMathUtils.unpackGeometry(geometry);
 
                     if (holder.rotation.value() == 90 || holder.rotation.value() == 270) {
                         if (rep.isHorizontal() && !rep.isVertical()) {
-                            canvas.scale(1, master.getAnimRotationValue(), centerX, centerY);
+                            canvas.scale(1, masterImage.getAnimRotationValue(), centerX, centerY);
                         } else if (rep.isVertical() && !rep.isHorizontal()) {
-                            canvas.scale(1, master.getAnimRotationValue(), centerX, centerY);
+                            canvas.scale(1, masterImage.getAnimRotationValue(), centerX, centerY);
                         } else if (rep.isHorizontal() && rep.isVertical()) {
-                            canvas.scale(master.getAnimRotationValue(), 1, centerX, centerY);
+                            canvas.scale(masterImage.getAnimRotationValue(), 1, centerX, centerY);
                         } else {
-                            canvas.scale(master.getAnimRotationValue(), 1, centerX, centerY);
+                            canvas.scale(masterImage.getAnimRotationValue(), 1, centerX, centerY);
                         }
                     } else {
                         if (rep.isHorizontal() && !rep.isVertical()) {
-                            canvas.scale(master.getAnimRotationValue(), 1, centerX, centerY);
+                            canvas.scale(masterImage.getAnimRotationValue(), 1, centerX, centerY);
                         } else if (rep.isVertical() && !rep.isHorizontal()) {
-                            canvas.scale(master.getAnimRotationValue(), 1, centerX, centerY);
+                            canvas.scale(masterImage.getAnimRotationValue(), 1, centerX, centerY);
                         } else if (rep.isHorizontal() && rep.isVertical()) {
-                            canvas.scale(1, master.getAnimRotationValue(), centerX, centerY);
+                            canvas.scale(1, masterImage.getAnimRotationValue(), centerX, centerY);
                         } else {
-                            canvas.scale(1, master.getAnimRotationValue(), centerX, centerY);
+                            canvas.scale(1, masterImage.getAnimRotationValue(), centerX, centerY);
                         }
                     }
                 }
@@ -463,31 +454,16 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
         canvas.restore();
     }
 
-    private Rect computeImageBounds(int imageWidth, int imageHeight) {
-        float scale = GeometryMathUtils.scale(imageWidth, imageHeight,
-                getWidth(), getHeight());
-
-        float w = imageWidth * scale;
-        float h = imageHeight * scale;
-        float ty = (getHeight() - h) / 2.0f;
-        float tx = (getWidth() - w) / 2.0f;
-        return new Rect((int) tx + mShadowMargin,
-                (int) ty + mShadowMargin,
-                (int) (w + tx) - mShadowMargin,
-                (int) (h + ty) - mShadowMargin);
-    }
-
     private void drawShadow(Canvas canvas, Rect d) {
         if (!mShadowDrawn) {
-            mShadowBounds.set(d.left - mShadowMargin, d.top - mShadowMargin,
-                    d.right + mShadowMargin, d.bottom + mShadowMargin);
+            mShadowBounds.set(d.left - mShadowMargin, d.top - mShadowMargin, d.right + mShadowMargin, d.bottom + mShadowMargin);
             mShadow.setBounds(mShadowBounds);
             mShadow.draw(canvas);
             mShadowDrawn = true;
         }
     }
 
-    public void drawCompareImage(Canvas canvas, Bitmap image) {
+    private void drawCompareImage(Canvas canvas, Bitmap image) {
         MasterImage master = MasterImage.getImage();
         boolean showsOriginal = master.showsOriginal();
         if (!showsOriginal && !mTouchShowOriginal)
@@ -519,13 +495,11 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
                     mImageBounds.left + px, mImageBounds.top + py);
             if (mShowOriginalDirection == UNVEIL_HORIZONTAL) {
                 if (mTouchDown.x - mTouch.x > 0) {
-                    d.set(mImageBounds.left + px, mImageBounds.top,
-                            mImageBounds.right, mImageBounds.top + py);
+                    d.set(mImageBounds.left + px, mImageBounds.top, mImageBounds.right, mImageBounds.top + py);
                 }
             } else {
                 if (mTouchDown.y - mTouch.y > 0) {
-                    d.set(mImageBounds.left, mImageBounds.top + py,
-                            mImageBounds.left + px, mImageBounds.bottom);
+                    d.set(mImageBounds.left, mImageBounds.top + py, mImageBounds.left + px, mImageBounds.bottom);
                 }
             }
             canvas.clipRect(d);
@@ -536,11 +510,9 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
             paint.setStrokeWidth(3);
 
             if (mShowOriginalDirection == UNVEIL_VERTICAL) {
-                canvas.drawLine(mImageBounds.left, mTouch.y,
-                        mImageBounds.right, mTouch.y, paint);
+                canvas.drawLine(mImageBounds.left, mTouch.y, mImageBounds.right, mTouch.y, paint);
             } else {
-                canvas.drawLine(mTouch.x, mImageBounds.top,
-                        mTouch.x, mImageBounds.bottom, paint);
+                canvas.drawLine(mTouch.x, mImageBounds.top, mTouch.x, mImageBounds.bottom, paint);
             }
 
             Rect bounds = new Rect();
@@ -559,6 +531,10 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
                     mImageBounds.top + bounds.height() + mOriginalTextMargin, paint);
         }
         canvas.restore();
+    }
+
+    public void resetImageCaches(ImageShow caller) {
+        MasterImage.getImage().invalidatePreview();
     }
 
     public void bindAsImageLoadListener() {
@@ -613,7 +589,7 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
             mTouch.y = ey;
 
             float scaleFactor = MasterImage.getImage().getScaleFactor();
-            if (scaleFactor > 1 && (!ENABLE_ZOOMED_COMPARISON || event.getPointerCount() == 2)) {
+            if (scaleFactor > 1 && (!ENABLE_ZOOMED_COMPARISON)) {
                 float translateX = (mTouch.x - mTouchDown.x) / scaleFactor;
                 float translateY = (mTouch.y - mTouchDown.y) / scaleFactor;
                 Point originalTranslation = MasterImage.getImage().getOriginalTranslation();
@@ -623,7 +599,7 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
                 MasterImage.getImage().setTranslation(translation);
                 mTouchShowOriginal = false;
             } else if (enableComparison() && !mOriginalDisabled
-                    && (System.currentTimeMillis() - mTouchShowOriginalDate > mTouchShowOriginalDelayMin) 
+                    && (System.currentTimeMillis() - mTouchShowOriginalDate > mTouchShowOriginalDelayMin)
                     && event.getPointerCount() == 1) {
                 mTouchShowOriginal = true;
             }
@@ -718,10 +694,7 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
             if (mAnimatorScale != null) {
                 mAnimatorScale.cancel();
             }
-            mAnimatorScale = ValueAnimator.ofFloat(
-                    MasterImage.getImage().getScaleFactor(),
-                    scale
-                    );
+            mAnimatorScale = ValueAnimator.ofFloat(MasterImage.getImage().getScaleFactor(), scale);
             float translateX = (getWidth() / 2 - x);
             float translateY = (getHeight() / 2 - y);
             Point translation = MasterImage.getImage().getTranslation();
@@ -891,8 +864,8 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
 
     @Override
     public boolean onScale(ScaleGestureDetector detector) {
-        MasterImage img = MasterImage.getImage();
-        float scaleFactor = img.getScaleFactor();
+        MasterImage masterImage = MasterImage.getImage();
+        float scaleFactor = masterImage.getScaleFactor();
 
         scaleFactor = scaleFactor * detector.getScaleFactor();
         if (scaleFactor > MasterImage.getImage().getMaxScaleFactor()) {
@@ -902,7 +875,7 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
             scaleFactor = 1.0f;
         }
         MasterImage.getImage().setScaleFactor(scaleFactor);
-        scaleFactor = img.getScaleFactor();
+        scaleFactor = masterImage.getScaleFactor();
         float focusx = detector.getFocusX();
         float focusy = detector.getFocusY();
         float translateX = (focusx - mStartFocusX) / scaleFactor;

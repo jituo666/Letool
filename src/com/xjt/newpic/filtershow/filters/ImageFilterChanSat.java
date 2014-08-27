@@ -56,8 +56,7 @@ public class ImageFilterChanSat extends ImageFilterRS {
     }
 
     @Override
-    protected void createFilter(android.content.res.Resources res, float scaleFactor,
-            int quality, Allocation in) {
+    protected void createFilter(android.content.res.Resources res, float scaleFactor, int quality, Allocation in) {
         RenderScript rsCtx = getRenderScriptContext();
 
         Type.Builder tb_float = new Type.Builder(rsCtx, Element.F32_4(rsCtx));

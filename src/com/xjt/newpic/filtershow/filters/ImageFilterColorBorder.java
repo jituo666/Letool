@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2012 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.xjt.newpic.filtershow.filters;
 
@@ -24,7 +9,8 @@ import android.graphics.Path;
 import android.graphics.RectF;
 
 public class ImageFilterColorBorder extends ImageFilter {
-    private static final String LOGTAG = "ImageFilterColorBorder";
+
+    private static final String TAG = ImageFilterColorBorder.class.getSimpleName();
     private FilterColorBorderRepresentation mParameters = null;
     Paint mPaint = new Paint();
     RectF mBounds = new RectF();
@@ -66,16 +52,13 @@ public class ImageFilterColorBorder extends ImageFilter {
         float bs = size / 100.f * mBounds.width();
         float r = radius / 100.f * mBounds.width();
 
-        mInsideBounds.set(mBounds.left + bs,
-                mBounds.top + bs, mBounds.right - bs,
-                mBounds.bottom - bs);
+        mInsideBounds.set(mBounds.left + bs, mBounds.top + bs, mBounds.right - bs, mBounds.bottom - bs);
 
         mBorderPath.moveTo(mBounds.left, mBounds.top);
         mBorderPath.lineTo(mBounds.right, mBounds.top);
         mBorderPath.lineTo(mBounds.right, mBounds.bottom);
         mBorderPath.lineTo(mBounds.left, mBounds.bottom);
-        mBorderPath.addRoundRect(mInsideBounds,
-                r, r, Path.Direction.CCW);
+        mBorderPath.addRoundRect(mInsideBounds, r, r, Path.Direction.CCW);
 
         canvas.drawPath(mBorderPath, mPaint);
     }

@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.filtershow.pipeline;
 
 import android.graphics.Bitmap;
@@ -11,8 +12,8 @@ import com.xjt.newpic.filtershow.filters.FilterUserPresetRepresentation;
 import com.xjt.newpic.filtershow.filters.FiltersManagerInterface;
 import com.xjt.newpic.filtershow.filters.ImageFilter;
 
-
 public class FilterEnvironment {
+
     private static final String TAG = FilterEnvironment.class.getSimpleName();
     private ImagePreset mImagePreset;
     private float mScaleFactor;
@@ -88,8 +89,7 @@ public class FilterEnvironment {
         return mFiltersManager;
     }
 
-    public void applyRepresentation(FilterRepresentation representation,
-                                    Allocation in, Allocation out) {
+    public void applyRepresentation(FilterRepresentation representation, Allocation in, Allocation out) {
         ImageFilter filter = mFiltersManager.getFilterForRepresentation(representation);
         filter.useRepresentation(representation);
         filter.setEnvironment(this);
@@ -108,8 +108,8 @@ public class FilterEnvironment {
             return bitmap;
         }
         ImageFilter filter = mFiltersManager.getFilterForRepresentation(representation);
-        if (filter == null){
-            LLog.e(TAG,"No ImageFilter for "+representation.getSerializationName());
+        if (filter == null) {
+            LLog.e(TAG, "No ImageFilter for " + representation.getSerializationName());
         }
         filter.useRepresentation(representation);
         filter.setEnvironment(this);

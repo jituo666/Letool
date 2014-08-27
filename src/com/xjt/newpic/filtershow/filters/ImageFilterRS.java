@@ -148,8 +148,7 @@ public abstract class ImageFilterRS extends ImageFilter {
 
     private static Allocation convertRGBAtoA(RenderScript RS, Bitmap bitmap) {
         if (RS != mRScache || mGreyConvert == null) {
-            mGreyConvert = new ScriptC_grey(RS, RS.getApplicationContext().getResources(),
-                                            R.raw.grey);
+            mGreyConvert = new ScriptC_grey(RS, RS.getApplicationContext().getResources(),  R.raw.grey);
             mRScache = RS;
         }
 
@@ -186,9 +185,7 @@ public abstract class ImageFilterRS extends ImageFilter {
         Resources res = getEnvironment().getPipeline().getResources();
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize      = inSampleSize;
-        Bitmap bitmap = BitmapFactory.decodeResource(
-                res,
-                resource, options);
+        Bitmap bitmap = BitmapFactory.decodeResource( res,resource, options);
         Bitmap resizeBitmap = Bitmap.createScaledBitmap(bitmap, w, h, true);
         Allocation ret = convertRGBAtoA(getRenderScriptContext(), resizeBitmap);
         resizeBitmap.recycle();

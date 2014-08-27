@@ -1,6 +1,5 @@
 package com.xjt.newpic.filtershow.filters;
 
-
 public class SplineMath {
     double[][] mPoints = new double[6][2];
     double[] mDerivatives;

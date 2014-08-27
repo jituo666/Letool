@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.filtershow.pipeline;
 
 import android.app.NotificationManager;
@@ -15,6 +14,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.ApiHelper;
+import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.filtershow.FilterShowActivity;
 import com.xjt.newpic.filtershow.filters.FiltersManager;
 import com.xjt.newpic.filtershow.filters.ImageFilter;
@@ -27,10 +27,11 @@ public class ProcessingService extends Service {
 
     private static final String TAG = ProcessingService.class.getSimpleName();
 
-    private static final boolean SHOW_IMAGE = false;
+    private int mNotificationId;
     private NotificationManager mNotifyMgr = null;
     private NotificationCompat.Builder mBuilder = null;
-    private int mNotificationId;
+
+    private static final boolean SHOW_IMAGE = false;
 
     private static final String PRESET = "preset";
     private static final String QUALITY = "quality";
@@ -42,18 +43,31 @@ public class ProcessingService extends Service {
     private static final String SIZE_FACTOR = "sizeFactor";
     private static final String EXIT = "exit";
 
-    private ProcessingTaskController mProcessingTaskController;
-    private ImageSavingTask mImageSavingTask;
-    private UpdatePreviewTask mUpdatePreviewTask;
-    private HighresRenderingRequestTask mHighresRenderingRequestTask;
-    private FullresRenderingRequestTask mFullresRenderingRequestTask;
-    private RenderingRequestTask mRenderingRequestTask;
 
     private final IBinder mBinder = new LocalBinder();
     private FilterShowActivity mFiltershowActivity;
+    private ProcessingTaskController mProcessingTaskController;
+
+    private RenderingRequestTask mRenderingRequestTask;
+    private HighresRenderingRequestTask mHighresRenderingRequestTask;
+    private FullresRenderingRequestTask mFullresRenderingRequestTask;
+
+    private UpdatePreviewTask mUpdatePreviewTask;
+    private ImageSavingTask mImageSavingTask;
 
     private boolean mSaving = false;
     private boolean mNeedsAlive = false;
+
+    public class LocalBinder extends Binder {
+
+        public ProcessingService getService() {
+            return ProcessingService.this;
+        }
+    }
+
+    static {
+        System.loadLibrary("jni_filtershow_filters");
+    }
 
     public void setFiltershowActivity(FilterShowActivity filtershowActivity) {
         mFiltershowActivity = filtershowActivity;
@@ -67,6 +81,22 @@ public class ProcessingService extends Service {
         mHighresRenderingRequestTask.setOriginal(originalBitmap);
         mFullresRenderingRequestTask.setOriginal(originalBitmap);
         mRenderingRequestTask.setOriginal(originalBitmap);
+    }
+
+    public void setOriginalBitmapHighres(Bitmap originalHires) {
+        mHighresRenderingRequestTask.setOriginalBitmapHighres(originalHires);
+    }
+
+    public void setPreviewScaleFactor(float previewScale) {
+        LLog.i(TAG, "----------------------setPreviewScaleFactor:" + previewScale);
+        mHighresRenderingRequestTask.setPreviewScaleFactor(previewScale);
+        mFullresRenderingRequestTask.setPreviewScaleFactor(previewScale);
+        mRenderingRequestTask.setPreviewScaleFactor(previewScale);
+    }
+
+    public void setHighresPreviewScaleFactor(float highResPreviewScale) {
+        LLog.i(TAG, "----------------------setHighresPreviewScaleFactor:" + highResPreviewScale);
+        mHighresRenderingRequestTask.setHighresPreviewScaleFactor(highResPreviewScale);
     }
 
     public void updatePreviewBuffer() {
@@ -103,27 +133,6 @@ public class ProcessingService extends Service {
         request.setDestination(destination);
         passedPreset.setPartialRendering(true, bounds);
         mFullresRenderingRequestTask.postRenderingRequest(request);
-    }
-
-    public void setHighresPreviewScaleFactor(float highResPreviewScale) {
-        mHighresRenderingRequestTask.setHighresPreviewScaleFactor(highResPreviewScale);
-    }
-
-    public void setPreviewScaleFactor(float previewScale) {
-        mHighresRenderingRequestTask.setPreviewScaleFactor(previewScale);
-        mFullresRenderingRequestTask.setPreviewScaleFactor(previewScale);
-        mRenderingRequestTask.setPreviewScaleFactor(previewScale);
-    }
-
-    public void setOriginalBitmapHighres(Bitmap originalHires) {
-        mHighresRenderingRequestTask.setOriginalBitmapHighres(originalHires);
-    }
-
-    public class LocalBinder extends Binder {
-
-        public ProcessingService getService() {
-            return ProcessingService.this;
-        }
     }
 
     public static Intent getSaveIntent(Context context, ImagePreset preset, File destination, Uri selectedImageUri, Uri sourceImageUri, boolean doFlatten,
@@ -199,8 +208,7 @@ public class ProcessingService extends Service {
             preset.readJsonFromString(presetJson);
             mNeedsAlive = false;
             mSaving = true;
-            handleSaveRequest(sourceUri, selectedUri, destinationFile, preset,
-                    MasterImage.getImage().getHighresImage(), flatten, quality, sizeFactor, exit);
+            handleSaveRequest(sourceUri, selectedUri, destinationFile, preset, MasterImage.getImage().getHighresImage(), flatten, quality, sizeFactor, exit);
         }
         return START_REDELIVER_INTENT;
     }
@@ -294,7 +302,4 @@ public class ProcessingService extends Service {
         CachingPipeline.destroyRenderScriptContext();
     }
 
-    static {
-        System.loadLibrary("jni_filtershow_filters");
-    }
 }

@@ -1,6 +1,7 @@
+
 package com.xjt.newpic.filtershow.cache;
 
-import android.annotation.TargetApi;
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
@@ -12,7 +13,6 @@ import android.graphics.BitmapRegionDecoder;
 import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
@@ -31,10 +31,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+@SuppressLint("NewApi")
 public final class ImageLoader {
 
-    private static final String LOGTAG = "ImageLoader";
+    private static final String TAG = "ImageLoader";
 
     public static final String JPEG_MIME_TYPE = "image/jpeg";
     public static final int DEFAULT_COMPRESS_QUALITY = 95;
@@ -136,14 +136,14 @@ public final class ImageLoader {
             }
             return parseExif(exif);
         } catch (IOException e) {
-            Log.w(LOGTAG, "Failed to read EXIF orientation", e);
+            Log.w(TAG, "Failed to read EXIF orientation", e);
         } finally {
             try {
                 if (is != null) {
                     is.close();
                 }
             } catch (IOException e) {
-                Log.w(LOGTAG, "Failed to close InputStream", e);
+                Log.w(TAG, "Failed to close InputStream", e);
             }
         }
         return ORI_NORMAL;
@@ -196,10 +196,7 @@ public final class ImageLoader {
         Matrix matrix = new Matrix();
         int w = bitmap.getWidth();
         int h = bitmap.getHeight();
-        if (ori == ORI_ROTATE_90 ||
-                ori == ORI_ROTATE_270 ||
-                ori == ORI_TRANSPOSE ||
-                ori == ORI_TRANSVERSE) {
+        if (ori == ORI_ROTATE_90 || ori == ORI_ROTATE_270 || ori == ORI_TRANSPOSE || ori == ORI_TRANSVERSE) {
             int tmp = w;
             w = h;
             h = tmp;
@@ -241,9 +238,7 @@ public final class ImageLoader {
      * if it is a subset of the bitmap stored at uri.  Otherwise returns
      * null.
      */
-    public static Bitmap loadRegionBitmap(Context context, BitmapCache cache,
-            Uri uri, BitmapFactory.Options options,
-            Rect bounds) {
+    public static Bitmap loadRegionBitmap(Context context, BitmapCache cache, Uri uri, BitmapFactory.Options options, Rect bounds) {
         InputStream is = null;
         int w = 0;
         int h = 0;
@@ -263,8 +258,7 @@ public final class ImageLoader {
                 bounds.left = imageBounds.left;
                 bounds.top = imageBounds.top;
             }
-            Bitmap reuse = cache.getBitmap(imageBounds.width(),
-                    imageBounds.height(), BitmapCache.REGION);
+            Bitmap reuse = cache.getBitmap(imageBounds.width(), imageBounds.height(), BitmapCache.REGION);
             if (ApiHelper.AT_LEAST_11) {
                 options.inBitmap = reuse;
             }
@@ -274,11 +268,11 @@ public final class ImageLoader {
             }
             return bitmap;
         } catch (FileNotFoundException e) {
-            Log.e(LOGTAG, "FileNotFoundException for " + uri, e);
+            Log.e(TAG, "FileNotFoundException for " + uri, e);
         } catch (IOException e) {
-            Log.e(LOGTAG, "FileNotFoundException for " + uri, e);
+            Log.e(TAG, "FileNotFoundException for " + uri, e);
         } catch (IllegalArgumentException e) {
-            Log.e(LOGTAG, "exc, image decoded " + w + " x " + h + " bounds: "
+            Log.e(TAG, "exc, image decoded " + w + " x " + h + " bounds: "
                     + bounds.left + "," + bounds.top + " - "
                     + bounds.width() + "x" + bounds.height() + " exc: " + e);
         } finally {
@@ -309,8 +303,7 @@ public final class ImageLoader {
     }
 
     /**
-     * Returns the bitmap from the given uri loaded using the given options.
-     * Returns null on failure.
+     * Returns the bitmap from the given uri loaded using the given options. Returns null on failure.
      */
     public static Bitmap loadBitmap(Context context, Uri uri, BitmapFactory.Options o) {
         if (uri == null || context == null) {
@@ -321,7 +314,7 @@ public final class ImageLoader {
             is = context.getContentResolver().openInputStream(uri);
             return BitmapFactory.decodeStream(is, null, o);
         } catch (FileNotFoundException e) {
-            Log.e(LOGTAG, "FileNotFoundException for " + uri, e);
+            Log.e(TAG, "FileNotFoundException for " + uri, e);
         } finally {
             Utils.closeSilently(is);
         }
@@ -340,8 +333,7 @@ public final class ImageLoader {
      * @param useMin use min or max side of the original image
      * @return downsampled bitmap or null if this operation failed.
      */
-    public static Bitmap loadConstrainedBitmap(Uri uri, Context context, int maxSideLength,
-            Rect originalBounds, boolean useMin) {
+    public static Bitmap loadConstrainedBitmap(Uri uri, Context context, int maxSideLength, Rect originalBounds, boolean useMin) {
         if (maxSideLength <= 0 || uri == null || context == null) {
             throw new IllegalArgumentException("bad argument to getScaledBitmap");
         }
@@ -372,8 +364,7 @@ public final class ImageLoader {
         }
 
         // Make sure sample size is reasonable
-        if (sampleSize <= 0 ||
-                0 >= (int) (Math.min(w, h) / sampleSize)) {
+        if (sampleSize <= 0 || 0 >= (int) (Math.min(w, h) / sampleSize)) {
             return null;
         }
         return loadDownsampledBitmap(context, uri, sampleSize);
@@ -459,8 +450,7 @@ public final class ImageLoader {
      * Loads an oriented bitmap that is downsampled by at least the input sample
      * size. In low-memory situations, the bitmap may be downsampled further.
      */
-    public static Bitmap loadOrientedBitmapWithBackouts(Context context, Uri sourceUri,
-            int sampleSize) {
+    public static Bitmap loadOrientedBitmapWithBackouts(Context context, Uri sourceUri,int sampleSize) {
         Bitmap bitmap = loadBitmapWithBackouts(context, sourceUri, sampleSize);
         if (bitmap == null) {
             return null;
@@ -567,7 +557,7 @@ public final class ImageLoader {
                 List<ExifTag> taglist = exif.getAllTags();
                 return taglist;
             } catch (IOException e) {
-                Log.w(LOGTAG, "Failed to read EXIF tags", e);
+                Log.w(TAG, "Failed to read EXIF tags", e);
             }
         }
         return null;

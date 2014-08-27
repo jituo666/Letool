@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.filtershow.pipeline;
 
 import android.content.Context;
@@ -10,8 +9,8 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.v8.renderscript.Allocation;
 import android.support.v8.renderscript.RenderScript;
-import android.util.Log;
 
+import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.filtershow.cache.BitmapCache;
 import com.xjt.newpic.filtershow.cache.ImageLoader;
 import com.xjt.newpic.filtershow.filters.FilterRepresentation;
@@ -23,8 +22,9 @@ import java.util.Vector;
 
 public class CachingPipeline implements PipelineInterface {
 
-    private static final String TAG = "CachingPipeline";
-    private boolean DEBUG = false;
+    private boolean DEBUG = true;
+
+    private static final String TAG = CachingPipeline.class.getSimpleName();
 
     private static final Bitmap.Config BITMAP_CONFIG = Bitmap.Config.ARGB_8888;
 
@@ -60,7 +60,7 @@ public class CachingPipeline implements PipelineInterface {
 
     public static synchronized void createRenderscriptContext(Context context) {
         if (sRS != null) {
-            Log.w(TAG, "A prior RS context exists when calling setRenderScriptContext");
+            LLog.w(TAG, "A prior RS context exists when calling setRenderScriptContext");
             destroyRenderScriptContext();
         }
         sRS = RenderScript.create(context);
@@ -108,7 +108,7 @@ public class CachingPipeline implements PipelineInterface {
 
     private synchronized void destroyPixelAllocations() {
         if (DEBUG) {
-            Log.v(TAG, "destroyPixelAllocations in " + getName());
+            LLog.v(TAG, "destroyPixelAllocations in " + getName());
         }
         if (mInPixelsAllocation != null) {
             mInPixelsAllocation.destroy();
@@ -160,7 +160,7 @@ public class CachingPipeline implements PipelineInterface {
 
     public void setOriginal(Bitmap bitmap) {
         mOriginalBitmap = bitmap;
-        Log.v(TAG, "setOriginal, size " + bitmap.getWidth() + " x " + bitmap.getHeight());
+        LLog.v(TAG, "setOriginal, size " + bitmap.getWidth() + " x " + bitmap.getHeight());
         ImagePreset preset = MasterImage.getImage().getPreset();
         setupEnvironment(preset, false);
         updateOriginalAllocation(preset);
@@ -179,16 +179,16 @@ public class CachingPipeline implements PipelineInterface {
         RenderScript RS = getRenderScriptContext();
 
         Allocation filtersOnlyOriginalAllocation = mFiltersOnlyOriginalAllocation;
-        mFiltersOnlyOriginalAllocation = Allocation.createFromBitmap(RS, originalBitmap,
-                Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT);
+        mFiltersOnlyOriginalAllocation = Allocation.createFromBitmap(RS, originalBitmap,Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT);
         if (filtersOnlyOriginalAllocation != null) {
             filtersOnlyOriginalAllocation.destroy();
         }
 
         Allocation originalAllocation = mOriginalAllocation;
         mResizedOriginalBitmap = preset.applyGeometry(originalBitmap, mEnvironment);
-        mOriginalAllocation = Allocation.createFromBitmap(RS, mResizedOriginalBitmap,
-                Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT);
+        LLog.i(TAG, "+++++ccbitmap+++++mResizedOriginalBitmap:" + mResizedOriginalBitmap.getRowBytes() * mResizedOriginalBitmap.getHeight()
+                + "::::::" + mResizedOriginalBitmap);
+        mOriginalAllocation = Allocation.createFromBitmap(RS, mResizedOriginalBitmap, Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT);
         if (originalAllocation != null) {
             originalAllocation.destroy();
         }
@@ -203,7 +203,7 @@ public class CachingPipeline implements PipelineInterface {
             }
             ImagePreset preset = request.getImagePreset();
             setupEnvironment(preset, false);
-            Bitmap bitmap = MasterImage.getImage().getOriginalBitmapHighres();
+            Bitmap bitmap = MasterImage.getImage().getOriginalBitmapHighres();//
             if (bitmap == null) {
                 return;
             }
@@ -228,7 +228,7 @@ public class CachingPipeline implements PipelineInterface {
             }
             ImagePreset preset = request.getImagePreset();
             setupEnvironment(preset, false);
-            Bitmap bitmap = MasterImage.getImage().getOriginalBitmapHighres();
+            Bitmap bitmap = MasterImage.getImage().getOriginalBitmapHighres(); //
             if (bitmap == null) {
                 return;
             }
@@ -250,7 +250,7 @@ public class CachingPipeline implements PipelineInterface {
             }
             ImagePreset preset = request.getImagePreset();
             setupEnvironment(preset, false);
-            Bitmap bitmap = MasterImage.getImage().getOriginalBitmapHighres();
+            Bitmap bitmap = MasterImage.getImage().getOriginalBitmapHighres(); //
             if (bitmap == null) {
                 return;
             }
@@ -273,12 +273,11 @@ public class CachingPipeline implements PipelineInterface {
             }
             if ((request.getType() != RenderingRequest.PARTIAL_RENDERING
                     && request.getType() != RenderingRequest.ICON_RENDERING
-                    && request.getBitmap() == null)
-                    || request.getImagePreset() == null) {
+                    && request.getBitmap() == null) || request.getImagePreset() == null) {
                 return;
             }
 
-            Log.v(TAG, "render image of type " + getType(request));
+            LLog.v(TAG, "render image of type " + getType(request));
 
             Bitmap bitmap = request.getBitmap();
             ImagePreset preset = request.getImagePreset();
@@ -290,7 +289,7 @@ public class CachingPipeline implements PipelineInterface {
                 bitmap = ImageLoader.getScaleOneImageForPreset(master.getActivity(),
                         mEnvironment.getBimapCache(), master.getUri(), request.getBounds(), request.getDestination());
                 if (bitmap == null) {
-                    Log.w(TAG, "could not get bitmap for: " + getType(request));
+                    LLog.w(TAG, "could not get bitmap for: " + getType(request));
                     return;
                 }
             }
@@ -301,14 +300,13 @@ public class CachingPipeline implements PipelineInterface {
                 updateOriginalAllocation(preset);
             }
 
-            if (DEBUG && bitmap != null) {
-                Log.v(TAG, "after update, req bitmap (" + bitmap.getWidth() + "x" + bitmap.getHeight()
+            if (DEBUG && bitmap != null && mResizedOriginalBitmap != null) {
+                LLog.v(TAG, "after update, req bitmap (" + bitmap.getWidth() + "x" + bitmap.getHeight()
                         + " ? resizeOriginal (" + mResizedOriginalBitmap.getWidth() + "x"
                         + mResizedOriginalBitmap.getHeight());
             }
 
-            if (request.getType() == RenderingRequest.FULL_RENDERING
-                    || request.getType() == RenderingRequest.GEOMETRY_RENDERING) {
+            if (request.getType() == RenderingRequest.FULL_RENDERING || request.getType() == RenderingRequest.GEOMETRY_RENDERING) {
                 mOriginalAllocation.copyTo(bitmap);
             } else if (request.getType() == RenderingRequest.FILTERS_RENDERING) {
                 mFiltersOnlyOriginalAllocation.copyTo(bitmap);
@@ -328,26 +326,21 @@ public class CachingPipeline implements PipelineInterface {
 
                 if (request.getType() == RenderingRequest.ICON_RENDERING) {
                     Rect iconBounds = request.getIconBounds();
-                    Bitmap source = MasterImage.getImage().getThumbnailBitmap();
+                    Bitmap source = MasterImage.getImage().getThumbnailBitmap(); //
                     if (iconBounds.width() > source.getWidth() * 2) {
-                        source = MasterImage.getImage().getLargeThumbnailBitmap();
+                        source = MasterImage.getImage().getLargeThumbnailBitmap(); //
                     }
-                    if (iconBounds != null) {
-                        bitmap = mEnvironment.getBitmap(iconBounds.width(),
-                                iconBounds.height(), BitmapCache.ICON);
-                        Canvas canvas = new Canvas(bitmap);
-                        Matrix m = new Matrix();
-                        float minSize = Math.min(source.getWidth(), source.getHeight());
-                        float maxSize = Math.max(iconBounds.width(), iconBounds.height());
-                        float scale = maxSize / minSize;
-                        m.setScale(scale, scale);
-                        float dx = (iconBounds.width() - (source.getWidth() * scale)) / 2.0f;
-                        float dy = (iconBounds.height() - (source.getHeight() * scale)) / 2.0f;
-                        m.postTranslate(dx, dy);
-                        canvas.drawBitmap(source, m, new Paint(Paint.FILTER_BITMAP_FLAG));
-                    } else {
-                        bitmap = mEnvironment.getBitmapCopy(source, BitmapCache.ICON);
-                    }
+                    bitmap = mEnvironment.getBitmap(iconBounds.width(), iconBounds.height(), BitmapCache.ICON);
+                    Canvas canvas = new Canvas(bitmap);
+                    Matrix m = new Matrix();
+                    float minSize = Math.min(source.getWidth(), source.getHeight());
+                    float maxSize = Math.max(iconBounds.width(), iconBounds.height());
+                    float scale = maxSize / minSize;
+                    m.setScale(scale, scale);
+                    float dx = (iconBounds.width() - (source.getWidth() * scale)) / 2.0f;
+                    float dy = (iconBounds.height() - (source.getHeight() * scale)) / 2.0f;
+                    m.postTranslate(dx, dy);
+                    canvas.drawBitmap(source, m, new Paint(Paint.FILTER_BITMAP_FLAG));
                 }
                 Bitmap bmp = preset.apply(bitmap, mEnvironment);
                 if (!mEnvironment.needsStop()) {
@@ -424,30 +417,26 @@ public class CachingPipeline implements PipelineInterface {
     public boolean prepareRenderscriptAllocations(Bitmap bitmap) {
         RenderScript RS = getRenderScriptContext();
         boolean needsUpdate = false;
-        if (mOutPixelsAllocation == null || mInPixelsAllocation == null ||
-                bitmap.getWidth() != mWidth || bitmap.getHeight() != mHeight) {
+        if (mOutPixelsAllocation == null || mInPixelsAllocation == null || bitmap.getWidth() != mWidth || bitmap.getHeight() != mHeight) {
             destroyPixelAllocations();
             Bitmap bitmapBuffer = bitmap;
             if (bitmap.getConfig() == null || bitmap.getConfig() != BITMAP_CONFIG) {
                 bitmapBuffer = bitmap.copy(BITMAP_CONFIG, true);
             }
-            mOutPixelsAllocation = Allocation.createFromBitmap(RS, bitmapBuffer,
-                    Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT);
-            mInPixelsAllocation = Allocation.createTyped(RS,
-                    mOutPixelsAllocation.getType());
+            mOutPixelsAllocation = Allocation.createFromBitmap(RS, bitmapBuffer, Allocation.MipmapControl.MIPMAP_NONE, Allocation.USAGE_SCRIPT);
+            mInPixelsAllocation = Allocation.createTyped(RS, mOutPixelsAllocation.getType());
             needsUpdate = true;
         }
         if (RS != null) {
             mInPixelsAllocation.copyFrom(bitmap);
         }
-        if (bitmap.getWidth() != mWidth
-                || bitmap.getHeight() != mHeight) {
+        if (bitmap.getWidth() != mWidth || bitmap.getHeight() != mHeight) {
             mWidth = bitmap.getWidth();
             mHeight = bitmap.getHeight();
             needsUpdate = true;
         }
         if (DEBUG) {
-            Log.v(TAG, "prepareRenderscriptAllocations: " + needsUpdate + " in " + getName());
+            LLog.v(TAG, "prepareRenderscriptAllocations: " + needsUpdate + " in " + getName());
         }
         return needsUpdate;
     }

@@ -133,8 +133,7 @@ public class CategoryAdapter extends ArrayAdapter<Action> {
     public FilterRepresentation getTinyPlanet() {
         for (int i = 0; i < getCount(); i++) {
             Action action = getItem(i);
-            if (action.getRepresentation() != null && action.getRepresentation()
-                    instanceof FilterTinyPlanetRepresentation) {
+            if (action.getRepresentation() != null && action.getRepresentation() instanceof FilterTinyPlanetRepresentation) {
                 return action.getRepresentation();
             }
         }

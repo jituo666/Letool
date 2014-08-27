@@ -339,7 +339,7 @@
     <string name="filtershow_exif_copyright">Copyright</string>
     <string name="select_image" msgid="7841406150484742140">"选择照片"</string>
 
-     <string name="ffx_original" msgid="372686331501281474">"原照片"</string>
+    <string name="ffx_original" msgid="372686331501281474">"原照片"</string>
     <string name="ffx_vintage" msgid="8348759951363844780">"复古"</string>
     <string name="ffx_instant" msgid="726968618715691987">"即时出相"</string>
     <string name="ffx_bleach" msgid="8946700451603478453">"漂除银影"</string>

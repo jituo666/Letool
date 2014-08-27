@@ -3,7 +3,6 @@ package com.xjt.newpic.filtershow.filters;
 import android.util.Log;
 
 import com.xjt.newpic.R;
-import com.xjt.newpic.filtershow.editors.EditorRotate;
 import com.xjt.newpic.filtershow.editors.ImageOnlyEditor;
 import com.xjt.newpic.surpport.JsonReader;
 import com.xjt.newpic.surpport.JsonWriter;

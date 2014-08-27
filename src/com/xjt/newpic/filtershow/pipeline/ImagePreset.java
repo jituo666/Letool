@@ -1,11 +1,12 @@
+
 package com.xjt.newpic.filtershow.pipeline;
 
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.support.v8.renderscript.Allocation;
-import android.util.Log;
 
 import com.xjt.newpic.R;
+import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.filtershow.cache.ImageLoader;
 import com.xjt.newpic.filtershow.filters.BaseFiltersManager;
 import com.xjt.newpic.filtershow.filters.FilterCropRepresentation;
@@ -32,7 +33,8 @@ import java.util.Vector;
 
 public class ImagePreset {
 
-    private static final String LOGTAG = "ImagePreset";
+    private static final String TAG = ImagePreset.class.getSimpleName();
+
     public static final String JASON_SAVED = "Saved";
 
     private Vector<FilterRepresentation> mFilters = new Vector<FilterRepresentation>();
@@ -42,7 +44,7 @@ public class ImagePreset {
 
     private boolean mPartialRendering = false;
     private Rect mPartialRenderingBounds;
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     public ImagePreset() {
     }
@@ -108,8 +110,7 @@ public class ImagePreset {
         return -1;
     }
 
-    public FilterRepresentation getFilterRepresentationCopyFrom(
-            FilterRepresentation filterRepresentation) {
+    public FilterRepresentation getFilterRepresentationCopyFrom(FilterRepresentation filterRepresentation) {
         // TODO: add concept of position in the filters (to allow multiple instances)
         if (filterRepresentation == null) {
             return null;
@@ -164,8 +165,7 @@ public class ImagePreset {
 
     public boolean contains(byte type) {
         for (FilterRepresentation representation : mFilters) {
-            if (representation.getFilterType() == type
-                    && !representation.isNil()) {
+            if (representation.getFilterType() == type && !representation.isNil()) {
                 return true;
             }
         }
@@ -174,20 +174,16 @@ public class ImagePreset {
 
     public boolean isPanoramaSafe() {
         for (FilterRepresentation representation : mFilters) {
-            if (representation.getFilterType() == FilterRepresentation.TYPE_GEOMETRY
-                    && !representation.isNil()) {
+            if (representation.getFilterType() == FilterRepresentation.TYPE_GEOMETRY && !representation.isNil()) {
                 return false;
             }
-            if (representation.getFilterType() == FilterRepresentation.TYPE_BORDER
-                    && !representation.isNil()) {
+            if (representation.getFilterType() == FilterRepresentation.TYPE_BORDER && !representation.isNil()) {
                 return false;
             }
-            if (representation.getFilterType() == FilterRepresentation.TYPE_VIGNETTE
-                    && !representation.isNil()) {
+            if (representation.getFilterType() == FilterRepresentation.TYPE_VIGNETTE && !representation.isNil()) {
                 return false;
             }
-            if (representation.getFilterType() == FilterRepresentation.TYPE_TINYPLANET
-                    && !representation.isNil()) {
+            if (representation.getFilterType() == FilterRepresentation.TYPE_TINYPLANET && !representation.isNil()) {
                 return false;
             }
         }
@@ -289,13 +285,13 @@ public class ImagePreset {
     }
 
     public void showFilters() {
-        Log.v(LOGTAG, "\\\\\\ showFilters -- " + mFilters.size() + " filters");
+        LLog.v(TAG, "\\\\\\ showFilters -- " + mFilters.size() + " filters");
         int n = 0;
         for (FilterRepresentation representation : mFilters) {
-            Log.v(LOGTAG, " filter " + n + " : " + representation.toString());
+            LLog.v(TAG, " filter " + n + " : " + representation.toString());
             n++;
         }
-        Log.v(LOGTAG, "/// showFilters -- " + mFilters.size() + " filters");
+        LLog.v(TAG, "/// showFilters -- " + mFilters.size() + " filters");
     }
 
     public FilterRepresentation getLastRepresentation() {
@@ -329,7 +325,7 @@ public class ImagePreset {
         if (representation instanceof FilterUserPresetRepresentation) {
             ImagePreset preset = ((FilterUserPresetRepresentation) representation).getImagePreset();
             if (preset.nbFilters() == 1
-                && preset.contains(FilterRepresentation.TYPE_FX)) {
+                    && preset.contains(FilterRepresentation.TYPE_FX)) {
                 FilterRepresentation rep = preset.getFilterRepresentationForType(
                         FilterRepresentation.TYPE_FX);
                 addFilter(rep);
@@ -449,11 +445,9 @@ public class ImagePreset {
     }
 
     public Bitmap applyGeometry(Bitmap bitmap, FilterEnvironment environment) {
-        // Apply any transform -- 90 rotate, flip, straighten, crop
-        // Returns a new bitmap.
+        // Apply any transform -- 90 rotate, flip, straighten, crop Returns a new bitmap.
         if (mDoApplyGeometry) {
-            Bitmap bmp = GeometryMathUtils.applyGeometryRepresentations(
-                    getGeometryFilters(), bitmap);
+            Bitmap bmp = GeometryMathUtils.applyGeometryRepresentations(getGeometryFilters(), bitmap);
             if (bmp != bitmap) {
                 environment.cache(bitmap);
             }
@@ -462,10 +456,22 @@ public class ImagePreset {
         return bitmap;
     }
 
+    public void applyBorder(Allocation in, Allocation out, boolean copyOut, FilterEnvironment environment) {
+        FilterRepresentation border = getFilterRepresentationForType(FilterRepresentation.TYPE_BORDER);
+        if (border != null && mDoApplyGeometry) {
+            // TODO: should keep the bitmap around
+            Allocation bitmapIn = in;
+            if (copyOut) {
+                bitmapIn = Allocation.createTyped(CachingPipeline.getRenderScriptContext(), in.getType());
+                bitmapIn.copyFrom(out);
+            }
+            environment.applyRepresentation(border, bitmapIn, out);
+        }
+    }
+
     public Bitmap applyBorder(Bitmap bitmap, FilterEnvironment environment) {
         // get the border from the list of filters.
-        FilterRepresentation border = getFilterRepresentationForType(
-                FilterRepresentation.TYPE_BORDER);
+        FilterRepresentation border = getFilterRepresentationForType(FilterRepresentation.TYPE_BORDER);
         if (border != null && mDoApplyGeometry) {
             bitmap = environment.applyRepresentation(border, bitmap);
             if (environment.getQuality() == FilterEnvironment.QUALITY_FINAL) {
@@ -493,8 +499,7 @@ public class ImagePreset {
                     continue;
                 }
                 if (representation.getFilterType() == FilterRepresentation.TYPE_BORDER) {
-                    // for now, let's skip the border as it will be applied in
-                    // applyBorder()
+                    // for now, let's skip the border as it will be applied in applyBorder()
                     // TODO: might be worth getting rid of applyBorder.
                     continue;
                 }
@@ -512,24 +517,7 @@ public class ImagePreset {
         return bitmap;
     }
 
-    public void applyBorder(Allocation in, Allocation out,
-            boolean copyOut, FilterEnvironment environment) {
-        FilterRepresentation border = getFilterRepresentationForType(
-                FilterRepresentation.TYPE_BORDER);
-        if (border != null && mDoApplyGeometry) {
-            // TODO: should keep the bitmap around
-            Allocation bitmapIn = in;
-            if (copyOut) {
-                bitmapIn = Allocation.createTyped(
-                        CachingPipeline.getRenderScriptContext(), in.getType());
-                bitmapIn.copyFrom(out);
-            }
-            environment.applyRepresentation(border, bitmapIn, out);
-        }
-    }
-
-    public void applyFilters(int from, int to, Allocation in, Allocation out,
-            FilterEnvironment environment) {
+    public void applyFilters(int from, int to, Allocation in, Allocation out, FilterEnvironment environment) {
         if (mDoApplyFilters) {
             if (from < 0) {
                 from = 0;
@@ -563,7 +551,6 @@ public class ImagePreset {
         }
         return true;
     }
-
 
     public void setPartialRendering(boolean partialRendering, Rect bounds) {
         mPartialRendering = partialRendering;
@@ -611,9 +598,9 @@ public class ImagePreset {
                 }
                 String sname = filter.getSerializationName();
                 if (DEBUG) {
-                    Log.v(LOGTAG, "Serialization: " + sname);
+                    LLog.v(TAG, "Serialization: " + sname);
                     if (sname == null) {
-                        Log.v(LOGTAG, "Serialization name null for filter: " + filter);
+                        LLog.v(TAG, "Serialization name null for filter: " + filter);
                     }
                 }
                 writer.name(sname);
@@ -622,7 +609,7 @@ public class ImagePreset {
             writer.endObject();
 
         } catch (IOException e) {
-           Log.e(LOGTAG,"Error encoding JASON",e);
+            LLog.e(TAG, "Error encoding JASON", e);
         }
     }
 
@@ -634,7 +621,7 @@ public class ImagePreset {
      */
     public boolean readJsonFromString(String filterString) {
         if (DEBUG) {
-            Log.v(LOGTAG, "reading preset: \"" + filterString + "\"");
+            LLog.v(TAG, "reading preset: \"" + filterString + "\"");
         }
         StringReader sreader = new StringReader(filterString);
         try {
@@ -646,8 +633,8 @@ public class ImagePreset {
             }
             reader.close();
         } catch (Exception e) {
-            Log.e(LOGTAG, "\""+filterString+"\"");
-            Log.e(LOGTAG, "parsing the filter parameters:", e);
+            LLog.e(TAG, "\"" + filterString + "\"");
+            LLog.e(TAG, "parsing the filter parameters:", e);
             return false;
         }
         return true;
@@ -666,7 +653,7 @@ public class ImagePreset {
             String name = sreader.nextName();
             FilterRepresentation filter = creatFilterFromName(name);
             if (filter == null) {
-                Log.w(LOGTAG, "UNKNOWN FILTER! " + name);
+                LLog.w(TAG, "UNKNOWN FILTER! " + name);
                 return false;
             }
             filter.deSerializeRepresentation(sreader);
@@ -692,7 +679,7 @@ public class ImagePreset {
 
     public void updateWith(ImagePreset preset) {
         if (preset.mFilters.size() != mFilters.size()) {
-            Log.e(LOGTAG, "Updating a preset with an incompatible one");
+            LLog.e(TAG, "Updating a preset with an incompatible one");
             return;
         }
         for (int i = 0; i < mFilters.size(); i++) {

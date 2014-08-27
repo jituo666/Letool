@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.filtershow;
 
 import android.app.AlertDialog;
@@ -48,7 +47,6 @@ import com.xjt.newpic.filtershow.category.CategoryAdapter;
 import com.xjt.newpic.filtershow.category.CategorySelected;
 import com.xjt.newpic.filtershow.category.CategoryView;
 import com.xjt.newpic.filtershow.category.MainPanel;
-import com.xjt.newpic.filtershow.category.SwipableView;
 import com.xjt.newpic.filtershow.data.UserPresetsManager;
 import com.xjt.newpic.filtershow.editors.BasicEditor;
 import com.xjt.newpic.filtershow.editors.Editor;
@@ -655,12 +653,10 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         if (representation == null) {
             return;
         }
-
         if (representation instanceof FilterRotateRepresentation) {
             FilterRotateRepresentation r = (FilterRotateRepresentation) representation;
             r.rotateCW();
-        }
-        if (representation instanceof FilterMirrorRepresentation) {
+        } else if (representation instanceof FilterMirrorRepresentation) {
             FilterMirrorRepresentation r = (FilterMirrorRepresentation) representation;
             r.cycle();
         }
@@ -677,7 +673,6 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
             }
         }
         useFilterRepresentation(representation);
-
         // show representation
         if (mCurrentEditor != null) {
             mCurrentEditor.detach();
@@ -761,8 +756,8 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         @Override
         protected Boolean doInBackground(Void... params) {
             MasterImage master = MasterImage.getImage();
-            Rect originalBounds = master.getOriginalBounds();
             if (master.supportsHighRes()) {
+                Rect originalBounds = master.getOriginalBounds();
                 int highresPreviewSize = master.getOriginalBitmapLarge().getWidth() * 2;
                 if (highresPreviewSize > originalBounds.width()) {
                     highresPreviewSize = originalBounds.width();
@@ -771,6 +766,8 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
                 Bitmap originalHires = ImageLoader.loadOrientedConstrainedBitmap(master.getUri(),
                         master.getActivity(), highresPreviewSize,
                         master.getOrientation(), bounds);
+                LLog.i(TAG, "--------------------------LoadHighresBitmapTask w:" + originalHires.getWidth() + ":" + " h" + originalHires.getHeight()
+                        + " size:" + originalHires.getWidth() * 4 * originalHires.getHeight());
                 master.setOriginalBounds(bounds);
                 master.setOriginalBitmapHighres(originalHires);
                 mBoundService.setOriginalBitmapHighres(originalHires);
@@ -1037,7 +1034,7 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         mMasterImage.setHistoryManager(historyManager);
         mMasterImage.setActivity(this);
 
-        if (Runtime.getRuntime().maxMemory() >= LIMIT_SUPPORTS_HIGHRES) {
+        if (Runtime.getRuntime().maxMemory() > LIMIT_SUPPORTS_HIGHRES) {
             mMasterImage.setSupportsHighRes(true);
         } else {
             mMasterImage.setSupportsHighRes(false);
@@ -1223,7 +1220,7 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
                     distance = mHandledSwipeView.getWidth();
                 }
                 if (mHandledSwipeViewLastDelta > distance) {
-                    ((SwipableView) mHandledSwipeView).delete();
+                    ((CategoryView) mHandledSwipeView).delete();
                 }
             }
             return true;

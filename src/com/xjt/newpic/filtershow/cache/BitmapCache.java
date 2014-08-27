@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 
+import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.filtershow.pipeline.Buffer;
 import com.xjt.newpic.filtershow.pipeline.CacheProcessing;
 
@@ -12,8 +13,9 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class BitmapCache {
+
     private static final String TAG = BitmapCache.class.getSimpleName();
-    private LongSparseArray< ArrayList<WeakReference<Bitmap>>>mBitmapCache = new LongSparseArray<ArrayList<WeakReference<Bitmap>>>();
+    private LongSparseArray<ArrayList<WeakReference<Bitmap>>> mBitmapCache = new LongSparseArray<ArrayList<WeakReference<Bitmap>>>();
     private final int mMaxItemsPerKey = 4;
 
     private static final boolean DEBUG = false;
@@ -36,6 +38,7 @@ public class BitmapCache {
     private int[] mTracking = new int[TRACKING_COUNT];
 
     class BitmapTracking {
+
         Bitmap bitmap;
         int type;
     }
@@ -53,14 +56,14 @@ public class BitmapCache {
         tracking.bitmap = bitmap;
         tracking.type = type;
         mBitmapTracking.add(tracking);
-        mTracking[tracking.type] ++;
+        mTracking[tracking.type]++;
     }
 
     private void untrack(Bitmap bitmap) {
         for (int i = 0; i < mBitmapTracking.size(); i++) {
             BitmapTracking tracking = mBitmapTracking.get(i);
             if (tracking.bitmap == bitmap) {
-                mTracking[tracking.type] --;
+                mTracking[tracking.type]--;
                 mBitmapTracking.remove(i);
                 return;
             }
@@ -69,19 +72,32 @@ public class BitmapCache {
 
     public String getTrackingName(int i) {
         switch (i) {
-            case PREVIEW_CACHE: return "PREVIEW_CACHE";
-            case PREVIEW_CACHE_NO_FILTERS: return "PREVIEW_CACHE_NO_FILTERS";
-            case PREVIEW_CACHE_NO_ROOT: return "PREVIEW_CACHE_NO_ROOT";
-            case PREVIEW_CACHE_NO_APPLY: return "PREVIEW_CACHE_NO_APPLY";
-            case NEW_LOOK: return "NEW_LOOK";
-            case ICON: return "ICON";
-            case FILTERS: return "FILTERS";
-            case GEOMETRY: return "GEOMETRY";
-            case HIGHRES: return "HIGHRES";
-            case UTIL_GEOMETRY: return "UTIL_GEOMETRY";
-            case RENDERING_REQUEST: return "RENDERING_REQUEST";
-            case REGION: return "REGION";
-            case TINY_PLANET: return "TINY_PLANET";
+            case PREVIEW_CACHE:
+                return "PREVIEW_CACHE";
+            case PREVIEW_CACHE_NO_FILTERS:
+                return "PREVIEW_CACHE_NO_FILTERS";
+            case PREVIEW_CACHE_NO_ROOT:
+                return "PREVIEW_CACHE_NO_ROOT";
+            case PREVIEW_CACHE_NO_APPLY:
+                return "PREVIEW_CACHE_NO_APPLY";
+            case NEW_LOOK:
+                return "NEW_LOOK";
+            case ICON:
+                return "ICON";
+            case FILTERS:
+                return "FILTERS";
+            case GEOMETRY:
+                return "GEOMETRY";
+            case HIGHRES:
+                return "HIGHRES";
+            case UTIL_GEOMETRY:
+                return "UTIL_GEOMETRY";
+            case RENDERING_REQUEST:
+                return "RENDERING_REQUEST";
+            case REGION:
+                return "REGION";
+            case TINY_PLANET:
+                return "TINY_PLANET";
         }
         return "UNKNOWN";
     }
@@ -153,6 +169,7 @@ public class BitmapCache {
             }
             list.add(new WeakReference<Bitmap>(bitmap));
         }
+        computecacedSize();
         return true;
     }
 
@@ -171,7 +188,7 @@ public class BitmapCache {
             bitmap = ref.get();
         }
         if (bitmap == null || bitmap.getWidth() != w || bitmap.getHeight() != h) {
-            bitmap = Bitmap.createBitmap( w, h, Bitmap.Config.ARGB_8888);
+            bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
             showBitmapCounts();
         }
 
@@ -194,4 +211,31 @@ public class BitmapCache {
     private Long calcKey(long w, long h) {
         return (w << 32) | h;
     }
+
+    public void computecacedSize() {
+        long size = 0;
+        for (int i = 0; i < mBitmapCache.size(); i++) {
+            ArrayList<WeakReference<Bitmap>> list = mBitmapCache.get(mBitmapCache.keyAt(i));
+            for (WeakReference<Bitmap> wb : list) {
+                Bitmap b = wb.get();
+                if (b != null && !b.isRecycled()) {
+                    int temp = b.getRowBytes() * b.getHeight();
+                    LLog.i(TAG, "-----===============---computecacedSize:" + b.getRowBytes() * b.getHeight() + ":" + b);
+                    size += temp;
+                }
+            }
+        }
+        LLog.i(TAG, "-----==============---total cached size:" + size);
+    }
+
+    //    public void clear() {
+    //        for (int i = 0; i < mBitmapCache.size(); i++) {
+    //            ArrayList<WeakReference<Bitmap>> list = mBitmapCache.get(mBitmapCache.keyAt(i));
+    //            for (WeakReference<Bitmap> wb : list) {
+    //                if (wb.get() != null) {
+    //                    wb.get().recycle();
+    //                }
+    //            }
+    //        }
+    //    }
 }

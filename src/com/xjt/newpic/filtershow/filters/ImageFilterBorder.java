@@ -1,6 +1,9 @@
 
 package com.xjt.newpic.filtershow.filters;
 
+import com.xjt.newpic.common.LLog;
+
+import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,6 +14,8 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.util.LongSparseArray;
 
 public class ImageFilterBorder extends ImageFilter {
+
+    private static final String TAG = ImageFilterBorder.class.getSimpleName();
 
     private FilterImageBorderRepresentation mParameters = null;
     private Resources mResources = null;
@@ -40,12 +45,13 @@ public class ImageFilterBorder extends ImageFilter {
         Rect bounds = new Rect(0, 0, (int) (w * scale1), (int) (h * scale1));
         Canvas canvas = new Canvas(bitmap);
         canvas.scale(scale2, scale2);
-        Drawable drawable = getDrawable(getParameters().getDrawableResource());
+        Drawable drawable = getDrawable(getParameters().getDrawableResource(), bitmap.getHeight());
         drawable.setBounds(bounds);
         drawable.draw(canvas);
         return bitmap;
     }
 
+    @SuppressLint("NewApi")
     @Override
     public Bitmap apply(Bitmap bitmap, float scaleFactor, int quality) {
         if (getParameters() == null || getParameters().getDrawableResource() == 0) {
@@ -53,6 +59,7 @@ public class ImageFilterBorder extends ImageFilter {
         }
         float scale2 = scaleFactor * 2.0f;
         float scale1 = 1 / scale2;
+        LLog.i(TAG, "___________APPLY______bitmap_____h:" + bitmap.getHeight() + " w:" + bitmap.getWidth());
         return applyHelper(bitmap, scale1, scale2);
     }
 
@@ -63,10 +70,26 @@ public class ImageFilterBorder extends ImageFilter {
         }
     }
 
-    public Drawable getDrawable(int rsc) {
+    @SuppressLint("NewApi")
+    public Drawable getDrawable(int rsc, int maxHeight) {
         Drawable drawable = mDrawables.get(rsc);
         if (drawable == null && mResources != null && rsc != 0) {
-            drawable = new BitmapDrawable(mResources, BitmapFactory.decodeResource(mResources, rsc));
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            int height = BitmapFactory.decodeResource(mResources, rsc).getHeight();
+            int sample = 1;
+            LLog.i(TAG, "___________APPLY____border_______h:" + height + " maxh:" + maxHeight);
+            while (height > maxHeight) {
+                sample = sample * 2;
+                height = height / 2;
+            }
+
+            LLog.i(TAG, "___________APPLY____border_______h:" + height + " simple:" + sample);
+            o = new BitmapFactory.Options();
+            o.inSampleSize = sample;
+            Bitmap b = BitmapFactory.decodeResource(mResources, rsc, o);
+            drawable = new BitmapDrawable(mResources, b);
+            LLog.i(TAG, "___________APPLY____border_______h:" + b.getHeight() + " w:" + b.getWidth());
             mDrawables.put(rsc, drawable);
         }
         return drawable;

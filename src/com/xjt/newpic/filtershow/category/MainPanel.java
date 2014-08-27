@@ -98,6 +98,7 @@ public class MainPanel extends Fragment {
             }
         });
 
+        // 显示初始的category panel
         FilterShowActivity activity = (FilterShowActivity) getActivity();
         showPanel(activity.getCurrentPanel());
         return mMainView;

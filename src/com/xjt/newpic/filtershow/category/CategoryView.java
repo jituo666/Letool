@@ -19,7 +19,7 @@ import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.filtershow.FilterShowActivity;
 import com.xjt.newpic.filtershow.ui.SelectionRenderer;
 
-public class CategoryView extends IconView implements View.OnClickListener, SwipableView {
+public class CategoryView extends IconView implements View.OnClickListener {
 
     private static final String TAG = CategoryView.class.getSimpleName();
 
@@ -187,7 +187,6 @@ public class CategoryView extends IconView implements View.OnClickListener, Swip
         return true;
     }
 
-    @Override
     public void delete() {
         mAdapter.remove(mAction);
     }

@@ -183,9 +183,7 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
                 "LUT3D_XPROCESS"
         };
 
-        FilterFxRepresentation nullFx =
-                new FilterFxRepresentation(context.getString(R.string.none),
-                        0, R.string.none);
+        FilterFxRepresentation nullFx = new FilterFxRepresentation(context.getString(R.string.none), 0, R.string.none);
         mLooks.add(nullFx);
 
         for (int i = 0; i < drawid.length; i++) {
@@ -197,26 +195,6 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
             mLooks.add(rep);
             addRepresentation(fx);
         }
-    }
-
-    public void addEffects() {
-        mEffects.add(getRepresentation(ImageFilterTinyPlanet.class));
-        mEffects.add(getRepresentation(ImageFilterWBalance.class));
-        mEffects.add(getRepresentation(ImageFilterExposure.class));
-        mEffects.add(getRepresentation(ImageFilterVignette.class));
-        mEffects.add(getRepresentation(ImageFilterGrad.class));
-        mEffects.add(getRepresentation(ImageFilterContrast.class));
-        mEffects.add(getRepresentation(ImageFilterShadows.class));
-        mEffects.add(getRepresentation(ImageFilterHighlights.class));
-        mEffects.add(getRepresentation(ImageFilterVibrance.class));
-        mEffects.add(getRepresentation(ImageFilterSharpen.class));
-        mEffects.add(getRepresentation(ImageFilterCurves.class));
-        mEffects.add(getRepresentation(ImageFilterHue.class));
-        mEffects.add(getRepresentation(ImageFilterChanSat.class));
-        mEffects.add(getRepresentation(ImageFilterBwFilter.class));
-        mEffects.add(getRepresentation(ImageFilterNegative.class));
-        mEffects.add(getRepresentation(ImageFilterEdge.class));
-        mEffects.add(getRepresentation(ImageFilterKMeans.class));
     }
 
     public void addBorders(Context context) {
@@ -324,8 +302,27 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
         mTools.add(getRepresentation(ImageFilterDraw.class));
     }
 
-    public void removeRepresentation(ArrayList<FilterRepresentation> list,
-            FilterRepresentation representation) {
+    public void addEffects() {
+        mEffects.add(getRepresentation(ImageFilterTinyPlanet.class));
+        mEffects.add(getRepresentation(ImageFilterWBalance.class));
+        mEffects.add(getRepresentation(ImageFilterExposure.class));
+        mEffects.add(getRepresentation(ImageFilterVignette.class));
+        mEffects.add(getRepresentation(ImageFilterGrad.class));
+        mEffects.add(getRepresentation(ImageFilterContrast.class));
+        mEffects.add(getRepresentation(ImageFilterShadows.class));
+        mEffects.add(getRepresentation(ImageFilterHighlights.class));
+        mEffects.add(getRepresentation(ImageFilterVibrance.class));
+        mEffects.add(getRepresentation(ImageFilterSharpen.class));
+        mEffects.add(getRepresentation(ImageFilterCurves.class));
+        mEffects.add(getRepresentation(ImageFilterHue.class));
+        mEffects.add(getRepresentation(ImageFilterChanSat.class));
+        mEffects.add(getRepresentation(ImageFilterBwFilter.class));
+        mEffects.add(getRepresentation(ImageFilterNegative.class));
+        mEffects.add(getRepresentation(ImageFilterEdge.class));
+        mEffects.add(getRepresentation(ImageFilterKMeans.class));
+    }
+
+    public void removeRepresentation(ArrayList<FilterRepresentation> list, FilterRepresentation representation) {
         for (int i = 0; i < list.size(); i++) {
             FilterRepresentation r = list.get(i);
             if (r.getFilterClass() == representation.getFilterClass()) {

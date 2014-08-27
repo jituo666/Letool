@@ -297,8 +297,7 @@ public final class GeometryMathUtils {
         RectF crop = getTrueCropRect(holder, width, height);
         Rect frame = new Rect();
         crop.roundOut(frame);
-        Matrix m = getCropSelectionToScreenMatrix(null, holder, width, height, frame.width(),
-                frame.height());
+        Matrix m = getCropSelectionToScreenMatrix(null, holder, width, height, frame.width(), frame.height());
         BitmapCache bitmapCache = MasterImage.getImage().getBitmapCache();
         Bitmap temp = bitmapCache.getBitmap(frame.width(), frame.height(), BitmapCache.UTIL_GEOMETRY);
         Canvas canvas = new Canvas(temp);
@@ -351,8 +350,7 @@ public final class GeometryMathUtils {
         return compensation;
     }
 
-    public static Matrix getOriginalToScreen(GeometryHolder holder, boolean rotate,
-            float originalWidth,
+    public static Matrix getOriginalToScreen(GeometryHolder holder, boolean rotate, float originalWidth,
             float originalHeight, float viewWidth, float viewHeight) {
         int orientation = MasterImage.getImage().getZoomOrientation();
         int rotation = getRotationForOrientation(orientation);
@@ -365,8 +363,7 @@ public final class GeometryMathUtils {
         return m;
     }
 
-    public static Bitmap applyGeometryRepresentations(Collection<FilterRepresentation> res,
-            Bitmap image) {
+    public static Bitmap applyGeometryRepresentations(Collection<FilterRepresentation> res,Bitmap image) {
         GeometryHolder holder = unpackGeometry(res);
         Bitmap bmap = image;
         // If there are geometry changes, apply them to the image
@@ -380,14 +377,12 @@ public final class GeometryMathUtils {
         return bmap;
     }
 
-    public static RectF drawTransformedCropped(GeometryHolder holder, Canvas canvas,
-            Bitmap photo, int viewWidth, int viewHeight) {
+    public static RectF drawTransformedCropped(GeometryHolder holder, Canvas canvas, Bitmap photo, int viewWidth, int viewHeight) {
         if (photo == null) {
             return null;
         }
         RectF crop = new RectF();
-        Matrix m = getCropSelectionToScreenMatrix(crop, holder, photo.getWidth(), photo.getHeight(),
-                viewWidth, viewHeight);
+        Matrix m = getCropSelectionToScreenMatrix(crop, holder, photo.getWidth(), photo.getHeight(), viewWidth, viewHeight);
         canvas.save();
         canvas.clipRect(crop);
         Paint p = new Paint();

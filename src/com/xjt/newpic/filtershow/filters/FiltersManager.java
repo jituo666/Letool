@@ -1,9 +1,10 @@
+
 package com.xjt.newpic.filtershow.filters;
 
 import android.content.res.Resources;
 
-
 public class FiltersManager extends BaseFiltersManager {
+
     private static FiltersManager sInstance = null;
     private static FiltersManager sPreviewInstance = null;
     private static FiltersManager sHighresInstance = null;
@@ -12,18 +13,18 @@ public class FiltersManager extends BaseFiltersManager {
         init();
     }
 
-    public static FiltersManager getPreviewManager() {
-        if (sPreviewInstance == null) {
-            sPreviewInstance = new FiltersManager();
-        }
-        return sPreviewInstance;
-    }
-
     public static FiltersManager getManager() {
         if (sInstance == null) {
             sInstance = new FiltersManager();
         }
         return sInstance;
+    }
+
+    public static FiltersManager getPreviewManager() {
+        if (sPreviewInstance == null) {
+            sPreviewInstance = new FiltersManager();
+        }
+        return sPreviewInstance;
     }
 
     public static FiltersManager getHighresManager() {

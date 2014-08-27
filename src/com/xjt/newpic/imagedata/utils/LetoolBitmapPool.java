@@ -45,7 +45,7 @@ public class LetoolBitmapPool {
     private Pool<Node> mSharedNodePool = new SynchronizedPool<Node>(128);
 
     private LetoolBitmapPool() {
-        if (Runtime.getRuntime().maxMemory() > CAPACITY_BYTES_THREHOLD) {
+        if (Runtime.getRuntime().maxMemory() >= CAPACITY_BYTES_THREHOLD) {
             mCapacityBytes = CAPACITY_BYTES_LARGE;
         } else {
             mCapacityBytes = CAPACITY_BYTES_SMALL;

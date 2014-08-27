@@ -49,14 +49,12 @@ public class ImageFilterGrad extends ImageFilterRS {
         }
     }
     @Override
-    protected void createFilter(android.content.res.Resources res, float scaleFactor,
-                                int quality) {
+    protected void createFilter(android.content.res.Resources res, float scaleFactor, int quality) {
         createFilter(res, scaleFactor, quality, getInPixelsAllocation());
     }
 
     @Override
-    protected void createFilter(android.content.res.Resources res, float scaleFactor,
-                                int quality, Allocation in) {
+    protected void createFilter(android.content.res.Resources res, float scaleFactor, int quality, Allocation in) {
         RenderScript rsCtx = getRenderScriptContext();
 
         Type.Builder tb_float = new Type.Builder(rsCtx, Element.F32_4(rsCtx));
@@ -127,8 +125,7 @@ public class ImageFilterGrad extends ImageFilterRS {
         mScript.set_saturation(mParameters.getSaturation());
 
         mScript.invoke_setupGradParams();
-        runSelectiveAdjust(
-                getInPixelsAllocation(), getOutPixelsAllocation());
+        runSelectiveAdjust(getInPixelsAllocation(), getOutPixelsAllocation());
 
     }
 

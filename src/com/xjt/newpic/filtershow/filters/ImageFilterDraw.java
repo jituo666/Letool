@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2012 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.xjt.newpic.filtershow.filters;
 
@@ -37,7 +22,9 @@ import com.xjt.newpic.filtershow.pipeline.FilterEnvironment;
 import java.util.Vector;
 
 public class ImageFilterDraw extends ImageFilter {
-    private static final String LOGTAG = "ImageFilterDraw";
+
+    private static final String TAG = ImageFilterDraw.class.getSimpleName();
+
     public final static byte SIMPLE_STYLE = 0;
     public final static byte BRUSH_STYLE_SPATTER = 1;
     public final static byte BRUSH_STYLE_MARKER = 2;
@@ -86,12 +73,15 @@ public class ImageFilterDraw extends ImageFilter {
     }
 
     public static interface DrawStyle {
+
         public void setType(byte type);
+
         public void paint(FilterDrawRepresentation.StrokeData sd, Canvas canvas, Matrix toScrMatrix,
                 int quality);
     }
 
     class SimpleDraw implements DrawStyle {
+
         byte mType;
         int mMode;
 
@@ -134,6 +124,7 @@ public class ImageFilterDraw extends ImageFilter {
     }
 
     class Brush implements DrawStyle {
+
         int mBrushID;
         Bitmap mBrush;
         byte mType;
@@ -183,6 +174,7 @@ public class ImageFilterDraw extends ImageFilter {
             return result;
 
         }
+
         void draw(Canvas canvas, Paint paint, int color, float size, Path path) {
             PathMeasure mPathMeasure = new PathMeasure();
             float[] mPosition = new float[2];

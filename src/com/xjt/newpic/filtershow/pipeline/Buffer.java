@@ -1,32 +1,15 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.xjt.newpic.filtershow.pipeline;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.support.v8.renderscript.Allocation;
 import android.support.v8.renderscript.RenderScript;
-import android.util.Log;
 
 import com.xjt.newpic.filtershow.cache.BitmapCache;
 import com.xjt.newpic.filtershow.imageshow.MasterImage;
 
 public class Buffer {
-    private static final String LOGTAG = "Buffer";
+    private static final String TAG = Buffer.class.getSimpleName();
     private Bitmap mBitmap;
     private Allocation mAllocation;
     private boolean mUseAllocation = false;
@@ -40,9 +23,7 @@ public class Buffer {
         }
         if (mUseAllocation) {
             // TODO: recreate the allocation when the RS context changes
-            mAllocation = Allocation.createFromBitmap(rs, mBitmap,
-                    Allocation.MipmapControl.MIPMAP_NONE,
-                    Allocation.USAGE_SHARED | Allocation.USAGE_SCRIPT);
+            mAllocation = Allocation.createFromBitmap(rs, mBitmap, Allocation.MipmapControl.MIPMAP_NONE,  Allocation.USAGE_SHARED | Allocation.USAGE_SCRIPT);
         }
     }
 
@@ -50,8 +31,7 @@ public class Buffer {
         if (mBitmap == null || bitmap == null) {
             return false;
         }
-        if (mBitmap.getWidth() == bitmap.getWidth()
-                && mBitmap.getHeight() == bitmap.getHeight()) {
+        if (mBitmap.getWidth() == bitmap.getWidth() && mBitmap.getHeight() == bitmap.getHeight()) {
             return true;
         }
         return false;
