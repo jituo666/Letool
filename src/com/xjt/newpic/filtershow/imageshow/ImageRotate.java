@@ -29,7 +29,7 @@ import com.xjt.newpic.filtershow.imageshow.GeometryMathUtils.GeometryHolder;
 public class ImageRotate extends ImageShow {
     private EditorRotate mEditorRotate;
     private static final String TAG = ImageRotate.class.getSimpleName();
-    private FilterRotateRepresentation mLocalRep = new FilterRotateRepresentation();
+    private FilterRotateRepresentation mLocalRep = new FilterRotateRepresentation(0);
     private GeometryHolder mDrawHolder = new GeometryHolder();
 
     public ImageRotate(Context context, AttributeSet attrs) {
@@ -41,7 +41,7 @@ public class ImageRotate extends ImageShow {
     }
 
     public void setFilterRotateRepresentation(FilterRotateRepresentation rep) {
-        mLocalRep = (rep == null) ? new FilterRotateRepresentation() : rep;
+        mLocalRep = (rep == null) ? new FilterRotateRepresentation(0) : rep;
     }
 
     public void rotate() {

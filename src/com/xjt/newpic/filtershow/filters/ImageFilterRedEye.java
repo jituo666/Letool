@@ -8,7 +8,7 @@ import java.util.Vector;
 
 public class ImageFilterRedEye extends ImageFilter {
     private static final String LOGTAG = "ImageFilterRedEye";
-    FilterRedEyeRepresentation mParameters = new FilterRedEyeRepresentation();
+    FilterRedEyeRepresentation mParameters = new FilterRedEyeRepresentation(0);
 
     public ImageFilterRedEye() {
         mName = "Red Eye";
@@ -16,7 +16,7 @@ public class ImageFilterRedEye extends ImageFilter {
 
     @Override
     public FilterRepresentation getDefaultRepresentation() {
-        return new FilterRedEyeRepresentation();
+        return new FilterRedEyeRepresentation(0);
     }
 
     public boolean isNil() {

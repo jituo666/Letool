@@ -22,8 +22,8 @@ public class FilterGradRepresentation extends FilterRepresentation implements Li
     private static String LINE_NAME = "Point";
     private static final  String SERIALIZATION_NAME = "grad";
 
-    public FilterGradRepresentation() {
-        super("Grad");
+    public FilterGradRepresentation(int sr) {
+        super("Grad", sr);
         setSerializationName(SERIALIZATION_NAME);
         creatExample();
         setOverlayId(R.drawable.filtershow_button_grad);
@@ -121,7 +121,7 @@ public class FilterGradRepresentation extends FilterRepresentation implements Li
 
     @Override
     public FilterRepresentation copy() {
-        FilterGradRepresentation representation = new FilterGradRepresentation();
+        FilterGradRepresentation representation = new FilterGradRepresentation(0);
         copyAllParameters(representation);
         return representation;
     }

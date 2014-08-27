@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package com.xjt.newpic.filtershow.filters;
 
@@ -31,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class FilterMirrorRepresentation extends FilterRepresentation {
+
     public static final String SERIALIZATION_NAME = "MIRROR";
     private static final String SERIALIZATION_MIRROR_VALUE = "value";
     private static final String TAG = FilterMirrorRepresentation.class.getSimpleName();
@@ -39,6 +25,7 @@ public class FilterMirrorRepresentation extends FilterRepresentation {
 
     public enum Mirror {
         NONE('N'), VERTICAL('V'), HORIZONTAL('H'), BOTH('B');
+
         char mValue;
 
         private Mirror(char value) {
@@ -65,8 +52,8 @@ public class FilterMirrorRepresentation extends FilterRepresentation {
         }
     }
 
-    public FilterMirrorRepresentation(Mirror mirror) {
-        super(SERIALIZATION_NAME);
+    public FilterMirrorRepresentation(Mirror mirror, int sr) {
+        super(SERIALIZATION_NAME, 0);
         setSerializationName(SERIALIZATION_NAME);
         setShowParameterValue(false);
         setFilterClass(FilterMirrorRepresentation.class);
@@ -78,12 +65,12 @@ public class FilterMirrorRepresentation extends FilterRepresentation {
     }
 
     public FilterMirrorRepresentation(FilterMirrorRepresentation m) {
-        this(m.getMirror());
+        this(m.getMirror(), m.getSampleResource());
         setName(m.getName());
     }
 
-    public FilterMirrorRepresentation() {
-        this(getNil());
+    public FilterMirrorRepresentation(int sr) {
+        this(getNil(), 0);
     }
 
     @Override

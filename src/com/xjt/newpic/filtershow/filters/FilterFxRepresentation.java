@@ -1,15 +1,17 @@
+
 package com.xjt.newpic.filtershow.filters;
 
 import com.xjt.newpic.filtershow.editors.ImageOnlyEditor;
 
 public class FilterFxRepresentation extends FilterRepresentation {
-   private static final String TAG = FilterFxRepresentation.class.getSimpleName();
+
+    private static final String TAG = FilterFxRepresentation.class.getSimpleName();
     // TODO: When implementing serialization, we should find a unique way of specifying bitmaps / names (the resource IDs being random)
     private int mBitmapResource = 0;
     private int mNameResource = 0;
 
-    public FilterFxRepresentation(String name, int bitmapResource, int nameResource) {
-        super(name);
+    public FilterFxRepresentation(String name, int bitmapResource, int sampleResource, int nameResource) {
+        super(name,bitmapResource);
         setFilterClass(ImageFilterFx.class);
         mBitmapResource = bitmapResource;
         mNameResource = nameResource;
@@ -27,7 +29,7 @@ public class FilterFxRepresentation extends FilterRepresentation {
 
     @Override
     public FilterRepresentation copy() {
-        FilterFxRepresentation representation = new FilterFxRepresentation(getName(),0,0);
+        FilterFxRepresentation representation = new FilterFxRepresentation(getName(), 0, 0, 0);
         copyAllParameters(representation);
         return representation;
     }
@@ -76,19 +78,19 @@ public class FilterFxRepresentation extends FilterRepresentation {
         return true;
     }
 
-    public int getNameResource() {
-        return mNameResource;
-    }
-
-    public void setNameResource(int nameResource) {
-        mNameResource = nameResource;
-    }
-
     public int getBitmapResource() {
         return mBitmapResource;
     }
 
     public void setBitmapResource(int bitmapResource) {
         mBitmapResource = bitmapResource;
+    }
+
+    public int getNameResource() {
+        return mNameResource;
+    }
+
+    public void setNameResource(int nameResource) {
+        mNameResource = nameResource;
     }
 }

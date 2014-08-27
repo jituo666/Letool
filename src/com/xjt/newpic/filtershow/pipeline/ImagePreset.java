@@ -665,13 +665,13 @@ public class ImagePreset {
 
     FilterRepresentation creatFilterFromName(String name) {
         if (FilterRotateRepresentation.SERIALIZATION_NAME.equals(name)) {
-            return new FilterRotateRepresentation();
+            return new FilterRotateRepresentation(0);
         } else if (FilterMirrorRepresentation.SERIALIZATION_NAME.equals(name)) {
-            return new FilterMirrorRepresentation();
+            return new FilterMirrorRepresentation(0);
         } else if (FilterStraightenRepresentation.SERIALIZATION_NAME.equals(name)) {
-            return new FilterStraightenRepresentation();
+            return new FilterStraightenRepresentation(0);
         } else if (FilterCropRepresentation.SERIALIZATION_NAME.equals(name)) {
-            return new FilterCropRepresentation();
+            return new FilterCropRepresentation(0);
         }
         FiltersManager filtersManager = FiltersManager.getManager();
         return filtersManager.createFilterFromName(name);

@@ -158,6 +158,18 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
                 R.drawable.filtershow_fx_0006_x_process
         };
 
+        int[] sampleid = {
+                R.drawable.ic_action_delete,
+                R.drawable.ic_action_delete,
+                R.drawable.ic_action_delete,
+                R.drawable.ic_action_delete,
+                R.drawable.ic_action_delete,
+                R.drawable.ic_action_delete,
+                R.drawable.ic_action_delete,
+                R.drawable.ic_action_delete,
+                R.drawable.ic_action_delete
+        };
+
         int[] fxNameid = {
                 R.string.ffx_punch,
                 R.string.ffx_vintage,
@@ -183,15 +195,15 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
                 "LUT3D_XPROCESS"
         };
 
-        FilterFxRepresentation nullFx = new FilterFxRepresentation(context.getString(R.string.none), 0, R.string.none);
+        FilterFxRepresentation nullFx = new FilterFxRepresentation(context.getString(R.string.none), 0, 0, R.string.none);
         mLooks.add(nullFx);
 
         for (int i = 0; i < drawid.length; i++) {
-            FilterFxRepresentation fx = new FilterFxRepresentation(context.getString(fxNameid[i]), drawid[i], fxNameid[i]);
+            FilterFxRepresentation fx = new FilterFxRepresentation(context.getString(fxNameid[i]), drawid[i], sampleid[i], fxNameid[i]);
             fx.setSerializationName(serializationNames[i]);
             ImagePreset preset = new ImagePreset();
             preset.addFilter(fx);
-            FilterUserPresetRepresentation rep = new FilterUserPresetRepresentation(context.getString(fxNameid[i]), preset, -1);
+            FilterUserPresetRepresentation rep = new FilterUserPresetRepresentation(context.getString(fxNameid[i]), sampleid[i], preset, -1);
             mLooks.add(rep);
             addRepresentation(fx);
         }
@@ -214,46 +226,61 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
                 "FRAME_CREAM_ROUNDED"
         };
 
+        int[] sampleid = {
+                R.drawable.ic_action_picture,
+                R.drawable.ic_action_picture,
+                R.drawable.ic_action_picture,
+                R.drawable.ic_action_picture,
+                R.drawable.ic_action_picture,
+                R.drawable.ic_action_picture,
+                R.drawable.ic_action_picture,
+                R.drawable.ic_action_picture,
+                R.drawable.ic_action_picture,
+                R.drawable.ic_action_picture,
+                R.drawable.ic_action_picture,
+                R.drawable.ic_action_picture
+        };
+
         // The "no border" implementation
         int i = 0;
-        FilterRepresentation rep = new FilterImageBorderRepresentation(0);
+        FilterRepresentation rep = new FilterImageBorderRepresentation(0, sampleid[0]);
         mBorders.add(rep);
 
         // Regular borders
         ArrayList<FilterRepresentation> borderList = new ArrayList<FilterRepresentation>();
 
-        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_4x5);
+        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_4x5, sampleid[1]);
         borderList.add(rep);
 
-        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_brush);
+        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_brush, sampleid[2]);
         borderList.add(rep);
 
-        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_grunge);
+        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_grunge, sampleid[3]);
         borderList.add(rep);
 
-        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_sumi_e);
+        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_sumi_e, sampleid[4]);
         borderList.add(rep);
 
-        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_tape);
+        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_tape, sampleid[5]);
         borderList.add(rep);
 
-        rep = new FilterColorBorderRepresentation(Color.BLACK, mImageBorderSize, 0);
+        rep = new FilterColorBorderRepresentation(Color.BLACK, mImageBorderSize, 0, sampleid[6]);
         borderList.add(rep);
 
-        rep = new FilterColorBorderRepresentation(Color.BLACK, mImageBorderSize, mImageBorderSize);
+        rep = new FilterColorBorderRepresentation(Color.BLACK, mImageBorderSize, mImageBorderSize, sampleid[7]);
         borderList.add(rep);
 
-        rep = new FilterColorBorderRepresentation(Color.WHITE, mImageBorderSize, 0);
+        rep = new FilterColorBorderRepresentation(Color.WHITE, mImageBorderSize, 0, sampleid[8]);
         borderList.add(rep);
 
-        rep = new FilterColorBorderRepresentation(Color.WHITE, mImageBorderSize, mImageBorderSize);
+        rep = new FilterColorBorderRepresentation(Color.WHITE, mImageBorderSize, mImageBorderSize, sampleid[9]);
         borderList.add(rep);
 
         int creamColor = Color.argb(255, 237, 237, 227);
-        rep = new FilterColorBorderRepresentation(creamColor, mImageBorderSize, 0);
+        rep = new FilterColorBorderRepresentation(creamColor, mImageBorderSize, 0, sampleid[10]);
         borderList.add(rep);
 
-        rep = new FilterColorBorderRepresentation(creamColor, mImageBorderSize, mImageBorderSize);
+        rep = new FilterColorBorderRepresentation(creamColor, mImageBorderSize, mImageBorderSize, sampleid[11]);
         borderList.add(rep);
 
         for (FilterRepresentation filter : borderList) {
@@ -281,10 +308,10 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
         };
 
         FilterRepresentation[] geometryFilters = {
-                new FilterCropRepresentation(),
-                new FilterStraightenRepresentation(),
-                new FilterRotateRepresentation(),
-                new FilterMirrorRepresentation()
+                new FilterCropRepresentation(0),
+                new FilterStraightenRepresentation(0),
+                new FilterRotateRepresentation(0),
+                new FilterMirrorRepresentation(0)
         };
 
         for (int i = 0; i < textId.length; i++) {

@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.filtershow.filters;
 
 import android.util.Log;
@@ -10,6 +11,7 @@ import com.xjt.newpic.surpport.JsonWriter;
 import java.io.IOException;
 
 public class FilterRotateRepresentation extends FilterRepresentation {
+
     public static final String SERIALIZATION_NAME = "ROTATION";
     public static final String SERIALIZATION_ROTATE_VALUE = "value";
     private static final String TAG = FilterRotateRepresentation.class.getSimpleName();
@@ -18,6 +20,7 @@ public class FilterRotateRepresentation extends FilterRepresentation {
 
     public enum Rotation {
         ZERO(0), NINETY(90), ONE_EIGHTY(180), TWO_SEVENTY(270);
+
         private final int mValue;
 
         private Rotation(int value) {
@@ -44,8 +47,8 @@ public class FilterRotateRepresentation extends FilterRepresentation {
         }
     }
 
-    public FilterRotateRepresentation(Rotation rotation) {
-        super(SERIALIZATION_NAME);
+    public FilterRotateRepresentation(Rotation rotation, int sr) {
+        super(SERIALIZATION_NAME, sr);
         setSerializationName(SERIALIZATION_NAME);
         setShowParameterValue(false);
         setFilterClass(FilterRotateRepresentation.class);
@@ -57,12 +60,12 @@ public class FilterRotateRepresentation extends FilterRepresentation {
     }
 
     public FilterRotateRepresentation(FilterRotateRepresentation r) {
-        this(r.getRotation());
+        this(r.getRotation(), r.getSampleResource());
         setName(r.getName());
     }
 
-    public FilterRotateRepresentation() {
-        this(getNil());
+    public FilterRotateRepresentation(int sr) {
+        this(getNil(), sr);
     }
 
     public Rotation getRotation() {
@@ -70,7 +73,7 @@ public class FilterRotateRepresentation extends FilterRepresentation {
     }
 
     public void rotateCW() {
-        switch(mRotation) {
+        switch (mRotation) {
             case ZERO:
                 mRotation = Rotation.NINETY;
                 break;

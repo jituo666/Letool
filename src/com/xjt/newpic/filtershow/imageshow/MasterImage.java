@@ -63,7 +63,6 @@ public class MasterImage implements RenderingRequestCaller {
     private Bitmap mOriginalBitmapSmall = null;
     private Bitmap mOriginalBitmapLarge = null;
     private Bitmap mOriginalBitmapHighres = null;
-    private Bitmap mTemporaryThumbnail = null;
 
     private Uri mUri = null;
     private int mOrientation;
@@ -738,20 +737,6 @@ public class MasterImage implements RenderingRequestCaller {
         }
         mScaleFactor = scaleFactor;
         invalidatePartialPreview();
-    }
-
-    public Bitmap getTemporaryThumbnailBitmap() {
-        if (mTemporaryThumbnail == null && getOriginalBitmapSmall() != null) {
-            mTemporaryThumbnail = getOriginalBitmapSmall().copy(Bitmap.Config.ARGB_8888, true);
-            Canvas canvas = new Canvas(mTemporaryThumbnail);
-            canvas.drawARGB(200, 80, 80, 80);
-            LLog.i(TAG,
-                    "+++++ccbitmap+++++loading mTemporaryThumbnail:" + mTemporaryThumbnail.getRowBytes()
-                            * mTemporaryThumbnail.getHeight()
-                            + " size:" + mTemporaryThumbnail.getWidth() * 4 * mTemporaryThumbnail.getHeight()
-                            + "::::::" + mTemporaryThumbnail);
-        }
-        return mTemporaryThumbnail;
     }
 
     public Bitmap getThumbnailBitmap() {

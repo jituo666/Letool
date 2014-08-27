@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.filtershow.filters;
 
 import android.graphics.RectF;
@@ -10,6 +11,7 @@ import com.xjt.newpic.surpport.JsonWriter;
 import java.io.IOException;
 
 public class FilterCropRepresentation extends FilterRepresentation {
+
     public static final String SERIALIZATION_NAME = "CROP";
     public static final String[] BOUNDS = {
             "C0", "C1", "C2", "C3"
@@ -18,8 +20,8 @@ public class FilterCropRepresentation extends FilterRepresentation {
 
     RectF mCrop = getNil();
 
-    public FilterCropRepresentation(RectF crop) {
-        super(SERIALIZATION_NAME);
+    public FilterCropRepresentation(RectF crop, int sr) {
+        super(SERIALIZATION_NAME, sr);
         setSerializationName(SERIALIZATION_NAME);
         setShowParameterValue(true);
         setFilterClass(FilterCropRepresentation.class);
@@ -30,13 +32,13 @@ public class FilterCropRepresentation extends FilterRepresentation {
         setCrop(crop);
     }
 
-    public FilterCropRepresentation(FilterCropRepresentation m) {
-        this(m.mCrop);
+    public FilterCropRepresentation(FilterCropRepresentation m, int sr) {
+        this(m.mCrop, sr);
         setName(m.getName());
     }
 
-    public FilterCropRepresentation() {
-        this(sNilRect);
+    public FilterCropRepresentation(int sr) {
+        this(sNilRect, sr);
     }
 
     public void set(FilterCropRepresentation r) {
@@ -50,9 +52,9 @@ public class FilterCropRepresentation extends FilterRepresentation {
         }
         FilterCropRepresentation crop = (FilterCropRepresentation) rep;
         if (mCrop.bottom != crop.mCrop.bottom
-            || mCrop.left != crop.mCrop.left
-            || mCrop.right != crop.mCrop.right
-            || mCrop.top != crop.mCrop.top) {
+                || mCrop.left != crop.mCrop.left
+                || mCrop.right != crop.mCrop.right
+                || mCrop.top != crop.mCrop.top) {
             return false;
         }
         return true;
@@ -102,7 +104,7 @@ public class FilterCropRepresentation extends FilterRepresentation {
 
     @Override
     public FilterRepresentation copy() {
-        return new FilterCropRepresentation(this);
+        return new FilterCropRepresentation(this, 0);
     }
 
     @Override

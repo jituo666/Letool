@@ -33,7 +33,7 @@ public class ImageFilterDraw extends ImageFilter {
     int mCachedStrokes = -1;
     int mCurrentStyle = 0;
 
-    FilterDrawRepresentation mParameters = new FilterDrawRepresentation();
+    FilterDrawRepresentation mParameters = new FilterDrawRepresentation(0);
 
     public ImageFilterDraw() {
         mName = "Image Draw";
@@ -55,7 +55,7 @@ public class ImageFilterDraw extends ImageFilter {
 
     @Override
     public FilterRepresentation getDefaultRepresentation() {
-        return new FilterDrawRepresentation();
+        return new FilterDrawRepresentation(0);
     }
 
     @Override

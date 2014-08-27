@@ -12,18 +12,14 @@ import android.widget.LinearLayout;
 import com.xjt.newpic.R;
 import com.xjt.newpic.filtershow.FilterShowActivity;
 
-/**
- * @author jetoo
- *
- */
 public class CategoryPanel extends Fragment implements View.OnClickListener {
 
     public static final String FRAGMENT_TAG = "CategoryPanel";
     private static final String PARAMETER_TAG = "currentPanel";
 
-    private int mCurrentAdapter = MainPanel.LOOKS;
+    private int mCurrentAdapter = CategoryMainPanel.LOOKS;
     private CategoryAdapter mAdapter;
-    private IconView mAddButton;
+    private CategoryBaseView mAddButton;
 
     public void setAdapter(int value) {
         mCurrentAdapter = value;
@@ -38,40 +34,40 @@ public class CategoryPanel extends Fragment implements View.OnClickListener {
     private void loadAdapter(int adapter) {
         FilterShowActivity activity = (FilterShowActivity) getActivity();
         switch (adapter) {
-            case MainPanel.LOOKS: {
+            case CategoryMainPanel.LOOKS: {
                 mAdapter = activity.getCategoryLooksAdapter();
                 if (mAdapter != null) {
-                    mAdapter.initializeSelection(MainPanel.LOOKS);
+                    mAdapter.initializeSelection(CategoryMainPanel.LOOKS);
                 }
                 activity.updateCategories();
                 break;
             }
-            case MainPanel.BORDERS: {
+            case CategoryMainPanel.BORDERS: {
                 mAdapter = activity.getCategoryBordersAdapter();
                 if (mAdapter != null) {
-                    mAdapter.initializeSelection(MainPanel.BORDERS);
+                    mAdapter.initializeSelection(CategoryMainPanel.BORDERS);
                 }
                 activity.updateCategories();
                 break;
             }
-            case MainPanel.GEOMETRY: {
+            case CategoryMainPanel.GEOMETRY: {
                 mAdapter = activity.getCategoryGeometryAdapter();
                 if (mAdapter != null) {
-                    mAdapter.initializeSelection(MainPanel.GEOMETRY);
+                    mAdapter.initializeSelection(CategoryMainPanel.GEOMETRY);
                 }
                 break;
             }
-            case MainPanel.FILTERS: {
+            case CategoryMainPanel.FILTERS: {
                 mAdapter = activity.getCategoryFiltersAdapter();
                 if (mAdapter != null) {
-                    mAdapter.initializeSelection(MainPanel.FILTERS);
+                    mAdapter.initializeSelection(CategoryMainPanel.FILTERS);
                 }
                 break;
             }
-            case MainPanel.VERSIONS: {
+            case CategoryMainPanel.VERSIONS: {
                 mAdapter = activity.getCategoryVersionsAdapter();
                 if (mAdapter != null) {
-                    mAdapter.initializeSelection(MainPanel.VERSIONS);
+                    mAdapter.initializeSelection(CategoryMainPanel.VERSIONS);
                 }
                 break;
             }
@@ -93,13 +89,13 @@ public class CategoryPanel extends Fragment implements View.OnClickListener {
             int selectedPanel = savedInstanceState.getInt(PARAMETER_TAG);
             loadAdapter(selectedPanel);
         }
-        CategoryTrack panel = (CategoryTrack) main.findViewById(R.id.listItems);
+        CategoryListView panel = (CategoryListView) main.findViewById(R.id.listItems);
         if (mAdapter != null) {
             mAdapter.setOrientation(CategoryView.HORIZONTAL);
             panel.setAdapter(mAdapter);
             mAdapter.setContainer(panel);
         }
-        mAddButton = (IconView) main.findViewById(R.id.addButton);
+        mAddButton = (CategoryBaseView) main.findViewById(R.id.addButton);
         if (mAddButton != null) {
             mAddButton.setOnClickListener(this);
             updateAddButtonVisibility();
@@ -111,8 +107,6 @@ public class CategoryPanel extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.addButton:
-                FilterShowActivity activity = (FilterShowActivity) getActivity();
-                activity.addCurrentVersion();
                 break;
         }
     }

@@ -20,8 +20,8 @@ public class FilterCurvesRepresentation extends FilterRepresentation {
 
     private Spline[] mSplines = new Spline[MAX_SPLINE_NUMBER];
 
-    public FilterCurvesRepresentation() {
-        super("Curves");
+    public FilterCurvesRepresentation(int sr) {
+        super("Curves", sr);
         setSerializationName("CURVES");
         setFilterClass(ImageFilterCurves.class);
         setTextId(R.string.curvesRGB);
@@ -34,7 +34,7 @@ public class FilterCurvesRepresentation extends FilterRepresentation {
 
     @Override
     public FilterRepresentation copy() {
-        FilterCurvesRepresentation representation = new FilterCurvesRepresentation();
+        FilterCurvesRepresentation representation = new FilterCurvesRepresentation(0);
         copyAllParameters(representation);
         return representation;
     }

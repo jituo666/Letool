@@ -12,7 +12,7 @@ public class ImageFilterNegative extends ImageFilter {
     }
 
     public FilterRepresentation getDefaultRepresentation() {
-        FilterRepresentation representation = new FilterDirectRepresentation("Negative");
+        FilterRepresentation representation = new FilterDirectRepresentation("Negative",0);
         representation.setSerializationName(SERIALIZATION_NAME);
         representation.setFilterClass(ImageFilterNegative.class);
         representation.setTextId(R.string.negative);

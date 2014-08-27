@@ -4,10 +4,11 @@ import com.xjt.newpic.R;
 import com.xjt.newpic.filtershow.editors.ImageOnlyEditor;
 
 public class FilterImageBorderRepresentation extends FilterRepresentation {
+
     private int mDrawableResource = 0;
 
-    public FilterImageBorderRepresentation(int drawableResource) {
-        super("ImageBorder");
+    public FilterImageBorderRepresentation(int drawableResource, int sr) {
+        super("ImageBorder", sr);
         setFilterClass(ImageFilterBorder.class);
         mDrawableResource = drawableResource;
         setFilterType(FilterRepresentation.TYPE_BORDER);
@@ -22,8 +23,7 @@ public class FilterImageBorderRepresentation extends FilterRepresentation {
 
     @Override
     public FilterRepresentation copy() {
-        FilterImageBorderRepresentation representation =
-                new FilterImageBorderRepresentation(mDrawableResource);
+        FilterImageBorderRepresentation representation = new FilterImageBorderRepresentation(mDrawableResource, 0);
         copyAllParameters(representation);
         return representation;
     }

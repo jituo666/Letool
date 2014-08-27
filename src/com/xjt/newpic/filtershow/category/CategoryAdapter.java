@@ -4,31 +4,33 @@ package com.xjt.newpic.filtershow.category;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.xjt.newpic.R;
+import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.filtershow.FilterShowActivity;
 import com.xjt.newpic.filtershow.filters.FilterRepresentation;
 import com.xjt.newpic.filtershow.filters.FilterTinyPlanetRepresentation;
 import com.xjt.newpic.filtershow.pipeline.ImagePreset;
 
-public class CategoryAdapter extends ArrayAdapter<Action> {
+public class CategoryAdapter extends ArrayAdapter<CategoryAction> {
 
     private static final String TAG = CategoryAdapter.class.getSimpleName();
 
     private View mContainer;
-    private int mItemHeight;
-    private int mItemWidth = ListView.LayoutParams.MATCH_PARENT;
     private int mSelectedPosition;
     private int mCategory;
     private int mOrientation;
     private boolean mShowAddButton = false;
     private String mAddButtonText;
+    private int mItemHeight =0;
+    private int mItemWidth =0;
 
     public CategoryAdapter(Context context, int textViewResourceId) {
         super(context, textViewResourceId);
-        mItemHeight = (int) (context.getResources().getDisplayMetrics().density * 100);
+        mItemHeight = context.getResources().getDimensionPixelSize(R.dimen.category_panel_height);
+        mItemWidth = context.getResources().getDimensionPixelSize(R.dimen.category_panel_icon_size);
     }
 
     public CategoryAdapter(Context context) {
@@ -38,22 +40,14 @@ public class CategoryAdapter extends ArrayAdapter<Action> {
     @Override
     public void clear() {
         for (int i = 0; i < getCount(); i++) {
-            Action action = getItem(i);
+            CategoryAction action = getItem(i);
             action.clearBitmap();
         }
         super.clear();
     }
 
-    public void setItemHeight(int height) {
-        mItemHeight = height;
-    }
-
-    public void setItemWidth(int width) {
-        mItemWidth = width;
-    }
-
     @Override
-    public void add(Action action) {
+    public void add(CategoryAction action) {
         super.add(action);
         action.setAdapter(this);
     }
@@ -61,15 +55,12 @@ public class CategoryAdapter extends ArrayAdapter<Action> {
     public void initializeSelection(int category) {
         mCategory = category;
         mSelectedPosition = -1;
-        if (category == MainPanel.LOOKS) {
+        if (category == CategoryMainPanel.LOOKS) {
             mSelectedPosition = 0;
             mAddButtonText = getContext().getString(R.string.filtershow_add_button_looks);
         }
-        if (category == MainPanel.BORDERS) {
+        if (category == CategoryMainPanel.BORDERS) {
             mSelectedPosition = 0;
-        }
-        if (category == MainPanel.VERSIONS) {
-            mAddButtonText = getContext().getString(R.string.filtershow_add_button_versions);
         }
     }
 
@@ -80,22 +71,9 @@ public class CategoryAdapter extends ArrayAdapter<Action> {
         }
         CategoryView view = (CategoryView) convertView;
         view.setOrientation(mOrientation);
-        Action action = getItem(position);
+        CategoryAction action = getItem(position);
         view.setAction(action, this);
-        int width = mItemWidth;
-        int height = mItemHeight;
-        if (action.getType() == Action.SPACER) {
-            if (mOrientation == CategoryView.HORIZONTAL) {
-                width = width / 2;
-            } else {
-                height = height / 2;
-            }
-        }
-        if (action.getType() == Action.ADD_ACTION && mOrientation == CategoryView.VERTICAL) {
-            height = height / 2;
-        }
-
-        view.setLayoutParams(new ListView.LayoutParams(width, height));
+        view.setLayoutParams(new LayoutParams(mItemWidth, mItemHeight));
         view.setTag(position);
         view.invalidate();
         return view;
@@ -115,7 +93,7 @@ public class CategoryAdapter extends ArrayAdapter<Action> {
     }
 
     private void invalidateView(int position) {
-        CategoryTrack ct = (CategoryTrack) mContainer;
+        CategoryListView ct = (CategoryListView) mContainer;
         View child = ct.getChildAt(position);
         if (child != null) {
             child.invalidate();
@@ -132,7 +110,7 @@ public class CategoryAdapter extends ArrayAdapter<Action> {
 
     public FilterRepresentation getTinyPlanet() {
         for (int i = 0; i < getCount(); i++) {
-            Action action = getItem(i);
+            CategoryAction action = getItem(i);
             if (action.getRepresentation() != null && action.getRepresentation() instanceof FilterTinyPlanetRepresentation) {
                 return action.getRepresentation();
             }
@@ -142,7 +120,7 @@ public class CategoryAdapter extends ArrayAdapter<Action> {
 
     public void removeTinyPlanet() {
         for (int i = 0; i < getCount(); i++) {
-            Action action = getItem(i);
+            CategoryAction action = getItem(i);
             if (action.getRepresentation() != null && action.getRepresentation()
                     instanceof FilterTinyPlanetRepresentation) {
                 super.remove(action);
@@ -152,16 +130,14 @@ public class CategoryAdapter extends ArrayAdapter<Action> {
     }
 
     @Override
-    public void remove(Action action) {
-        if (!(mCategory == MainPanel.VERSIONS || mCategory == MainPanel.LOOKS)) {
+    public void remove(CategoryAction action) {
+        if (!(mCategory == CategoryMainPanel.VERSIONS || mCategory == CategoryMainPanel.LOOKS)) {
             return;
         }
         super.remove(action);
         FilterShowActivity activity = (FilterShowActivity) getContext();
-        if (mCategory == MainPanel.LOOKS) {
+        if (mCategory == CategoryMainPanel.LOOKS) {
             activity.removeLook(action);
-        } else if (mCategory == MainPanel.VERSIONS) {
-            activity.removeVersion(action);
         }
     }
 
@@ -175,12 +151,12 @@ public class CategoryAdapter extends ArrayAdapter<Action> {
         }
         int selected = 0; // if nothing found, select "none" (first element)
         FilterRepresentation rep = null;
-        if (mCategory == MainPanel.LOOKS) {
+        if (mCategory == CategoryMainPanel.LOOKS) {
             int pos = preset.getPositionForType(FilterRepresentation.TYPE_FX);
             if (pos != -1) {
                 rep = preset.getFilterRepresentation(pos);
             }
-        } else if (mCategory == MainPanel.BORDERS) {
+        } else if (mCategory == CategoryMainPanel.BORDERS) {
             int pos = preset.getPositionForType(FilterRepresentation.TYPE_BORDER);
             if (pos != -1) {
                 rep = preset.getFilterRepresentation(pos);

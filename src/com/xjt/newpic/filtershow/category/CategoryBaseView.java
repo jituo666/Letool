@@ -19,9 +19,9 @@ import android.view.View;
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.LLog;
 
-public class IconView extends View {
+public class CategoryBaseView extends View {
 
-    private static final String TAG = IconView.class.getSimpleName();
+    private static final String TAG = CategoryBaseView.class.getSimpleName();
 
     public static final int VERTICAL = 0;
     public static final int HORIZONTAL = 1;
@@ -38,12 +38,12 @@ public class IconView extends View {
     private String mText;
     private boolean mUseOnlyDrawable = false;
 
-    public IconView(Context context) {
+    public CategoryBaseView(Context context) {
         super(context);
         setup(context);
     }
 
-    public IconView(Context context, AttributeSet attrs) {
+    public CategoryBaseView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setup(context);
         int bitmapRsc = attrs.getAttributeResourceValue("http://schemas.android.com/apk/res/android", "src", 0);
@@ -218,6 +218,7 @@ public class IconView extends View {
             canvas.drawRect(new RectF(startGradient, start, getWidth(), end), mPaint);
             mPaint.setShader(null);
         }
+        // 绘制文字
         drawOutlinedText(canvas, getText());
     }
 }

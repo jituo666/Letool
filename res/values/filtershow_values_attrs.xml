@@ -26,7 +26,7 @@
         <attr name="elemSize" format="dimension" />
         <attr name="elemEndSize" format="dimension" />
     </declare-styleable>
-    <declare-styleable name="CategoryTrack">
+    <declare-styleable name="CategoryListView">
         <attr name="iconSize" format="dimension" />
     </declare-styleable>
 </resources>

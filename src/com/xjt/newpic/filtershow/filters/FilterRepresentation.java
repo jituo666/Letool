@@ -34,13 +34,15 @@ public class FilterRepresentation {
     private boolean mShowParameterValue = true;
     private boolean mIsBooleanFilter = false;
     private String mSerializationName;
+    private int mSampleResource = 0;
 
-    public FilterRepresentation(String name) {
+    public FilterRepresentation(String name, int sampleResource) {
         mName = name;
+        mSampleResource = sampleResource;
     }
 
     public FilterRepresentation copy() {
-        FilterRepresentation representation = new FilterRepresentation(mName);
+        FilterRepresentation representation = new FilterRepresentation(mName, 0);
         representation.useParametersFrom(this);
         return representation;
     }
@@ -74,7 +76,8 @@ public class FilterRepresentation {
                 && representation.mOverlayId == mOverlayId
                 && representation.mOverlayOnly == mOverlayOnly
                 && representation.mShowParameterValue == mShowParameterValue
-                && representation.mIsBooleanFilter == mIsBooleanFilter) {
+                && representation.mIsBooleanFilter == mIsBooleanFilter
+                && representation.mSampleResource == mSampleResource) {
             return true;
         }
         return false;
@@ -107,6 +110,14 @@ public class FilterRepresentation {
 
     public String getSerializationName() {
         return mSerializationName;
+    }
+
+    public int getSampleResource() {
+        return mSampleResource;
+    }
+
+    public void setSampleResource(int sampleResource) {
+        mSampleResource = sampleResource;
     }
 
     public void setFilterType(int priority) {

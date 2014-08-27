@@ -14,9 +14,9 @@ import com.xjt.newpic.R;
 import com.xjt.newpic.filtershow.FilterShowActivity;
 import com.xjt.newpic.filtershow.imageshow.MasterImage;
 
-public class MainPanel extends Fragment {
+public class CategoryMainPanel extends Fragment {
 
-    private static final String TAG = MainPanel.class.getSimpleName();
+    private static final String TAG = CategoryMainPanel.class.getSimpleName();
 
     private LinearLayout mMainView;
     private ImageButton looksButton;
@@ -177,21 +177,6 @@ public class MainPanel extends Fragment {
         selection(mCurrentSelected, true);
     }
 
-    public void loadCategoryVersionsPanel() {
-        if (mCurrentSelected == VERSIONS) {
-            return;
-        }
-        FilterShowActivity activity = (FilterShowActivity) getActivity();
-        activity.updateVersions();
-        boolean fromRight = isRightAnimation(VERSIONS);
-        selection(mCurrentSelected, false);
-        CategoryPanel categoryPanel = new CategoryPanel();
-        categoryPanel.setAdapter(VERSIONS);
-        setCategoryFragment(categoryPanel, fromRight);
-        mCurrentSelected = VERSIONS;
-        selection(mCurrentSelected, true);
-    }
-
     public void showPanel(int currentPanel) {
         switch (currentPanel) {
             case LOOKS: {
@@ -208,10 +193,6 @@ public class MainPanel extends Fragment {
             }
             case FILTERS: {
                 loadCategoryFiltersPanel();
-                break;
-            }
-            case VERSIONS: {
-                loadCategoryVersionsPanel();
                 break;
             }
         }

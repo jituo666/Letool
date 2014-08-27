@@ -22,7 +22,7 @@ public class ImageFilterColorBorder extends ImageFilter {
     }
 
     public FilterRepresentation getDefaultRepresentation() {
-        return new FilterColorBorderRepresentation(Color.WHITE, 3, 2);
+        return new FilterColorBorderRepresentation(0, Color.WHITE, 3, 2);
     }
 
     public void useRepresentation(FilterRepresentation representation) {

@@ -20,7 +20,7 @@ public class ImageFilterTinyPlanet extends SimpleImageFilter {
 
     private static final String LOGTAG = ImageFilterTinyPlanet.class.getSimpleName();
     public static final String GOOGLE_PANO_NAMESPACE = "http://ns.google.com/photos/1.0/panorama/";
-    FilterTinyPlanetRepresentation mParameters = new FilterTinyPlanetRepresentation();
+    FilterTinyPlanetRepresentation mParameters = new FilterTinyPlanetRepresentation(0);
 
     public static final String CROPPED_AREA_IMAGE_WIDTH_PIXELS =
             "CroppedAreaImageWidthPixels";
@@ -47,7 +47,7 @@ public class ImageFilterTinyPlanet extends SimpleImageFilter {
 
     @Override
     public FilterRepresentation getDefaultRepresentation() {
-        return new FilterTinyPlanetRepresentation();
+        return new FilterTinyPlanetRepresentation(0);
     }
 
 

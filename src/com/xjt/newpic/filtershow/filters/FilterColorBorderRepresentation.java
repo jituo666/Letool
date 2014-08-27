@@ -37,8 +37,8 @@ public class FilterColorBorderRepresentation extends FilterRepresentation {
     };
     private int mPramMode;
 
-    public FilterColorBorderRepresentation(int color, int size, int radius) {
-        super("ColorBorder");
+    public FilterColorBorderRepresentation(int sr, int color, int size, int radius) {
+        super("ColorBorder", sr);
         setSerializationName(SERIALIZATION_NAME);
         setFilterType(FilterRepresentation.TYPE_BORDER);
         setTextId(R.string.borders);
@@ -64,7 +64,7 @@ public class FilterColorBorderRepresentation extends FilterRepresentation {
     @Override
     public FilterRepresentation copy() {
         FilterColorBorderRepresentation representation =
-                new FilterColorBorderRepresentation(0, 0, 0);
+                new FilterColorBorderRepresentation(0, 0, 0, 0);
         copyAllParameters(representation);
         return representation;
     }

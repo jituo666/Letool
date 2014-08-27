@@ -7,11 +7,11 @@ import com.xjt.newpic.filtershow.imageshow.Spline;
 public class ImageFilterCurves extends ImageFilter {
 
     private static final String LOGTAG = "ImageFilterCurves";
-    FilterCurvesRepresentation mParameters = new FilterCurvesRepresentation();
+    FilterCurvesRepresentation mParameters = new FilterCurvesRepresentation(0);
 
     @Override
     public FilterRepresentation getDefaultRepresentation() {
-        return new FilterCurvesRepresentation();
+        return new FilterCurvesRepresentation(0);
     }
 
     @Override

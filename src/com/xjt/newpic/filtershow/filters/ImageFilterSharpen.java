@@ -15,7 +15,7 @@ public class ImageFilterSharpen extends ImageFilterRS {
     }
 
     public FilterRepresentation getDefaultRepresentation() {
-        FilterRepresentation representation = new FilterBasicRepresentation("Sharpen", 0, 0, 100);
+        FilterRepresentation representation = new FilterBasicRepresentation("Sharpen",0, 0, 0, 100);
         representation.setSerializationName(SERIALIZATION_NAME);
         representation.setShowParameterValue(true);
         representation.setFilterClass(ImageFilterSharpen.class);

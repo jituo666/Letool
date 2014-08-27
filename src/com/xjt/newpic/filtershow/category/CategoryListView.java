@@ -1,18 +1,20 @@
+
 package com.xjt.newpic.filtershow.category;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.database.DataSetObserver;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
-import com.xjt.newpic.R;
+import com.xjt.newpic.common.LLog;
 
-public class CategoryTrack extends LinearLayout {
+public class CategoryListView extends LinearLayout {
+
+    private static final String TAG = CategoryListView.class.getSimpleName();
 
     private CategoryAdapter mAdapter;
-    private int mElemSize;
     private DataSetObserver mDataSetObserver = new DataSetObserver() {
+
         @Override
         public void onChanged() {
             super.onChanged();
@@ -22,6 +24,7 @@ public class CategoryTrack extends LinearLayout {
                 invalidate();
             }
         }
+
         @Override
         public void onInvalidated() {
             super.onInvalidated();
@@ -29,11 +32,8 @@ public class CategoryTrack extends LinearLayout {
         }
     };
 
-    public CategoryTrack(Context context, AttributeSet attrs) {
+    public CategoryListView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CategoryTrack);
-        mElemSize = a.getDimensionPixelSize(R.styleable.CategoryTrack_iconSize, 0);
-        a.recycle();
     }
 
     public void setAdapter(CategoryAdapter adapter) {
@@ -44,8 +44,6 @@ public class CategoryTrack extends LinearLayout {
 
     public void fillContent() {
         removeAllViews();
-        mAdapter.setItemWidth(mElemSize);
-        mAdapter.setItemHeight(LayoutParams.MATCH_PARENT);
         int n = mAdapter.getCount();
         for (int i = 0; i < n; i++) {
             View view = mAdapter.getView(i, null, this);

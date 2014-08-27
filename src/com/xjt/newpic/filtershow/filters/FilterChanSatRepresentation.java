@@ -50,8 +50,8 @@ public class FilterChanSatRepresentation extends FilterRepresentation implements
             mParamBlue,
             mParamMagenta};
 
-    public FilterChanSatRepresentation() {
-        super("ChannelSaturation");
+    public FilterChanSatRepresentation(int sr) {
+        super("ChannelSaturation", sr);
         setTextId(R.string.saturation);
         setFilterType(FilterRepresentation.TYPE_NORMAL);
         setSerializationName(SERIALIZATION_NAME);
@@ -67,7 +67,7 @@ public class FilterChanSatRepresentation extends FilterRepresentation implements
 
     @Override
     public FilterRepresentation copy() {
-        FilterChanSatRepresentation representation = new FilterChanSatRepresentation();
+        FilterChanSatRepresentation representation = new FilterChanSatRepresentation(0);
         copyAllParameters(representation);
         return representation;
     }

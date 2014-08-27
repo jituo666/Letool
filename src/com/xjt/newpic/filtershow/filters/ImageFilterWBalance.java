@@ -14,7 +14,7 @@ public class ImageFilterWBalance extends ImageFilter {
     }
 
     public FilterRepresentation getDefaultRepresentation() {
-        FilterRepresentation representation = new FilterDirectRepresentation("WBalance");
+        FilterRepresentation representation = new FilterDirectRepresentation("WBalance",0);
         representation.setSerializationName(SERIALIZATION_NAME);
         representation.setFilterClass(ImageFilterWBalance.class);
         representation.setFilterType(FilterRepresentation.TYPE_WBALANCE);

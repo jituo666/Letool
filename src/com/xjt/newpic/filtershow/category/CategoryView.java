@@ -16,17 +16,18 @@ import android.view.View;
 import com.nineoldandroids.view.ViewHelper;
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.ApiHelper;
+import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.filtershow.FilterShowActivity;
 import com.xjt.newpic.filtershow.ui.SelectionRenderer;
 
-public class CategoryView extends IconView implements View.OnClickListener {
+public class CategoryView extends CategoryBaseView implements View.OnClickListener {
 
     private static final String TAG = CategoryView.class.getSimpleName();
 
     public static final int VERTICAL = 0;
     public static final int HORIZONTAL = 1;
     private Paint mPaint = new Paint();
-    private Action mAction;
+    private CategoryAction mAction;
     private Paint mSelectPaint;
     private CategoryAdapter mAdapter;
     private int mSelectionStroke;
@@ -62,10 +63,10 @@ public class CategoryView extends IconView implements View.OnClickListener {
         if (mAction == null) {
             return false;
         }
-        if (mAction.getType() == Action.CROP_VIEW) {
+        if (mAction.getType() == CategoryAction.CROP_VIEW) {
             return true;
         }
-        if (mAction.getType() == Action.ADD_ACTION) {
+        if (mAction.getType() == CategoryAction.ADD_ACTION) {
             return true;
         }
         return false;
@@ -88,7 +89,7 @@ public class CategoryView extends IconView implements View.OnClickListener {
 
     @Override
     public boolean needsCenterText() {
-        if (mAction != null && mAction.getType() == Action.ADD_ACTION) {
+        if (mAction != null && mAction.getType() == CategoryAction.ADD_ACTION) {
             return true;
         }
         return super.needsCenterText();
@@ -96,7 +97,7 @@ public class CategoryView extends IconView implements View.OnClickListener {
 
     public void onDraw(Canvas canvas) {
         if (mAction != null) {
-            if (mAction.getType() == Action.SPACER) {
+            if (mAction.getType() == CategoryAction.SPACER) {
                 drawSpacer(canvas);
                 return;
             }
@@ -104,8 +105,11 @@ public class CategoryView extends IconView implements View.OnClickListener {
                 return;
             }
             mAction.setImageFrame(new Rect(0, 0, getWidth(), getHeight()), getOrientation());
-            if (mAction.getImage() != null) {
-                setBitmap(mAction.getImage());
+            Bitmap image = mAction.getImage();
+            if (image != null) {
+                setBitmap(image);
+            } else {
+                LLog.i(TAG, "**************** ondraw image is null");
             }
         }
         super.onDraw(canvas);
@@ -114,13 +118,13 @@ public class CategoryView extends IconView implements View.OnClickListener {
         }
     }
 
-    public void setAction(Action action, CategoryAdapter adapter) {
+    public void setAction(CategoryAction action, CategoryAdapter adapter) {
         mAction = action;
         setText(mAction.getName());
         mAdapter = adapter;
         mCanBeRemoved = action.canBeRemoved();
         setUseOnlyDrawable(false);
-        if (mAction.getType() == Action.ADD_ACTION) {
+        if (mAction.getType() == CategoryAction.ADD_ACTION) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.filtershow_add);
             setBitmap(bitmap);
             setUseOnlyDrawable(true);
@@ -134,9 +138,9 @@ public class CategoryView extends IconView implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         FilterShowActivity activity = (FilterShowActivity) getContext();
-        if (mAction.getType() == Action.ADD_ACTION) {
-            activity.addNewPreset();
-        } else if (mAction.getType() != Action.SPACER) {
+        if (mAction.getType() == CategoryAction.ADD_ACTION) {
+            //
+        } else if (mAction.getType() != CategoryAction.SPACER) {
             if (mAction.isDoubleAction()) {
                 long current = System.currentTimeMillis() - mDoubleActionLast;
                 if (current < mDoubleTapDelay) {

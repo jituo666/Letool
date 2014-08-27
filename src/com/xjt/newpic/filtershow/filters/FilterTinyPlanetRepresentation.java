@@ -20,13 +20,14 @@ import com.xjt.newpic.R;
 import com.xjt.newpic.filtershow.editors.EditorTinyPlanet;
 
 public class FilterTinyPlanetRepresentation extends FilterBasicRepresentation {
+
     private static final String SERIALIZATION_NAME = "TINYPLANET";
     private static final String LOGTAG = "FilterTinyPlanetRepresentation";
     private static final String SERIAL_ANGLE = "Angle";
     private float mAngle = 0;
 
-    public FilterTinyPlanetRepresentation() {
-        super("TinyPlanet", 0, 50, 100);
+    public FilterTinyPlanetRepresentation(int sr) {
+        super("TinyPlanet", 0, 50, 100, sr);
         setSerializationName(SERIALIZATION_NAME);
         setShowParameterValue(true);
         setFilterClass(ImageFilterTinyPlanet.class);
@@ -39,7 +40,7 @@ public class FilterTinyPlanetRepresentation extends FilterBasicRepresentation {
 
     @Override
     public FilterRepresentation copy() {
-        FilterTinyPlanetRepresentation representation = new FilterTinyPlanetRepresentation();
+        FilterTinyPlanetRepresentation representation = new FilterTinyPlanetRepresentation(0);
         copyAllParameters(representation);
         return representation;
     }
@@ -92,9 +93,16 @@ public class FilterTinyPlanetRepresentation extends FilterBasicRepresentation {
     @Override
     public String[][] serializeRepresentation() {
         String[][] ret = {
-                {SERIAL_NAME  , getName() },
-                {SERIAL_VALUE , Integer.toString(getValue())},
-                {SERIAL_ANGLE , Float.toString(mAngle)}};
+                {
+                        SERIAL_NAME, getName()
+                },
+                {
+                        SERIAL_VALUE, Integer.toString(getValue())
+                },
+                {
+                        SERIAL_ANGLE, Float.toString(mAngle)
+                }
+        };
         return ret;
     }
 

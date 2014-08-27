@@ -33,7 +33,7 @@ public class ImageStraighten extends ImageShow {
     private static final int NBLINES = 16;
     private boolean mFirstDrawSinceUp = false;
     private EditorStraighten mEditorStraighten;
-    private FilterStraightenRepresentation mLocalRep = new FilterStraightenRepresentation();
+    private FilterStraightenRepresentation mLocalRep = new FilterStraightenRepresentation(0);
     private RectF mPriorCropAtUp = new RectF();
     private RectF mDrawRect = new RectF();
     private Path mDrawPath = new Path();
@@ -88,7 +88,7 @@ public class ImageStraighten extends ImageShow {
     }
 
     public void setFilterStraightenRepresentation(FilterStraightenRepresentation rep) {
-        mLocalRep = (rep == null) ? new FilterStraightenRepresentation() : rep;
+        mLocalRep = (rep == null) ? new FilterStraightenRepresentation(0) : rep;
         mInitialAngle = mBaseAngle = mAngle = mLocalRep.getStraighten();
     }
 
@@ -96,7 +96,7 @@ public class ImageStraighten extends ImageShow {
         ArrayList<FilterRepresentation> reps = new ArrayList<FilterRepresentation>(2);
         reps.add(mLocalRep);
         if (mInitialAngle != mLocalRep.getStraighten()) {
-            reps.add(new FilterCropRepresentation(mCrop));
+            reps.add(new FilterCropRepresentation(mCrop,0));
         }
         return reps;
     }
