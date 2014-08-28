@@ -158,16 +158,16 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
                 R.drawable.filtershow_fx_0006_x_process
         };
 
-        int[] sampleid = {
-                R.drawable.ic_action_delete,
-                R.drawable.ic_action_delete,
-                R.drawable.ic_action_delete,
-                R.drawable.ic_action_delete,
-                R.drawable.ic_action_delete,
-                R.drawable.ic_action_delete,
-                R.drawable.ic_action_delete,
-                R.drawable.ic_action_delete,
-                R.drawable.ic_action_delete
+        int[] sampleid = { // [0,  1~9] 10
+                R.drawable.effect_sample_1,
+                R.drawable.effect_sample_2,
+                R.drawable.effect_sample_3,
+                R.drawable.effect_sample_4,
+                R.drawable.effect_sample_5,
+                R.drawable.effect_sample_6,
+                R.drawable.effect_sample_7,
+                R.drawable.effect_sample_8,
+                R.drawable.effect_sample_9
         };
 
         int[] fxNameid = {
@@ -195,7 +195,7 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
                 "LUT3D_XPROCESS"
         };
 
-        FilterFxRepresentation nullFx = new FilterFxRepresentation(context.getString(R.string.none), 0, 0, R.string.none);
+        FilterFxRepresentation nullFx = new FilterFxRepresentation(context.getString(R.string.none), R.drawable.effect_sample_0, 0, R.string.none);
         mLooks.add(nullFx);
 
         for (int i = 0; i < drawid.length; i++) {
@@ -226,61 +226,60 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
                 "FRAME_CREAM_ROUNDED"
         };
 
-        int[] sampleid = {
-                R.drawable.ic_action_picture,
-                R.drawable.ic_action_picture,
-                R.drawable.ic_action_picture,
-                R.drawable.ic_action_picture,
-                R.drawable.ic_action_picture,
-                R.drawable.ic_action_picture,
-                R.drawable.ic_action_picture,
-                R.drawable.ic_action_picture,
-                R.drawable.ic_action_picture,
-                R.drawable.ic_action_picture,
-                R.drawable.ic_action_picture,
-                R.drawable.ic_action_picture
+        int[] sampleid = { // [0, 11 ~21] 12
+                R.drawable.effect_sample_11,
+                R.drawable.effect_sample_12,
+                R.drawable.effect_sample_13,
+                R.drawable.effect_sample_14,
+                R.drawable.effect_sample_15,
+                R.drawable.effect_sample_16,
+                R.drawable.effect_sample_17,
+                R.drawable.effect_sample_18,
+                R.drawable.effect_sample_19,
+                R.drawable.effect_sample_20,
+                R.drawable.effect_sample_21
         };
 
         // The "no border" implementation
         int i = 0;
-        FilterRepresentation rep = new FilterImageBorderRepresentation(0, sampleid[0]);
+        FilterRepresentation rep = new FilterImageBorderRepresentation(0, R.drawable.effect_sample_0);
         mBorders.add(rep);
 
         // Regular borders
         ArrayList<FilterRepresentation> borderList = new ArrayList<FilterRepresentation>();
 
-        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_4x5, sampleid[1]);
+        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_4x5, sampleid[0]);
         borderList.add(rep);
 
-        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_brush, sampleid[2]);
+        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_brush, sampleid[1]);
         borderList.add(rep);
 
-        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_grunge, sampleid[3]);
+        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_grunge, sampleid[2]);
         borderList.add(rep);
 
-        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_sumi_e, sampleid[4]);
+        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_sumi_e, sampleid[3]);
         borderList.add(rep);
 
-        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_tape, sampleid[5]);
+        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_tape, sampleid[4]);
         borderList.add(rep);
 
-        rep = new FilterColorBorderRepresentation(Color.BLACK, mImageBorderSize, 0, sampleid[6]);
+        rep = new FilterColorBorderRepresentation(Color.BLACK, mImageBorderSize, 0, sampleid[5]);
         borderList.add(rep);
 
-        rep = new FilterColorBorderRepresentation(Color.BLACK, mImageBorderSize, mImageBorderSize, sampleid[7]);
+        rep = new FilterColorBorderRepresentation(Color.BLACK, mImageBorderSize, mImageBorderSize, sampleid[6]);
         borderList.add(rep);
 
-        rep = new FilterColorBorderRepresentation(Color.WHITE, mImageBorderSize, 0, sampleid[8]);
+        rep = new FilterColorBorderRepresentation(Color.WHITE, mImageBorderSize, 0, sampleid[7]);
         borderList.add(rep);
 
-        rep = new FilterColorBorderRepresentation(Color.WHITE, mImageBorderSize, mImageBorderSize, sampleid[9]);
+        rep = new FilterColorBorderRepresentation(Color.WHITE, mImageBorderSize, mImageBorderSize, sampleid[8]);
         borderList.add(rep);
 
         int creamColor = Color.argb(255, 237, 237, 227);
-        rep = new FilterColorBorderRepresentation(creamColor, mImageBorderSize, 0, sampleid[10]);
+        rep = new FilterColorBorderRepresentation(creamColor, mImageBorderSize, 0, sampleid[9]);
         borderList.add(rep);
 
-        rep = new FilterColorBorderRepresentation(creamColor, mImageBorderSize, mImageBorderSize, sampleid[11]);
+        rep = new FilterColorBorderRepresentation(creamColor, mImageBorderSize, mImageBorderSize, sampleid[10]);
         borderList.add(rep);
 
         for (FilterRepresentation filter : borderList) {
@@ -293,14 +292,14 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
 
     public void addTools(Context context) {
 
-        int[] textId = {
+        int[] textId = { // [22~26] ,5
                 R.string.crop,
                 R.string.straighten,
                 R.string.rotate,
                 R.string.mirror
         };
 
-        int[] overlayId = {
+        int[] overlayId = { // [
                 R.drawable.filtershow_button_geometry_crop,
                 R.drawable.filtershow_button_geometry_straighten,
                 R.drawable.filtershow_button_geometry_rotate,
@@ -308,10 +307,10 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
         };
 
         FilterRepresentation[] geometryFilters = {
-                new FilterCropRepresentation(0),
-                new FilterStraightenRepresentation(0),
-                new FilterRotateRepresentation(0),
-                new FilterMirrorRepresentation(0)
+                new FilterCropRepresentation(R.drawable.effect_sample_22),
+                new FilterStraightenRepresentation(R.drawable.effect_sample_23),
+                new FilterRotateRepresentation(R.drawable.effect_sample_24),
+                new FilterMirrorRepresentation(R.drawable.effect_sample_25)
         };
 
         for (int i = 0; i < textId.length; i++) {
@@ -330,6 +329,7 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
     }
 
     public void addEffects() {
+        // sample resource id [28~43], 16
         mEffects.add(getRepresentation(ImageFilterTinyPlanet.class));
         mEffects.add(getRepresentation(ImageFilterWBalance.class));
         mEffects.add(getRepresentation(ImageFilterExposure.class));

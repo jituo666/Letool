@@ -30,6 +30,7 @@ public class FilterCropRepresentation extends FilterRepresentation {
         setTextId(R.string.crop);
         setEditorId(EditorCrop.ID);
         setCrop(crop);
+        setSampleResource(R.drawable.effect_sample_22);
     }
 
     public FilterCropRepresentation(FilterCropRepresentation m, int sr) {

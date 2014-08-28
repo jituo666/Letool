@@ -2,6 +2,7 @@ package com.xjt.newpic.filtershow.filters;
 
 import android.graphics.Bitmap;
 
+import com.xjt.newpic.R;
 import com.xjt.newpic.filtershow.imageshow.Spline;
 
 public class ImageFilterCurves extends ImageFilter {
@@ -11,7 +12,7 @@ public class ImageFilterCurves extends ImageFilter {
 
     @Override
     public FilterRepresentation getDefaultRepresentation() {
-        return new FilterCurvesRepresentation(0);
+        return new FilterCurvesRepresentation(R.drawable.effect_sample_37);
     }
 
     @Override

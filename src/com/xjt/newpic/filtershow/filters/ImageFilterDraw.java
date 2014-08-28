@@ -55,7 +55,7 @@ public class ImageFilterDraw extends ImageFilter {
 
     @Override
     public FilterRepresentation getDefaultRepresentation() {
-        return new FilterDrawRepresentation(0);
+        return new FilterDrawRepresentation(R.drawable.effect_sample_26);
     }
 
     @Override

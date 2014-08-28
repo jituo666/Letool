@@ -44,6 +44,7 @@ public class FilterStraightenRepresentation extends FilterRepresentation {
         setTextId(R.string.straighten);
         setEditorId(EditorStraighten.ID);
         setStraighten(straighten);
+        setSampleResource(R.drawable.effect_sample_23);
     }
 
     public FilterStraightenRepresentation(FilterStraightenRepresentation s) {

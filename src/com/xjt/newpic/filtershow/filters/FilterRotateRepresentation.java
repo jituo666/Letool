@@ -56,6 +56,7 @@ public class FilterRotateRepresentation extends FilterRepresentation {
         setSupportsPartialRendering(true);
         setTextId(R.string.rotate);
         setEditorId(ImageOnlyEditor.ID);
+        setSampleResource(R.drawable.effect_sample_24);
         setRotation(rotation);
     }
 

@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.filtershow.filters;
 
 import android.graphics.Bitmap;
@@ -17,23 +18,16 @@ import com.xjt.newpic.filtershow.pipeline.ImagePreset;
  */
 public class ImageFilterTinyPlanet extends SimpleImageFilter {
 
-
     private static final String LOGTAG = ImageFilterTinyPlanet.class.getSimpleName();
+    private FilterTinyPlanetRepresentation mParameters = new FilterTinyPlanetRepresentation(0);
     public static final String GOOGLE_PANO_NAMESPACE = "http://ns.google.com/photos/1.0/panorama/";
-    FilterTinyPlanetRepresentation mParameters = new FilterTinyPlanetRepresentation(0);
 
-    public static final String CROPPED_AREA_IMAGE_WIDTH_PIXELS =
-            "CroppedAreaImageWidthPixels";
-    public static final String CROPPED_AREA_IMAGE_HEIGHT_PIXELS =
-            "CroppedAreaImageHeightPixels";
-    public static final String CROPPED_AREA_FULL_PANO_WIDTH_PIXELS =
-            "FullPanoWidthPixels";
-    public static final String CROPPED_AREA_FULL_PANO_HEIGHT_PIXELS =
-            "FullPanoHeightPixels";
-    public static final String CROPPED_AREA_LEFT =
-            "CroppedAreaLeftPixels";
-    public static final String CROPPED_AREA_TOP =
-            "CroppedAreaTopPixels";
+    public static final String CROPPED_AREA_IMAGE_WIDTH_PIXELS = "CroppedAreaImageWidthPixels";
+    public static final String CROPPED_AREA_IMAGE_HEIGHT_PIXELS = "CroppedAreaImageHeightPixels";
+    public static final String CROPPED_AREA_FULL_PANO_WIDTH_PIXELS = "FullPanoWidthPixels";
+    public static final String CROPPED_AREA_FULL_PANO_HEIGHT_PIXELS = "FullPanoHeightPixels";
+    public static final String CROPPED_AREA_LEFT = "CroppedAreaLeftPixels";
+    public static final String CROPPED_AREA_TOP = "CroppedAreaTopPixels";
 
     public ImageFilterTinyPlanet() {
         mName = "TinyPlanet";
@@ -50,11 +44,9 @@ public class ImageFilterTinyPlanet extends SimpleImageFilter {
         return new FilterTinyPlanetRepresentation(0);
     }
 
-
     native protected void nativeApplyFilter(
             Bitmap bitmapIn, int width, int height, Bitmap bitmapOut, int outSize, float scale,
             float angle);
-
 
     @Override
     public Bitmap apply(Bitmap bitmapIn, float scaleFactor, int quality) {
@@ -66,7 +58,7 @@ public class ImageFilterTinyPlanet extends SimpleImageFilter {
         if (preset != null) {
             XMPMeta xmp = ImageLoader.getXmpObject(MasterImage.getImage().getActivity());
             // Do nothing, just use bitmapIn as is if we don't have XMP.
-            if(xmp != null) {
+            if (xmp != null) {
                 bitmapIn = applyXmp(bitmapIn, xmp, w);
             }
         }

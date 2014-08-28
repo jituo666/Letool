@@ -28,7 +28,7 @@ public class ImageFilterChanSat extends ImageFilterRS {
 
     @Override
     public FilterRepresentation getDefaultRepresentation() {
-        return new FilterChanSatRepresentation(0);
+        return new FilterChanSatRepresentation(R.drawable.effect_sample_39);
     }
 
     @Override

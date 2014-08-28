@@ -59,6 +59,7 @@ public class FilterMirrorRepresentation extends FilterRepresentation {
         setFilterClass(FilterMirrorRepresentation.class);
         setFilterType(FilterRepresentation.TYPE_GEOMETRY);
         setSupportsPartialRendering(true);
+        setSampleResource(R.drawable.effect_sample_25);
         setTextId(R.string.mirror);
         setEditorId(ImageOnlyEditor.ID);
         setMirror(mirror);

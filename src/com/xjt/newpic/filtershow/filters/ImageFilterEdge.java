@@ -17,6 +17,7 @@ public class ImageFilterEdge extends SimpleImageFilter {
         representation.setFilterClass(ImageFilterEdge.class);
         representation.setTextId(R.string.edge);
         representation.setSupportsPartialRendering(true);
+        representation.setSampleResource(R.drawable.effect_sample_42);
         return representation;
     }
 

@@ -28,7 +28,7 @@ public class ImageFilterGrad extends ImageFilterRS {
 
     @Override
     public FilterRepresentation getDefaultRepresentation() {
-        return new FilterGradRepresentation(0);
+        return new FilterGradRepresentation(R.drawable.effect_sample_31);
     }
 
     @Override
