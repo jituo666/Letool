@@ -1,10 +1,10 @@
 
 package com.xjt.newpic.views.utils;
 
+import com.xjt.newpic.R;
 import com.xjt.newpic.common.ThreadPool;
 import com.xjt.newpic.common.ThreadPool.JobContext;
 import com.xjt.newpic.imagedata.utils.LetoolBitmapPool;
-import com.xjt.newpic.views.render.ThumbnailSetRenderer;
 import com.xjt.newpic.views.render.ThumbnailVideoRenderer;
 
 import android.content.Context;
@@ -14,9 +14,6 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 
 public class VideoLabelMaker {
-
-    private static final int FONT_COLOR_TITLE = 0xFF333333;// 0xFF999fa5;//Color.BLACK;
-    private static final int FONT_COLOR_COUNT = 0xFF222222;// 0xFFeeeeee;//Color.WHITE;
 
     // We keep a border around the album label to prevent aliasing
     private static final int BORDER_SIZE = 1;
@@ -31,8 +28,8 @@ public class VideoLabelMaker {
 
     public VideoLabelMaker(Context context, ThumbnailVideoRenderer.LabelSpec spec) {
         mSpec = spec;
-        mTitlePaint = getTextPaint(spec.titleFontSize, FONT_COLOR_TITLE, false);
-        mCountPaint = getTextPaint(spec.countFontSize, FONT_COLOR_COUNT, false);
+        mTitlePaint = getTextPaint(spec.titleFontSize, context.getResources().getColor(R.color.np_major_text_color), false);
+        mCountPaint = getTextPaint(spec.countFontSize, context.getResources().getColor(R.color.np_minor_text_color), false);
 
     }
 
@@ -105,7 +102,7 @@ public class VideoLabelMaker {
             if (jc.isCancelled())
                 return null;
             int x = (mLabelWidth - mSpec.titleOffset) / 2 + BORDER_SIZE;
-            int y = mLabelHeight -mSpec.labelHeight * 2 / 3 + 2;
+            int y = mLabelHeight - mSpec.labelHeight * 7 / 12 + 2;
             mTitlePaint.setTextAlign(Paint.Align.CENTER);
             mTitle = TextUtils.ellipsize(mTitle, mTitlePaint, mLabelWidth - 2 * BORDER_SIZE, TextUtils.TruncateAt.END).toString();
             canvas.drawText(mTitle, x, y, mTitlePaint);
@@ -113,7 +110,7 @@ public class VideoLabelMaker {
                 return null;
             // draw count
             x = (mLabelWidth - mSpec.countOffset) / 2 + BORDER_SIZE;
-            y = (mLabelHeight) / 2 + + mSpec.countOffset * 3 / 2;
+            y = (mLabelHeight) / 2 + +mSpec.countOffset * 3 / 2;
             mCountPaint.setTextAlign(Paint.Align.CENTER);
             mCount = TextUtils.ellipsize(mCount, mCountPaint, mLabelWidth - 2 * BORDER_SIZE, TextUtils.TruncateAt.END).toString();
             canvas.drawText(mCount, x, y, mCountPaint);

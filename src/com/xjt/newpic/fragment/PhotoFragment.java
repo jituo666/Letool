@@ -5,7 +5,6 @@ import com.umeng.analytics.MobclickAgent;
 import com.xjt.newpic.LetoolApp;
 import com.xjt.newpic.LetoolContext;
 import com.xjt.newpic.R;
-import com.xjt.newpic.activities.LetoolMainActivity;
 import com.xjt.newpic.activities.LocalMediaActivity;
 import com.xjt.newpic.activities.SettingsActivity;
 import com.xjt.newpic.common.EyePosition;
@@ -323,7 +322,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         topBar.setVisible(View.VISIBLE, false);
         ViewGroup nativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);
         if (mIsCameraSource) {
-            topBar.setTitleText(R.string.app_name);
+            topBar.setTitleText("");
             nativeButtons.setVisibility(View.VISIBLE);
             topBar.setTitleIcon(R.drawable.ic_drawer);
             TextView naviToPhoto = (TextView) nativeButtons.findViewById(R.id.navi_to_photo);
@@ -374,14 +373,15 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                     startActivityForResult(it, LocalMediaActivity.REQUEST_CODE_SETTINGS);
                     getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
                 }
-            });
+            },R.drawable.np_common_pressed_left_bg);
+
             dlg.setCancelBtn(R.string.common_cancel, new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
                     dlg.dismiss();
                 }
-            });
+            },R.drawable.np_common_pressed_right_bg);
             dlg.setMessage(R.string.camera_source_dirs_tip);
             dlg.show();
         } else {
@@ -525,8 +525,8 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                         });
                 final LetoolDialog dlg = new LetoolDialog(getActivity());
                 dlg.setTitle(R.string.common_recommend);
-                dlg.setOkBtn(R.string.common_ok, cdl);
-                dlg.setCancelBtn(R.string.common_cancel, cdl);
+                dlg.setOkBtn(R.string.common_ok, cdl,R.drawable.np_common_pressed_left_bg);
+                dlg.setCancelBtn(R.string.common_cancel, cdl, R.drawable.np_common_pressed_right_bg);
                 dlg.setMessage(R.string.common_delete_tip);
                 dlg.show();
 
@@ -590,10 +590,14 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     }
 
     private Rect getThumbnailRect(int index) {
-        Rect offset = new Rect();
-        mRootPane.getBoundsOf(mThumbnailView, offset);
-        Rect r = mThumbnailView.getThumbnailRect(index);
-        r.offset(offset.left - mThumbnailView.getScrollX(), offset.top - mThumbnailView.getScrollY());
+        Rect r = new Rect();
+        Rect rx = mThumbnailView.getThumbnailRect(index);
+        int x = (int) mOpenCenter.getX();
+        int y = (int) mOpenCenter.getY();
+        r.set(x, y, x + rx.width(), y + rx.height());
+        //        mRootPane.getBoundsOf(mThumbnailView, offset);
+        //        Rect r = mThumbnailView.getThumbnailRect(index);
+        //        r.offset(offset.left - mThumbnailView.getScrollX(), offset.top - mThumbnailView.getScrollY());
         return r;
     }
 

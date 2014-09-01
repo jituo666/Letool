@@ -29,6 +29,8 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
     private static final int CACHE_SIZE = 48;
 
     private final ColorTexture mWaitLoadingTexture;
+    protected final ResourceTexture mVideoPlayIcon;
+    private final ResourceTexture mVideoOverlay;
     private LetoolContext mLetoolContext;
 
     private ThumbnailView mThumbnailView;
@@ -77,6 +79,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         mVideoPlayIcon = new ResourceTexture(activity.getActivityContext(), R.drawable.ic_video_folder);
         mWaitLoadingTexture = new ColorTexture(activity.getActivityContext().getResources().getColor(R.color.thumbnail_placehoder));
         mWaitLoadingTexture.setSize(1, 1);
+        mVideoOverlay = new ResourceTexture(activity.getActivityContext(), R.drawable.ic_video_thumb);
     }
 
     public void setModel(ThumbnailSetDataLoader model) {
@@ -170,10 +173,20 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
             } else {
                 drawPressedFrame(canvas, width, height);
             }
-        } else if ((mHighlightItemPath != null)) {
-            drawSelectedFrame(canvas, width, height);
         }
         return renderRequestFlags;
+    }
+
+    protected void drawVideoOverlay(GLESCanvas canvas, int width, int height) {
+        // Scale the video overlay to the height of the thumbnail and put it  on the left side.
+        ResourceTexture v = mVideoOverlay;
+        float scale = (float) height / v.getHeight();
+        int w = Math.round(scale * v.getWidth());
+        int h = Math.round(scale * v.getHeight());
+        v.draw(canvas, 0, 0, w, h);
+
+        int s = Math.min(width, height) / 6;
+        mVideoPlayIcon.draw(canvas, (width - s) / 2, (height - s) / 2, s, s);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

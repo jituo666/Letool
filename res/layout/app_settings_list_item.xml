@@ -3,16 +3,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/common_list_item_bkg"
+    android:background="@drawable/np_common_pressed_bg"
     android:minHeight="@dimen/letool_sliding_menu_item_height"
-    android:paddingBottom="2dp"
+    android:layout_marginBottom="2dp"
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
-    android:paddingTop="2dp" >
+    android:layout_marginTop="2dp" >
 
     <com.xjt.newpic.surpport.ToggleButton
         android:id="@+id/toggle"
-        android:layout_width="wrap_content"
+        android:layout_width="64dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
@@ -28,8 +28,8 @@
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@id/toggle"
         android:gravity="center_vertical"
-        android:textColor="@color/major_text_color"
-        android:textSize="18sp" />
+        android:textColor="@color/np_major_text_color"
+        android:textSize="@dimen/common_text_size_middle" />
 
     <TextView
         android:id="@+id/item_minor_title"
@@ -39,7 +39,7 @@
         android:layout_below="@+id/item_major_title"
         android:layout_toLeftOf="@id/toggle"
         android:gravity="center_vertical"
-        android:textColor="@color/minor_text_color"
-        android:textSize="12sp" />
+        android:textColor="@color/np_minor_text_color"
+        android:textSize="@dimen/common_text_size_small" />
 
 </com.xjt.newpic.settings.LetoolPreference>

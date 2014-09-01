@@ -16,8 +16,8 @@
     <dimen name="albumset_icon_size">25dp</dimen>
     <dimen name="albumset_title_offset">8dp</dimen>
     <dimen name="albumset_count_offset">8dp</dimen>
-    <dimen name="albumset_title_font_size">14sp</dimen>
-    <dimen name="albumset_count_font_size">16sp</dimen>
+    <dimen name="albumset_title_font_size">15sp</dimen>
+    <dimen name="albumset_count_font_size">13sp</dimen>
 
     <!-- configuration for album page -->
 
@@ -67,10 +67,10 @@
     <dimen name="video_icon_size">25dp</dimen>
     <dimen name="video_title_offset">8dp</dimen>
     <dimen name="video_count_offset">8dp</dimen>
-    <dimen name="video_title_font_size">14sp</dimen>
-    <dimen name="video_count_font_size">16sp</dimen>
+    <dimen name="video_title_font_size">15sp</dimen>
+    <dimen name="video_count_font_size">13sp</dimen>
     <dimen name="video_rotate_button_padding">8dp</dimen>
-    <dimen name="share_list_item_height">48dp</dimen>
+    <dimen name="share_list_item_height">76dp</dimen>
 
     <!-- configuration common UI -->
 
@@ -82,13 +82,14 @@
     <dimen name="letool_sliding_menu_logo_height">180dp</dimen>
     <dimen name="letool_sliding_menu_logo_width">240dp</dimen>
     <dimen name="letool_sliding_menu_icon_size">32dp</dimen>
-    <dimen name="letool_sliding_menu_text_size">18sp</dimen>
     <dimen name="letool_bottom_bar_height">48dp</dimen>
     <dimen name="letool_settings_item_height">48dp</dimen>
     <dimen name="letool_settings_major_item_height">22dp</dimen>
     <dimen name="letool_settings_minor_item_height">16dp</dimen>
     <dimen name="letool_camera_source_settings_item_padding">2dp</dimen>
     <dimen name="letool_camera_source_settings_item_height">56dp</dimen>
+    
+    <dimen name="common_title_text_size">18sp</dimen>
     <dimen name="common_text_size_large">20sp</dimen>
     <dimen name="common_text_size_middle">16dp</dimen>
     <dimen name="common_text_size_small">13dp</dimen>

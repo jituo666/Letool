@@ -169,7 +169,7 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
 
             @Override
             public void onAnimationEnd(Animation a) {
-                View v = rootView.findViewById(R.id.btn_panel);
+                View v = rootView.findViewById(R.id.save);
                 v.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_bottom_in));
                 v.setVisibility(View.VISIBLE);
             }

@@ -3,3 +3,11 @@
     android:drawable="@drawable/loading_inside"
     android:pivotX="50%"
     android:pivotY="50%" />
+<!--
+<rotate xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/loading_inside"
+    android:fromDegrees="0.0"
+    android:pivotX="50.0%"
+    android:pivotY="50.0%"
+    android:toDegrees="360.0" />
+-->

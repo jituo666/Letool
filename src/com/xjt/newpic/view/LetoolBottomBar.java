@@ -33,6 +33,7 @@ public class LetoolBottomBar {
     };
 
     public static final int BOTTOM_BUTTON_IDS[] = {
+            R.id.action_edit,
             R.id.action_share,
             R.id.action_detail,
             R.id.action_delete

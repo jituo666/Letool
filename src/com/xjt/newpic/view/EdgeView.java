@@ -48,16 +48,18 @@ public class EdgeView extends GLView {
     }
 
     public void freeDrawables() {
-        mEdge.recycle();
-        mGlow.recycle();
+        if (mEdge != null)
+            mEdge.recycle();
+
+        if (mGlow != null)
+            mGlow.recycle();
         for (int i = 0; i < 4; i++) {
             mEffect[i] = null;
         }
     }
 
     @Override
-    protected void onLayout(
-            boolean changeSize, int left, int top, int right, int bottom) {
+    protected void onLayout(boolean changeSize, int left, int top, int right, int bottom) {
         if (!changeSize)
             return;
 
@@ -97,7 +99,9 @@ public class EdgeView extends GLView {
         for (int i = 0; i < 4; i++) {
             canvas.save(GLESCanvas.SAVE_FLAG_MATRIX);
             canvas.multiplyMatrix(mMatrix, i * 16);
-            more |= mEffect[i].draw(canvas);
+            if (mEffect[i] != null) {
+                more |= mEffect[i].draw(canvas);
+            }
             canvas.restore();
         }
         if (more) {
@@ -109,9 +113,11 @@ public class EdgeView extends GLView {
     // offset is in pixels. direction is one of {TOP, LEFT, BOTTOM, RIGHT}.
     public void onPull(int offset, int direction) {
         int fullLength = ((direction & 1) == 0) ? getWidth() : getHeight();
-        mEffect[direction].onPull((float) offset / fullLength);
-        if (!mEffect[direction].isFinished()) {
-            invalidate();
+        if (mEffect[direction] != null) {
+            mEffect[direction].onPull((float) offset / fullLength);
+            if (!mEffect[direction].isFinished()) {
+                invalidate();
+            }
         }
     }
 
@@ -119,8 +125,10 @@ public class EdgeView extends GLView {
     public void onRelease() {
         boolean more = false;
         for (int i = 0; i < 4; i++) {
-            mEffect[i].onRelease();
-            more |= !mEffect[i].isFinished();
+            if (mEffect[i] != null) {
+                mEffect[i].onRelease();
+                more |= !mEffect[i].isFinished();
+            }
         }
         if (more) {
             invalidate();
@@ -131,9 +139,11 @@ public class EdgeView extends GLView {
     // Used when a fling reaches the scroll boundary. velocity is in pixels
     // per second. direction is one of {TOP, LEFT, BOTTOM, RIGHT}.
     public void onAbsorb(int velocity, int direction) {
-        mEffect[direction].onAbsorb(velocity);
-        if (!mEffect[direction].isFinished()) {
-            invalidate();
+        if (mEffect[direction] != null) {
+            mEffect[direction].onAbsorb(velocity);
+            if (!mEffect[direction].isFinished()) {
+                invalidate();
+            }
         }
     }
 }

@@ -44,7 +44,7 @@ public class ShareManager {
         } else {
             final LetoolDialog dlg = new LetoolDialog(activity);
             dlg.setTitle(R.string.common_share_to);
-            dlg.setCancelBtn(R.string.common_cancel, null);
+            dlg.setCancelBtn(R.string.common_cancel, null,R.drawable.np_common_pressed_bottom_bg);
 
             GridView g = dlg.setGridAdapter(new ShareToAllAdapter(activity, shareToList));
             g.setOnItemClickListener(new AdapterView.OnItemClickListener() {

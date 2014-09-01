@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="0dp"
-        android:background="@drawable/main_sliding_menu_bg"
+        android:background="@color/np_menu_bg"
         android:orientation="vertical" >
 
         <ImageView
@@ -23,7 +23,8 @@
 
         <ListView
             android:id="@+id/sliding_menu_list"
-            style="@style/MyWidget.ListView" >
+            style="@style/MyWidget.ListView"
+            android:divider="@drawable/np_slid_menu_divider_bg" >
         </ListView>
     </LinearLayout>
 

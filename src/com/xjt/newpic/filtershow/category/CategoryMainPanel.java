@@ -61,14 +61,11 @@ public class CategoryMainPanel extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         mMainView = (LinearLayout) inflater.inflate(R.layout.filtershow_main_panel, null, false);
-
         looksButton = (ImageButton) mMainView.findViewById(R.id.fxButton);
         bordersButton = (ImageButton) mMainView.findViewById(R.id.borderButton);
         geometryButton = (ImageButton) mMainView.findViewById(R.id.geometryButton);
         filtersButton = (ImageButton) mMainView.findViewById(R.id.colorsButton);
-
         looksButton.setOnClickListener(new View.OnClickListener() {
 
             @Override

@@ -72,7 +72,8 @@ public class DialogDetailsView implements DetailsViewContainer {
 
     private void setDetails(MediaDetails details) {
         mAdapter = new DetailsAdapter(details);
-        String title = String.format(mLetoolContext.getActivityContext().getString(R.string.details_title), mIndex + 1, mSource.size());
+//        String title = String.format(mLetoolContext.getActivityContext().getString(R.string.details_title), mIndex + 1, mSource.size());
+        String title = mLetoolContext.getActivityContext().getString(R.string.common_detail);
 
         mDialog = new LetoolDialog(mLetoolContext.getActivityContext());
         mDialog.setListAdapter(mAdapter);
@@ -83,11 +84,11 @@ public class DialogDetailsView implements DetailsViewContainer {
             public void onClick(View v) {
                 mListener.onClose();
             }
-        });
+        },R.drawable.np_common_pressed_bottom_bg);
         mDialog.setOnDismissListener(new OnDismissListener() {
 
             @Override
-            public void onDismiss(DialogInterface arg0) {
+            public void onDismiss(DialogInterface d) {
                 mListener.onClose();
             }
 
@@ -266,7 +267,6 @@ public class DialogDetailsView implements DetailsViewContainer {
             title.setText(mItems.get(position).title);
             TextView imageView = (TextView) v.findViewById(R.id.property_content);
             imageView.setText(mItems.get(position).content);
-
             return v;
         }
 
@@ -321,6 +321,7 @@ public class DialogDetailsView implements DetailsViewContainer {
         private String toLocalNumber(double n) {
             return mDecimalFormat.format(n);
         }
+
     }
 
     @Override

@@ -11,6 +11,7 @@ import com.xjt.newpic.selectors.SelectionManager;
 import com.xjt.newpic.view.ThumbnailView;
 import com.xjt.newpic.views.opengl.ColorTexture;
 import com.xjt.newpic.views.opengl.GLESCanvas;
+import com.xjt.newpic.views.opengl.ResourceTexture;
 import com.xjt.newpic.views.opengl.Texture;
 
 /**
@@ -28,6 +29,9 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
     private ThumbnailFilter mThumbnailFilter;
 
     private final ColorTexture mWaitLoadingTexture;
+    protected final ResourceTexture mFramePreSelected;
+    protected final ResourceTexture mFrameSelected;
+    protected final ColorTexture mHalfTransparentLevel;
 
     private int mPressedIndex = -1;
     private boolean mAnimatePressedUp;
@@ -60,6 +64,9 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
         mMediaSelector = selector;
         mWaitLoadingTexture = new ColorTexture(context.getActivityContext().getResources().getColor(R.color.thumbnail_placehoder));
         mWaitLoadingTexture.setSize(1, 1);
+        mFramePreSelected = new ResourceTexture(context.getActivityContext(), R.drawable.common_check_off);
+        mFrameSelected = new ResourceTexture(context.getActivityContext(), R.drawable.common_check_on);
+        mHalfTransparentLevel = new ColorTexture(0x80000000);
     }
 
     public void setModel(ThumbnailDataLoader model) {
@@ -149,6 +156,20 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
             }
         }
         return renderRequestFlags;
+    }
+
+    protected void drawPreSelectedFrame(GLESCanvas canvas, int width, int height) {
+        ColorTexture v = mHalfTransparentLevel;
+        v.draw(canvas, 0, 0, width, height);
+        int s = Math.min(width, height) / 3;
+        mFramePreSelected.draw(canvas, width - s, height - s, s, s);
+    }
+
+    protected void drawSelectedFrame(GLESCanvas canvas, int width, int height) {
+        ColorTexture v = mHalfTransparentLevel;
+        v.draw(canvas, 0, 0, width, height);
+        int s = Math.min(width, height) / 3;
+        mFrameSelected.draw(canvas, width - s, height - s, s, s);
     }
 
     //

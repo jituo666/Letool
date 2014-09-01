@@ -34,7 +34,6 @@ public class LetoolDialog extends Dialog {
         mTitleView = (TextView) findViewById(R.id.title);
         mButtonPanel = findViewById(R.id.btn_panel);
         setCanceledOnTouchOutside(false);
-
     }
 
     public void setTitle(String title) {
@@ -76,7 +75,7 @@ public class LetoolDialog extends Dialog {
         return gridView;
     }
 
-    public void setOkBtn(int title, View.OnClickListener clickListener) {
+    public void setOkBtn(int title, View.OnClickListener clickListener, int background) {
         mButtonPanel.setVisibility(View.VISIBLE);
         TextView okBtn = (TextView) findViewById(R.id.ok_btn);
         okBtn.setVisibility(View.VISIBLE);
@@ -86,9 +85,10 @@ public class LetoolDialog extends Dialog {
             okBtn.setOnClickListener(new CloseListener());
         }
         okBtn.setText(title);
+        okBtn.setBackgroundResource(background);
     }
 
-    public void setCancelBtn(int title, View.OnClickListener clickListener) {
+    public void setCancelBtn(int title, View.OnClickListener clickListener, int background) {
 
         if (findViewById(R.id.ok_btn).getVisibility() == View.VISIBLE) {
             setDividerVisible(true);
@@ -102,6 +102,7 @@ public class LetoolDialog extends Dialog {
         } else {
             cancelBtn.setOnClickListener(new CloseListener());
         }
+        cancelBtn.setBackgroundResource(background);
     }
 
     private class CloseListener implements View.OnClickListener {

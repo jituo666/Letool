@@ -8,7 +8,7 @@
         android:layout_width="48dp"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:background="@drawable/common_list_item_bkg"
+        android:background="@drawable/np_common_pressed_bg"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingRight="2dp" >
@@ -18,16 +18,16 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_action_previous_item" />
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_drawer" />
 
         <ImageView
             android:id="@+id/app_logo"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_launcher" />
+            android:scaleType="center"
+            android:src="@drawable/np_logo_navi" />
     </LinearLayout>
 
     <LinearLayout
@@ -35,17 +35,16 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:background="@drawable/vpi__tab_unselected_holo"
         android:orientation="horizontal" >
 
         <TextView
             android:id="@+id/navi_to_photo"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@drawable/vpi__tab_indicator"
+            android:background="@drawable/np_common_pressed_bg"
             android:gravity="center"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:text="@string/common_picture"
             android:textColor="@drawable/common_navi_text_color"
             android:textSize="@dimen/letool_action_bar_text_size1" />
@@ -53,18 +52,18 @@
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/common_bar_divider" />
+            android:layout_marginBottom="14dp"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/np_panel_divider_bg" />
 
         <TextView
             android:id="@+id/navi_to_gallery"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@drawable/vpi__tab_indicator"
+            android:background="@drawable/np_common_pressed_bg"
             android:gravity="center"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
             android:text="@string/common_gallery"
             android:textColor="@drawable/common_navi_text_color"
             android:textSize="@dimen/letool_action_bar_text_size1" />
@@ -80,7 +79,7 @@
         android:ellipsize="end"
         android:gravity="left|center_vertical"
         android:singleLine="true"
-        android:textColor="@color/major_text_color"
-        android:textSize="@dimen/common_text_size_large" />
+        android:textColor="@color/np_main_text_color_normal"
+        android:textSize="@dimen/common_title_text_size" />
 
 </RelativeLayout>

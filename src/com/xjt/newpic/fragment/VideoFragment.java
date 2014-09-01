@@ -235,7 +235,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
                 }
             }
         });
-        dlg.setCancelBtn(R.string.common_cancel, null);
+        dlg.setCancelBtn(R.string.common_cancel, null,R.drawable.np_common_pressed_bottom_bg);
         dlg.setCanceledOnTouchOutside(false);
         dlg.show();
     }
@@ -328,7 +328,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
                 VideoFragment.this.onLongTap(videoIndex);
             }
         });
-        mRender = new ThumbnailVideoRenderer(mLetoolContext, mThumbnailView);
+        mRender = new ThumbnailVideoRenderer(mLetoolContext, mThumbnailView, mIsCameraSource);
         layout.setRenderer(mRender);
         mThumbnailView.setThumbnailRenderer(mRender);
         mRender.setModel(mVideoDataLoader);
@@ -341,7 +341,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         topBar.setVisible(View.VISIBLE, false);
         ViewGroup nativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);
         if (mIsCameraSource) {
-            topBar.setTitleText(R.string.app_name);
+            topBar.setTitleText("");
             nativeButtons.setVisibility(View.VISIBLE);
             topBar.setTitleIcon(R.drawable.ic_drawer);
             TextView naviToPhoto = (TextView) nativeButtons.findViewById(R.id.navi_to_photo);
@@ -528,8 +528,8 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
 
         final LetoolDialog dlg = new LetoolDialog(getActivity());
         dlg.setTitle(R.string.common_recommend);
-        dlg.setOkBtn(R.string.common_ok, cdl);
-        dlg.setCancelBtn(R.string.common_cancel, cdl);
+        dlg.setOkBtn(R.string.common_ok, cdl,R.drawable.np_common_pressed_left_bg);
+        dlg.setCancelBtn(R.string.common_cancel, cdl, R.drawable.np_common_pressed_right_bg);
         dlg.setMessage(mIsCameraSource ? Html.fromHtml(getString(R.string.common_delete_cur_video_tip, item.getName()))
                 : Html.fromHtml(getString(R.string.common_delete_cur_movie_tip, item.getName())));
         dlg.show();

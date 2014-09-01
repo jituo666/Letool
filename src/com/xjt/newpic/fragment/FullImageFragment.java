@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -130,8 +129,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
 
         @Override
         protected void render(GLESCanvas canvas) {
-            canvas.clearBuffer(LetoolUtils
-                    .intColorToFloatARGBArray(Color.BLACK));
+            canvas.clearBuffer(LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.gl_background_color)));
             super.render(canvas);
         }
     };
@@ -257,24 +255,20 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
     public void onClick(View v) {
         if (v.getId() == R.id.action_navi) {
             mLetoolContext.popContentFragment();
+        } else if (v.getId() == R.id.action_edit) {
+            launchPhotoEditor();
         } else if (v.getId() == R.id.action_share) {
             MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_FULL_IMAGE_SHARE);
             ArrayList<Uri> uris = new ArrayList<Uri>();
             uris.add(Uri.parse("file://" + mModel.getMediaItem(0).getFilePath()));
             ShareManager.showAllShareDialog(getActivity(), GlobalConstants.MIMI_TYPE_IMAGE, uris, null);
         } else if (v.getId() == R.id.action_detail) {
-            //            MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_FULL_IMAGE_DETAIL);
-            //            if (mShowDetails) {
-            //                hideDetails();
-            //            } else {
-            //                showDetails();
-            //            }
-            launchPhotoEditor();
-            //            Intent it = new Intent();
-            //            it.setClass(getActivity(), SettingsActivity.class);
-            //            it.putExtra(SettingsActivity.KEY_FROM_TIP, true);
-            //            this.getActivity().startActivity(it);
-
+            MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_FULL_IMAGE_DETAIL);
+            if (mShowDetails) {
+                hideDetails();
+            } else {
+                showDetails();
+            }
         } else if (v.getId() == R.id.action_delete) {
             SingleDeleteMediaListener cdl = new SingleDeleteMediaListener(
                     getActivity(), mCurrentPhoto.getPath(), mLetoolContext.getDataManager(),
@@ -300,8 +294,8 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
 
             final LetoolDialog dlg = new LetoolDialog(getActivity());
             dlg.setTitle(R.string.common_recommend);
-            dlg.setOkBtn(R.string.common_ok, cdl);
-            dlg.setCancelBtn(R.string.common_cancel, cdl);
+            dlg.setOkBtn(R.string.common_ok, cdl,R.drawable.np_common_pressed_left_bg);
+            dlg.setCancelBtn(R.string.common_cancel, cdl, R.drawable.np_common_pressed_right_bg);
             dlg.setMessage(R.string.common_delete_cur_pic_tip);
             dlg.show();
         }
@@ -519,7 +513,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
     private void showDetails() {
         mShowDetails = true;
         if (mDetailsHelper == null) {
-            mDetailsHelper = new DetailsHelper(mLetoolContext, mRootPane,  new MyDetailsSource());
+            mDetailsHelper = new DetailsHelper(mLetoolContext, mRootPane, new MyDetailsSource());
             mDetailsHelper.setCloseListener(new CloseListener() {
 
                 @Override

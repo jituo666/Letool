@@ -101,7 +101,7 @@ public class CategoryAction {
 //        if (temp != null) {
 //            mImage = temp;
 //        }
-        mAdapter.notifyDataSetChanged();
+//        mAdapter.notifyDataSetChanged();
     }
 
     public Bitmap getImage() {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical" >
 
     <ListView
@@ -23,23 +23,15 @@
         layout="@layout/local_media_empty_view"
         android:visibility="gone" />
 
-    <LinearLayout
-        android:id="@+id/btn_panel"
+    <Button
+        android:id="@+id/save"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@drawable/main_action_bar_bg"
-        android:visibility="gone" >
-
-        <Button
-            android:id="@+id/save"
-            android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="48dp"
-            android:layout_marginRight="48dp"
-            android:background="@drawable/common_btn_bkg"
-            android:text="@string/common_save"
-            android:textSize="@dimen/letool_action_bar_text_size1" />
-    </LinearLayout>
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/common_btn_bkg"
+        android:text="@string/common_save"
+        android:textColor="@color/np_main_text_color_normal"
+        android:textSize="@dimen/letool_action_bar_text_size1"
+        android:visibility="gone" />
 
 </LinearLayout>

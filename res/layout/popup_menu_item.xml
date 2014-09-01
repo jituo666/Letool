@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@drawable/common_list_item_bkg"
+    android:background="@drawable/np_common_pressed_bg"
     android:orientation="horizontal" >
 
     <ImageView
@@ -24,6 +24,6 @@
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textColor="@color/minor_text_color"
-        android:textSize="@dimen/letool_sliding_menu_text_size" />
+        android:textSize="@dimen/common_title_text_size" />
 
 </LinearLayout>

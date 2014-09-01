@@ -10,6 +10,7 @@ import com.xjt.newpic.metadata.loader.ThumbnailDataLoader;
 import com.xjt.newpic.view.ThumbnailView;
 import com.xjt.newpic.views.opengl.ColorTexture;
 import com.xjt.newpic.views.opengl.GLESCanvas;
+import com.xjt.newpic.views.opengl.ResourceTexture;
 import com.xjt.newpic.views.opengl.Texture;
 import com.xjt.newpic.views.opengl.UploadedBitmapTexture;
 import com.xjt.newpic.views.utils.AlbumLabelMaker;
@@ -27,7 +28,11 @@ public class ThumbnailVideoRenderer extends AbstractThumbnailRender {
     private static final int CACHE_SIZE = 48;
 
     private final ColorTexture mWaitLoadingTexture;
+    private final ResourceTexture mVideoOverlay;
+    protected final ResourceTexture mVideoPlayIcon;
+    protected final ResourceTexture mCameraPlayIcon;
     private LetoolContext mActivity;
+    private boolean mIsCameraSource = false;
 
     private ThumbnailView mThumbnailView;
     private ThumbnailVideoDataWindow mDataWindow;
@@ -67,13 +72,17 @@ public class ThumbnailVideoRenderer extends AbstractThumbnailRender {
         }
     }
 
-    public ThumbnailVideoRenderer(LetoolContext activity, ThumbnailView thumbnailView) {
-        super(activity.getActivityContext());
-        mActivity = activity;
+    public ThumbnailVideoRenderer(LetoolContext context, ThumbnailView thumbnailView, boolean isCameraSource) {
+        super(context.getActivityContext());
+        mActivity = context;
+        mIsCameraSource = isCameraSource;
         mThumbnailView = thumbnailView;
-        mLabelSpec = ViewConfigs.VideoPage.get(activity.getActivityContext()).labelSpec;
-        mWaitLoadingTexture = new ColorTexture(activity.getActivityContext().getResources().getColor(R.color.thumbnail_placehoder));
+        mLabelSpec = ViewConfigs.VideoPage.get(context.getActivityContext()).labelSpec;
+        mWaitLoadingTexture = new ColorTexture(context.getActivityContext().getResources().getColor(R.color.thumbnail_placehoder));
         mWaitLoadingTexture.setSize(1, 1);
+        mVideoOverlay = new ResourceTexture(context.getActivityContext(), R.drawable.ic_video_thumb);
+        mVideoPlayIcon = new ResourceTexture(context.getActivityContext(), R.drawable.ic_movie_play);
+        mCameraPlayIcon = new ResourceTexture(context.getActivityContext(), R.drawable.ic_video_play);
     }
 
     public void setModel(ThumbnailDataLoader model) {
@@ -166,10 +175,24 @@ public class ThumbnailVideoRenderer extends AbstractThumbnailRender {
             } else {
                 drawPressedFrame(canvas, width, height);
             }
-        } else if ((mHighlightItemPath != null)) {
-            drawSelectedFrame(canvas, width, height);
         }
         return renderRequestFlags;
+    }
+
+    protected void drawVideoOverlay(GLESCanvas canvas, int width, int height) {
+        // Scale the video overlay to the height of the thumbnail and put it  on the left side.
+        ResourceTexture v = mVideoOverlay;
+        float scale = (float) height / v.getHeight();
+        int w = Math.round(scale * v.getWidth());
+        int h = Math.round(scale * v.getHeight());
+        v.draw(canvas, 0, 0, w, h);
+
+        int s = Math.min(width, height) / 6;
+        if (mIsCameraSource) {
+            mCameraPlayIcon.draw(canvas, (width - s) / 2, (height - s) / 2, s, s);
+        } else {
+            mVideoPlayIcon.draw(canvas, (width - s) / 2, (height - s) / 2, s, s);
+        }
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Rect;
 
 import com.xjt.newpic.R;
-import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.view.ThumbnailView;
 import com.xjt.newpic.views.opengl.FadeOutTexture;
 import com.xjt.newpic.views.opengl.GLESCanvas;
@@ -22,19 +21,11 @@ public abstract class AbstractThumbnailRender implements ThumbnailView.Renderer 
 
     private static final String TAG = AbstractThumbnailRender.class.getSimpleName();
 
-    private final ResourceTexture mVideoOverlay;
-    protected ResourceTexture mVideoPlayIcon;
     protected final NinePatchTexture mFramePressed;
-    protected final ResourceTexture mFramePreSelected;
-    protected final ResourceTexture mFrameSelected;
     private FadeOutTexture mFramePressedUp;
 
     protected AbstractThumbnailRender(Context context) {
-        mVideoOverlay = new ResourceTexture(context, R.drawable.ic_video_thumb);
-        mVideoPlayIcon = new ResourceTexture(context, R.drawable.ic_video_play);
         mFramePressed = new NinePatchTexture(context, R.drawable.grid_pressed);
-        mFramePreSelected = new ResourceTexture(context, R.drawable.grid_preselected);
-        mFrameSelected = new ResourceTexture(context, R.drawable.grid_selected);
     }
 
     protected void drawContent(GLESCanvas canvas, Texture content, int width, int height, int rotation) {
@@ -52,18 +43,6 @@ public abstract class AbstractThumbnailRender implements ThumbnailView.Renderer 
         canvas.scale(scale, scale, 1);
         content.draw(canvas, 0, 0);
         canvas.restore();
-    }
-
-    protected void drawVideoOverlay(GLESCanvas canvas, int width, int height) {
-        // Scale the video overlay to the height of the thumbnail and put it  on the left side.
-        ResourceTexture v = mVideoOverlay;
-        float scale = (float) height / v.getHeight();
-        int w = Math.round(scale * v.getWidth());
-        int h = Math.round(scale * v.getHeight());
-        v.draw(canvas, 0, 0, w, h);
-
-        int s = Math.min(width, height) / 6;
-        mVideoPlayIcon.draw(canvas, (width - s) / 2, (height - s) / 2, s, s);
     }
 
     protected boolean isPressedUpFrameFinished() {
@@ -86,14 +65,6 @@ public abstract class AbstractThumbnailRender implements ThumbnailView.Renderer 
 
     protected void drawPressedFrame(GLESCanvas canvas, int width, int height) {
         drawFrame(canvas, mFramePressed.getPaddings(), mFramePressed, 0, 0, width, height);
-    }
-
-    protected void drawPreSelectedFrame(GLESCanvas canvas, int width, int height) {
-        drawFrame(canvas, new Rect(0, 0, 0, 0), mFramePreSelected, 0, 0, width, height);
-    }
-
-    protected void drawSelectedFrame(GLESCanvas canvas, int width, int height) {
-        drawFrame(canvas, new Rect(0, 0, 0, 0), mFrameSelected, 0, 0, width, height);
     }
 
     protected static void drawFrame(GLESCanvas canvas, Rect padding, Texture frame,

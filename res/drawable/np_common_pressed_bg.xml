@@ -4,5 +4,5 @@
         android:state_pressed="true" />
     <item android:drawable="@drawable/np_pressed_drawable"
         android:state_focused="true" />
-    <item android:drawable="@color/np_menu_bg" />
+    <item android:drawable="@android:color/transparent" />
 </selector>

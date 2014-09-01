@@ -309,7 +309,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         LetoolTopBar topBar = mLetoolContext.getLetoolTopBar();
         topBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_BROWSE, this);
         topBar.setTitleIcon(R.drawable.ic_drawer);
-        topBar.setTitleText(R.string.app_name);
+        topBar.setTitleText("");
         mNativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);
         mNativeButtons.setVisibility(View.VISIBLE);
 
@@ -520,8 +520,8 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
                         });
                 final LetoolDialog dlg = new LetoolDialog(getActivity());
                 dlg.setTitle(R.string.common_recommend);
-                dlg.setOkBtn(R.string.common_ok, cdl);
-                dlg.setCancelBtn(R.string.common_cancel, cdl);
+                dlg.setOkBtn(R.string.common_ok, cdl,R.drawable.np_common_pressed_left_bg);
+                dlg.setCancelBtn(R.string.common_cancel, cdl, R.drawable.np_common_pressed_right_bg);
                 dlg.setMessage(R.string.common_delete_tip);
                 dlg.show();
             } else if (v.getId() == R.id.selection_finished) {
