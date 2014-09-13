@@ -12,7 +12,7 @@ public class FilterImageBorderRepresentation extends FilterRepresentation {
         setFilterClass(ImageFilterBorder.class);
         mDrawableResource = drawableResource;
         setFilterType(FilterRepresentation.TYPE_BORDER);
-        setTextId(R.string.borders);
+        setTextId(R.string.custom_border);
         setEditorId(ImageOnlyEditor.ID);
         setShowParameterValue(false);
     }

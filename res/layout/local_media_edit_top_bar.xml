@@ -8,6 +8,7 @@
         android:layout_width="48dp"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
+        android:background="@drawable/np_common_pressed_bg"
         android:gravity="center_vertical"
         android:orientation="horizontal" >
 
@@ -24,7 +25,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
-            android:scaleType="fitCenter"
+            android:scaleType="center"
             android:src="@drawable/np_logo_navi" />
     </LinearLayout>
 
@@ -38,22 +39,35 @@
         <ImageView
             android:id="@+id/action_undo"
             style="@style/MyWidget.ActionBarIconStyle"
+            android:enabled="false"
             android:src="@drawable/filtershow_button_undo" />
 
         <ImageView
             android:id="@+id/action_redo"
             style="@style/MyWidget.ActionBarIconStyle"
+            android:layout_marginRight="8dp"
+            android:enabled="false"
             android:src="@drawable/filtershow_button_redo" />
 
-        <ImageView
-            android:id="@+id/action_accept"
-            style="@style/MyWidget.ActionBarIconStyle"
-            android:src="@drawable/ic_action_accept" />
+        <TextView
+            android:id="@+id/action_reset"
+            android:layout_width="@dimen/common_action_view_width"
+            android:layout_height="match_parent"
+            android:background="@drawable/np_common_pressed_bg"
+            android:enabled="false"
+            android:gravity="center"
+            android:text="@string/common_reset"
+            android:textSize="@dimen/common_text_size_middle" />
 
-        <ImageView
-            android:id="@+id/action_more"
-            style="@style/MyWidget.ActionBarIconStyle"
-            android:src="@drawable/ic_action_more" />
+        <TextView
+            android:id="@+id/action_save"
+            android:layout_width="@dimen/common_action_view_width"
+            android:layout_height="match_parent"
+            android:background="@drawable/np_common_pressed_bg"
+            android:enabled="false"
+            android:gravity="center"
+            android:text="@string/common_save"
+            android:textSize="@dimen/common_text_size_middle" />
     </LinearLayout>
 
 </RelativeLayout>

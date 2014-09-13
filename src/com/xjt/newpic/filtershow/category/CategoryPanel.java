@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.filtershow.category;
 
 import android.app.Activity;
@@ -19,7 +18,7 @@ public class CategoryPanel extends Fragment implements View.OnClickListener {
 
     private int mCurrentAdapter = CategoryMainPanel.LOOKS;
     private CategoryAdapter mAdapter;
-    private CategoryBaseView mAddButton;
+    private CategoryIconView mAddButton;
 
     public void setAdapter(int value) {
         mCurrentAdapter = value;
@@ -83,7 +82,7 @@ public class CategoryPanel extends Fragment implements View.OnClickListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        LinearLayout main = (LinearLayout) inflater.inflate(R.layout.filtershow_category_panel_new, container, false);
+        LinearLayout main = (LinearLayout) inflater.inflate(R.layout.filtershow_category_panel, container, false);
 
         if (savedInstanceState != null) {
             int selectedPanel = savedInstanceState.getInt(PARAMETER_TAG);
@@ -95,7 +94,7 @@ public class CategoryPanel extends Fragment implements View.OnClickListener {
             panel.setAdapter(mAdapter);
             mAdapter.setContainer(panel);
         }
-        mAddButton = (CategoryBaseView) main.findViewById(R.id.addButton);
+        mAddButton = (CategoryIconView) main.findViewById(R.id.addButton);
         if (mAddButton != null) {
             mAddButton.setOnClickListener(this);
             updateAddButtonVisibility();
@@ -115,8 +114,7 @@ public class CategoryPanel extends Fragment implements View.OnClickListener {
         if (mAddButton == null) {
             return;
         }
-        FilterShowActivity activity = (FilterShowActivity) getActivity();
-        if (activity.isShowingImageStatePanel() && mAdapter.showAddButton()) {
+        if (mAdapter.showAddButton()) {
             mAddButton.setVisibility(View.VISIBLE);
             if (mAdapter != null) {
                 mAddButton.setText(mAdapter.getAddButtonText());

@@ -2,13 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/np_menu_bg"
+    android:background="@color/np_common_bar_bg"
     android:orientation="vertical" >
 
     <ListView
         android:id="@+id/items"
         style="@style/MyWidget.ListView"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:divider="@drawable/np_slid_menu_divider_bg" />
 
 </LinearLayout>
-

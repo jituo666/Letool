@@ -1,14 +1,13 @@
+
 package com.xjt.newpic.filtershow;
 
-import android.app.AlertDialog;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -39,6 +38,7 @@ import android.widget.Toast;
 
 import com.nineoldandroids.view.ViewHelper;
 import com.xjt.newpic.R;
+import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.filtershow.cache.ImageLoader;
 import com.xjt.newpic.filtershow.category.CategoryAction;
@@ -73,7 +73,6 @@ import com.xjt.newpic.filtershow.history.HistoryManager;
 import com.xjt.newpic.filtershow.imageshow.ImageShow;
 import com.xjt.newpic.filtershow.imageshow.MasterImage;
 import com.xjt.newpic.filtershow.imageshow.Spline;
-import com.xjt.newpic.filtershow.info.InfoPanel;
 import com.xjt.newpic.filtershow.pipeline.CachingPipeline;
 import com.xjt.newpic.filtershow.pipeline.ImagePreset;
 import com.xjt.newpic.filtershow.pipeline.ProcessingService;
@@ -84,9 +83,9 @@ import com.xjt.newpic.filtershow.tools.XmpPresets.XMresults;
 import com.xjt.newpic.filtershow.ui.FramedTextButton;
 import com.xjt.newpic.imagedata.utils.LetoolBitmapPool;
 import com.xjt.newpic.metadata.source.LocalAlbum;
-import com.xjt.newpic.surpport.PopupMenuItem;
 import com.xjt.newpic.surpport.PopupMenu;
 import com.xjt.newpic.utils.LetoolUtils;
+import com.xjt.newpic.view.LetoolDialog;
 import com.xjt.newpic.view.LetoolTopBar;
 import com.xjt.newpic.view.LetoolTopBar.OnActionModeListener;
 
@@ -96,7 +95,7 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 public class FilterShowActivity extends FragmentActivity implements OnItemClickListener, OnActionModeListener,
-        PopupMenu.OnDismissListener, PopupMenu.OnMenuItemClickListener {
+        PopupMenu.OnDismissListener {
 
     private static final String TAG = FilterShowActivity.class.getSimpleName();
 
@@ -106,12 +105,7 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
     public static final String FILTER_EDIT_ACTION = "com.xjt.newpic.edit";
 
     public static final boolean RESET_TO_LOADED = false;
-
     private static final int SELECT_PICTURE = 1;
-
-    private static final int POPUP_MENU_RESET = 0;
-    private static final int POPUP_MENU_INFO = 1;
-    private static final int POPUP_MENU_PRINT = 2;
 
     private String mAction = "";
     private MasterImage mMasterImage = null;
@@ -122,8 +116,6 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
     private Editor mCurrentEditor = null;
 
     private boolean mShowingTinyPlanet = false;
-    private boolean mShowingImageStatePanel = false;
-    private boolean mShowingVersionsPanel = false;
 
     private final Vector<ImageShow> mImageViews = new Vector<ImageShow>();
 
@@ -152,8 +144,8 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
     private PopupMenu mCurrentMenu = null;
     private boolean mLoadingVisible = true;
     private LetoolTopBar mTopBar;
-    private View mAccept;
-    private View mMore;
+    private View mReset;
+    private View mSave;
 
     private ProcessingService mBoundService;
     private LoadBitmapTask mLoadBitmapTask;
@@ -211,7 +203,6 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         doBindService();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.GRAY));
-        setContentView(R.layout.filtershow_splashscreen);
     }
 
     public void updateUIAfterServiceStarted() {
@@ -240,6 +231,7 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         mEditorPlaceHolder.addEditor(new EditorMirror());
         mEditorPlaceHolder.addEditor(new EditorRotate());
         mEditorPlaceHolder.addEditor(new EditorStraighten());
+        //mEditorPlaceHolder.addEditor(new EditorRedEye());
     }
 
     public void initActionBar() {
@@ -249,9 +241,9 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         View operationPanel = mTopBar.getActionPanel();
         ImageView undo = (ImageView) operationPanel.findViewById(R.id.action_undo);
         ImageView redo = (ImageView) operationPanel.findViewById(R.id.action_redo);
-        mAccept = operationPanel.findViewById(R.id.action_accept);
-        mMore = (ImageView) operationPanel.findViewById(R.id.action_more);
-        mMasterImage.getHistory().setMenuItems(undo, redo, redo);
+        mReset = operationPanel.findViewById(R.id.action_reset);
+        mSave = operationPanel.findViewById(R.id.action_save);
+        mMasterImage.getHistory().initMenuItems(undo, redo, mReset);
     }
 
     private void loadXML() {
@@ -322,23 +314,7 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
                 transaction.commit();
             }
         };
-        Fragment main = getSupportFragmentManager().findFragmentByTag(CategoryMainPanel.FRAGMENT_TAG);
-        boolean doAnimation = false;
-        if (mShowingImageStatePanel && getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            doAnimation = true;
-        }
-        if (doAnimation && main != null && main instanceof CategoryMainPanel) {
-            //            MainPanel mainPanel = (MainPanel) main;
-            //            View container = mainPanel.getView().findViewById(R.id.category_panel_container);
-            //            View bottom = mainPanel.getView().findViewById(R.id.bottom_panel);
-            //            int panelHeight = container.getHeight() + bottom.getHeight();
-            //            ViewPropertyAnimator anim = mainPanel.getView().animate();
-            //            anim.translationY(panelHeight).start();
-            //            final Handler handler = new Handler();
-            //            handler.postDelayed(showEditor, 0);
-        } else {
-            showEditor.run();
-        }
+        showEditor.run();
     }
 
     private void fillLooks() {
@@ -458,7 +434,6 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         mLoadBitmapTask.execute(uri);
     }
 
-
     public CategoryAdapter getCategoryLooksAdapter() {
         return mCategoryLooksAdapter;
     }
@@ -532,6 +507,7 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         if (representation == null) {
             return;
         }
+
         if (representation instanceof FilterRotateRepresentation) {
             FilterRotateRepresentation r = (FilterRotateRepresentation) representation;
             r.rotateCW();
@@ -551,11 +527,14 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
                 return;
             }
         }
+
         useFilterRepresentation(representation);
         // show representation
         if (mCurrentEditor != null) {
             mCurrentEditor.detach();
         }
+
+        LLog.i(TAG, "-------------showEditor3:" + representation.getEditorId() );
         mCurrentEditor = mEditorPlaceHolder.showEditor(representation.getEditorId());
         loadEditorPanel(representation, mCurrentEditor);
     }
@@ -585,27 +564,12 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         return findViewById(id);
     }
 
-    public boolean isShowingImageStatePanel() {
-        return mShowingImageStatePanel;
-    }
-
     public ProcessingService getProcessingService() {
         return mBoundService;
     }
 
     public boolean isSimpleEditAction() {
         return !FILTER_EDIT_ACTION.equalsIgnoreCase(mAction);
-    }
-
-    //pop up menu callback
-    private void showPopupMenu() {
-        PopupMenu popup = new PopupMenu(this, mMore);
-        popup.setOnMenuItemClickListener(this);
-        popup.add(POPUP_MENU_RESET, R.string.reset);
-        popup.add(POPUP_MENU_INFO, R.string.filtershow_show_info_panel);
-        popup.add(POPUP_MENU_PRINT, R.string.print_image);
-        popup.show();
-        onShowMenu(popup);
     }
 
     public void onShowMenu(PopupMenu menu) {
@@ -620,14 +584,6 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         }
         mCurrentMenu.setOnDismissListener(null);
         mCurrentMenu = null;
-    }
-
-    public void toggleInformationPanel() {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-
-        InfoPanel panel = new InfoPanel();
-        panel.show(transaction, InfoPanel.FRAGMENT_TAG);
     }
 
     private class LoadHighresBitmapTask extends AsyncTask<Void, Void, Boolean> {
@@ -843,8 +799,7 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
     public void completeSaveImage(Uri saveUri) {
         if (mSharingImage && mSharedOutputFile != null) {
             // Image saved, we unblock the content provider
-            Uri uri = Uri.withAppendedPath(SharedImageProvider.CONTENT_URI,
-                    Uri.encode(mSharedOutputFile.getAbsolutePath()));
+            Uri uri = Uri.withAppendedPath(SharedImageProvider.CONTENT_URI, Uri.encode(mSharedOutputFile.getAbsolutePath()));
             ContentValues values = new ContentValues();
             values.put(SharedImageProvider.PREPARE, false);
             getContentResolver().insert(uri, values);
@@ -873,8 +828,11 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
     }
 
     public void enableSave(boolean enable) {
-        if (mAccept != null) {
-            mAccept.setEnabled(enable);
+        if (mSave != null) {
+            mSave.setEnabled(enable);
+        }
+        if (mReset != null) {
+            mReset.setEnabled(enable);
         }
     }
 
@@ -952,23 +910,24 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
             if (!mImageShow.hasModifications()) {
                 done();
             } else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage(R.string.unsaved).setTitle(R.string.save_before_exit);
-                builder.setPositiveButton(R.string.save_and_exit, new DialogInterface.OnClickListener() {
+
+                View.OnClickListener l = new View.OnClickListener() {
 
                     @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        saveImage();
+                    public void onClick(View v) {
+                        if (v.getId() == R.id.ok_btn) {
+                            saveImage();
+                        } else if (v.getId() == R.id.cancel_btn) {
+                            done();
+                        }
                     }
-                });
-                builder.setNegativeButton(R.string.exit, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        done();
-                    }
-                });
-                builder.show();
+                };
+                final LetoolDialog dlg = new LetoolDialog(this);
+                dlg.setTitle(R.string.common_recommend);
+                dlg.setOkBtn(R.string.save_and_exit, l, R.drawable.np_common_pressed_left_bg);
+                dlg.setCancelBtn(R.string.exit, l, R.drawable.np_common_pressed_right_bg);
+                dlg.setMessage(R.string.unsaved);
+                dlg.show();
             }
         } else {
             backToMain();
@@ -1056,6 +1015,7 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
         mSwipeStartY = location[1] + startY;
     }
 
+    @SuppressLint("NewApi")
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (mHandlingSwipeButton) {
             int direction = CategoryView.HORIZONTAL;
@@ -1067,22 +1027,39 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
                 float distance = mHandledSwipeView.getHeight();
                 if (direction == CategoryView.VERTICAL) {
                     delta = ev.getX() - mSwipeStartX;
-                    ViewHelper.setTranslationX(mHandledSwipeView, delta);
+                    if (ApiHelper.AT_LEAST_11) {
+                        mHandledSwipeView.setTranslationX(delta);
+                    } else {
+                        ViewHelper.setTranslationX(mHandledSwipeView, delta);
+                    }
                     distance = mHandledSwipeView.getWidth();
                 } else {
-                    ViewHelper.setTranslationY(mHandledSwipeView, delta);
+                    if (ApiHelper.AT_LEAST_11) {
+                        mHandledSwipeView.setTranslationY(delta);
+                    } else {
+                        ViewHelper.setTranslationY(mHandledSwipeView, delta);
+                    }
                 }
                 delta = Math.abs(delta);
                 float transparency = Math.min(1, delta / distance);
-
-                ViewHelper.setAlpha(mHandledSwipeView, 1.f - transparency);
+                if (ApiHelper.AT_LEAST_11) {
+                    mHandledSwipeView.setAlpha(1.f - transparency);
+                } else {
+                    ViewHelper.setAlpha(mHandledSwipeView, 1.f - transparency);
+                }
                 mHandledSwipeViewLastDelta = delta;
             }
             if (ev.getActionMasked() == MotionEvent.ACTION_CANCEL || ev.getActionMasked() == MotionEvent.ACTION_UP) {
 
-                ViewHelper.setTranslationX(mHandledSwipeView, 0);
-                ViewHelper.setTranslationY(mHandledSwipeView, 0);
-                ViewHelper.setAlpha(mHandledSwipeView, 1.f);
+                if (ApiHelper.AT_LEAST_11) {
+                    mHandledSwipeView.setTranslationX(0);
+                    mHandledSwipeView.setTranslationY(0);
+                    mHandledSwipeView.setAlpha(1.f);
+                } else {
+                    ViewHelper.setTranslationX(mHandledSwipeView, 0);
+                    ViewHelper.setTranslationY(mHandledSwipeView, 0);
+                    ViewHelper.setAlpha(mHandledSwipeView, 1.f);
+                }
                 mHandlingSwipeButton = false;
                 float distance = mHandledSwipeView.getHeight();
                 if (direction == CategoryView.VERTICAL) {
@@ -1136,38 +1113,24 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
                 invalidateViews();
                 break;
             }
-            case R.id.action_accept: {
-                saveImage();
+            case R.id.action_reset: {
+                resetHistory();
                 break;
             }
-            case R.id.action_more: {
-                showPopupMenu();
+            case R.id.action_save: {
+                saveImage();
                 break;
             }
             case android.R.id.home: {
                 saveImage();
                 break;
             }
-        }
-    }
+            case R.id.action_navi: {
+                onBackPressed();
+                break;
+            }
 
-    @Override
-    public boolean onMenuItemClick(PopupMenuItem item) {
-        switch (item.getItemId()) {
-            case POPUP_MENU_RESET: {
-                resetHistory();
-                return true;
-            }
-            case POPUP_MENU_INFO: {
-                toggleInformationPanel();
-                return true;
-            }
-            case POPUP_MENU_PRINT: {
-                print();
-                return true;
-            }
         }
-        return false;
     }
 
 }

@@ -4,6 +4,8 @@ package com.xjt.newpic.filtershow;
 import android.view.View;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
+
+import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.filtershow.editors.Editor;
 import com.xjt.newpic.filtershow.imageshow.ImageShow;
 

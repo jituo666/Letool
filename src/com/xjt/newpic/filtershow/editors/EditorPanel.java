@@ -45,8 +45,7 @@ public class EditorPanel extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FilterShowActivity activity = (FilterShowActivity) getActivity();
         if (mMainView != null) {
             if (mMainView.getParent() != null) {

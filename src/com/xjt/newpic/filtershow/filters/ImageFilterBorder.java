@@ -59,7 +59,6 @@ public class ImageFilterBorder extends ImageFilter {
         }
         float scale2 = scaleFactor * 2.0f;
         float scale1 = 1 / scale2;
-        LLog.i(TAG, "___________APPLY______bitmap_____h:" + bitmap.getHeight() + " w:" + bitmap.getWidth());
         return applyHelper(bitmap, scale1, scale2);
     }
 
@@ -78,18 +77,14 @@ public class ImageFilterBorder extends ImageFilter {
             o.inJustDecodeBounds = true;
             int height = BitmapFactory.decodeResource(mResources, rsc).getHeight();
             int sample = 1;
-            LLog.i(TAG, "___________APPLY____border_______h:" + height + " maxh:" + maxHeight);
             while (height > maxHeight) {
                 sample = sample * 2;
                 height = height / 2;
             }
-
-            LLog.i(TAG, "___________APPLY____border_______h:" + height + " simple:" + sample);
             o = new BitmapFactory.Options();
             o.inSampleSize = sample;
             Bitmap b = BitmapFactory.decodeResource(mResources, rsc, o);
             drawable = new BitmapDrawable(mResources, b);
-            LLog.i(TAG, "___________APPLY____border_______h:" + b.getHeight() + " w:" + b.getWidth());
             mDrawables.put(rsc, drawable);
         }
         return drawable;

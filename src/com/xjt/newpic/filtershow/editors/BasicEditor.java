@@ -1,7 +1,5 @@
 package com.xjt.newpic.filtershow.editors;
 
-import android.content.Context;
-
 import com.xjt.newpic.R;
 import com.xjt.newpic.filtershow.controller.Control;
 import com.xjt.newpic.filtershow.controller.FilterView;
@@ -10,13 +8,14 @@ import com.xjt.newpic.filtershow.controller.ParameterInteger;
 import com.xjt.newpic.filtershow.filters.FilterBasicRepresentation;
 import com.xjt.newpic.filtershow.filters.FilterRepresentation;
 
-
 /**
  * The basic editor that all the one parameter filters
  */
 public class BasicEditor extends ParametricEditor implements ParameterInteger {
+
+    private final String TAG = BasicEditor.class.getSimpleName();
+
     public static int ID = R.id.basicEditor;
-    private final String LOGTAG = "BasicEditor";
 
     public BasicEditor() {
         super(ID, R.layout.filtershow_default_editor, R.id.basicEditor);
@@ -34,7 +33,6 @@ public class BasicEditor extends ParametricEditor implements ParameterInteger {
     public void reflectCurrentFilter() {
         super.reflectCurrentFilter();
         if (getLocalRepresentation() != null && getLocalRepresentation() instanceof FilterBasicRepresentation) {
-            FilterBasicRepresentation interval = (FilterBasicRepresentation) getLocalRepresentation();
             updateText();
         }
     }

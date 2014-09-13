@@ -10,8 +10,7 @@
         android:layout_alignParentLeft="true"
         android:background="@drawable/np_common_pressed_bg"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingRight="2dp" >
+        android:orientation="horizontal" >
 
         <ImageView
             android:id="@+id/action_navi_tip"

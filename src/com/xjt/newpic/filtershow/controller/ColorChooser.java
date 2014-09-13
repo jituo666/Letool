@@ -26,7 +26,7 @@ public class ColorChooser implements Control {
     private View mTopView;
     private Vector<Button> mIconButton = new Vector<Button>();
     protected int mLayoutID = R.layout.filtershow_control_color_chooser;
-    Context mContext;
+    private Context mContext;
     private int mTransparent;
     private int mSelected;
     private static final int OPACITY_OFFSET = 3;

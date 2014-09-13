@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.xjt.newpic.R;
+import com.xjt.newpic.common.LLog;
 
 import android.app.Activity;
 import android.content.Context;
@@ -26,6 +27,8 @@ import android.widget.TextView;
 
 public class PopupMenu implements PopupWindow.OnDismissListener {
 
+    private static final String TAG = PopupMenu.class.getSimpleName();
+
     private Context mContext;
     private LayoutInflater mInflater;
     private View mAnchor;
@@ -38,6 +41,7 @@ public class PopupMenu implements PopupWindow.OnDismissListener {
     private List<PopupMenuItem> mItems;
     private int mWidth = 160; //dp
     private float mScale;
+    private int mDensity;
 
     public interface OnDismissListener {
 
@@ -56,6 +60,7 @@ public class PopupMenu implements PopupWindow.OnDismissListener {
         DisplayMetrics metrics = new DisplayMetrics();
         mWindowManager.getDefaultDisplay().getMetrics(metrics);
         mScale = metrics.scaledDensity;
+        mDensity = Math.round(metrics.density);
 
         mItems = new ArrayList<PopupMenuItem>();
 
@@ -111,7 +116,6 @@ public class PopupMenu implements PopupWindow.OnDismissListener {
     }
 
     public void show() {
-
         if (mItems.size() == 0) {
             throw new IllegalStateException("PopupMenu#add was not called with a menu item to display.");
         }
@@ -121,8 +125,7 @@ public class PopupMenu implements PopupWindow.OnDismissListener {
         mItemsView.setOnItemClickListener(new OnItemClickListener() {
 
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position,
-                    long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (mListener != null) {
                     mListener.onMenuItemClick(mItems.get(position));
                 }
@@ -136,7 +139,8 @@ public class PopupMenu implements PopupWindow.OnDismissListener {
         }
         int[] location = new int[2];
         mAnchor.getLocationOnScreen(location);
-        mPopupWindow.showAtLocation(mAnchor, Gravity.NO_GRAVITY, location[0] + mAnchor.getWidth() / 2, location[1] + mAnchor.getHeight());
+        mPopupWindow.showAtLocation(mAnchor, Gravity.NO_GRAVITY, location[0], location[1] - mItemsView.getCount() * mAnchor.getHeight()
+                + (mItemsView.getCount() * 2) * mDensity);
     }
 
     public boolean isShowing() {
@@ -174,7 +178,6 @@ public class PopupMenu implements PopupWindow.OnDismissListener {
         mPopupWindow.setFocusable(true);
         mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setAnimationStyle(android.R.style.Animation_Dialog);
-        mPopupWindow.setBackgroundDrawable(mContext.getResources().getDrawable(R.drawable.panel_background));
     }
 
     static class ViewHolder {

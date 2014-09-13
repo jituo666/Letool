@@ -3,7 +3,10 @@ package com.xjt.newpic.view;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager.LayoutParams;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -127,4 +130,16 @@ public class LetoolDialog extends Dialog {
             mListener.onClick(v);
         }
     }
+
+    @Override
+    public void show() {
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindow().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        LayoutParams p = getWindow().getAttributes();
+        p.width = (int) (metrics.widthPixels * 0.85);
+        getWindow().setAttributes(p);
+        getWindow().setGravity(Gravity.CENTER);
+        super.show();
+    }
+
 }

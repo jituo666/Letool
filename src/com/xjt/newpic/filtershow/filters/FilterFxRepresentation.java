@@ -6,7 +6,6 @@ import com.xjt.newpic.filtershow.editors.ImageOnlyEditor;
 public class FilterFxRepresentation extends FilterRepresentation {
 
     private static final String TAG = FilterFxRepresentation.class.getSimpleName();
-    // TODO: When implementing serialization, we should find a unique way of specifying bitmaps / names (the resource IDs being random)
     private int mBitmapResource = 0;
     private int mNameResource = 0;
 

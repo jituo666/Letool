@@ -77,7 +77,7 @@
             android:label="@string/crop"
             android:screenOrientation="portrait"
             android:theme="@style/MainTheme" >
-            <intent-filter android:label="@string/crop_label" >
+            <intent-filter >
                 <action android:name="com.android.camera.action.CROP" />
 
                 <data android:scheme="http" />

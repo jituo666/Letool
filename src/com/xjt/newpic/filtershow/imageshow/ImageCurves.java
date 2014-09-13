@@ -98,7 +98,6 @@ public class ImageCurves extends ImageShow {
             mIdStrLut.put(POP_UP_MENU_ID_BLUE, getContext().getString(R.string.curves_channel_blue));
         }
         PopupMenu popupMenu = new PopupMenu(getActivity(), button);
-        //popupMenu.getMenuInflater().inflate(R.menu.filtershow_menu_curves, popupMenu.getMenu());
         popupMenu.add(POP_UP_MENU_ID_RGB, R.string.curves_channel_rgb);
         popupMenu.add(POP_UP_MENU_ID_RED, R.string.curves_channel_red);
         popupMenu.add(POP_UP_MENU_ID_GREEN, R.string.curves_channel_green);

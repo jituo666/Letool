@@ -1,26 +1,26 @@
+
 package com.xjt.newpic.filtershow.history;
 
 import android.graphics.drawable.Drawable;
-import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 
 import java.util.Vector;
 
 public class HistoryManager {
-    private static final String LOGTAG = "HistoryManager";
+
+    private static final String TAG = HistoryManager.class.getSimpleName();
 
     private Vector<HistoryItem> mHistoryItems = new Vector<HistoryItem>();
     private int mCurrentPresetPosition = 0;
-    private ImageView mUndoMenuItem = null;
-    private ImageView mRedoMenuItem = null;
-    private ImageView mResetMenuItem = null;
-    private ImageView mAcceptMenuItem = null;
+    private View mUndoMenuItem = null;
+    private View mRedoMenuItem = null;
+    private View mResetMenuItem = null;
 
-    public void setMenuItems(ImageView undoItem, ImageView redoItem, ImageView resetItem ) {
+    public void initMenuItems(View undoItem, View redoItem, View resetItem) {
         mUndoMenuItem = undoItem;
         mRedoMenuItem = redoItem;
         mResetMenuItem = resetItem;
-        updateMenuItems();
     }
 
     private int getCount() {
@@ -67,7 +67,7 @@ public class HistoryManager {
         return true;
     }
 
-    public void updateMenuItems() {
+    private void updateMenuItems() {
         if (mUndoMenuItem != null) {
             setEnabled(mUndoMenuItem, canUndo());
         }
@@ -79,11 +79,13 @@ public class HistoryManager {
         }
     }
 
-    private void setEnabled(ImageView item, boolean enabled) {
+    private void setEnabled(View item, boolean enabled) {
         item.setEnabled(enabled);
-        Drawable drawable = item.getDrawable();
-        if (drawable != null) {
-            drawable.setAlpha(enabled ? 255 : 80);
+        if (item instanceof ImageView) {
+            Drawable drawable = ((ImageView) item).getDrawable();
+            if (drawable != null) {
+                drawable.setAlpha(enabled ? 255 : 80);
+            }
         }
     }
 

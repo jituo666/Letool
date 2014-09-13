@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/action_bar_selection"
-    style="@style/MyWidget.ActionBarPanel"
-    android:layout_marginLeft="4dp"
-    android:layout_marginRight="8dp" >
+    style="@style/MyWidget.ActionBarPanel">
 
     <ImageView
         android:id="@+id/selection_finished"
@@ -37,18 +35,17 @@
         style="@style/MyWidget.ActionBarIconStyle"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="2dp"
         android:clickable="false"
         android:src="@drawable/ic_action_delete" />
 
     <ImageView
         android:id="@+id/operation_multi_share"
         style="@style/MyWidget.ActionBarIconStyle"
-        android:layout_toLeftOf="@id/operation_delete"
-        android:layout_marginRight="12dp"
         android:layout_centerVertical="true"
+        android:layout_marginRight="12dp"
+        android:layout_toLeftOf="@id/operation_delete"
         android:clickable="false"
         android:src="@drawable/ic_action_share"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </RelativeLayout>

@@ -158,7 +158,7 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
         mOriginalTextMargin = res.getDimensionPixelSize(R.dimen.photoeditor_original_text_margin);
         mOriginalTextSize = res.getDimensionPixelSize(R.dimen.photoeditor_original_text_size);
         mBackgroundColor = res.getColor(R.color.background_screen);
-        mOriginalText = res.getString(R.string.original_picture_text);
+        mOriginalText = res.getString(R.string.original);
         mShadow = (NinePatchDrawable) res.getDrawable(R.drawable.geometry_shadow);
         setupGestureDetector(context);
         mActivity = (FilterShowActivity) context;

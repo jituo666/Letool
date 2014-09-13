@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.xjt.newpic.R;
@@ -19,10 +18,10 @@ public class CategoryMainPanel extends Fragment {
     private static final String TAG = CategoryMainPanel.class.getSimpleName();
 
     private LinearLayout mMainView;
-    private ImageButton looksButton;
-    private ImageButton bordersButton;
-    private ImageButton geometryButton;
-    private ImageButton filtersButton;
+    private View looksButton;
+    private View bordersButton;
+    private View geometryButton;
+    private View filtersButton;
 
     public static final String FRAGMENT_TAG = TAG;
     public static final int LOOKS = 0;
@@ -32,7 +31,6 @@ public class CategoryMainPanel extends Fragment {
     public static final int VERSIONS = 4;
 
     private int mCurrentSelected = -1;
-    private int mPreviousToggleVersions = -1;
 
     private void selection(int position, boolean value) {
         if (value) {
@@ -59,13 +57,34 @@ public class CategoryMainPanel extends Fragment {
         }
     }
 
+    public void showPanel(int currentPanel) {
+        switch (currentPanel) {
+            case LOOKS: {
+                loadCategoryLookPanel(false);
+                break;
+            }
+            case BORDERS: {
+                loadCategoryBorderPanel();
+                break;
+            }
+            case GEOMETRY: {
+                loadCategoryGeometryPanel();
+                break;
+            }
+            case FILTERS: {
+                loadCategoryFiltersPanel();
+                break;
+            }
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         mMainView = (LinearLayout) inflater.inflate(R.layout.filtershow_main_panel, null, false);
-        looksButton = (ImageButton) mMainView.findViewById(R.id.fxButton);
-        bordersButton = (ImageButton) mMainView.findViewById(R.id.borderButton);
-        geometryButton = (ImageButton) mMainView.findViewById(R.id.geometryButton);
-        filtersButton = (ImageButton) mMainView.findViewById(R.id.colorsButton);
+        looksButton = (View) mMainView.findViewById(R.id.fxButton);
+        bordersButton = (View) mMainView.findViewById(R.id.borderButton);
+        geometryButton = (View) mMainView.findViewById(R.id.geometryButton);
+        filtersButton = (View) mMainView.findViewById(R.id.colorsButton);
         looksButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -172,45 +191,6 @@ public class CategoryMainPanel extends Fragment {
         setCategoryFragment(categoryPanel, fromRight);
         mCurrentSelected = FILTERS;
         selection(mCurrentSelected, true);
-    }
-
-    public void showPanel(int currentPanel) {
-        switch (currentPanel) {
-            case LOOKS: {
-                loadCategoryLookPanel(false);
-                break;
-            }
-            case BORDERS: {
-                loadCategoryBorderPanel();
-                break;
-            }
-            case GEOMETRY: {
-                loadCategoryGeometryPanel();
-                break;
-            }
-            case FILTERS: {
-                loadCategoryFiltersPanel();
-                break;
-            }
-        }
-    }
-
-    public void setToggleVersionsPanelButton(ImageButton button) {
-        if (button == null) {
-            return;
-        }
-        button.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (mCurrentSelected == VERSIONS) {
-                    showPanel(mPreviousToggleVersions);
-                } else {
-                    mPreviousToggleVersions = mCurrentSelected;
-                    showPanel(VERSIONS);
-                }
-            }
-        });
     }
 
     @Override

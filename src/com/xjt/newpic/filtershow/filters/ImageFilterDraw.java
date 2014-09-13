@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.filtershow.filters;
 
 import android.graphics.Bitmap;
@@ -14,7 +13,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 
 import com.xjt.newpic.R;
-import com.xjt.newpic.filtershow.cache.ImageLoader;
 import com.xjt.newpic.filtershow.filters.FilterDrawRepresentation.StrokeData;
 import com.xjt.newpic.filtershow.imageshow.MasterImage;
 import com.xjt.newpic.filtershow.pipeline.FilterEnvironment;

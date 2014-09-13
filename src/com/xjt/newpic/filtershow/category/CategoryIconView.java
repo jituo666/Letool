@@ -19,9 +19,9 @@ import android.view.View;
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.LLog;
 
-public class CategoryBaseView extends View {
+public class CategoryIconView extends View {
 
-    private static final String TAG = CategoryBaseView.class.getSimpleName();
+    private static final String TAG = CategoryIconView.class.getSimpleName();
 
     public static final int VERTICAL = 0;
     public static final int HORIZONTAL = 1;
@@ -36,14 +36,14 @@ public class CategoryBaseView extends View {
     private Bitmap mBitmap;
     private Rect mBitmapBounds;
     private String mText;
-    private boolean mUseOnlyDrawable = false;
+    private boolean mUseOnlyDrawable = true;
 
-    public CategoryBaseView(Context context) {
+    public CategoryIconView(Context context) {
         super(context);
         setup(context);
     }
 
-    public CategoryBaseView(Context context, AttributeSet attrs) {
+    public CategoryIconView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setup(context);
         int bitmapRsc = attrs.getAttributeResourceValue("http://schemas.android.com/apk/res/android", "src", 0);
@@ -68,7 +68,6 @@ public class CategoryBaseView extends View {
         mPaint.setTextSize(mTextSize);
         if (getOrientation() == VERTICAL) {
             text = text.toUpperCase();
-            // TODO: set this in xml
             mPaint.setTypeface(Typeface.DEFAULT_BOLD);
         }
         mPaint.getTextBounds(text, 0, text.length(), mTextBounds);
@@ -98,11 +97,11 @@ public class CategoryBaseView extends View {
     }
 
     protected void drawOutlinedText(Canvas canvas, String text) {
-        mPaint.setColor(getBackgroundColor());
+        mPaint.setColor(Color.BLACK);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(3);
         drawText(canvas, text);
-        mPaint.setColor(getTextColor());
+        mPaint.setColor(Color.WHITE);
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setStrokeWidth(1);
         drawText(canvas, text);

@@ -1,78 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:baselineAligned="false"
-              android:orientation="vertical"
-              android:visibility="visible"
-              android:background="@color/background_main_toolbar" >
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background_main_toolbar"
+    android:baselineAligned="false"
+    android:orientation="vertical"
+    android:visibility="visible" >
 
-    <FrameLayout android:id="@+id/category_panel_container"
-                 android:layout_width="match_parent"
-                 android:visibility="visible"
-                 android:layout_height="0dip"
-                 android:layout_gravity="center"
-                 android:layout_weight="1"/>
+    <FrameLayout
+        android:id="@+id/category_panel_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dip"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:visibility="visible" />
 
     <View
-            android:background="@color/toolbar_separation_line"
-            android:layout_height="1dip"
-            android:layout_width="match_parent"/>
+        android:layout_width="match_parent"
+        android:layout_height="1dip"
+        android:background="@color/toolbar_separation_line" />
 
     <com.xjt.newpic.filtershow.CenteredLinearLayout
-            xmlns:custom="http://schemas.android.com/apk/res/com.xjt.newpic"
-            android:id="@+id/bottom_panel"
+        xmlns:custom="http://schemas.android.com/apk/res/com.xjt.newpic"
+        android:id="@+id/bottom_panel"
+        android:layout_width="match_parent"
+        android:layout_height="48dip"
+        android:layout_gravity="center|bottom"
+        android:orientation="vertical"
+        custom:max_width="400dip" >
+
+        <LinearLayout
+            style="@style/MyWidget.ActionBarPanel"
             android:layout_width="match_parent"
-            android:layout_height="48dip"
-            android:layout_gravity="center|bottom"
-            custom:max_width="400dip"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
 
-        <LinearLayout android:layout_width="wrap_content"
-                      android:layout_height="match_parent"
-                      android:background="@color/background_main_toolbar">
+            <TextView
+                android:id="@+id/fxButton"
+                style="@style/MyWidget.ActionBarIconStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawablePadding="-3dp"
+                android:drawableTop="@drawable/filtershow_action_fx_bg"
+                android:gravity="center_horizontal"
+                android:text="@string/np_edit_fx"
+                android:textColor="@drawable/common_filter_action_color"
+                android:textSize="12sp" />
 
-            <ImageButton
-                    android:id="@+id/fxButton"
-                    android:layout_width="@dimen/thumbnail_size"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/filtershow_button_background"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_photoeditor_effects"/>
+            <TextView
+                android:id="@+id/borderButton"
+                style="@style/MyWidget.ActionBarIconStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawablePadding="-3dp"
+                android:drawableTop="@drawable/filtershow_action_boder_bg"
+                android:gravity="center_horizontal"
+                android:text="@string/np_edit_boder"
+                android:textColor="@drawable/common_filter_action_color"
+                android:textSize="12sp" />
 
-            <ImageButton
-                    android:id="@+id/borderButton"
-                    android:layout_width="@dimen/thumbnail_size"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/filtershow_button_background"
-                    android:padding="2dip"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_photoeditor_border"/>
+            <TextView
+                android:id="@+id/geometryButton"
+                style="@style/MyWidget.ActionBarIconStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawablePadding="-3dp"
+                android:drawableTop="@drawable/filtershow_action_geometry_bg"
+                android:gravity="center_horizontal"
+                android:text="@string/np_edit_geometry"
+                android:textColor="@drawable/common_filter_action_color"
+                android:textSize="12sp" />
 
-            <ImageButton
-                    android:id="@+id/geometryButton"
-                    android:layout_width="@dimen/thumbnail_size"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/filtershow_button_background"
-                    android:padding="2dip"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_photoeditor_fix"/>
-
-            <ImageButton
-                    android:id="@+id/colorsButton"
-                    android:layout_width="@dimen/thumbnail_size"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/filtershow_button_background"
-                    android:padding="2dip"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_photoeditor_color"/>
-
+            <TextView
+                android:id="@+id/colorsButton"
+                style="@style/MyWidget.ActionBarIconStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawablePadding="-3dp"
+                android:drawableTop="@drawable/filtershow_action_effect_bg"
+                android:gravity="center_horizontal"
+                android:text="@string/np_edit_effect"
+                android:textColor="@drawable/common_filter_action_color"
+                android:textSize="12sp" />
         </LinearLayout>
-
     </com.xjt.newpic.filtershow.CenteredLinearLayout>
 
 </LinearLayout>

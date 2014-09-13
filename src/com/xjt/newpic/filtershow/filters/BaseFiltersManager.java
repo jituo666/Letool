@@ -36,7 +36,6 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
                 Object filterInstance = filterClass.newInstance();
                 if (filterInstance instanceof ImageFilter) {
                     mFilters.put(filterClass, (ImageFilter) filterInstance);
-
                     FilterRepresentation rep = ((ImageFilter) filterInstance).getDefaultRepresentation();
                     if (rep != null) {
                         addRepresentation(rep);
@@ -147,51 +146,51 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
 
     public void addLooks(Context context) {
         int[] drawid = {
-                R.drawable.filtershow_fx_0005_punch,
+                R.drawable.filtershow_fx_0007_washout,
                 R.drawable.filtershow_fx_0000_vintage,
                 R.drawable.filtershow_fx_0004_bw_contrast,
+                R.drawable.filtershow_fx_0008_washout_color,
                 R.drawable.filtershow_fx_0002_bleach,
                 R.drawable.filtershow_fx_0001_instant,
-                R.drawable.filtershow_fx_0007_washout,
                 R.drawable.filtershow_fx_0003_blue_crush,
-                R.drawable.filtershow_fx_0008_washout_color,
+                R.drawable.filtershow_fx_0005_punch,
                 R.drawable.filtershow_fx_0006_x_process
         };
 
         int[] sampleid = { // [0,  1~9] 10
-                R.drawable.effect_sample_1,
+                R.drawable.effect_sample_6,
                 R.drawable.effect_sample_2,
                 R.drawable.effect_sample_3,
+                R.drawable.effect_sample_8,
                 R.drawable.effect_sample_4,
                 R.drawable.effect_sample_5,
-                R.drawable.effect_sample_6,
                 R.drawable.effect_sample_7,
-                R.drawable.effect_sample_8,
+                R.drawable.effect_sample_1,
                 R.drawable.effect_sample_9
         };
 
         int[] fxNameid = {
-                R.string.ffx_punch,
+                R.string.ffx_washout,
                 R.string.ffx_vintage,
                 R.string.ffx_bw_contrast,
+                R.string.ffx_washout_color,
                 R.string.ffx_bleach,
                 R.string.ffx_instant,
-                R.string.ffx_washout,
                 R.string.ffx_blue_crush,
-                R.string.ffx_washout_color,
+                R.string.ffx_punch,
                 R.string.ffx_x_process
         };
 
         // Do not localize.
         String[] serializationNames = {
-                "LUT3D_PUNCH",
+                "LUT3D_WASHOUT",
                 "LUT3D_VINTAGE",
                 "LUT3D_BW",
+                "LUT3D_WASHOUT_COLOR",
                 "LUT3D_BLEACH",
                 "LUT3D_INSTANT",
-                "LUT3D_WASHOUT",
                 "LUT3D_BLUECRUSH",
-                "LUT3D_WASHOUT_COLOR",
+                "LUT3D_PUNCH",
                 "LUT3D_XPROCESS"
         };
 
@@ -263,24 +262,24 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
         rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_tape, sampleid[4]);
         borderList.add(rep);
 
-        rep = new FilterColorBorderRepresentation(Color.BLACK, mImageBorderSize, 0, sampleid[5]);
+        rep = new FilterColorBorderRepresentation(Color.BLACK, mImageBorderSize, mImageBorderSize, sampleid[5]);
         borderList.add(rep);
 
-        rep = new FilterColorBorderRepresentation(Color.BLACK, mImageBorderSize, mImageBorderSize, sampleid[6]);
-        borderList.add(rep);
-
-        rep = new FilterColorBorderRepresentation(Color.WHITE, mImageBorderSize, 0, sampleid[7]);
-        borderList.add(rep);
-
-        rep = new FilterColorBorderRepresentation(Color.WHITE, mImageBorderSize, mImageBorderSize, sampleid[8]);
-        borderList.add(rep);
-
-        int creamColor = Color.argb(255, 237, 237, 227);
-        rep = new FilterColorBorderRepresentation(creamColor, mImageBorderSize, 0, sampleid[9]);
-        borderList.add(rep);
-
-        rep = new FilterColorBorderRepresentation(creamColor, mImageBorderSize, mImageBorderSize, sampleid[10]);
-        borderList.add(rep);
+//        rep = new FilterColorBorderRepresentation(Color.BLACK, mImageBorderSize, mImageBorderSize, sampleid[6]);
+//        borderList.add(rep);
+//
+//        rep = new FilterColorBorderRepresentation(Color.WHITE, mImageBorderSize, 0, sampleid[7]);
+//        borderList.add(rep);
+//
+//        rep = new FilterColorBorderRepresentation(Color.WHITE, mImageBorderSize, mImageBorderSize, sampleid[8]);
+//        borderList.add(rep);
+//
+//        int creamColor = Color.argb(255, 237, 237, 227);
+//        rep = new FilterColorBorderRepresentation(creamColor, mImageBorderSize, 0, sampleid[9]);
+//        borderList.add(rep);
+//
+//        rep = new FilterColorBorderRepresentation(creamColor, mImageBorderSize, mImageBorderSize, sampleid[10]);
+//        borderList.add(rep);
 
         for (FilterRepresentation filter : borderList) {
             filter.setSerializationName(serializationNames[i++]);
@@ -308,9 +307,9 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
 
         FilterRepresentation[] geometryFilters = {
                 new FilterCropRepresentation(R.drawable.effect_sample_22),
-                new FilterStraightenRepresentation(R.drawable.effect_sample_23),
+                new FilterStraightenRepresentation(R.drawable.effect_sample_25),
                 new FilterRotateRepresentation(R.drawable.effect_sample_24),
-                new FilterMirrorRepresentation(R.drawable.effect_sample_25)
+                new FilterMirrorRepresentation(R.drawable.effect_sample_23)
         };
 
         for (int i = 0; i < textId.length; i++) {

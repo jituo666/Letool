@@ -20,7 +20,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">48dip</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:background">@drawable/filtershow_button_background</item>
+        <item name="android:background">@drawable/filtershow_action_fx_bg</item>
         <item name="android:gravity">center</item>
         <item name="android:padding">2dip</item>
         <item name="android:textColor">@android:color/white</item>
@@ -31,7 +31,7 @@
     <style name="FilterShowTopButton">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:background">@drawable/filtershow_button_background</item>
+        <item name="android:background">@drawable/filtershow_action_fx_bg</item>
         <item name="android:gravity">center</item>
         <item name="android:padding">8dip</item>
         <item name="android:textColor">@android:color/white</item>
@@ -43,7 +43,7 @@
     <style name="FilterShowBottomButton">
         <item name="android:layout_width">96dip</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/filtershow_button_background</item>
+        <item name="android:background">@drawable/filtershow_action_fx_bg</item>
         <item name="android:gravity">center</item>
         <item name="android:paddingBottom">16dip</item>
         <item name="android:textColor">@android:color/white</item>

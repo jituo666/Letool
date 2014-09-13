@@ -96,5 +96,7 @@
     <dimen name="common_list_header_height">30dp</dimen>
     <dimen name="common_scroll_bar_width">10dp</dimen>
     <dimen name="common_scroll_bar_height">48dp</dimen>
+    
+    <dimen name="common_action_view_width">56dp</dimen>
 
 </resources>

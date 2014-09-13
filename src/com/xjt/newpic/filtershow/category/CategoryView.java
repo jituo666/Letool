@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.filtershow.category;
 
 import android.annotation.SuppressLint;
@@ -20,7 +19,7 @@ import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.filtershow.FilterShowActivity;
 import com.xjt.newpic.filtershow.ui.SelectionRenderer;
 
-public class CategoryView extends CategoryBaseView implements View.OnClickListener {
+public class CategoryView extends CategoryIconView implements View.OnClickListener {
 
     private static final String TAG = CategoryView.class.getSimpleName();
 
@@ -41,6 +40,7 @@ public class CategoryView extends CategoryBaseView implements View.OnClickListen
     private boolean mCanBeRemoved = false;
     private long mDoubleActionLast = 0;
     private long mDoubleTapDelay = 250;
+    private Rect mTempRect = new Rect();
 
     public CategoryView(Context context) {
         super(context);
@@ -104,7 +104,8 @@ public class CategoryView extends CategoryBaseView implements View.OnClickListen
             if (mAction.isDoubleAction()) {
                 return;
             }
-            mAction.setImageFrame(new Rect(0, 0, getWidth(), getHeight()), getOrientation());
+            mTempRect.set(0, 0, getWidth(), getHeight());
+            mAction.setImageFrame(mTempRect, getOrientation());
             Bitmap image = mAction.getImage();
             if (image != null) {
                 setBitmap(image);

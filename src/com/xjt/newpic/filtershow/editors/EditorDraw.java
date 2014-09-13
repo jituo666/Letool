@@ -1,17 +1,13 @@
-
 package com.xjt.newpic.filtershow.editors;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 
 import com.xjt.newpic.R;
 import com.xjt.newpic.filtershow.FilterShowActivity;
@@ -20,7 +16,6 @@ import com.xjt.newpic.filtershow.controller.ColorChooser;
 import com.xjt.newpic.filtershow.controller.FilterView;
 import com.xjt.newpic.filtershow.filters.FilterDrawRepresentation;
 import com.xjt.newpic.filtershow.filters.FilterRepresentation;
-import com.xjt.newpic.filtershow.filters.ImageFilterDraw;
 import com.xjt.newpic.filtershow.imageshow.ImageDraw;
 import com.xjt.newpic.surpport.PopupMenu;
 import com.xjt.newpic.surpport.PopupMenuItem;
@@ -103,7 +98,6 @@ public class EditorDraw extends ParametricEditor implements FilterView {
     @Override
     public void openUtilityPanel(final LinearLayout accessoryViewList) {
         Button view = (Button) accessoryViewList.findViewById(R.id.applyEffect);
-
         view.setText(mContext.getString(R.string.draw_color));
         view.setOnClickListener(new OnClickListener() {
 
@@ -145,7 +139,6 @@ public class EditorDraw extends ParametricEditor implements FilterView {
     }
 
     protected void selectMenuItem(PopupMenuItem item) {
-        ImageFilterDraw filter = (ImageFilterDraw) mImageShow.getCurrentFilter();
         FilterDrawRepresentation rep = getDrawRep();
         if (rep == null) {
             return;

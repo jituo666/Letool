@@ -6,8 +6,10 @@ import com.nineoldandroids.animation.Animator.AnimatorListener;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.nineoldandroids.view.ViewHelper;
 import com.xjt.newpic.R;
+import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.common.LLog;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -57,9 +59,14 @@ public class CategorySelected extends View implements AnimatorListener, ValueAni
         mWaveAnimator.start();
     }
 
+    @SuppressLint("NewApi")
     @Override
     public void onAnimationUpdate(ValueAnimator v) {
-        ViewHelper.setAlpha(this, (2f - (Float) v.getAnimatedValue()));
+        if (ApiHelper.AT_LEAST_11) {
+            setAlpha((2f - (Float) v.getAnimatedValue()));
+        } else {
+            ViewHelper.setAlpha(this, (2f - (Float) v.getAnimatedValue()));
+        }
         invalidate();
     }
 

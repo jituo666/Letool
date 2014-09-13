@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.filtershow.editors;
 
 import android.content.Context;
@@ -113,7 +112,6 @@ public class EditorColorBorder extends ParametricEditor {
             }
         });
         popupMenu.show();
-        LLog.i(TAG, " -------------------------------====showPopupMenu excuted !:");
         ((FilterShowActivity) mContext).onShowMenu(popupMenu);
     }
 

@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.filtershow.editors;
 
 import android.content.Context;

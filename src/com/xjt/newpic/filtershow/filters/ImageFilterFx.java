@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.filtershow.filters;
 
 import com.xjt.newpic.common.LLog;

@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.filtershow.filters;
 
 import android.graphics.RectF;
@@ -8,10 +9,11 @@ import com.xjt.newpic.filtershow.editors.EditorRedEye;
 import java.util.Vector;
 
 public class FilterRedEyeRepresentation extends FilterPointRepresentation {
-    private static final String LOGTAG = "FilterRedEyeRepresentation";
+
+    private static final String TAG = FilterRedEyeRepresentation.class.getSimpleName();
 
     public FilterRedEyeRepresentation(int sr) {
-        super("RedEye",R.string.redeye,EditorRedEye.ID,sr);
+        super("RedEye", sr, R.string.redeye, EditorRedEye.ID);
         setSerializationName("REDEYE");
         setFilterClass(ImageFilterRedEye.class);
         setOverlayId(R.drawable.photoeditor_effect_redeye);

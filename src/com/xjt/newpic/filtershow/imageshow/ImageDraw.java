@@ -5,17 +5,12 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.graphics.RectF;
-import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.NinePatchDrawable;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -27,38 +22,33 @@ import com.xjt.newpic.filtershow.filters.ImageFilterDraw;
 
 public class ImageDraw extends ImageShow {
 
-    private static final String LOGTAG = "ImageDraw";
-    private int mCurrentColor = Color.RED;
+    private static final String TAG = ImageDraw.class.getSimpleName();
+
     final static float INITAL_STROKE_RADIUS = 40;
     private float mCurrentSize = INITAL_STROKE_RADIUS;
     private byte mType = 0;
     private FilterDrawRepresentation mFRep;
     private EditorDraw mEditorDraw;
     private long mTimeout;
-    private Paint mCheckerdPaint = makeCheckedPaint();
     private Paint mShadowPaint = new Paint();
     private Paint mIconPaint = new Paint();
     private Paint mBorderPaint = new Paint();
     private Handler mHandler;
     private FilterDrawRepresentation.StrokeData mTmpStrokData =
             new FilterDrawRepresentation.StrokeData();
-    private Bitmap mBitmap;
-    private float mDisplayRound;
-    private float mDisplayBorder;
     private int DISPLAY_TIME = 500;
     private Matrix mRotateToScreen = new Matrix();
     private Matrix mToOrig;
     private int mBorderColor;
     private int mBorderShadowSize;
-    private NinePatchDrawable mShadow;
 
     Runnable mUpdateRunnable = new Runnable() {
+
         @Override
         public void run() {
-           invalidate();
+            invalidate();
         }
     };
-
 
     public ImageDraw(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -74,22 +64,17 @@ public class ImageDraw extends ImageShow {
         setupTimer();
     }
 
-    private void setupConstants(Context context){
+    private void setupConstants(Context context) {
         Resources res = context.getResources();
-        mDisplayRound = res.getDimensionPixelSize(R.dimen.draw_rect_round);
-        mDisplayBorder = res.getDimensionPixelSize(R.dimen.draw_rect_border);
         mBorderShadowSize = res.getDimensionPixelSize(R.dimen.draw_rect_shadow);
         float edge = res.getDimensionPixelSize(R.dimen.draw_rect_border_edge);
-
         mBorderColor = res.getColor(R.color.draw_rect_border);
         mBorderPaint.setColor(mBorderColor);
         mBorderPaint.setStyle(Paint.Style.STROKE);
         mBorderPaint.setStrokeWidth(edge);
         mShadowPaint.setStyle(Paint.Style.FILL);
         mShadowPaint.setColor(Color.BLACK);
-        mShadowPaint.setShadowLayer(mBorderShadowSize,mBorderShadowSize,
-                mBorderShadowSize,Color.BLACK);
-        mShadow = (NinePatchDrawable) res.getDrawable(R.drawable.geometry_shadow);
+        mShadowPaint.setShadowLayer(mBorderShadowSize, mBorderShadowSize, mBorderShadowSize, Color.BLACK);
     }
 
     public void setEditor(EditorDraw editorDraw) {
@@ -114,10 +99,6 @@ public class ImageDraw extends ImageShow {
         }
     }
 
-    public void setColor(int color) {
-        mCurrentColor = color;
-    }
-
     public void setSize(int size) {
         mCurrentSize = size;
     }
@@ -135,6 +116,7 @@ public class ImageDraw extends ImageShow {
     }
 
     float[] mTmpPoint = new float[2]; // so we do not malloc
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getPointerCount() > 1) {
@@ -156,7 +138,7 @@ public class ImageDraw extends ImageShow {
             mTmpPoint[0] = event.getX();
             mTmpPoint[1] = event.getY();
             mToOrig.mapPoints(mTmpPoint);
-            mFRep.startNewSection( mTmpPoint[0], mTmpPoint[1]);
+            mFRep.startNewSection(mTmpPoint[0], mTmpPoint[1]);
         }
 
         if (event.getAction() == MotionEvent.ACTION_MOVE) {
@@ -187,20 +169,6 @@ public class ImageDraw extends ImageShow {
     private void calcScreenMapping() {
         mToOrig = getScreenToImageMatrix(true);
         mToOrig.invert(mRotateToScreen);
-    }
-
-    private static Paint makeCheckedPaint(){
-        int[] colors = new int[16 * 16];
-        for (int i = 0; i < colors.length; i++) {
-            int y = i / (16 * 8);
-            int x = (i / 8) % 2;
-            colors[i] = (x == y) ? 0xFF777777 : 0xFF222222;
-        }
-        Bitmap bitmap = Bitmap.createBitmap(colors, 16, 16, Bitmap.Config.ARGB_8888);
-        BitmapShader bs = new BitmapShader(bitmap, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
-        Paint p = new Paint();
-        p.setShader(bs);
-        return p;
     }
 
     private void setupTimer() {
@@ -240,8 +208,6 @@ public class ImageDraw extends ImageShow {
         if (mFRep == null) {
             return;
         }
-        int color = mTmpStrokData.mColor;
-        byte type = mTmpStrokData.mType;
         float radius = mTmpStrokData.mRadius;
         mFRep.fillStrokeParameters(mTmpStrokData);
 
@@ -260,7 +226,7 @@ public class ImageDraw extends ImageShow {
         int centerx = cw / 2;
         int centery = ch / 2;
 
-//        mFRep.fillStrokeParameters(mTmpStrokData);
+        //        mFRep.fillStrokeParameters(mTmpStrokData);
         mIconPaint.setAntiAlias(true);
         mIconPaint.setStyle(Paint.Style.STROKE);
         float rad = mRotateToScreen.mapRadius(mTmpStrokData.mRadius);

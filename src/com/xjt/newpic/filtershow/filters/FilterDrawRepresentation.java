@@ -1,19 +1,15 @@
+
 package com.xjt.newpic.filtershow.filters;
 
 import android.graphics.Color;
 import android.graphics.Path;
-import android.graphics.PathMeasure;
 import android.util.Log;
 
 import com.xjt.newpic.R;
 import com.xjt.newpic.filtershow.controller.BasicParameterInt;
 import com.xjt.newpic.filtershow.controller.BasicParameterStyle;
 import com.xjt.newpic.filtershow.controller.Parameter;
-import com.xjt.newpic.filtershow.controller.ParameterBrightness;
 import com.xjt.newpic.filtershow.controller.ParameterColor;
-import com.xjt.newpic.filtershow.controller.ParameterHue;
-import com.xjt.newpic.filtershow.controller.ParameterOpacity;
-import com.xjt.newpic.filtershow.controller.ParameterSaturation;
 import com.xjt.newpic.filtershow.editors.EditorDraw;
 import com.xjt.newpic.surpport.JsonReader;
 import com.xjt.newpic.surpport.JsonWriter;
@@ -24,7 +20,8 @@ import java.util.Iterator;
 import java.util.Vector;
 
 public class FilterDrawRepresentation extends FilterRepresentation {
-    private static final String LOGTAG = "FilterDrawRepresentation";
+
+    private static final String TAG = "FilterDrawRepresentation";
 
     public static final int PARAM_SIZE = 0;
     public static final int PARAM_STYLE = 1;
@@ -36,16 +33,14 @@ public class FilterDrawRepresentation extends FilterRepresentation {
     public static int DEFAULT_MENU_COLOR3 = Color.BLUE & 0x80FFFFFF;
     public static int DEFAULT_MENU_COLOR4 = Color.BLACK & 0x80FFFFFF;
     public static int DEFAULT_MENU_COLOR5 = Color.WHITE & 0x80FFFFFF;
-    ParameterColor mParamColor = new ParameterColor(PARAM_COLOR,DEFAULT_MENU_COLOR1);
-    int mParamMode;
-    Parameter mCurrentParam = mParamSize;
+    private ParameterColor mParamColor = new ParameterColor(PARAM_COLOR, DEFAULT_MENU_COLOR1);
+    private int mParamMode;
     private static final String SERIAL_COLOR = "color";
     private static final String SERIAL_RADIUS = "radius";
     private static final String SERIAL_TYPE = "type";
     private static final String SERIAL_POINTS_COUNT = "point_count";
     private static final String SERIAL_POINTS = "points";
-    private static final String SERIAL_PATH =  "path";
-
+    private static final String SERIAL_PATH = "path";
 
     private Parameter[] mAllParam = {
             mParamSize,
@@ -55,7 +50,6 @@ public class FilterDrawRepresentation extends FilterRepresentation {
 
     public void setPramMode(int mode) {
         mParamMode = mode;
-        mCurrentParam = mAllParam[mParamMode];
     }
 
     public int getParamMode() {
@@ -63,14 +57,15 @@ public class FilterDrawRepresentation extends FilterRepresentation {
     }
 
     public Parameter getCurrentParam() {
-        return  mAllParam[mParamMode];
+        return mAllParam[mParamMode];
     }
 
     public Parameter getParam(int type) {
-        return  mAllParam[type];
+        return mAllParam[type];
     }
 
     public static class StrokeData implements Cloneable {
+
         public byte mType;
         public Path mPath;
         public float mRadius;
@@ -96,10 +91,7 @@ public class FilterDrawRepresentation extends FilterRepresentation {
                 return false;
             }
             StrokeData sd = (StrokeData) o;
-            if (mType != sd.mType
-                    || mRadius != sd.mRadius
-                    || noPoints != sd.noPoints
-                    || mColor != sd.mColor) {
+            if (mType != sd.mType || mRadius != sd.mRadius || noPoints != sd.noPoints || mColor != sd.mColor) {
                 return false;
             }
             return mPath.equals(sd.mPath);
@@ -156,7 +148,7 @@ public class FilterDrawRepresentation extends FilterRepresentation {
     public String toString() {
         return getName() + " : strokes=" + mDrawing.size()
                 + ((mCurrent == null) ? " no current "
-                : ("draw=" + mCurrent.mType + " " + mCurrent.noPoints));
+                        : ("draw=" + mCurrent.mType + " " + mCurrent.noPoints));
     }
 
     public Vector<StrokeData> getDrawing() {
@@ -198,8 +190,8 @@ public class FilterDrawRepresentation extends FilterRepresentation {
                 }
                 if (representation.mDrawing != null) {
                     mDrawing = new Vector<StrokeData>();
-                    for (Iterator<StrokeData> elem = representation.mDrawing.iterator(); elem.hasNext(); ) {
-                        StrokeData next =  elem.next();
+                    for (Iterator<StrokeData> elem = representation.mDrawing.iterator(); elem.hasNext();) {
+                        StrokeData next = elem.next();
                         mDrawing.add(new StrokeData(next));
                     }
                 } else {
@@ -210,7 +202,7 @@ public class FilterDrawRepresentation extends FilterRepresentation {
                 e.printStackTrace();
             }
         } else {
-            Log.v(LOGTAG, "cannot use parameters from " + a);
+            Log.v(TAG, "cannot use parameters from " + a);
         }
     }
 
@@ -227,7 +219,6 @@ public class FilterDrawRepresentation extends FilterRepresentation {
                 return false;
             }
 
-
             if (fdRep.mCurrent != null && mCurrent != null && mCurrent.mPath != null) {
                 if (fdRep.mCurrent.noPoints == mCurrent.noPoints) {
                     return true;
@@ -235,24 +226,24 @@ public class FilterDrawRepresentation extends FilterRepresentation {
                 return false;
             }
 
-        int n = mDrawing.size();
-        for (int i = 0; i < n; i++) {
-            StrokeData a = mDrawing.get(i);
-            StrokeData b = mDrawing.get(i);
-            if (!a.equals(b)){
-                return false;
+            int n = mDrawing.size();
+            for (int i = 0; i < n; i++) {
+                StrokeData a = mDrawing.get(i);
+                StrokeData b = mDrawing.get(i);
+                if (!a.equals(b)) {
+                    return false;
+                }
             }
-        }
-        return true;
+            return true;
         }
         return false;
     }
 
-    private int computeCurrentColor(){
+    private int computeCurrentColor() {
         return mParamColor.getValue();
     }
 
-    public void fillStrokeParameters(StrokeData sd){
+    public void fillStrokeParameters(StrokeData sd) {
         byte type = (byte) mParamStyle.getSelected();
         int color = computeCurrentColor();
         float size = mParamSize.getValue();
@@ -274,7 +265,7 @@ public class FilterDrawRepresentation extends FilterRepresentation {
     public void addPoint(float x, float y) {
         int len = mCurrent.noPoints * 2;
         mCurrent.mPath.lineTo(x, y);
-        if ((len+2) > mCurrent.mPoints.length) {
+        if ((len + 2) > mCurrent.mPoints.length) {
             mCurrent.mPoints = Arrays.copyOf(mCurrent.mPoints, mCurrent.mPoints.length * 2);
         }
         mCurrent.mPoints[len] = x;
@@ -301,11 +292,7 @@ public class FilterDrawRepresentation extends FilterRepresentation {
     public void serializeRepresentation(JsonWriter writer) throws IOException {
         writer.beginObject();
         int len = mDrawing.size();
-        int count = 0;
-        float[] mPosition = new float[2];
-        float[] mTan = new float[2];
 
-        PathMeasure mPathMeasure = new PathMeasure();
         for (int i = 0; i < len; i++) {
             writer.name(SERIAL_PATH + i);
             writer.beginObject();

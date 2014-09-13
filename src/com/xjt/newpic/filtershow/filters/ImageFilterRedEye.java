@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.filtershow.filters;
 
 import android.graphics.Bitmap;
@@ -6,9 +7,13 @@ import android.graphics.RectF;
 
 import java.util.Vector;
 
+import com.xjt.newpic.R;
+
 public class ImageFilterRedEye extends ImageFilter {
-    private static final String LOGTAG = "ImageFilterRedEye";
-    FilterRedEyeRepresentation mParameters = new FilterRedEyeRepresentation(0);
+
+    private static final String TAG = ImageFilterRedEye.class.getSimpleName();
+
+    private FilterRedEyeRepresentation mParameters = new FilterRedEyeRepresentation(0);
 
     public ImageFilterRedEye() {
         mName = "Red Eye";
@@ -16,7 +21,7 @@ public class ImageFilterRedEye extends ImageFilter {
 
     @Override
     public FilterRepresentation getDefaultRepresentation() {
-        return new FilterRedEyeRepresentation(0);
+        return new FilterRedEyeRepresentation(R.drawable.effect_sample_0);
     }
 
     public boolean isNil() {

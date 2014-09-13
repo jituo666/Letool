@@ -11,6 +11,7 @@ import android.graphics.RectF;
 public class ImageFilterColorBorder extends ImageFilter {
 
     private static final String TAG = ImageFilterColorBorder.class.getSimpleName();
+    
     private FilterColorBorderRepresentation mParameters = null;
     Paint mPaint = new Paint();
     RectF mBounds = new RectF();
@@ -26,8 +27,7 @@ public class ImageFilterColorBorder extends ImageFilter {
     }
 
     public void useRepresentation(FilterRepresentation representation) {
-        FilterColorBorderRepresentation parameters =
-                (FilterColorBorderRepresentation) representation;
+        FilterColorBorderRepresentation parameters = (FilterColorBorderRepresentation) representation;
         mParameters = parameters;
     }
 

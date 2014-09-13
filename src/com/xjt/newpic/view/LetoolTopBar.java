@@ -60,8 +60,8 @@ public class LetoolTopBar {
             R.id.selection_finished,
             R.id.action_undo,
             R.id.action_redo,
-            R.id.action_accept,
-            R.id.action_more
+            R.id.action_reset,
+            R.id.action_save
     };
 
     public static interface OnActionModeListener extends View.OnClickListener {
