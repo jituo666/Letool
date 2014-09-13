@@ -51,7 +51,7 @@
             android:theme="@style/MainTheme" >
         </activity>
         <activity
-            android:name="com.xjt.newpic.filtershow.FilterShowActivity"
+            android:name="com.xjt.newpic.edit.FilterShowActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_filter_show"
             android:screenOrientation="portrait"
@@ -72,7 +72,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.xjt.newpic.filtershow.crop.CropActivity"
+            android:name="com.xjt.newpic.edit.crop.CropActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/crop"
             android:screenOrientation="portrait"
@@ -94,7 +94,7 @@
         </activity>
 
         <service
-            android:name="com.xjt.newpic.filtershow.pipeline.ProcessingService"
+            android:name="com.xjt.newpic.edit.pipeline.ProcessingService"
             android:exported="false" />
 
         <!-- Umeng sdk requirement -->

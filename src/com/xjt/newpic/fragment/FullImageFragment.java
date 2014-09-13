@@ -27,7 +27,7 @@ import com.xjt.newpic.common.GlobalConstants;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.common.OrientationManager;
 import com.xjt.newpic.common.SynchronizedHandler;
-import com.xjt.newpic.filtershow.FilterShowActivity;
+import com.xjt.newpic.edit.FilterShowActivity;
 import com.xjt.newpic.metadata.MediaDetails;
 import com.xjt.newpic.metadata.MediaItem;
 import com.xjt.newpic.metadata.MediaObject;

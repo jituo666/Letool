@@ -154,9 +154,5 @@
         <item>"Sina weibo"</item>
         <item>"Tencent weibO"</item>
     </string-array>
-    
-    <string name="np_edit_fx">Effect</string>
-    <string name="np_edit_boder">Boder</string>
-    <string name="np_edit_geometry">Geometry</string>
-    <string name="np_edit_effect">Advance</string>
+
 </resources>

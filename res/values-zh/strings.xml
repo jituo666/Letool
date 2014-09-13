@@ -154,9 +154,4 @@
         <item>"腾讯微博"</item>
     </string-array>
 
-    <string name="np_edit_fx">特效</string>
-    <string name="np_edit_boder">边框</string>
-    <string name="np_edit_geometry">修剪</string>
-    <string name="np_edit_effect">高级</string>
-
 </resources>

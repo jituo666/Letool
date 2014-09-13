@@ -35,7 +35,7 @@ typedef unsigned int Color;
 
 #define LOG(msg...) __android_log_print(ANDROID_LOG_VERBOSE, "NativeFilters", msg)
 
-#define JNIFUNCF(cls, name, vars...) Java_com_xjt_newpic_filtershow_filters_ ## cls ## _ ## name(JNIEnv* env, jobject obj, vars)
+#define JNIFUNCF(cls, name, vars...) Java_com_xjt_newpic_edit_filters_ ## cls ## _ ## name(JNIEnv* env, jobject obj, vars)
 
 #define RED i
 #define GREEN i+1
