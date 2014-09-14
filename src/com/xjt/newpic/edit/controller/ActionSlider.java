@@ -9,7 +9,7 @@ import com.xjt.newpic.R;
 import com.xjt.newpic.edit.editors.Editor;
 
 public class ActionSlider extends TitledSlider {
-    private static final String TAG = "ActionSlider";
+    private static final String TAG = ActionSlider.class.getSimpleName();
     ImageButton mLeftButton;
     ImageButton mRightButton;
     public ActionSlider() {

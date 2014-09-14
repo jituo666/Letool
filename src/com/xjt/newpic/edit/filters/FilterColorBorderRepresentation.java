@@ -41,7 +41,7 @@ public class FilterColorBorderRepresentation extends FilterRepresentation {
         super("ColorBorder", sr);
         setSerializationName(SERIALIZATION_NAME);
         setFilterType(FilterRepresentation.TYPE_BORDER);
-        setTextId(R.string.borders);
+        setTextId(R.string.custom_border);
         setEditorId(EditorColorBorder.ID);
         setShowParameterValue(false);
         setFilterClass(ImageFilterColorBorder.class);

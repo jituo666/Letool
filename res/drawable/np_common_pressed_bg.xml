@@ -2,7 +2,5 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@drawable/np_pressed_drawable"
         android:state_pressed="true" />
-    <item android:drawable="@drawable/np_pressed_drawable"
-        android:state_focused="true" />
     <item android:drawable="@android:color/transparent" />
 </selector>

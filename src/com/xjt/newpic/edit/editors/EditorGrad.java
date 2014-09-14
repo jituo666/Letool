@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.edit.editors;
 
 import android.content.Context;
@@ -25,7 +26,7 @@ import com.xjt.newpic.surpport.PopupMenuItem;
 
 public class EditorGrad extends ParametricEditor implements OnSeekBarChangeListener, ParameterActionAndInt {
 
-    private static final String TAG = "EditorGrad";
+    private static final String TAG = EditorGrad.class.getSimpleName();
 
     public static final int ID = R.id.editorGrad;
 
@@ -36,6 +37,11 @@ public class EditorGrad extends ParametricEditor implements OnSeekBarChangeListe
     private static final int MODE_CONTRAST = FilterGradRepresentation.PARAM_CONTRAST;
     private static final int ADD_ICON = R.drawable.ic_grad_add;
     private static final int DEL_ICON = R.drawable.ic_grad_del;
+
+    private static final int POP_UP_MENU_ID_BRIGHTNESS = 0;
+    private static final int POP_UP_MENU_ID_SATURATION = 1;
+    private static final int POP_UP_MENU_ID_CONTRAST = 2;
+
     private int mSliderMode = MODE_BRIGHTNESS;
     private ImageGrad mImageGrad;
     private ParamAdapter[] mAdapters = new ParamAdapter[3];
@@ -191,10 +197,6 @@ public class EditorGrad extends ParametricEditor implements OnSeekBarChangeListe
         mPopupMenu.show();
         ((FilterShowActivity) mContext).onShowMenu(mPopupMenu);
     }
-
-    private static final int POP_UP_MENU_ID_BRIGHTNESS = 0;
-    private static final int POP_UP_MENU_ID_SATURATION = 1;
-    private static final int POP_UP_MENU_ID_CONTRAST = 2;
 
     private void setUpPopupMenu(Button button) {
         mPopupMenu = new PopupMenu(mImageShow.getActivity(), button);

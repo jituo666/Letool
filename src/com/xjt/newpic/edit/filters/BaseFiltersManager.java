@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.edit.filters;
 
 import android.content.Context;
@@ -146,10 +145,10 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
 
     public void addLooks(Context context) {
         int[] drawid = {
-                R.drawable.filtershow_fx_0007_washout,
                 R.drawable.filtershow_fx_0000_vintage,
                 R.drawable.filtershow_fx_0004_bw_contrast,
                 R.drawable.filtershow_fx_0008_washout_color,
+                R.drawable.filtershow_fx_0007_washout,
                 R.drawable.filtershow_fx_0002_bleach,
                 R.drawable.filtershow_fx_0001_instant,
                 R.drawable.filtershow_fx_0003_blue_crush,
@@ -158,10 +157,10 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
         };
 
         int[] sampleid = { // [0,  1~9] 10
-                R.drawable.effect_sample_6,
                 R.drawable.effect_sample_2,
                 R.drawable.effect_sample_3,
                 R.drawable.effect_sample_8,
+                R.drawable.effect_sample_6,
                 R.drawable.effect_sample_4,
                 R.drawable.effect_sample_5,
                 R.drawable.effect_sample_7,
@@ -170,10 +169,10 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
         };
 
         int[] fxNameid = {
-                R.string.ffx_washout,
                 R.string.ffx_vintage,
                 R.string.ffx_bw_contrast,
                 R.string.ffx_washout_color,
+                R.string.ffx_washout,
                 R.string.ffx_bleach,
                 R.string.ffx_instant,
                 R.string.ffx_blue_crush,
@@ -183,10 +182,10 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
 
         // Do not localize.
         String[] serializationNames = {
-                "LUT3D_WASHOUT",
                 "LUT3D_VINTAGE",
                 "LUT3D_BW",
                 "LUT3D_WASHOUT_COLOR",
+                "LUT3D_WASHOUT",
                 "LUT3D_BLEACH",
                 "LUT3D_INSTANT",
                 "LUT3D_BLUECRUSH",
@@ -231,12 +230,12 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
                 R.drawable.effect_sample_13,
                 R.drawable.effect_sample_14,
                 R.drawable.effect_sample_15,
-                R.drawable.effect_sample_16,
-                R.drawable.effect_sample_17,
-                R.drawable.effect_sample_18,
-                R.drawable.effect_sample_19,
-                R.drawable.effect_sample_20,
-                R.drawable.effect_sample_21
+                R.drawable.effect_sample_16
+//                R.drawable.effect_sample_17,
+//                R.drawable.effect_sample_18,
+//                R.drawable.effect_sample_19,
+//                R.drawable.effect_sample_20,
+//                R.drawable.effect_sample_21
         };
 
         // The "no border" implementation

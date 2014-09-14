@@ -1,19 +1,5 @@
+
 package com.xjt.newpic.edit.imageshow;
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -27,7 +13,9 @@ import com.xjt.newpic.edit.editors.EditorGrad;
 import com.xjt.newpic.edit.filters.FilterGradRepresentation;
 
 public class ImageGrad extends ImageShow {
-    private static final String LOGTAG = "ImageGrad";
+
+    private static final String TAG = ImageGrad.class.getSimpleName();
+
     private FilterGradRepresentation mGradRep;
     private EditorGrad mEditorGrad;
     private float mMinTouchDist;
@@ -74,12 +62,12 @@ public class ImageGrad extends ImageShow {
                             continue;
                         }
                         float d = (float) Math.hypot(x - mPointsX[i], y - mPointsY[i]);
-                        if ( min_d > d) {
+                        if (min_d > d) {
                             min_d = d;
                             pos = i;
                         }
                     }
-                    if (min_d > mMinTouchDist){
+                    if (min_d > mMinTouchDist) {
                         pos = -1;
                     }
 
@@ -136,23 +124,27 @@ public class ImageGrad extends ImageShow {
 
         toImg.invert(mToScr);
 
-        float[] c1 = new float[] { mGradRep.getPoint1X(), mGradRep.getPoint1Y() };
-        float[] c2 = new float[] { mGradRep.getPoint2X(), mGradRep.getPoint2Y() };
+        float[] c1 = new float[] {
+                mGradRep.getPoint1X(), mGradRep.getPoint1Y()
+        };
+        float[] c2 = new float[] {
+                mGradRep.getPoint2X(), mGradRep.getPoint2Y()
+        };
 
         if (c1[0] == -1) {
             float cx = MasterImage.getImage().getOriginalBounds().width() / 2;
             float cy = MasterImage.getImage().getOriginalBounds().height() / 2;
             float rx = Math.min(cx, cy) * .4f;
 
-            mGradRep.setPoint1(cx, cy-rx);
-            mGradRep.setPoint2(cx, cy+rx);
+            mGradRep.setPoint1(cx, cy - rx);
+            mGradRep.setPoint2(cx, cy + rx);
             c1[0] = cx;
-            c1[1] = cy-rx;
+            c1[1] = cy - rx;
             mToScr.mapPoints(c1);
             if (getWidth() != 0) {
                 mEllipse.setPoint1(c1[0], c1[1]);
                 c2[0] = cx;
-                c2[1] = cy+rx;
+                c2[1] = cy + rx;
                 mToScr.mapPoints(c2);
                 mEllipse.setPoint2(c2[0], c2[1]);
             }
@@ -188,8 +180,8 @@ public class ImageGrad extends ImageShow {
                 continue;
             }
 
-            c[0] = (x1[i]+x2[i])/2;
-            c[1] = (y1[i]+y2[i])/2;
+            c[0] = (x1[i] + x2[i]) / 2;
+            c[1] = (y1[i] + y2[i]) / 2;
             mToScr.mapPoints(c);
 
             mPointsX[i] = c[0];
