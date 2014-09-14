@@ -10,7 +10,7 @@ import android.opengl.ETC1Util.ETC1Texture;
 import android.provider.MediaStore.Video;
 import android.provider.MediaStore.Video.VideoColumns;
 
-import com.xjt.newpic.LetoolApp;
+import com.xjt.newpic.NpApp;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.common.ThreadPool.Job;
 import com.xjt.newpic.imagedata.blobcache.LocalVideoBlobRequest;
@@ -57,17 +57,17 @@ public class LocalVideo extends LocalMediaItem {
             VideoColumns.RESOLUTION,
     };
 
-    private final LetoolApp mApplication;
+    private final NpApp mApplication;
 
     public int durationInSec;
 
-    public LocalVideo(MediaPath path, LetoolApp application, Cursor cursor) {
+    public LocalVideo(MediaPath path, NpApp application, Cursor cursor) {
         super(path, nextVersionNumber());
         mApplication = application;
         loadFromCursor(cursor);
     }
 
-    public LocalVideo(MediaPath path, LetoolApp context, long id) {
+    public LocalVideo(MediaPath path, NpApp context, long id) {
         super(path, nextVersionNumber());
         mApplication = context;
         ContentResolver resolver = mApplication.getContentResolver();

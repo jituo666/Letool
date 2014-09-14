@@ -28,7 +28,7 @@ import com.umeng.update.UmengUpdateAgent;
 import com.umeng.update.UmengUpdateListener;
 import com.umeng.update.UpdateResponse;
 import com.umeng.update.UpdateStatus;
-import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.NpContext;
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.imagedata.blobcache.BlobCacheManager;
@@ -56,12 +56,12 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
     private LetoolPreference mVersionCheck;
     private LetoolPreference mAuthorDesc;
     private LetoolPreference mQQGroup;
-    private LetoolContext mLetoolContext;
+    private NpContext mLetoolContext;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mLetoolContext = (LetoolContext) this.getActivity();
+        mLetoolContext = (NpContext) this.getActivity();
     }
 
     public String getVersion() {

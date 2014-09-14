@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 
 import com.xjt.newpic.R;
-import com.xjt.newpic.edit.FilterShowActivity;
+import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.controller.Parameter;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
 import com.xjt.newpic.edit.filters.FilterVignetteRepresentation;
@@ -107,7 +107,7 @@ public class EditorVignette extends ParametricEditor {
             @Override
             public void onClick(View v) {
                 popupMenu.show();
-                ((FilterShowActivity) mContext).onShowMenu(popupMenu);
+                ((NpEditActivity) mContext).onShowMenu(popupMenu);
             }
         });
 

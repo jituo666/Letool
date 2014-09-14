@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.edit.imageshow;
 
 import android.graphics.Bitmap;

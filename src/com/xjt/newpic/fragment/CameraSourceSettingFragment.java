@@ -46,8 +46,8 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.umeng.analytics.MobclickAgent;
-import com.xjt.newpic.LetoolApp;
-import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.NpApp;
+import com.xjt.newpic.NpContext;
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.metadata.MediaSet;
@@ -79,7 +79,7 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
     private Button mSave;
     private String mSavePhotodirs;
     private ItemAdapter mItemAdapter;
-    private LetoolContext mLetoolContext;
+    private NpContext mLetoolContext;
     private LayoutInflater mLayoutInflater;
     private LetoolLoadingView mLoadingPanel;
     private LetoolEmptyView mEmptyView;
@@ -89,7 +89,7 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mLetoolContext = (LetoolContext) this.getActivity();
+        mLetoolContext = (NpContext) this.getActivity();
         if (GlobalPreference.getPhotoDirs(getActivity()).length() > 0)
             mSavePhotodirs = GlobalPreference.getPhotoDirs(getActivity());
         else {
@@ -313,7 +313,7 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
         protected void onPreExecute() {
             super.onPreExecute();
             mMediaDirList = new ArrayList<MediaDir>();
-            mDataSet = new LocalSimpleAlbumSet((LetoolApp) mLetoolContext.getActivityContext().getApplicationContext(), true);
+            mDataSet = new LocalSimpleAlbumSet((NpApp) mLetoolContext.getActivityContext().getApplicationContext(), true);
             mLoadingPanel.setVisibility(View.VISIBLE);
             mListView.setVisibility(View.GONE);
         }

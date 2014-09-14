@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.xjt.newpic.R;
-import com.xjt.newpic.edit.FilterShowActivity;
+import com.xjt.newpic.edit.NpEditActivity;
 
 public class CategoryPanel extends Fragment implements View.OnClickListener {
 
@@ -31,7 +31,7 @@ public class CategoryPanel extends Fragment implements View.OnClickListener {
     }
 
     private void loadAdapter(int adapter) {
-        FilterShowActivity activity = (FilterShowActivity) getActivity();
+        NpEditActivity activity = (NpEditActivity) getActivity();
         switch (adapter) {
             case CategoryMainPanel.LOOKS: {
                 mAdapter = activity.getCategoryLooksAdapter();

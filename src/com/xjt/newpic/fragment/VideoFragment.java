@@ -2,11 +2,11 @@
 package com.xjt.newpic.fragment;
 
 import com.umeng.analytics.MobclickAgent;
-import com.xjt.newpic.LetoolApp;
-import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.NpApp;
+import com.xjt.newpic.NpContext;
 import com.xjt.newpic.R;
-import com.xjt.newpic.activities.LocalMediaActivity;
-import com.xjt.newpic.activities.MoviePlayActivity;
+import com.xjt.newpic.activities.NpMediaActivity;
+import com.xjt.newpic.activities.NpMoviePlayActivity;
 import com.xjt.newpic.common.EyePosition;
 import com.xjt.newpic.common.GlobalConstants;
 import com.xjt.newpic.common.LLog;
@@ -90,7 +90,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     private static final int MENU_ITEM_DETAIL = 1;
     private static final int MENU_ITEM_DELETE = 2;
 
-    private LetoolContext mLetoolContext;
+    private NpContext mLetoolContext;
 
     // photo data
     private String mAlbumTitle;
@@ -250,7 +250,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LLog.i(TAG, "onCreate");
-        mLetoolContext = (LetoolContext) getActivity();
+        mLetoolContext = (NpContext) getActivity();
         mGLController = mLetoolContext.getGLController();
 
         initializeData();
@@ -275,12 +275,12 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
 
     private void initializeData() {
         Bundle data = getArguments();
-        mIsCameraSource = data.getBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE);
+        mIsCameraSource = data.getBoolean(NpMediaActivity.KEY_IS_CAMERA_SOURCE);
         if (mIsCameraSource) {
             if (MediaSetUtils.getBucketsIds().length > 0) {
                 mAlbumTitle = getString(R.string.common_photo);
-                mVideoPath = new MediaPath(data.getString(LocalMediaActivity.KEY_MEDIA_PATH), MediaSetUtils.getBucketsIds()[0]);
-                mVideoData = new LocalAlbum(mVideoPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.getBucketsIds(),
+                mVideoPath = new MediaPath(data.getString(NpMediaActivity.KEY_MEDIA_PATH), MediaSetUtils.getBucketsIds()[0]);
+                mVideoData = new LocalAlbum(mVideoPath, (NpApp) getActivity().getApplication(), MediaSetUtils.getBucketsIds(),
                         mLetoolContext.isImageBrwosing(),
                         getString(R.string.common_photo));
                 mHasDefaultDCIMDirectory = true;
@@ -289,8 +289,8 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
                 return;
             }
         } else {
-            mAlbumTitle = data.getString(LocalMediaActivity.KEY_ALBUM_TITLE);
-            mVideoPath = new MediaPath(data.getString(LocalMediaActivity.KEY_MEDIA_PATH), data.getInt(LocalMediaActivity.KEY_ALBUM_ID));
+            mAlbumTitle = data.getString(NpMediaActivity.KEY_ALBUM_TITLE);
+            mVideoPath = new MediaPath(data.getString(NpMediaActivity.KEY_MEDIA_PATH), data.getInt(NpMediaActivity.KEY_ALBUM_ID));
             mVideoData = mLetoolContext.getDataManager().getMediaSet(mVideoPath);
             if (mVideoData == null) {
                 Utils.fail("MediaSet is null. Path = %s", mVideoPath);
@@ -486,7 +486,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         } else if (mIsSDCardMountedCorreclty && v.getId() == R.id.navi_to_gallery) {
             GalleryFragment f = new GalleryFragment();
             Bundle data = new Bundle();
-            data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
+            data.putString(NpMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
                     .getTopSetPath(mLetoolContext.isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
             f.setArguments(data);
             mLetoolContext.pushContentFragment(f, this, false);
@@ -500,7 +500,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         Context c = mLetoolContext.getActivityContext();
         try {
             Intent intent = new Intent();
-            intent.setClass(c, MoviePlayActivity.class);
+            intent.setClass(c, NpMoviePlayActivity.class);
             intent.setDataAndType(Uri.parse(item.getFilePath()), "video/*");
             intent.putExtra(Intent.EXTRA_TITLE, "");
             c.startActivity(intent);

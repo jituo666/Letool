@@ -94,10 +94,10 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Vector;
 
-public class FilterShowActivity extends FragmentActivity implements OnItemClickListener, OnActionModeListener,
+public class NpEditActivity extends FragmentActivity implements OnItemClickListener, OnActionModeListener,
         PopupMenu.OnDismissListener {
 
-    private static final String TAG = FilterShowActivity.class.getSimpleName();
+    private static final String TAG = NpEditActivity.class.getSimpleName();
 
     private static final long LIMIT_SUPPORTS_HIGHRES = 134217728; // 128Mb
 
@@ -162,7 +162,7 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
              * cast its IBinder to a concrete class and directly access it.
              */
             mBoundService = ((ProcessingService.LocalBinder) service).getService();
-            mBoundService.setFiltershowActivity(FilterShowActivity.this);
+            mBoundService.setFiltershowActivity(NpEditActivity.this);
             mBoundService.onStart();
         }
 
@@ -677,7 +677,7 @@ public class FilterShowActivity extends FragmentActivity implements OnItemClickL
                 if (mOriginalImageUri != null && !mOriginalImageUri.equals(mSelectedImageUri)) {
                     mOriginalImageUri = mSelectedImageUri;
                     mOriginalPreset = null;
-                    Toast.makeText(FilterShowActivity.this, R.string.cannot_edit_original, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NpEditActivity.this, R.string.cannot_edit_original, Toast.LENGTH_SHORT).show();
                     startLoadBitmap(mOriginalImageUri);
                 } else {
                     cannotLoadImage();

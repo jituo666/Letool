@@ -2,8 +2,8 @@
 package com.xjt.newpic.activities;
 
 import com.umeng.analytics.MobclickAgent;
-import com.xjt.newpic.LetoolApp;
-import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.NpApp;
+import com.xjt.newpic.NpContext;
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.common.OrientationManager;
@@ -30,9 +30,9 @@ import android.view.WindowManager;
  * @Date 8:16:31 PM Jul 24, 2014
  * @Comments:null
  */
-public class SettingsActivity extends FragmentActivity implements LetoolContext {
+public class NpSettingsActivity extends FragmentActivity implements NpContext {
 
-    private static final String TAG = SettingsActivity.class.getSimpleName();
+    private static final String TAG = NpSettingsActivity.class.getSimpleName();
 
     public static final String KEY_SOURCE_TYPE = "source_type";
     public static final String KEY_FROM_TIP = "from_tip";
@@ -109,7 +109,7 @@ public class SettingsActivity extends FragmentActivity implements LetoolContext 
 
     @Override
     public DataManager getDataManager() {
-        return ((LetoolApp) getApplication()).getDataManager();
+        return ((NpApp) getApplication()).getDataManager();
     }
 
     @Override
@@ -119,7 +119,7 @@ public class SettingsActivity extends FragmentActivity implements LetoolContext 
 
     @Override
     public ThreadPool getThreadPool() {
-        return ((LetoolApp) getApplication()).getThreadPool();
+        return ((NpApp) getApplication()).getThreadPool();
     }
 
     @Override

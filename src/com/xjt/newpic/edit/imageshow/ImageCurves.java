@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.edit.imageshow;
 
 import android.annotation.SuppressLint;
@@ -19,7 +18,7 @@ import android.widget.LinearLayout;
 
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.ApiHelper;
-import com.xjt.newpic.edit.FilterShowActivity;
+import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.editors.Editor;
 import com.xjt.newpic.edit.editors.EditorCurves;
 import com.xjt.newpic.edit.filters.FilterCurvesRepresentation;
@@ -114,7 +113,7 @@ public class ImageCurves extends ImageShow {
         });
         Editor.hackFixStrings(popupMenu);
         popupMenu.show();
-        ((FilterShowActivity) getContext()).onShowMenu(popupMenu);
+        ((NpEditActivity) getContext()).onShowMenu(popupMenu);
     }
 
     @Override

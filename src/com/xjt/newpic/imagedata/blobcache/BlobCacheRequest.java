@@ -4,7 +4,7 @@ package com.xjt.newpic.imagedata.blobcache;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.xjt.newpic.LetoolApp;
+import com.xjt.newpic.NpApp;
 import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.common.ThreadPool.Job;
@@ -19,13 +19,13 @@ public abstract class BlobCacheRequest implements Job<Bitmap> {
 
     private static final String TAG = BlobCacheRequest.class.getSimpleName();
 
-    protected LetoolApp mApplication;
+    protected NpApp mApplication;
     private MediaPath mPath;
     private int mType;
     private int mTargetSize;
     private long mTimeModified;
 
-    public BlobCacheRequest(LetoolApp application, MediaPath path, long timeModified, int type, int targetSize) {
+    public BlobCacheRequest(NpApp application, MediaPath path, long timeModified, int type, int targetSize) {
         mApplication = application;
         mPath = path;
         mType = type;

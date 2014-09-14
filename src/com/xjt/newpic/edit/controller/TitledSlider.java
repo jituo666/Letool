@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.edit.controller;
 
 import android.content.Context;
@@ -13,6 +14,7 @@ import com.xjt.newpic.R;
 import com.xjt.newpic.edit.editors.Editor;
 
 public class TitledSlider implements Control {
+
     private final String LOGTAG = "ParametricEditor";
     private SeekBar mSeekBar;
     private TextView mControlName;

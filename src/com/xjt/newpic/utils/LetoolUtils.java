@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Locale;
 
 import com.xjt.newpic.R;
-import com.xjt.newpic.activities.LocalMediaActivity;
+import com.xjt.newpic.activities.NpMediaActivity;
 import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.common.PackagesMonitor;
@@ -237,7 +237,7 @@ public class LetoolUtils {
     }
 
     public static void startGalleryActivity(Context context) {
-        Intent intent = new Intent(context, LocalMediaActivity.class)
+        Intent intent = new Intent(context, NpMediaActivity.class)
                 .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                         | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);

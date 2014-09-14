@@ -5,7 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Message;
 
-import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.NpContext;
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.Future;
 import com.xjt.newpic.common.FutureListener;
@@ -57,7 +57,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataChange
     private int mActiveRequestCount = 0;
     private boolean mIsActive = false;
     private BitmapTexture mLoadingLabel;
-    private LetoolContext mLetoolContext;
+    private NpContext mLetoolContext;
 
     private int mThumbnailWidth;
 
@@ -81,7 +81,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataChange
         private BitmapLoader coverLoader;
     }
 
-    public ThumbnailSetDataWindow(LetoolContext c, ThumbnailSetDataLoader source, ThumbnailSetRenderer.LabelSpec labelSpec, int cacheSize) {
+    public ThumbnailSetDataWindow(NpContext c, ThumbnailSetDataLoader source, ThumbnailSetRenderer.LabelSpec labelSpec, int cacheSize) {
         source.setModelListener(this);
         mSource = source;
         mData = new AlbumSetEntry[cacheSize];

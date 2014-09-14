@@ -10,7 +10,7 @@ import android.graphics.Bitmap;
 import android.opengl.ETC1Util;
 import android.opengl.ETC1Util.ETC1Texture;
 
-import com.xjt.newpic.LetoolApp;
+import com.xjt.newpic.NpApp;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.common.ThreadPool.Job;
 import com.xjt.newpic.common.ThreadPool.JobContext;
@@ -28,13 +28,13 @@ public abstract class ETCCacheRequest implements Job<ETC1Texture> {
 
     private static final String TAG = ETCCacheRequest.class.getSimpleName();
 
-    protected LetoolApp mApplication;
+    protected NpApp mApplication;
     private MediaPath mPath;
     private int mType;
     private int mTargetSize;
     private long mTimeModified;
 
-    public ETCCacheRequest(LetoolApp application, MediaPath path, long timeModified, int type, int targetSize) {
+    public ETCCacheRequest(NpApp application, MediaPath path, long timeModified, int type, int targetSize) {
         mApplication = application;
         mPath = path;
         mType = type;

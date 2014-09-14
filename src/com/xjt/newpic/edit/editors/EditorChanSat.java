@@ -10,7 +10,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
 import com.xjt.newpic.R;
-import com.xjt.newpic.edit.FilterShowActivity;
+import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.controller.BasicParameterStyle;
 import com.xjt.newpic.edit.controller.BitmapCaller;
 import com.xjt.newpic.edit.controller.FilterView;
@@ -95,7 +95,7 @@ public class EditorChanSat extends ParametricEditor implements OnSeekBarChangeLi
             @Override
             public void onClick(View arg0) {
                 popupMenu.show();
-                ((FilterShowActivity) mContext).onShowMenu(popupMenu);
+                ((NpEditActivity) mContext).onShowMenu(popupMenu);
             }
         });
 

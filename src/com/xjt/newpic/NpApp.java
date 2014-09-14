@@ -15,7 +15,7 @@ import com.xjt.newpic.metadata.DataManager;
  * @Date 9:07:03 PM May 17, 2014
  * @Comments:null
  */
-public interface LetoolApp {
+public interface NpApp {
 
     public DataManager getDataManager();
 

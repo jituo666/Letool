@@ -10,7 +10,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.xjt.newpic.R;
-import com.xjt.newpic.edit.FilterShowActivity;
+import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.controller.BitmapCaller;
 import com.xjt.newpic.edit.controller.ColorChooser;
 import com.xjt.newpic.edit.controller.FilterView;
@@ -135,7 +135,7 @@ public class EditorDraw extends ParametricEditor implements FilterView {
             }
         });
         popupMenu.show();
-        ((FilterShowActivity) mContext).onShowMenu(popupMenu);
+        ((NpEditActivity) mContext).onShowMenu(popupMenu);
     }
 
     protected void selectMenuItem(PopupMenuItem item) {

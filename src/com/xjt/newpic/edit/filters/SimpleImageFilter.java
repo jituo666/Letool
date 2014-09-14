@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.edit.filters;
 
 public class SimpleImageFilter extends ImageFilter {

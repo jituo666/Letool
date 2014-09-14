@@ -27,7 +27,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
 import com.xjt.newpic.R;
-import com.xjt.newpic.activities.MoviePlayActivity;
+import com.xjt.newpic.activities.NpMoviePlayActivity;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.imagedata.blobcache.BlobCache;
 import com.xjt.newpic.imagedata.blobcache.BlobCacheManager;
@@ -87,7 +87,7 @@ public class MoviePlayer implements MediaPlayer.OnErrorListener, MediaPlayer.OnC
         }
     };
 
-    public MoviePlayer(View rootView, final MoviePlayActivity movieActivity, Uri videoUri, Bundle savedInstance, boolean canReplay) {
+    public MoviePlayer(View rootView, final NpMoviePlayActivity movieActivity, Uri videoUri, Bundle savedInstance, boolean canReplay) {
 
         mContext = movieActivity;
         mVideoView = (VideoView) rootView.findViewById(R.id.surface_view);

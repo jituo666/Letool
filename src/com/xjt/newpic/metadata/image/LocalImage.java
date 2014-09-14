@@ -14,7 +14,7 @@ import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Images.ImageColumns;
 import android.provider.MediaStore.MediaColumns;
 
-import com.xjt.newpic.LetoolApp;
+import com.xjt.newpic.NpApp;
 import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.common.ThreadPool.Job;
@@ -86,17 +86,17 @@ public class LocalImage extends LocalMediaItem {
         }
     }
 
-    private final LetoolApp mApplication;
+    private final NpApp mApplication;
 
     public int rotation;
 
-    public LocalImage(MediaPath path, LetoolApp application, Cursor cursor) {
+    public LocalImage(MediaPath path, NpApp application, Cursor cursor) {
         super(path, nextVersionNumber());
         mApplication = application;
         loadFromCursor(cursor);
     }
 
-    public LocalImage(MediaPath path, LetoolApp application, long id) {
+    public LocalImage(MediaPath path, NpApp application, long id) {
         super(path, nextVersionNumber());
         mApplication = application;
         ContentResolver resolver = mApplication.getContentResolver();

@@ -4,7 +4,7 @@ package com.xjt.newpic.adapters;
 import android.graphics.Bitmap;
 import android.os.Message;
 
-import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.NpContext;
 import com.xjt.newpic.common.Future;
 import com.xjt.newpic.common.FutureListener;
 import com.xjt.newpic.common.JobLimiter;
@@ -68,7 +68,7 @@ public class ThumbnailDataWindow implements ThumbnailDataLoader.DataChangedListe
         private BitmapLoader contentLoader;
     }
 
-    public ThumbnailDataWindow(LetoolContext fragment, ThumbnailDataLoader source) {
+    public ThumbnailDataWindow(NpContext fragment, ThumbnailDataLoader source) {
         source.setDataChangedListener(this);
         mDataSource = source;
         mImageData = new AlbumEntry[CACHE_SIZE];

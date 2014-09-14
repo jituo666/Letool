@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.LLog;
-import com.xjt.newpic.edit.FilterShowActivity;
+import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.filters.FilterCropRepresentation;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
 import com.xjt.newpic.edit.imageshow.ImageCrop;
@@ -151,7 +151,7 @@ public class EditorCrop extends Editor implements EditorInfo {
             }
         });
         popupMenu.show();
-        ((FilterShowActivity) mContext).onShowMenu(popupMenu);
+        ((NpEditActivity) mContext).onShowMenu(popupMenu);
     }
 
     @Override

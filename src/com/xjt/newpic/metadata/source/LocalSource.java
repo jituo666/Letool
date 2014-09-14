@@ -5,7 +5,7 @@ import android.content.ContentProviderClient;
 import android.content.UriMatcher;
 import android.provider.MediaStore;
 
-import com.xjt.newpic.LetoolApp;
+import com.xjt.newpic.NpApp;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.metadata.MediaObject;
 import com.xjt.newpic.metadata.MediaPath;
@@ -18,7 +18,7 @@ public class LocalSource extends MediaSource {
 
     public static final String KEY_BUCKET_ID = "bucketId";
 
-    private LetoolApp mApplication;
+    private NpApp mApplication;
     private PathMatcher mMatcher;
     private static final int NO_MATCH = -1;
     private final UriMatcher mUriMatcher = new UriMatcher(NO_MATCH);
@@ -35,7 +35,7 @@ public class LocalSource extends MediaSource {
 
     private ContentProviderClient mClient;
 
-    public LocalSource(LetoolApp context) {
+    public LocalSource(NpApp context) {
         super("local");
         mApplication = context;
         mMatcher = new PathMatcher();
@@ -61,7 +61,7 @@ public class LocalSource extends MediaSource {
 
     @Override
     public MediaObject createMediaObject(MediaPath path) {
-        LetoolApp app = mApplication;
+        NpApp app = mApplication;
         LLog.i(TAG, " createMediaObject prefix:" + path.getPrefix() + " : " + mMatcher.match(path.getPrefix()));
         switch (mMatcher.match(path.getPrefix())) {
             case LOCAL_ALL_ALBUMSET:

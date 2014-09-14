@@ -4,7 +4,7 @@ package com.xjt.newpic.metadata.loader;
 import android.os.Message;
 import android.os.Process;
 
-import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.NpContext;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.common.SynchronizedHandler;
 import com.xjt.newpic.metadata.ContentListener;
@@ -58,7 +58,7 @@ public class ThumbnailDataLoader {
         public void onContentChanged(int index);
     }
 
-    public ThumbnailDataLoader(LetoolContext context, MediaSet mediaSet) {
+    public ThumbnailDataLoader(NpContext context, MediaSet mediaSet) {
         mSource = mediaSet;
         mData = new MediaItem[DATA_CACHE_SIZE];
         mItemVersion = new long[DATA_CACHE_SIZE];

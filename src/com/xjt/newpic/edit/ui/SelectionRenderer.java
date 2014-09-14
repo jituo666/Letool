@@ -6,8 +6,7 @@ import android.graphics.Paint;
 
 public class SelectionRenderer {
 
-    public static void drawSelection(Canvas canvas, int left, int top, int right, int bottom,
-            int stroke, Paint paint) {
+    public static void drawSelection(Canvas canvas, int left, int top, int right, int bottom, int stroke, Paint paint) {
         canvas.drawRect(left, top, right, top + stroke, paint);
         canvas.drawRect(left, bottom - stroke, right, bottom, paint);
         canvas.drawRect(left, top, left + stroke, bottom, paint);

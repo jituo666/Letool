@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.xjt.newpic.R;
-import com.xjt.newpic.edit.FilterShowActivity;
+import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.imageshow.MasterImage;
 
 public class CategoryMainPanel extends Fragment {
@@ -34,7 +34,7 @@ public class CategoryMainPanel extends Fragment {
 
     private void selection(int position, boolean value) {
         if (value) {
-            FilterShowActivity activity = (FilterShowActivity) getActivity();
+            NpEditActivity activity = (NpEditActivity) getActivity();
             activity.setCurrentPanel(position);
         }
         switch (position) {
@@ -115,7 +115,7 @@ public class CategoryMainPanel extends Fragment {
         });
 
         // 显示初始的category panel
-        FilterShowActivity activity = (FilterShowActivity) getActivity();
+        NpEditActivity activity = (NpEditActivity) getActivity();
         showPanel(activity.getCurrentPanel());
         return mMainView;
     }

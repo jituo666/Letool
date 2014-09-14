@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.edit.filters;
 
 import com.xjt.newpic.R;

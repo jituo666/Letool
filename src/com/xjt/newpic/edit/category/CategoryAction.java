@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.LLog;
-import com.xjt.newpic.edit.FilterShowActivity;
+import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
 import com.xjt.newpic.edit.imageshow.MasterImage;
 
@@ -25,17 +25,17 @@ public class CategoryAction {
     public static final int ADD_ACTION = 2;
     public static final int SPACER = 3;
     private int mType = CROP_VIEW;
-    private FilterShowActivity mContext;
+    private NpEditActivity mContext;
     private ArrayAdapter mAdapter;
     private boolean mCanBeRemoved = false;
     private boolean mIsDoubleAction = false;
 
-    public CategoryAction(FilterShowActivity context, FilterRepresentation representation, int type, boolean canBeRemoved) {
+    public CategoryAction(NpEditActivity context, FilterRepresentation representation, int type, boolean canBeRemoved) {
         this(context, representation, type);
         mCanBeRemoved = canBeRemoved;
     }
 
-    public CategoryAction(FilterShowActivity context, FilterRepresentation representation, int type) {
+    public CategoryAction(NpEditActivity context, FilterRepresentation representation, int type) {
         mContext = context;
         setType(type);
         mContext.registerAction(this);
@@ -47,7 +47,7 @@ public class CategoryAction {
         }
     }
 
-    public CategoryAction(FilterShowActivity context, FilterRepresentation representation) {
+    public CategoryAction(NpEditActivity context, FilterRepresentation representation) {
         this(context, representation, CROP_VIEW);
     }
 

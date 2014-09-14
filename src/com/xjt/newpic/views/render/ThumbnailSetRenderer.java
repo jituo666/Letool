@@ -1,7 +1,7 @@
 
 package com.xjt.newpic.views.render;
 
-import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.NpContext;
 import com.xjt.newpic.R;
 import com.xjt.newpic.adapters.ThumbnailSetDataWindow;
 import com.xjt.newpic.adapters.ThumbnailSetDataWindow.AlbumSetEntry;
@@ -31,7 +31,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
     private final ColorTexture mWaitLoadingTexture;
     protected final ResourceTexture mVideoPlayIcon;
     private final ResourceTexture mVideoOverlay;
-    private LetoolContext mLetoolContext;
+    private NpContext mLetoolContext;
 
     private ThumbnailView mThumbnailView;
     private ThumbnailSetDataWindow mDataWindow;
@@ -71,7 +71,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         }
     }
 
-    public ThumbnailSetRenderer(LetoolContext activity, ThumbnailView thumbnailView, SelectionManager selector) {
+    public ThumbnailSetRenderer(NpContext activity, ThumbnailView thumbnailView, SelectionManager selector) {
         super(activity.getActivityContext());
         mLetoolContext = activity;
         mThumbnailView = thumbnailView;

@@ -11,9 +11,9 @@ import com.xjt.newpic.stat.StatConstants;
  * @Date 1:38:59 PM Aug 2, 2014
  * @Comments:null
  */
-public class LetoolMainActivity extends LocalMediaActivity {
+public class NpMainActivity extends NpMediaActivity {
 
-    private static final String TAG = LetoolMainActivity.class.getSimpleName();
+    private static final String TAG = NpMainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle b) {

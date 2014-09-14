@@ -14,7 +14,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
-import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.NpContext;
 import com.xjt.newpic.common.Future;
 import com.xjt.newpic.common.FutureListener;
 import com.xjt.newpic.common.LLog;
@@ -145,7 +145,7 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
     // The path of the current viewing item will be stored in mItemPath.
     // If mItemPath is not null, mCurrentIndex is only a hint for where we can find the item. If mItemPath is null, then we use the mCurrentIndex to
     // find the image being viewed. cameraIndex is the index of the camera preview. If cameraIndex < 0, there is no camera preview.
-    public FullImageDataAdapter(LetoolContext activity, FullImageView view, MediaSet mediaSet, MediaPath itemPath, int indexHint) {
+    public FullImageDataAdapter(NpContext activity, FullImageView view, MediaSet mediaSet, MediaPath itemPath, int indexHint) {
         mSource = Utils.checkNotNull(mediaSet);
         mPhotoView = Utils.checkNotNull(view);
         mItemPath = Utils.checkNotNull(itemPath);

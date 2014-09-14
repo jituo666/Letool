@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.LLog;
-import com.xjt.newpic.edit.FilterShowActivity;
+import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
 import com.xjt.newpic.edit.filters.FilterTinyPlanetRepresentation;
 import com.xjt.newpic.edit.pipeline.ImagePreset;
@@ -135,7 +135,7 @@ public class CategoryAdapter extends ArrayAdapter<CategoryAction> {
             return;
         }
         super.remove(action);
-        FilterShowActivity activity = (FilterShowActivity) getContext();
+        NpEditActivity activity = (NpEditActivity) getContext();
         if (mCategory == CategoryMainPanel.LOOKS) {
             activity.removeLook(action);
         }

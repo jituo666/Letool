@@ -1,7 +1,7 @@
 
 package com.xjt.newpic.view;
 
-import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.NpContext;
 import com.xjt.newpic.R;
 import com.xjt.newpic.animations.AnimationTime;
 import com.xjt.newpic.animations.ThumbnailAnim;
@@ -56,7 +56,7 @@ public class ThumbnailView extends GLView {
 
     private ScrollBarView mScrollBar;
 
-    private LetoolContext mLetoolContext;
+    private NpContext mLetoolContext;
 
     //////////////////////////////////////////////////////////////Animations////////////////////////////////////////////////////////////////////
 
@@ -303,7 +303,7 @@ public class ThumbnailView extends GLView {
 
     ////////////////////////////////////////////////////////////Layout////////////////////////////////////////////////////////////////////
 
-    public ThumbnailView(LetoolContext context, ThumbnailLayout layout) {
+    public ThumbnailView(NpContext context, ThumbnailLayout layout) {
         Context cxt = context.getActivityContext();
         mLetoolContext = context;
         mGestureDetector = new GestureDetector(cxt, new MyGestureListener());

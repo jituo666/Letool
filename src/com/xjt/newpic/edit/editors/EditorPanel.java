@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.LLog;
-import com.xjt.newpic.edit.FilterShowActivity;
+import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.history.HistoryManager;
 import com.xjt.newpic.edit.imageshow.MasterImage;
 
@@ -31,7 +31,7 @@ public class EditorPanel extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        FilterShowActivity filterShowActivity = (FilterShowActivity) activity;
+        NpEditActivity filterShowActivity = (NpEditActivity) activity;
         mEditor = filterShowActivity.getEditor(mEditorID);
     }
 
@@ -41,12 +41,12 @@ public class EditorPanel extends Fragment {
 
         int position = adapter.undo();
         masterImage.onHistoryItemClick(position);
-        ((FilterShowActivity)getActivity()).invalidateViews();
+        ((NpEditActivity)getActivity()).invalidateViews();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        FilterShowActivity activity = (FilterShowActivity) getActivity();
+        NpEditActivity activity = (NpEditActivity) getActivity();
         if (mMainView != null) {
             if (mMainView.getParent() != null) {
                 ViewGroup parent = (ViewGroup) mMainView.getParent();
@@ -65,7 +65,7 @@ public class EditorPanel extends Fragment {
             @Override
             public void onClick(View v) {
                 cancelCurrentFilter();
-                FilterShowActivity activity = (FilterShowActivity) getActivity();
+                NpEditActivity activity = (NpEditActivity) getActivity();
                 activity.backToMain();
             }
         });
@@ -80,7 +80,7 @@ public class EditorPanel extends Fragment {
         applyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FilterShowActivity activity = (FilterShowActivity) getActivity();
+                NpEditActivity activity = (NpEditActivity) getActivity();
                 mEditor.finalApplyCalled();
                 activity.backToMain();
             }

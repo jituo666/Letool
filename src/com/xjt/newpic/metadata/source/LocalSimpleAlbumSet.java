@@ -7,7 +7,7 @@ import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Images.ImageColumns;
 import android.provider.MediaStore.Video;
 
-import com.xjt.newpic.LetoolApp;
+import com.xjt.newpic.NpApp;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.metadata.DataManager;
 import com.xjt.newpic.metadata.MediaPath;
@@ -36,11 +36,11 @@ public class LocalSimpleAlbumSet {
     private static final String BUCKET_GROUP_BY = "1) GROUP BY 1,(2";
     private static final String BUCKET_ORDER_BY = "MAX(datetaken) DESC";
 
-    private final LetoolApp mApplication;
+    private final NpApp mApplication;
 
     private boolean mIsImage;
 
-    public LocalSimpleAlbumSet(LetoolApp application, boolean isImage) {
+    public LocalSimpleAlbumSet(NpApp application, boolean isImage) {
         mApplication = application;
         mIsImage = isImage;
         if (isImage) {

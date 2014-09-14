@@ -16,7 +16,7 @@ import com.nineoldandroids.view.ViewHelper;
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.common.LLog;
-import com.xjt.newpic.edit.FilterShowActivity;
+import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.ui.SelectionRenderer;
 
 public class CategoryView extends CategoryIconView implements View.OnClickListener {
@@ -138,7 +138,7 @@ public class CategoryView extends CategoryIconView implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
-        FilterShowActivity activity = (FilterShowActivity) getContext();
+        NpEditActivity activity = (NpEditActivity) getContext();
         if (mAction.getType() == CategoryAction.ADD_ACTION) {
             //
         } else if (mAction.getType() != CategoryAction.SPACER) {
@@ -159,7 +159,7 @@ public class CategoryView extends CategoryIconView implements View.OnClickListen
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         boolean ret = super.onTouchEvent(event);
-        FilterShowActivity activity = (FilterShowActivity) getContext();
+        NpEditActivity activity = (NpEditActivity) getContext();
 
         if (event.getActionMasked() == MotionEvent.ACTION_UP) {
             activity.startTouchAnimation(this, event.getX(), event.getY());

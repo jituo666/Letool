@@ -1,7 +1,7 @@
 
 package com.xjt.newpic.selectors;
 
-import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.NpContext;
 import com.xjt.newpic.metadata.DataManager;
 import com.xjt.newpic.metadata.MediaItem;
 import com.xjt.newpic.metadata.MediaPath;
@@ -35,7 +35,7 @@ public class SelectionManager {
     private boolean mAutoLeave = false;
     private int mTotal;
 
-    public SelectionManager(LetoolContext activity, boolean isAlbumSet) {
+    public SelectionManager(NpContext activity, boolean isAlbumSet) {
         mDataManager = activity.getDataManager();
         mClickedSet = new HashSet<MediaPath>();
         mIsAlbumSet = isAlbumSet;

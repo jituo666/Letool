@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.utils;
 
 import android.os.Environment;

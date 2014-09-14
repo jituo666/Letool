@@ -22,10 +22,10 @@ import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
-import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.NpContext;
 import com.xjt.newpic.R;
-import com.xjt.newpic.activities.LocalMediaActivity;
-import com.xjt.newpic.activities.SettingsActivity;
+import com.xjt.newpic.activities.NpMediaActivity;
+import com.xjt.newpic.activities.NpSettingsActivity;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.metadata.DataManager;
 import com.xjt.newpic.metadata.MediaSetUtils;
@@ -61,19 +61,19 @@ public class SlidingMenuFragment extends Fragment {
     private List<Intent> mIntents;
     private ListView mMenusList;
     private ImageView mMenuLogo;
-    private LetoolContext mLetoolContext;
+    private NpContext mLetoolContext;
     private FragmentManager mFragmentManager;
 
     private void initIntentDatas() {
         mIntents = new ArrayList<Intent>();
-        Intent itImage = new Intent(getActivity(), LocalMediaActivity.class);
-        itImage.putExtra(LocalMediaActivity.KEY_IS_IMAGE, true);
+        Intent itImage = new Intent(getActivity(), NpMediaActivity.class);
+        itImage.putExtra(NpMediaActivity.KEY_IS_IMAGE, true);
         mIntents.add(itImage);
-        Intent itVideo = new Intent(getActivity(), LocalMediaActivity.class);
-        itVideo.putExtra(LocalMediaActivity.KEY_IS_IMAGE, false);
+        Intent itVideo = new Intent(getActivity(), NpMediaActivity.class);
+        itVideo.putExtra(NpMediaActivity.KEY_IS_IMAGE, false);
         mIntents.add(itVideo);
-        Intent itSetting = new Intent(getActivity(), SettingsActivity.class);
-        itSetting.putExtra(SettingsActivity.KEY_FROM_TIP, false);
+        Intent itSetting = new Intent(getActivity(), NpSettingsActivity.class);
+        itSetting.putExtra(NpSettingsActivity.KEY_FROM_TIP, false);
         mIntents.add(itSetting);
     }
 
@@ -81,7 +81,7 @@ public class SlidingMenuFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFragmentManager = getFragmentManager();
-        mLetoolContext = (LetoolContext) getActivity();
+        mLetoolContext = (NpContext) getActivity();
         initIntentDatas();
     }
 
@@ -114,8 +114,8 @@ public class SlidingMenuFragment extends Fragment {
 
                 if (position < 2) {
                     mLetoolContext.getLetoolSlidingMenu().toggle();
-                    if (mIntents.get(position).hasExtra(LocalMediaActivity.KEY_IS_IMAGE)
-                            && mLetoolContext.isImageBrwosing() == mIntents.get(position).getBooleanExtra(LocalMediaActivity.KEY_IS_IMAGE, true)) {
+                    if (mIntents.get(position).hasExtra(NpMediaActivity.KEY_IS_IMAGE)
+                            && mLetoolContext.isImageBrwosing() == mIntents.get(position).getBooleanExtra(NpMediaActivity.KEY_IS_IMAGE, true)) {
                         return;
                     }
                     getActivity().startActivity(mIntents.get(position));

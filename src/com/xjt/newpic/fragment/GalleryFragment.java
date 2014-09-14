@@ -4,10 +4,10 @@ package com.xjt.newpic.fragment;
 import java.util.ArrayList;
 
 import com.umeng.analytics.MobclickAgent;
-import com.xjt.newpic.LetoolApp;
-import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.NpApp;
+import com.xjt.newpic.NpContext;
 import com.xjt.newpic.R;
-import com.xjt.newpic.activities.LocalMediaActivity;
+import com.xjt.newpic.activities.NpMediaActivity;
 import com.xjt.newpic.common.EyePosition;
 import com.xjt.newpic.common.GlobalConstants;
 import com.xjt.newpic.common.LLog;
@@ -73,7 +73,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     private static final int BIT_LOADING_RELOAD = 1;
 
     private ViewGroup mNativeButtons;
-    private LetoolContext mLetoolContext;
+    private NpContext mLetoolContext;
     private GLController mGLController;
     private ThumbnailView mThumbnailView;
     private boolean mIsSDCardMountedCorreclty = false;
@@ -221,7 +221,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LLog.i(TAG, "onCreate");
-        mLetoolContext = (LetoolContext) getActivity();
+        mLetoolContext = (NpContext) getActivity();
         mGLController = mLetoolContext.getGLController();
 
         mHandler = new SynchronizedHandler(mGLController) {
@@ -298,7 +298,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     private void initializeData() {
         mMediaSet = new LocalAlbumSet(new MediaPath(mLetoolContext.getDataManager()
                 .getTopSetPath(mLetoolContext.isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_ONLY), -1000),
-                (LetoolApp) getActivity().getApplication(), mLetoolContext.isImageBrwosing());
+                (NpApp) getActivity().getApplication(), mLetoolContext.isImageBrwosing());
         mSelector.setSourceMediaSet(mMediaSet);
         mThumbnailSetAdapter = new ThumbnailSetDataLoader(mLetoolContext, mMediaSet);
         mThumbnailSetAdapter.setLoadingListener(new MyLoadingListener());
@@ -531,9 +531,9 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
                     StatConstants.EVENT_KEY_CLICK_VIDEO);
                 Fragment f = mLetoolContext.isImageBrwosing() ? new PhotoFragment() : new VideoFragment();
                 Bundle data = new Bundle();
-                data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
+                data.putString(NpMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
                         .getTopSetPath(mLetoolContext.isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
-                data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, true);
+                data.putBoolean(NpMediaActivity.KEY_IS_CAMERA_SOURCE, true);
                 f.setArguments(data);
                 mLetoolContext.pushContentFragment(f, this, false);
             }
@@ -555,11 +555,11 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         MediaPath mediaPath = albumData.getPath();
         Fragment f = mLetoolContext.isImageBrwosing() ? new PhotoFragment() : new VideoFragment();
         Bundle data = new Bundle();
-        data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
+        data.putString(NpMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
                 .getTopSetPath(mLetoolContext.isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
-        data.putString(LocalMediaActivity.KEY_ALBUM_TITLE, albumData.getName());
-        data.putInt(LocalMediaActivity.KEY_ALBUM_ID, mediaPath.getIdentity());
-        data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, false);
+        data.putString(NpMediaActivity.KEY_ALBUM_TITLE, albumData.getName());
+        data.putInt(NpMediaActivity.KEY_ALBUM_ID, mediaPath.getIdentity());
+        data.putBoolean(NpMediaActivity.KEY_IS_CAMERA_SOURCE, false);
         f.setArguments(data);
         mLetoolContext.pushContentFragment(f, this, true);
 

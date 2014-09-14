@@ -10,7 +10,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.content.LocalBroadcastManager;
 
-import com.xjt.newpic.LetoolApp;
+import com.xjt.newpic.NpApp;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.metadata.source.LocalSource;
 
@@ -51,13 +51,13 @@ public class DataManager {
     private static final String ACTION_DELETE_PICTURE = "com.android.gallery3d.action.DELETE_PICTURE";
 
     public final static Object LOCK = new Object();
-    private LetoolApp mApplication;
+    private NpApp mApplication;
     private HashMap<String, MediaSource> mSourceMap = new LinkedHashMap<String, MediaSource>();
     private HashMap<Uri, DataObserver> mNotifierMap = new HashMap<Uri, DataObserver>();
     private final Handler mMainHandler;
     private int mActiveCount = 0;
 
-    public DataManager(LetoolApp app) {
+    public DataManager(NpApp app) {
         mApplication = app;
         mMainHandler = new Handler(app.getMainLooper());
     }

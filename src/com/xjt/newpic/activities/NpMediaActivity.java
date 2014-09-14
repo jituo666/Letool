@@ -18,8 +18,8 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
-import com.xjt.newpic.LetoolApp;
-import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.NpApp;
+import com.xjt.newpic.NpContext;
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.GlobalConstants;
 import com.xjt.newpic.common.LLog;
@@ -47,9 +47,9 @@ import com.xjt.newpic.view.LetoolTopBar;
  * @Date 8:16:18 PM Jul 24, 2014
  * @Comments:null
  */
-public class LocalMediaActivity extends FragmentActivity implements LetoolContext {
+public class NpMediaActivity extends FragmentActivity implements NpContext {
 
-    private static final String TAG = LocalMediaActivity.class.getSimpleName();
+    private static final String TAG = NpMediaActivity.class.getSimpleName();
 
     public static final String KEY_ALBUM_TITLE = "album_title";
     public static final String KEY_MEDIA_PATH = "media_path";
@@ -97,30 +97,30 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
                 mIsImage = false;
                 fragment = new VideoFragment();
                 Bundle data = new Bundle();
-                data.putString(LocalMediaActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
-                data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, true);
+                data.putString(NpMediaActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
+                data.putBoolean(NpMediaActivity.KEY_IS_CAMERA_SOURCE, true);
                 fragment.setArguments(data);
             } else if (lastUI.equals(GlobalConstants.UI_TYPE_VIDEO_SETS)) {
                 LLog.i(TAG, "----------remember last ui 2:" + lastUI);
                 mIsImage = false;
                 fragment = new GalleryFragment();
                 Bundle data = new Bundle();
-                data.putString(LocalMediaActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
+                data.putString(NpMediaActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
                 fragment.setArguments(data);
             } else if (lastUI.equals(GlobalConstants.UI_TYPE_IMAGE_SETS)) {
                 LLog.i(TAG, "----------remember last ui 3:" + lastUI);
                 mIsImage = true;
                 fragment = new GalleryFragment();
                 Bundle data = new Bundle();
-                data.putString(LocalMediaActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
+                data.putString(NpMediaActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
                 fragment.setArguments(data);
             } else {
                 LLog.i(TAG, "----------remember last ui 4:" + lastUI);
                 mIsImage = true;
                 fragment = new PhotoFragment();
                 Bundle data = new Bundle();
-                data.putString(LocalMediaActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-                data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, true);
+                data.putString(NpMediaActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+                data.putBoolean(NpMediaActivity.KEY_IS_CAMERA_SOURCE, true);
                 fragment.setArguments(data);
             }
         } else {
@@ -130,15 +130,15 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
             if (MediaSetUtils.getBucketsIds().length <= 0) {
                 fragment = new GalleryFragment();
                 Bundle data = new Bundle();
-                data.putString(LocalMediaActivity.KEY_MEDIA_PATH, getDataManager()
+                data.putString(NpMediaActivity.KEY_MEDIA_PATH, getDataManager()
                         .getTopSetPath(isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
                 fragment.setArguments(data);
             } else {
                 fragment = mIsImage ? new PhotoFragment() : new VideoFragment();
                 Bundle data = new Bundle();
-                data.putString(LocalMediaActivity.KEY_MEDIA_PATH, getDataManager()
+                data.putString(NpMediaActivity.KEY_MEDIA_PATH, getDataManager()
                         .getTopSetPath(isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
-                data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, true);
+                data.putBoolean(NpMediaActivity.KEY_IS_CAMERA_SOURCE, true);
                 fragment.setArguments(data);
 
             }
@@ -258,7 +258,7 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             Intent it = new Intent();
-            it.setClass(this, LocalMediaActivity.class);
+            it.setClass(this, NpMediaActivity.class);
             it.putExtra(KEY_IS_IMAGE, mIsImage);
             startActivity(it);
             finish();
@@ -298,7 +298,7 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
 
     @Override
     public DataManager getDataManager() {
-        return ((LetoolApp) getApplication()).getDataManager();
+        return ((NpApp) getApplication()).getDataManager();
     }
 
     @Override
@@ -308,7 +308,7 @@ public class LocalMediaActivity extends FragmentActivity implements LetoolContex
 
     @Override
     public ThreadPool getThreadPool() {
-        return ((LetoolApp) getApplication()).getThreadPool();
+        return ((NpApp) getApplication()).getThreadPool();
     }
 
     @Override

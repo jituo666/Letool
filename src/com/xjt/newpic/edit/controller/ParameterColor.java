@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.edit.controller;
 
 import android.graphics.Color;
@@ -5,6 +6,7 @@ import android.graphics.Color;
 import java.util.Arrays;
 
 public class ParameterColor implements Parameter {
+
     public static String sParameterType = "ParameterColor";
     protected Control mControl;
     protected FilterView mEditor;
@@ -86,7 +88,7 @@ public class ParameterColor implements Parameter {
     }
 
     public void copyPalletFrom(ParameterColor parameterColor) {
-        System.arraycopy(parameterColor.mBasColors,0,mBasColors,0,mBasColors.length);
+        System.arraycopy(parameterColor.mBasColors, 0, mBasColors, 0, mBasColors.length);
     }
 
     public void setColorpalette(int[] palette) {

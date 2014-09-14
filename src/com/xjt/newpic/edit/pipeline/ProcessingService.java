@@ -15,7 +15,7 @@ import android.support.v4.app.NotificationCompat;
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.common.LLog;
-import com.xjt.newpic.edit.FilterShowActivity;
+import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.filters.FiltersManager;
 import com.xjt.newpic.edit.filters.ImageFilter;
 import com.xjt.newpic.edit.imageshow.MasterImage;
@@ -45,7 +45,7 @@ public class ProcessingService extends Service {
 
 
     private final IBinder mBinder = new LocalBinder();
-    private FilterShowActivity mFiltershowActivity;
+    private NpEditActivity mFiltershowActivity;
     private ProcessingTaskController mProcessingTaskController;
 
     private RenderingRequestTask mRenderingRequestTask;
@@ -69,7 +69,7 @@ public class ProcessingService extends Service {
         System.loadLibrary("jni_filtershow_filters");
     }
 
-    public void setFiltershowActivity(FilterShowActivity filtershowActivity) {
+    public void setFiltershowActivity(NpEditActivity filtershowActivity) {
         mFiltershowActivity = filtershowActivity;
     }
 

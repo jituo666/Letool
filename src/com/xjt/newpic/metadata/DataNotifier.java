@@ -2,7 +2,7 @@ package com.xjt.newpic.metadata;
 
 import android.net.Uri;
 
-import com.xjt.newpic.LetoolApp;
+import com.xjt.newpic.NpApp;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -11,7 +11,7 @@ public class DataNotifier {
     private MediaSet mMediaSet;
     private AtomicBoolean mContentDirty = new AtomicBoolean(true);
 
-    public DataNotifier(MediaSet set, Uri uri, LetoolApp app) {
+    public DataNotifier(MediaSet set, Uri uri, NpApp app) {
         mMediaSet = set;
         app.getDataManager().registerDataNotifier(uri, this);
     }

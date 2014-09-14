@@ -16,12 +16,12 @@ public class EditorPlaceHolder {
 
     private static final String TAG = EditorPlaceHolder.class.getSimpleName();
 
-    private FilterShowActivity mActivity = null;
+    private NpEditActivity mActivity = null;
     private FrameLayout mContainer = null;
     private HashMap<Integer, Editor> mEditors = new HashMap<Integer, Editor>();
     private Vector<ImageShow> mOldViews = new Vector<ImageShow>();
 
-    public EditorPlaceHolder(FilterShowActivity activity) {
+    public EditorPlaceHolder(NpEditActivity activity) {
         mActivity = activity;
     }
 

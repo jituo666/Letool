@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.edit.tools;
 
 import android.content.ContentResolver;
@@ -19,7 +18,7 @@ import com.xjt.newpic.R;
 import com.android.gallery3d.common.Utils;
 import com.android.gallery3d.exif.ExifInterface;
 import com.xjt.newpic.utils.XmpUtilHelper;
-import com.xjt.newpic.edit.FilterShowActivity;
+import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.cache.ImageLoader;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
 import com.xjt.newpic.edit.filters.FiltersManager;
@@ -506,7 +505,7 @@ public class SaveImage {
         return linkNewFileToUri(context, sourceUri, file, time, false);
     }
 
-    public static void saveImage(ImagePreset preset, final FilterShowActivity filterShowActivity, File destination) {
+    public static void saveImage(ImagePreset preset, final NpEditActivity filterShowActivity, File destination) {
         Uri selectedImageUri = filterShowActivity.getSelectedImageUri();
         Uri sourceImageUri = MasterImage.getImage().getUri();
         boolean flatten = false;

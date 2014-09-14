@@ -9,7 +9,7 @@ import android.provider.MediaStore.Images;
 import android.provider.MediaStore.Images.ImageColumns;
 import android.provider.MediaStore.Video;
 
-import com.xjt.newpic.LetoolApp;
+import com.xjt.newpic.NpApp;
 import com.xjt.newpic.common.Future;
 import com.xjt.newpic.common.FutureListener;
 import com.xjt.newpic.common.LLog;
@@ -68,7 +68,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
     private static final String BUCKET_GROUP_BY = "1) GROUP BY 1,(2";
     private static final String BUCKET_ORDER_BY = "MAX(datetaken) DESC";
 
-    private final LetoolApp mApplication;
+    private final NpApp mApplication;
     private ArrayList<MediaSet> mAlbums = new ArrayList<MediaSet>();
     private final DataNotifier mDataNotifier;
     private final String mName;
@@ -79,7 +79,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
     private ArrayList<MediaSet> mLoadBuffer;
     private boolean mIsImage;
 
-    public LocalAlbumSet(MediaPath path, LetoolApp application, boolean isImage) {
+    public LocalAlbumSet(MediaPath path, NpApp application, boolean isImage) {
         super(path, nextVersionNumber());
         mApplication = application;
         mHandler = new Handler(application.getMainLooper());

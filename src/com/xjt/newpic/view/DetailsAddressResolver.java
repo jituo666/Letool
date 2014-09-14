@@ -5,7 +5,7 @@ import android.location.Address;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.NpContext;
 import com.xjt.newpic.common.Future;
 import com.xjt.newpic.common.FutureListener;
 import com.xjt.newpic.common.ThreadPool.Job;
@@ -15,7 +15,7 @@ import com.xjt.newpic.utils.LetoolUtils;
 
 public class DetailsAddressResolver {
     private AddressResolvingListener mListener;
-    private final LetoolContext mContext;
+    private final NpContext mContext;
     private Future<Address> mAddressLookupJob;
     private final Handler mHandler;
 
@@ -38,7 +38,7 @@ public class DetailsAddressResolver {
         public void onAddressAvailable(String address);
     }
 
-    public DetailsAddressResolver(LetoolContext context) {
+    public DetailsAddressResolver(NpContext context) {
         mContext = context;
         mHandler = new Handler(Looper.getMainLooper());
     }

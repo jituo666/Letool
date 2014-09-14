@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.NpContext;
 import com.xjt.newpic.R;
 import com.xjt.newpic.metadata.MediaDetails;
 import com.xjt.newpic.utils.Utils;
@@ -31,7 +31,7 @@ public class DialogDetailsView implements DetailsViewContainer {
     @SuppressWarnings("unused")
     private static final String TAG = DialogDetailsView.class.getSimpleName();
 
-    private final LetoolContext mLetoolContext;
+    private final NpContext mLetoolContext;
     private DetailsAdapter mAdapter;
     private MediaDetails mDetails;
     private final DetailsSource mSource;
@@ -39,7 +39,7 @@ public class DialogDetailsView implements DetailsViewContainer {
     private LetoolDialog mDialog;
     private CloseListener mListener;
 
-    public DialogDetailsView(LetoolContext context, DetailsSource source) {
+    public DialogDetailsView(NpContext context, DetailsSource source) {
         mLetoolContext = context;
         mSource = source;
     }

@@ -2,7 +2,7 @@ package com.xjt.newpic.imagedata.blobcache;
 
 import android.graphics.Bitmap;
 
-import com.xjt.newpic.LetoolApp;
+import com.xjt.newpic.NpApp;
 import com.xjt.newpic.common.ThreadPool.JobContext;
 import com.xjt.newpic.imagedata.utils.BitmapUtils;
 import com.xjt.newpic.metadata.MediaItem;
@@ -16,7 +16,7 @@ import com.xjt.newpic.metadata.MediaPath;
 public class LocalVideoBlobRequest extends BlobCacheRequest {
     private String mLocalFilePath;
 
-    public LocalVideoBlobRequest(LetoolApp application, MediaPath path, long timeModified, int type, String localFilePath) {
+    public LocalVideoBlobRequest(NpApp application, MediaPath path, long timeModified, int type, String localFilePath) {
         super(application, path, timeModified, type, MediaItem.getTargetSize(type));
         mLocalFilePath = localFilePath;
     }

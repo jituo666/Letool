@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.LLog;
-import com.xjt.newpic.edit.FilterShowActivity;
+import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.controller.ColorChooser;
 import com.xjt.newpic.edit.filters.FilterColorBorderRepresentation;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
@@ -112,7 +112,7 @@ public class EditorColorBorder extends ParametricEditor {
             }
         });
         popupMenu.show();
-        ((FilterShowActivity) mContext).onShowMenu(popupMenu);
+        ((NpEditActivity) mContext).onShowMenu(popupMenu);
     }
 
     protected void selectMenuItem(PopupMenuItem item) {

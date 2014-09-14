@@ -2,11 +2,11 @@
 package com.xjt.newpic.fragment;
 
 import com.umeng.analytics.MobclickAgent;
-import com.xjt.newpic.LetoolApp;
-import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.NpApp;
+import com.xjt.newpic.NpContext;
 import com.xjt.newpic.R;
-import com.xjt.newpic.activities.LocalMediaActivity;
-import com.xjt.newpic.activities.SettingsActivity;
+import com.xjt.newpic.activities.NpMediaActivity;
+import com.xjt.newpic.activities.NpSettingsActivity;
 import com.xjt.newpic.common.EyePosition;
 import com.xjt.newpic.common.GlobalConstants;
 import com.xjt.newpic.common.LLog;
@@ -79,7 +79,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     private static final int MSG_LAYOUT_CONFIRMED = 0;
     private static final int MSG_PICK_PHOTO = 1;
 
-    private LetoolContext mLetoolContext;
+    private NpContext mLetoolContext;
 
     // photo data
     private MediaPath mDataSetPath;
@@ -225,7 +225,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LLog.i(TAG, "onCreate");
-        mLetoolContext = (LetoolContext) getActivity();
+        mLetoolContext = (NpContext) getActivity();
         mGLController = mLetoolContext.getGLController();
 
         initializeData();
@@ -254,12 +254,12 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
 
     private void initializeData() {
         Bundle data = getArguments();
-        mIsCameraSource = data.getBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE);
+        mIsCameraSource = data.getBoolean(NpMediaActivity.KEY_IS_CAMERA_SOURCE);
         if (mIsCameraSource) {
             if (MediaSetUtils.getBucketsIds().length > 0) {
                 mAlbumTitle = getString(R.string.common_photo);
-                mDataSetPath = new MediaPath(data.getString(LocalMediaActivity.KEY_MEDIA_PATH), MediaSetUtils.getBucketsIds()[0]);
-                mDataSet = new LocalAlbum(mDataSetPath, (LetoolApp) getActivity().getApplication(), MediaSetUtils.getBucketsIds(),
+                mDataSetPath = new MediaPath(data.getString(NpMediaActivity.KEY_MEDIA_PATH), MediaSetUtils.getBucketsIds()[0]);
+                mDataSet = new LocalAlbum(mDataSetPath, (NpApp) getActivity().getApplication(), MediaSetUtils.getBucketsIds(),
                         mLetoolContext.isImageBrwosing(),
                         getString(R.string.common_photo));
                 mHasDefaultDCIMDirectory = true;
@@ -268,8 +268,8 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                 return;
             }
         } else {
-            mAlbumTitle = data.getString(LocalMediaActivity.KEY_ALBUM_TITLE);
-            mDataSetPath = new MediaPath(data.getString(LocalMediaActivity.KEY_MEDIA_PATH), data.getInt(LocalMediaActivity.KEY_ALBUM_ID));
+            mAlbumTitle = data.getString(NpMediaActivity.KEY_ALBUM_TITLE);
+            mDataSetPath = new MediaPath(data.getString(NpMediaActivity.KEY_MEDIA_PATH), data.getInt(NpMediaActivity.KEY_ALBUM_ID));
             mDataSet = mLetoolContext.getDataManager().getMediaSet(mDataSetPath);
             if (mDataSet == null) {
                 Utils.fail("MediaSet is null. Path = %s", mDataSetPath);
@@ -368,9 +368,9 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                 public void onClick(View v) {
                     dlg.dismiss();
                     Intent it = new Intent();
-                    it.setClass(getActivity(), SettingsActivity.class);
-                    it.putExtra(SettingsActivity.KEY_FROM_TIP, true);
-                    startActivityForResult(it, LocalMediaActivity.REQUEST_CODE_SETTINGS);
+                    it.setClass(getActivity(), NpSettingsActivity.class);
+                    it.putExtra(NpSettingsActivity.KEY_FROM_TIP, true);
+                    startActivityForResult(it, NpMediaActivity.REQUEST_CODE_SETTINGS);
                     getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
                 }
             },R.drawable.np_common_pressed_left_bg);
@@ -535,7 +535,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                         StatConstants.EVENT_KEY_CLICK_MOVIE);
                 GalleryFragment f = new GalleryFragment();
                 Bundle data = new Bundle();
-                data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
+                data.putString(NpMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
                         .getTopSetPath(mLetoolContext.isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
                 f.setArguments(data);
                 mLetoolContext.pushContentFragment(f, this, false);
@@ -605,15 +605,15 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         hideGuideTip();
         Bundle data = new Bundle();
         if (mIsCameraSource) {
-            data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
+            data.putString(NpMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
                     .getTopSetPath(mLetoolContext.isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
-            data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, true);
+            data.putBoolean(NpMediaActivity.KEY_IS_CAMERA_SOURCE, true);
         } else {
-            data.putInt(LocalMediaActivity.KEY_ALBUM_ID, mDataSet.getPath().getIdentity());
-            data.putString(LocalMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
+            data.putInt(NpMediaActivity.KEY_ALBUM_ID, mDataSet.getPath().getIdentity());
+            data.putString(NpMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
                     .getTopSetPath(mLetoolContext.isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
-            data.putBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE, false);
-            data.putString(LocalMediaActivity.KEY_ALBUM_TITLE, mDataSet.getName());
+            data.putBoolean(NpMediaActivity.KEY_IS_CAMERA_SOURCE, false);
+            data.putString(NpMediaActivity.KEY_ALBUM_TITLE, mDataSet.getName());
         }
         Fragment fragment = new FullImageFragment();
         data.putInt(FullImageFragment.KEY_INDEX_HINT, index);

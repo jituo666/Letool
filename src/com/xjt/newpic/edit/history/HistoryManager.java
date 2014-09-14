@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.edit.history;
 
 import android.graphics.drawable.Drawable;

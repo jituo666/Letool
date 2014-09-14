@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.edit.filters;
 
 import android.graphics.Bitmap;

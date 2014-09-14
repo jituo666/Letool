@@ -21,10 +21,10 @@ import android.view.WindowManager;
  * @Date 8:16:26 PM Jul 24, 2014
  * @Comments:null
  */
-public class MoviePlayActivity extends Activity {
+public class NpMoviePlayActivity extends Activity {
 
     @SuppressWarnings("unused")
-    private static final String TAG = MoviePlayActivity.class.getSimpleName();
+    private static final String TAG = NpMoviePlayActivity.class.getSimpleName();
     public static final String KEY_LOGO_BITMAP = "logo-bitmap";
     private MoviePlayer mMoviePlayer;
     private boolean mFinishOnCompletion;

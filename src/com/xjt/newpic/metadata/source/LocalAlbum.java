@@ -10,7 +10,7 @@ import android.provider.MediaStore.Images.ImageColumns;
 import android.provider.MediaStore.Video;
 import android.provider.MediaStore.Video.VideoColumns;
 
-import com.xjt.newpic.LetoolApp;
+import com.xjt.newpic.NpApp;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.metadata.DataManager;
 import com.xjt.newpic.metadata.DataNotifier;
@@ -32,7 +32,7 @@ public class LocalAlbum extends MediaSet {
     private final Uri mBaseUri;
     private final String[] mProjection;
 
-    private final LetoolApp mApplication;
+    private final NpApp mApplication;
     private final ContentResolver mResolver;
     private final int mBucketId[];
     private final String mName;
@@ -42,13 +42,13 @@ public class LocalAlbum extends MediaSet {
     private Cursor mCursor;
     private boolean isMergedAlbum;
 
-    public LocalAlbum(MediaPath path, LetoolApp application, int bucketId, boolean isImage) {
+    public LocalAlbum(MediaPath path, NpApp application, int bucketId, boolean isImage) {
         this(path, application, new int[] {
                 bucketId
         }, isImage, LocalAlbumSet.getBucketName(application.getContentResolver(), bucketId));
     }
 
-    public LocalAlbum(MediaPath path, LetoolApp application, int[] bucketIds, boolean isImage, String name) {
+    public LocalAlbum(MediaPath path, NpApp application, int[] bucketIds, boolean isImage, String name) {
         super(path, nextVersionNumber());
         mApplication = application;
         mResolver = application.getContentResolver();
@@ -115,7 +115,7 @@ public class LocalAlbum extends MediaSet {
         return list;
     }
 
-    private static MediaItem loadOrUpdateItem(MediaPath path, Cursor cursor, DataManager dataManager, LetoolApp app, boolean isImage) {
+    private static MediaItem loadOrUpdateItem(MediaPath path, Cursor cursor, DataManager dataManager, NpApp app, boolean isImage) {
         LocalMediaItem item = (LocalMediaItem) path.getObject();
         if (item == null) {
             if (isImage) {

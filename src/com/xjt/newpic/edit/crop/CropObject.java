@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.edit.crop;
 
 import android.graphics.Rect;

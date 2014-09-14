@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2013 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.xjt.newpic.edit.crop;
 
 import android.content.Context;
@@ -34,9 +18,9 @@ import android.view.View;
 
 import com.xjt.newpic.R;
 
-
 public class CropView extends View {
-    private static final String LOGTAG = "CropView";
+
+    private static final String TAG = "CropView";
 
     private RectF mImageBounds = new RectF();
     private RectF mScreenBounds = new RectF();
@@ -186,7 +170,7 @@ public class CropView extends View {
     }
 
     private void reset() {
-        Log.w(LOGTAG, "crop reset called");
+        Log.w(TAG, "crop reset called");
         mState = Mode.NONE;
         mCropObj = null;
         mRotation = 0;
@@ -217,7 +201,7 @@ public class CropView extends View {
             applyAspect(w, h);
             mCropObj.resetBoundsTo(outer, outer);
         } else {
-            Log.w(LOGTAG, "failed to set aspect ratio original");
+            Log.w(TAG, "failed to set aspect ratio original");
         }
     }
 
@@ -236,7 +220,7 @@ public class CropView extends View {
             y = tmp;
         }
         if (!mCropObj.setInnerAspectRatio(x, y)) {
-            Log.w(LOGTAG, "failed to set aspect ratio");
+            Log.w(TAG, "failed to set aspect ratio");
         }
         invalidate();
     }
@@ -312,14 +296,14 @@ public class CropView extends View {
             mDisplayMatrix.reset();
             if (!CropDrawingUtils.setImageToScreenMatrix(mDisplayMatrix, mImageBounds, mScreenBounds,
                     mRotation)) {
-                Log.w(LOGTAG, "failed to get screen matrix");
+                Log.w(TAG, "failed to get screen matrix");
                 mDisplayMatrix = null;
                 return;
             }
             mDisplayMatrixInverse = new Matrix();
             mDisplayMatrixInverse.reset();
             if (!mDisplayMatrix.invert(mDisplayMatrixInverse)) {
-                Log.w(LOGTAG, "could not invert display matrix");
+                Log.w(TAG, "could not invert display matrix");
                 mDisplayMatrixInverse = null;
                 return;
             }
@@ -365,7 +349,9 @@ public class CropView extends View {
                 wpPaint.setStrokeWidth(3);
                 wpPaint.setStyle(Paint.Style.STROKE);
                 wpPaint.setPathEffect(new DashPathEffect(new float[]
-                        {mDashOnLength, mDashOnLength + mDashOffLength}, 0));
+                {
+                        mDashOnLength, mDashOnLength + mDashOffLength
+                }, 0));
                 p.setColor(mOverlayWPShadowColor);
                 CropDrawingUtils.drawWallpaperSelectionFrame(canvas, mScreenCropBounds,
                         mSpotX, mSpotY, wpPaint, p);

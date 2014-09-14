@@ -12,7 +12,7 @@ import android.view.MotionEvent;
 import android.view.animation.AccelerateInterpolator;
 
 import com.umeng.analytics.MobclickAgent;
-import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.NpContext;
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.common.LLog;
@@ -211,7 +211,7 @@ public class FullImageView extends GLView {
 
     private Context mContext;
 
-    public FullImageView(LetoolContext context) {
+    public FullImageView(NpContext context) {
         mTileView = new TiledImageView(context);
         addComponent(mTileView);
         mContext = context.getActivityContext();

@@ -12,7 +12,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import com.xjt.newpic.R;
-import com.xjt.newpic.edit.FilterShowActivity;
+import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.controller.Control;
 import com.xjt.newpic.edit.controller.FilterView;
 import com.xjt.newpic.edit.controller.Parameter;
@@ -195,7 +195,7 @@ public class EditorGrad extends ParametricEditor implements OnSeekBarChangeListe
             setUpPopupMenu(button);
         }
         mPopupMenu.show();
-        ((FilterShowActivity) mContext).onShowMenu(mPopupMenu);
+        ((NpEditActivity) mContext).onShowMenu(mPopupMenu);
     }
 
     private void setUpPopupMenu(Button button) {

@@ -18,16 +18,16 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
-import com.xjt.newpic.LetoolApp;
-import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.NpApp;
+import com.xjt.newpic.NpContext;
 import com.xjt.newpic.R;
-import com.xjt.newpic.activities.LocalMediaActivity;
+import com.xjt.newpic.activities.NpMediaActivity;
 import com.xjt.newpic.adapters.FullImageDataAdapter;
 import com.xjt.newpic.common.GlobalConstants;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.common.OrientationManager;
 import com.xjt.newpic.common.SynchronizedHandler;
-import com.xjt.newpic.edit.FilterShowActivity;
+import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.metadata.MediaDetails;
 import com.xjt.newpic.metadata.MediaItem;
 import com.xjt.newpic.metadata.MediaObject;
@@ -101,7 +101,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
     private boolean mDeferredUpdateWaiting = false;
     private long mDeferUpdateUntil = Long.MAX_VALUE;
 
-    private LetoolContext mLetoolContext;
+    private NpContext mLetoolContext;
 
     private static Handler mHandler;
 
@@ -242,7 +242,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
         if (current == null || (current.getSupportedOperations() & MediaObject.SUPPORT_EDIT) == 0) {
             return;
         }
-        Intent intent = new Intent(FilterShowActivity.FILTER_EDIT_ACTION);
+        Intent intent = new Intent(NpEditActivity.FILTER_EDIT_ACTION);
         intent.setDataAndType(current.getContentUri(), current.getMimeType()).setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         if (getActivity().getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).size() == 0) {
             intent.setAction(Intent.ACTION_EDIT);
@@ -304,7 +304,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mLetoolContext = (LetoolContext) getActivity();
+        mLetoolContext = (NpContext) getActivity();
         mGLController = mLetoolContext.getGLController();
         initViews();
         initDatas();
@@ -414,17 +414,17 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
 
     private void initDatas() {
         Bundle data = this.getArguments();
-        mIsCameraSource = data.getBoolean(LocalMediaActivity.KEY_IS_CAMERA_SOURCE);
+        mIsCameraSource = data.getBoolean(NpMediaActivity.KEY_IS_CAMERA_SOURCE);
         if (!mIsCameraSource) {
-            String albumTitle = data.getString(LocalMediaActivity.KEY_ALBUM_TITLE);
-            int albumId = data.getInt(LocalMediaActivity.KEY_ALBUM_ID, 0);
-            String albumMediaPath = data.getString(LocalMediaActivity.KEY_MEDIA_PATH);
+            String albumTitle = data.getString(NpMediaActivity.KEY_ALBUM_TITLE);
+            int albumId = data.getInt(NpMediaActivity.KEY_ALBUM_ID, 0);
+            String albumMediaPath = data.getString(NpMediaActivity.KEY_MEDIA_PATH);
             LLog.i(TAG, " photo fragment onCreateView id:" + albumId + " albumTitle:" + albumTitle + " albumMediaPath:" + albumMediaPath + " mIsCameraSource:");
             mMediaSet = mLetoolContext.getDataManager().getMediaSet(new MediaPath(albumMediaPath, albumId));
         } else {
             boolean isImage = mLetoolContext.isImageBrwosing();
-            mMediaSet = new LocalAlbum(new MediaPath(data.getString(LocalMediaActivity.KEY_MEDIA_PATH), MediaSetUtils.getBucketsIds()[0]),
-                    (LetoolApp) getActivity().getApplication(),
+            mMediaSet = new LocalAlbum(new MediaPath(data.getString(NpMediaActivity.KEY_MEDIA_PATH), MediaSetUtils.getBucketsIds()[0]),
+                    (NpApp) getActivity().getApplication(),
                     MediaSetUtils.getBucketsIds(), isImage, getString(isImage ? R.string.common_picture : R.string.common_video));
         }
         mStartInFilmstrip = data.getBoolean(KEY_START_IN_FILMSTRIP, false);

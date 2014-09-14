@@ -10,7 +10,7 @@ import android.util.DisplayMetrics;
 import android.util.FloatMath;
 import android.view.WindowManager;
 
-import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.NpContext;
 import com.xjt.newpic.common.Future;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.common.ThreadPool;
@@ -138,7 +138,7 @@ public class TiledImageView extends GLView {
         return metrics.heightPixels > 2048 ||  metrics.widthPixels > 2048;
     }
 
-    public TiledImageView(LetoolContext context) {
+    public TiledImageView(NpContext context) {
         mThreadPool = context.getThreadPool();
         mTileDecoder = mThreadPool.submit(new TileDecoder());
         if (sTileSize == 0) {

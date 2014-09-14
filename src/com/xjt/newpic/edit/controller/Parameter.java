@@ -1,7 +1,8 @@
+
 package com.xjt.newpic.edit.controller;
 
-
 public interface Parameter {
+
     public String getParameterName();
 
     public String getParameterType();

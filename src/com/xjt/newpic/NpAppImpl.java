@@ -20,9 +20,9 @@ import android.content.Context;
  * @Date 9:07:11 PM May 17, 2014
  * @Comments:null
  */
-public class LetoolAppImpl extends Application implements LetoolApp {
+public class NpAppImpl extends Application implements NpApp {
 
-    private static final String TAG = LetoolAppImpl.class.getSimpleName();
+    private static final String TAG = NpAppImpl.class.getSimpleName();
 
     private BlobCacheService mImageCacheService;
     private Object mLock = new Object();

@@ -6,7 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 
 import com.xjt.newpic.common.LLog;
-import com.xjt.newpic.edit.FilterShowActivity;
+import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.cache.BitmapCache;
 import com.xjt.newpic.edit.filters.FiltersManager;
 import com.xjt.newpic.edit.imageshow.MasterImage;
@@ -87,8 +87,8 @@ public class RenderingRequest {
     }
 
     private void post(Context context) {
-        if (context instanceof FilterShowActivity) {
-            FilterShowActivity activity = (FilterShowActivity) context;
+        if (context instanceof NpEditActivity) {
+            NpEditActivity activity = (NpEditActivity) context;
             ProcessingService service = activity.getProcessingService();
             service.postRenderingRequest(this);
         }

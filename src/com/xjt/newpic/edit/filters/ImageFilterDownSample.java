@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2012 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.xjt.newpic.edit.filters;
 
 import android.graphics.Bitmap;
@@ -24,12 +8,12 @@ import com.xjt.newpic.R;
 import com.xjt.newpic.edit.cache.ImageLoader;
 import com.xjt.newpic.edit.imageshow.MasterImage;
 
-public class ImageFilterDownsample extends SimpleImageFilter {
+public class ImageFilterDownSample extends SimpleImageFilter {
     private static final String SERIALIZATION_NAME = "DOWNSAMPLE";
     private static final int ICON_DOWNSAMPLE_FRACTION = 8;
     private ImageLoader mImageLoader;
 
-    public ImageFilterDownsample(ImageLoader loader) {
+    public ImageFilterDownSample(ImageLoader loader) {
         mName = "Downsample";
         mImageLoader = loader;
     }
@@ -39,7 +23,7 @@ public class ImageFilterDownsample extends SimpleImageFilter {
         representation.setName("Downsample");
         representation.setSerializationName(SERIALIZATION_NAME);
 
-        representation.setFilterClass(ImageFilterDownsample.class);
+        representation.setFilterClass(ImageFilterDownSample.class);
         representation.setMaximum(100);
         representation.setMinimum(1);
         representation.setValue(50);

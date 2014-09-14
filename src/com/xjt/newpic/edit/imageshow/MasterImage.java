@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.edit.imageshow;
 
 import android.graphics.Bitmap;
@@ -13,7 +12,7 @@ import com.android.gallery3d.exif.ExifTag;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.xjt.newpic.common.LLog;
-import com.xjt.newpic.edit.FilterShowActivity;
+import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.cache.BitmapCache;
 import com.xjt.newpic.edit.cache.ImageLoader;
 import com.xjt.newpic.edit.filters.FilterMirrorRepresentation;
@@ -47,7 +46,7 @@ public class MasterImage implements RenderingRequestCaller {
 
     private static MasterImage sMasterImage = null;
 
-    private FilterShowActivity mActivity = null;
+    private NpEditActivity mActivity = null;
 
     private ImageFilter mCurrentFilter = null;
     private ImagePreset mPreset = null;
@@ -332,11 +331,11 @@ public class MasterImage implements RenderingRequestCaller {
         mUri = uri;
     }
 
-    public void setActivity(FilterShowActivity activity) {
+    public void setActivity(NpEditActivity activity) {
         mActivity = activity;
     }
 
-    public FilterShowActivity getActivity() {
+    public NpEditActivity getActivity() {
         return mActivity;
     }
 

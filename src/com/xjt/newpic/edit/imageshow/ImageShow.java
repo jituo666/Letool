@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.edit.imageshow;
 
 import android.content.Context;
@@ -28,7 +27,7 @@ import android.widget.LinearLayout;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.ValueAnimator;
 import com.xjt.newpic.R;
-import com.xjt.newpic.edit.FilterShowActivity;
+import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.filters.FilterMirrorRepresentation;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
 import com.xjt.newpic.edit.filters.ImageFilter;
@@ -117,9 +116,9 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
         return new BitmapShader(b, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
     }
 
-    private FilterShowActivity mActivity = null;
+    private NpEditActivity mActivity = null;
 
-    public FilterShowActivity getActivity() {
+    public NpEditActivity getActivity() {
         return mActivity;
     }
 
@@ -161,7 +160,7 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
         mOriginalText = res.getString(R.string.original);
         mShadow = (NinePatchDrawable) res.getDrawable(R.drawable.geometry_shadow);
         setupGestureDetector(context);
-        mActivity = (FilterShowActivity) context;
+        mActivity = (NpEditActivity) context;
         if (sMask == null) {
             Bitmap mask = BitmapFactory.decodeResource(res, R.drawable.spot_mask);
             sMask = convertToAlphaMask(mask);
@@ -549,7 +548,7 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
         updateImage();
     }
 
-    public void saveImage(FilterShowActivity filterShowActivity, File file) {
+    public void saveImage(NpEditActivity filterShowActivity, File file) {
         SaveImage.saveImage(getImagePreset(), filterShowActivity, file);
     }
 

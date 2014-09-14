@@ -1,7 +1,7 @@
 
 package com.xjt.newpic.views.render;
 
-import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.NpContext;
 import com.xjt.newpic.R;
 import com.xjt.newpic.adapters.ThumbnailDataWindow;
 import com.xjt.newpic.common.LLog;
@@ -37,7 +37,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
     private boolean mAnimatePressedUp;
     private SelectionManager mMediaSelector;
     private boolean mInSelectionMode;
-    private LetoolContext mFragment;
+    private NpContext mFragment;
 
     public interface ThumbnailFilter {
 
@@ -57,7 +57,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
         }
     }
 
-    public ThumbnailRenderer(LetoolContext context, ThumbnailView slotView, SelectionManager selector) {
+    public ThumbnailRenderer(NpContext context, ThumbnailView slotView, SelectionManager selector) {
         super(context.getActivityContext());
         mFragment = context;
         mThumbnailView = slotView;

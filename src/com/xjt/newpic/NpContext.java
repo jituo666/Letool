@@ -18,7 +18,7 @@ import com.xjt.newpic.view.LetoolTopBar;
  * @Date 9:07:17 PM May 17, 2014
  * @Comments:null
  */
-public interface LetoolContext {
+public interface NpContext {
 
     public Context getActivityContext();
 

@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.edit.controller;
 
 import android.content.Context;
@@ -19,7 +20,8 @@ import com.xjt.newpic.edit.pipeline.RenderingRequestCaller;
 import java.util.Vector;
 
 public class StyleChooser implements Control {
-    private final String LOGTAG = "StyleChooser";
+
+    private final String TAG = "StyleChooser";
     protected ParameterStyles mParameter;
     protected LinearLayout mLinearLayout;
     protected Editor mEditor;
@@ -33,8 +35,7 @@ public class StyleChooser implements Control {
         mEditor = editor;
         Context context = container.getContext();
         mParameter = (ParameterStyles) parameter;
-        LayoutInflater inflater =
-                (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mTopView = inflater.inflate(mLayoutID, container, true);
         mLinearLayout = (LinearLayout) mTopView.findViewById(R.id.listStyles);
         mTopView.setVisibility(View.VISIBLE);
@@ -51,6 +52,7 @@ public class StyleChooser implements Control {
             mIconButton.add(button);
             final int buttonNo = i;
             button.setOnClickListener(new View.OnClickListener() {
+
                 @Override
                 public void onClick(View arg0) {
                     mParameter.setSelected(buttonNo);
@@ -58,6 +60,7 @@ public class StyleChooser implements Control {
             });
             mLinearLayout.addView(button);
             mParameter.getIcon(i, new BitmapCaller() {
+
                 @Override
                 public void available(Bitmap bmap) {
 

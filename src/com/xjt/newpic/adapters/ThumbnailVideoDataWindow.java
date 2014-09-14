@@ -5,7 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Message;
 
-import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.NpContext;
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.Future;
 import com.xjt.newpic.common.FutureListener;
@@ -77,7 +77,7 @@ public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChanged
         private BitmapLoader coverLoader;
     }
 
-    public ThumbnailVideoDataWindow(LetoolContext context, ThumbnailDataLoader source, ThumbnailVideoRenderer.LabelSpec labelSpec, int cacheSize) {
+    public ThumbnailVideoDataWindow(NpContext context, ThumbnailDataLoader source, ThumbnailVideoRenderer.LabelSpec labelSpec, int cacheSize) {
         source.setDataChangedListener(this);
         mSource = source;
         mData = new VideoEntry[cacheSize];

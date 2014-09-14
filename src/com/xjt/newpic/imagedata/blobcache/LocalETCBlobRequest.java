@@ -6,7 +6,7 @@ import java.io.IOException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.xjt.newpic.LetoolApp;
+import com.xjt.newpic.NpApp;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.common.ThreadPool.JobContext;
 import com.xjt.newpic.imagedata.exif.ExifInterface;
@@ -25,7 +25,7 @@ public class LocalETCBlobRequest extends ETCCacheRequest {
 
     private String mLocalFilePath;
 
-    public LocalETCBlobRequest(LetoolApp application, MediaPath path, long timeModified,
+    public LocalETCBlobRequest(NpApp application, MediaPath path, long timeModified,
             int type, String localFilePath) {
         super(application, path, timeModified, type, MediaItem.getTargetSize(type));
         mLocalFilePath = localFilePath;

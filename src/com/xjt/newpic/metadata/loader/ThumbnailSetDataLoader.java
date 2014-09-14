@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Process;
 
-import com.xjt.newpic.LetoolContext;
+import com.xjt.newpic.NpContext;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.common.SynchronizedHandler;
 import com.xjt.newpic.metadata.ContentListener;
@@ -69,7 +69,7 @@ public class ThumbnailSetDataLoader {
         }
     }
 
-    public ThumbnailSetDataLoader(LetoolContext activity, MediaSet albumSet) {
+    public ThumbnailSetDataLoader(NpContext activity, MediaSet albumSet) {
         mSource = Utils.checkNotNull(albumSet);
         mCoverItem = new MediaItem[DATA_CACHE_SIZE];
         mDataSet = new MediaSet[DATA_CACHE_SIZE];
