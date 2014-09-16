@@ -1,8 +1,10 @@
+
 package com.xjt.newpic.edit.pipeline;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
 
+import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.edit.cache.ImageLoader;
 import com.xjt.newpic.edit.filters.FiltersManager;
 import com.xjt.newpic.edit.tools.SaveImage;
@@ -10,14 +12,14 @@ import com.xjt.newpic.edit.tools.SaveImage;
 import java.io.File;
 
 public class ImageSavingTask extends ProcessingTask {
+
+    private static final String TAG = ImageSavingTask.class.getSimpleName();
     private ProcessingService mProcessingService;
 
     static class SaveRequest implements Request {
-        Uri sourceUri;
+
         Uri selectedUri;
-        File destinationFile;
         ImagePreset preset;
-        boolean flatten;
         int quality;
         float sizeFactor;
         Bitmap previewImage;
@@ -25,20 +27,24 @@ public class ImageSavingTask extends ProcessingTask {
     }
 
     static class UpdateBitmap implements Update {
+
         Bitmap bitmap;
     }
 
     static class UpdateProgress implements Update {
+
         int max;
         int current;
     }
 
     static class UpdatePreviewSaved implements Update {
+
         Uri uri;
         boolean exit;
     }
 
     static class URIResult implements Result {
+
         Uri uri;
         boolean exit;
     }
@@ -47,16 +53,10 @@ public class ImageSavingTask extends ProcessingTask {
         mProcessingService = service;
     }
 
-    public void saveImage(Uri sourceUri, Uri selectedUri,
-                          File destinationFile, ImagePreset preset,
-                          Bitmap previewImage, boolean flatten,
-                          int quality, float sizeFactor, boolean exit) {
+    public void saveImage(Uri selectedUri, ImagePreset preset, Bitmap previewImage, int quality, float sizeFactor, boolean exit) {
         SaveRequest request = new SaveRequest();
-        request.sourceUri = sourceUri;
         request.selectedUri = selectedUri;
-        request.destinationFile = destinationFile;
         request.preset = preset;
-        request.flatten = flatten;
         request.quality = quality;
         request.sizeFactor = sizeFactor;
         request.previewImage = previewImage;
@@ -64,23 +64,23 @@ public class ImageSavingTask extends ProcessingTask {
         postRequest(request);
     }
 
+    //运行在HandlerThread中
     public Result doInBackground(Request message) {
         SaveRequest request = (SaveRequest) message;
-        Uri sourceUri = request.sourceUri;
         Uri selectedUri = request.selectedUri;
-        File destinationFile = request.destinationFile;
+        LLog.i(TAG, "---selectedUri:" + (selectedUri == null ? null : selectedUri.toString()));
         Bitmap previewImage = request.previewImage;
         ImagePreset preset = request.preset;
-        boolean flatten = request.flatten;
         final boolean exit = request.exit;
         // We create a small bitmap showing the result that we can give to the notification
         UpdateBitmap updateBitmap = new UpdateBitmap();
-        updateBitmap.bitmap = createNotificationBitmap(previewImage, sourceUri, preset);
+        updateBitmap.bitmap = createNotificationBitmap(previewImage, selectedUri, preset);
         postUpdate(updateBitmap);
-        SaveImage saveImage = new SaveImage(mProcessingService, sourceUri, selectedUri, destinationFile, previewImage,
+        SaveImage saveImage = new SaveImage(mProcessingService, selectedUri, previewImage,
                 new SaveImage.Callback() {
+
                     @Override
-                    public void onPreviewSaved(Uri uri){
+                    public void onPreviewSaved(Uri uri) {
                         UpdatePreviewSaved previewSaved = new UpdatePreviewSaved();
                         previewSaved.uri = uri;
                         previewSaved.exit = exit;
@@ -95,7 +95,7 @@ public class ImageSavingTask extends ProcessingTask {
                         postUpdate(updateProgress);
                     }
                 });
-        Uri uri = saveImage.processAndSaveImage(preset, flatten,request.quality, request.sizeFactor, request.exit);
+        Uri uri = saveImage.processAndSaveImage(preset, request.quality, request.sizeFactor, request.exit);
         URIResult result = new URIResult();
         result.uri = uri;
         result.exit = request.exit;
@@ -110,16 +110,14 @@ public class ImageSavingTask extends ProcessingTask {
 
     @Override
     public void onUpdate(Update message) {
-        if (message instanceof UpdatePreviewSaved){
+        if (message instanceof UpdatePreviewSaved) {
             Uri uri = ((UpdatePreviewSaved) message).uri;
             boolean exit = ((UpdatePreviewSaved) message).exit;
             mProcessingService.completePreviewSaveImage(uri, exit);
-        }
-        if (message instanceof UpdateBitmap) {
+        } else if (message instanceof UpdateBitmap) {
             Bitmap bitmap = ((UpdateBitmap) message).bitmap;
             mProcessingService.updateNotificationWithBitmap(bitmap);
-        }
-        if (message instanceof UpdateProgress) {
+        } else if (message instanceof UpdateProgress) {
             UpdateProgress progress = (UpdateProgress) message;
             mProcessingService.updateProgress(progress.max, progress.current);
         }

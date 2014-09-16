@@ -102,7 +102,6 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
     }
 
     protected void addFilterClasses(Vector<Class<?>> filters) {
-        filters.add(ImageFilterTinyPlanet.class);
         filters.add(ImageFilterRedEye.class);
         filters.add(ImageFilterWBalance.class);
         filters.add(ImageFilterExposure.class);
@@ -294,21 +293,24 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
                 R.string.crop,
                 R.string.straighten,
                 R.string.rotate,
-                R.string.mirror
+                R.string.mirror,
+                R.string.imageDraw
         };
 
         int[] overlayId = { // [
                 R.drawable.filtershow_button_geometry_crop,
                 R.drawable.filtershow_button_geometry_straighten,
                 R.drawable.filtershow_button_geometry_rotate,
-                R.drawable.filtershow_button_geometry_flip
+                R.drawable.filtershow_button_geometry_flip,
+                R.drawable.filtershow_drawing
         };
 
         FilterRepresentation[] geometryFilters = {
                 new FilterCropRepresentation(R.drawable.effect_sample_22),
                 new FilterStraightenRepresentation(R.drawable.effect_sample_25),
                 new FilterRotateRepresentation(R.drawable.effect_sample_24),
-                new FilterMirrorRepresentation(R.drawable.effect_sample_23)
+                new FilterMirrorRepresentation(R.drawable.effect_sample_23),
+                getRepresentation(ImageFilterDraw.class)
         };
 
         for (int i = 0; i < textId.length; i++) {
@@ -321,14 +323,10 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
             }
             mTools.add(geometry);
         }
-
-        //mTools.add(getRepresentation(ImageFilterRedEye.class));
-        mTools.add(getRepresentation(ImageFilterDraw.class));
     }
 
     public void addEffects() {
         // sample resource id [28~43], 16
-        mEffects.add(getRepresentation(ImageFilterTinyPlanet.class));
         mEffects.add(getRepresentation(ImageFilterWBalance.class));
         mEffects.add(getRepresentation(ImageFilterExposure.class));
         mEffects.add(getRepresentation(ImageFilterVignette.class));

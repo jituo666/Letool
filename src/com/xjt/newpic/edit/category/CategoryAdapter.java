@@ -11,7 +11,6 @@ import com.xjt.newpic.R;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
-import com.xjt.newpic.edit.filters.FilterTinyPlanetRepresentation;
 import com.xjt.newpic.edit.pipeline.ImagePreset;
 
 public class CategoryAdapter extends ArrayAdapter<CategoryAction> {
@@ -106,27 +105,6 @@ public class CategoryAdapter extends ArrayAdapter<CategoryAction> {
 
     public void imageLoaded() {
         notifyDataSetChanged();
-    }
-
-    public FilterRepresentation getTinyPlanet() {
-        for (int i = 0; i < getCount(); i++) {
-            CategoryAction action = getItem(i);
-            if (action.getRepresentation() != null && action.getRepresentation() instanceof FilterTinyPlanetRepresentation) {
-                return action.getRepresentation();
-            }
-        }
-        return null;
-    }
-
-    public void removeTinyPlanet() {
-        for (int i = 0; i < getCount(); i++) {
-            CategoryAction action = getItem(i);
-            if (action.getRepresentation() != null && action.getRepresentation()
-                    instanceof FilterTinyPlanetRepresentation) {
-                super.remove(action);
-                return;
-            }
-        }
     }
 
     @Override

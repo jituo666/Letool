@@ -4,16 +4,11 @@ package com.xjt.newpic.edit.filters;
 import android.util.Log;
 
 import com.xjt.newpic.R;
-import com.xjt.newpic.edit.editors.EditorMirror;
 import com.xjt.newpic.edit.editors.ImageOnlyEditor;
-import com.xjt.newpic.edit.imageshow.GeometryMathUtils;
-import com.xjt.newpic.edit.imageshow.MasterImage;
-import com.xjt.newpic.edit.pipeline.ImagePreset;
 import com.xjt.newpic.surpport.JsonReader;
 import com.xjt.newpic.surpport.JsonWriter;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class FilterMirrorRepresentation extends FilterRepresentation {
 

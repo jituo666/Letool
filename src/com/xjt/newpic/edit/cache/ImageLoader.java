@@ -17,7 +17,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
-import com.adobe.xmp.XMPException;
 import com.adobe.xmp.XMPMeta;
 import com.android.gallery3d.common.Utils;
 import com.android.gallery3d.exif.ExifInterface;
@@ -475,8 +474,7 @@ public final class ImageLoader {
         while (noBitmap) {
             try {
                 // Try to decode, downsample if low-memory.
-                bmap = BitmapFactory.decodeResource(
-                        res, id, options);
+                bmap = BitmapFactory.decodeResource(res, id, options);
                 noBitmap = false;
             } catch (java.lang.OutOfMemoryError e) {
                 // Retry before failing for good.
@@ -497,49 +495,6 @@ public final class ImageLoader {
             return XmpUtilHelper.extractXMPMeta(is);
         } catch (FileNotFoundException e) {
             return null;
-        }
-    }
-
-    /**
-     * Determine if this is a light cycle 360 image
-     *
-     * @return true if it is a light Cycle image that is full 360
-     */
-    public static boolean queryLightCycle360(Context context) {
-        InputStream is = null;
-        try {
-            is = context.getContentResolver().openInputStream(MasterImage.getImage().getUri());
-            XMPMeta meta = XmpUtilHelper.extractXMPMeta(is);
-            if (meta == null) {
-                return false;
-            }
-            String namespace = "http://ns.google.com/photos/1.0/panorama/";
-            String cropWidthName = "GPano:CroppedAreaImageWidthPixels";
-            String fullWidthName = "GPano:FullPanoWidthPixels";
-
-            if (!meta.doesPropertyExist(namespace, cropWidthName)) {
-                return false;
-            }
-            if (!meta.doesPropertyExist(namespace, fullWidthName)) {
-                return false;
-            }
-
-            Integer cropValue = meta.getPropertyInteger(namespace, cropWidthName);
-            Integer fullValue = meta.getPropertyInteger(namespace, fullWidthName);
-
-            // Definition of a 360:
-            // GFullPanoWidthPixels == CroppedAreaImageWidthPixels
-            if (cropValue != null && fullValue != null) {
-                return cropValue.equals(fullValue);
-            }
-
-            return false;
-        } catch (FileNotFoundException e) {
-            return false;
-        } catch (XMPException e) {
-            return false;
-        } finally {
-            Utils.closeSilently(is);
         }
     }
 

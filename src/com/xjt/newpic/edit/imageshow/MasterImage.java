@@ -603,31 +603,6 @@ public class MasterImage implements RenderingRequestCaller {
         mCurrentFilterRepresentation = currentFilterRepresentation;
     }
 
-    private Matrix getImageToScreenMatrix(boolean reflectRotation) {
-        if (getOriginalBounds() == null || mImageShowSize.x == 0 || mImageShowSize.y == 0) {
-            return new Matrix();
-        }
-        Matrix m = GeometryMathUtils.getImageToScreenMatrix(mPreset.getGeometryFilters(),
-                reflectRotation, getOriginalBounds(), mImageShowSize.x, mImageShowSize.y);
-        if (m == null) {
-            m = new Matrix();
-            m.reset();
-            return m;
-        }
-        Point translate = getTranslation();
-        float scaleFactor = getScaleFactor();
-        m.postTranslate(translate.x, translate.y);
-        m.postScale(scaleFactor, scaleFactor, mImageShowSize.x / 2.0f, mImageShowSize.y / 2.0f);
-        return m;
-    }
-
-    private Matrix getScreenToImageMatrix(boolean reflectRotation) {
-        Matrix m = getImageToScreenMatrix(reflectRotation);
-        Matrix invert = new Matrix();
-        m.invert(invert);
-        return invert;
-    }
-
     public void needsUpdateHighResPreview() {
         if (!mSupportsHighRes || mActivity.getProcessingService() == null || mPreset == null) {
             return;

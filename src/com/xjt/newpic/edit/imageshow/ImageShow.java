@@ -548,8 +548,8 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
         updateImage();
     }
 
-    public void saveImage(NpEditActivity filterShowActivity, File file) {
-        SaveImage.saveImage(getImagePreset(), filterShowActivity, file);
+    public void saveImage(NpEditActivity filterShowActivity) {
+        SaveImage.saveImage(getImagePreset(), filterShowActivity);
     }
 
     public boolean scaleInProgress() {

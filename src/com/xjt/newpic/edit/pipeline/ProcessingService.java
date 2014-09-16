@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.edit.pipeline;
 
 import android.app.NotificationManager;
@@ -35,14 +36,11 @@ public class ProcessingService extends Service {
 
     private static final String PRESET = "preset";
     private static final String QUALITY = "quality";
-    private static final String SOURCE_URI = "sourceUri";
     private static final String SELECTED_URI = "selectedUri";
-    private static final String DESTINATION_FILE = "destinationFile";
     private static final String SAVING = "saving";
-    private static final String FLATTEN = "flatten";
+    //    private static final String FLATTEN = "flatten";
     private static final String SIZE_FACTOR = "sizeFactor";
     private static final String EXIT = "exit";
-
 
     private final IBinder mBinder = new LocalBinder();
     private NpEditActivity mFiltershowActivity;
@@ -56,7 +54,6 @@ public class ProcessingService extends Service {
     private ImageSavingTask mImageSavingTask;
 
     private boolean mSaving = false;
-    private boolean mNeedsAlive = false;
 
     public class LocalBinder extends Binder {
 
@@ -135,22 +132,16 @@ public class ProcessingService extends Service {
         mFullresRenderingRequestTask.postRenderingRequest(request);
     }
 
-    public static Intent getSaveIntent(Context context, ImagePreset preset, File destination, Uri selectedImageUri, Uri sourceImageUri, boolean doFlatten,
+    public static Intent getSaveIntent(Context context, ImagePreset preset, Uri selectedImageUri,
             int quality, float sizeFactor, boolean needsExit) {
         Intent processIntent = new Intent(context, ProcessingService.class);
-        processIntent.putExtra(ProcessingService.SOURCE_URI, sourceImageUri.toString());
         processIntent.putExtra(ProcessingService.SELECTED_URI, selectedImageUri.toString());
         processIntent.putExtra(ProcessingService.QUALITY, quality);
         processIntent.putExtra(ProcessingService.SIZE_FACTOR, sizeFactor);
-        if (destination != null) {
-            processIntent.putExtra(ProcessingService.DESTINATION_FILE, destination.toString());
-        }
+
         processIntent.putExtra(ProcessingService.PRESET, preset.getJsonString(ImagePreset.JASON_SAVED));
         processIntent.putExtra(ProcessingService.SAVING, true);
         processIntent.putExtra(ProcessingService.EXIT, needsExit);
-        if (doFlatten) {
-            processIntent.putExtra(ProcessingService.FLATTEN, true);
-        }
         return processIntent;
     }
 
@@ -176,7 +167,6 @@ public class ProcessingService extends Service {
     }
 
     public void onStart() {
-        mNeedsAlive = true;
         if (!mSaving && mFiltershowActivity != null) {
             mFiltershowActivity.updateUIAfterServiceStarted();
         }
@@ -184,31 +174,21 @@ public class ProcessingService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mNeedsAlive = true;
         if (intent != null && intent.getBooleanExtra(SAVING, false)) {
             // we save using an intent to keep the service around after the activity has been destroyed.
             String presetJson = intent.getStringExtra(PRESET);
-            String source = intent.getStringExtra(SOURCE_URI);
             String selected = intent.getStringExtra(SELECTED_URI);
-            String destination = intent.getStringExtra(DESTINATION_FILE);
             int quality = intent.getIntExtra(QUALITY, 100);
             float sizeFactor = intent.getFloatExtra(SIZE_FACTOR, 1);
-            boolean flatten = intent.getBooleanExtra(FLATTEN, false);
             boolean exit = intent.getBooleanExtra(EXIT, false);
-            Uri sourceUri = Uri.parse(source);
             Uri selectedUri = null;
             if (selected != null) {
                 selectedUri = Uri.parse(selected);
             }
-            File destinationFile = null;
-            if (destination != null) {
-                destinationFile = new File(destination);
-            }
             ImagePreset preset = new ImagePreset();
             preset.readJsonFromString(presetJson);
-            mNeedsAlive = false;
             mSaving = true;
-            handleSaveRequest(sourceUri, selectedUri, destinationFile, preset, MasterImage.getImage().getHighresImage(), flatten, quality, sizeFactor, exit);
+            handleSaveRequest(selectedUri, preset, MasterImage.getImage().getHighresImage(), quality, sizeFactor, exit);
         }
         return START_REDELIVER_INTENT;
     }
@@ -219,8 +199,7 @@ public class ProcessingService extends Service {
         mProcessingTaskController.quit();
     }
 
-    public void handleSaveRequest(Uri sourceUri, Uri selectedUri, File destinationFile, ImagePreset preset, Bitmap previewImage,
-            boolean flatten, int quality, float sizeFactor, boolean exit) {
+    public void handleSaveRequest(Uri selectedUri, ImagePreset preset, Bitmap previewImage, int quality, float sizeFactor, boolean exit) {
         mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNotifyMgr.cancelAll();
         mBuilder = new NotificationCompat.Builder(this);
@@ -232,7 +211,7 @@ public class ProcessingService extends Service {
         updateProgress(SaveImage.MAX_PROCESSING_STEPS, 0);
 
         // Process the image
-        mImageSavingTask.saveImage(sourceUri, selectedUri, destinationFile, preset, previewImage, flatten, quality, sizeFactor, exit);
+        mImageSavingTask.saveImage(selectedUri, preset, previewImage, quality, sizeFactor, exit);
     }
 
     public void updateNotificationWithBitmap(Bitmap bitmap) {
@@ -246,7 +225,7 @@ public class ProcessingService extends Service {
     }
 
     public void completePreviewSaveImage(Uri result, boolean exit) {
-        if (exit && !mNeedsAlive && !mFiltershowActivity.isSimpleEditAction()) {
+        if (exit) {
             mFiltershowActivity.completeSaveImage(result);
         }
     }
@@ -266,10 +245,7 @@ public class ProcessingService extends Service {
         }
         stopForeground(true);
         stopSelf();
-        if (mNeedsAlive) {
-            // If the app has been restarted while we were saving...
-            mFiltershowActivity.updateUIAfterServiceStarted();
-        } else if (exit || mFiltershowActivity.isSimpleEditAction()) {
+        if (exit) {
             // terminate now
             mFiltershowActivity.completeSaveImage(result);
         }

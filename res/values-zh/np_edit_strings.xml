@@ -12,7 +12,7 @@
     <string name="cannot_edit_original">无法编辑原图</string>
     <string name="original">原图</string>
     <string name="borders">边框</string>
-    <string name="custom_border">定制边框</string>
+    <string name="custom_border">自由边框</string>
 
     <!-- actionbar menu -->
 
@@ -21,7 +21,7 @@
     <string name="unsaved">"是否保存对此图片的更改？"</string>
     <string name="save_before_exit">"要在退出之前保存更改吗？"</string>
     <string name="save_and_exit">"保存"</string>
-    <string name="save_and_processing">正在处理高清原图?</string>
+    <string name="save_and_processing">正在保存图片...</string>
     <string name="exit">"退出"</string>
 
     <!-- Additional filters buttons -->
@@ -60,7 +60,7 @@
     <string name="vignette_contrast">对比度</string>
     <string name="vignette_falloff">衰减</string>
     <string name="redeye">"红眼"</string>
-    <string name="imageDraw">"绘图"</string>
+    <string name="imageDraw">"涂鸦"</string>
     <string name="straighten">"拉直"</string>
     <string name="crop">"裁剪"</string>
     <string name="rotate">"旋转"</string>
@@ -74,7 +74,7 @@
     <string name="editor_grad_brightness">亮度</string>
     <string name="editor_grad_contrast">对比度</string>
     <string name="editor_grad_saturation">饱和度</string>
-    <string name="editor_chan_sat_main">Main</string>
+    <string name="editor_chan_sat_main">主色</string>
     <string name="editor_chan_sat_red">红色</string>
     <string name="editor_chan_sat_yellow">黄色</string>
     <string name="editor_chan_sat_green">绿色</string>

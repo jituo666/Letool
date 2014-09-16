@@ -1,24 +1,22 @@
-package com.xjt.newpic.edit.filters;
 
+package com.xjt.newpic.edit.filters;
 
 import com.xjt.newpic.R;
 import com.xjt.newpic.edit.controller.BasicParameterInt;
 import com.xjt.newpic.edit.controller.Parameter;
 import com.xjt.newpic.edit.controller.ParameterSet;
 import com.xjt.newpic.edit.editors.EditorChanSat;
-import com.xjt.newpic.edit.imageshow.ControlPoint;
-import com.xjt.newpic.edit.imageshow.Spline;
 import com.xjt.newpic.surpport.JsonReader;
 import com.xjt.newpic.surpport.JsonWriter;
 
 import java.io.IOException;
-import java.util.Vector;
 
 /**
  * Representation for a filter that has per channel & Master saturation
  */
 public class FilterChanSatRepresentation extends FilterRepresentation implements ParameterSet {
-    private static final String LOGTAG = "FilterChanSatRepresentation";
+
+    private static final String TAG = "FilterChanSatRepresentation";
     private static final String ARGS = "ARGS";
     private static final String SERIALIZATION_NAME = "channelsaturation";
 
@@ -48,7 +46,8 @@ public class FilterChanSatRepresentation extends FilterRepresentation implements
             mParamGreen,
             mParamCyan,
             mParamBlue,
-            mParamMagenta};
+            mParamMagenta
+    };
 
     public FilterChanSatRepresentation(int sr) {
         super("ChannelSaturation", sr);

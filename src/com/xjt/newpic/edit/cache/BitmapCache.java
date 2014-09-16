@@ -220,22 +220,20 @@ public class BitmapCache {
                 Bitmap b = wb.get();
                 if (b != null && !b.isRecycled()) {
                     int temp = b.getRowBytes() * b.getHeight();
-                    LLog.i(TAG, "-----===============---computecacedSize:" + b.getRowBytes() * b.getHeight() + ":" + b);
                     size += temp;
                 }
             }
         }
-        LLog.i(TAG, "-----==============---total cached size:" + size);
     }
 
-    //    public void clear() {
-    //        for (int i = 0; i < mBitmapCache.size(); i++) {
-    //            ArrayList<WeakReference<Bitmap>> list = mBitmapCache.get(mBitmapCache.keyAt(i));
-    //            for (WeakReference<Bitmap> wb : list) {
-    //                if (wb.get() != null) {
-    //                    wb.get().recycle();
-    //                }
-    //            }
-    //        }
-    //    }
+//        public void clear() {
+//            for (int i = 0; i < mBitmapCache.size(); i++) {
+//                ArrayList<WeakReference<Bitmap>> list = mBitmapCache.get(mBitmapCache.keyAt(i));
+//                for (WeakReference<Bitmap> wb : list) {
+//                    if (wb.get() != null) {
+//                        wb.get().recycle();
+//                    }
+//                }
+//            }
+//        }
 }

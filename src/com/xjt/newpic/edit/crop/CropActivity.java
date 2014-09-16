@@ -286,7 +286,8 @@ public class CropActivity extends Activity {
             }
         }
         if (flags == 0) {
-            destinationUri = SaveImage.makeAndInsertUri(this, mSourceUri);
+          //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx xjt ,需修改       destinationUri = SaveImage.makeAndInsertUri(this, mSourceUri);
+            //destinationUri = SaveImage.makeAndInsertUri(this, mSourceUri);
             if (destinationUri != null) {
                 flags |= DO_EXTRA_OUTPUT;
             }

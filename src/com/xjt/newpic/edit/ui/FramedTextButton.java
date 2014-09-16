@@ -13,7 +13,7 @@ import com.xjt.newpic.R;
 
 public class FramedTextButton extends ImageButton {
 
-    private static final String LOGTAG = "FramedTextButton";
+    private static final String TAG = "FramedTextButton";
     private String mText = null;
     private static int mTextSize = 24;
     private static int mTextPadding = 20;
