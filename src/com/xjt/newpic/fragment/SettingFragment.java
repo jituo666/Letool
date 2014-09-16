@@ -37,8 +37,8 @@ import com.xjt.newpic.settings.LetoolPreference;
 import com.xjt.newpic.stat.StatConstants;
 import com.xjt.newpic.utils.StorageUtils;
 import com.xjt.newpic.utils.StringUtils;
-import com.xjt.newpic.view.LetoolTopBar;
-import com.xjt.newpic.view.LetoolTopBar.OnActionModeListener;
+import com.xjt.newpic.view.NpTopBar;
+import com.xjt.newpic.view.NpTopBar.OnActionModeListener;
 
 /**
  * @Author Jituo.Xuan
@@ -78,8 +78,8 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
     }
 
     private void initBrowseActionBar() {
-        LetoolTopBar topBar = mLetoolContext.getLetoolTopBar();
-        topBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_SETTINGS, this);
+        NpTopBar topBar = mLetoolContext.getLetoolTopBar();
+        topBar.setOnActionMode(NpTopBar.ACTION_BAR_MODE_SETTINGS, this);
         topBar.setTitleIcon(R.drawable.ic_action_previous_item);
         topBar.setTitleText(R.string.common_settings);
         ViewGroup nativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);

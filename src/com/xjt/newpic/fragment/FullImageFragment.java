@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.fragment;
 
 import java.util.ArrayList;
@@ -43,13 +42,13 @@ import com.xjt.newpic.view.DetailsHelper;
 import com.xjt.newpic.view.FullImageView;
 import com.xjt.newpic.view.GLView;
 import com.xjt.newpic.view.GLController;
-import com.xjt.newpic.view.LetoolBottomBar;
-import com.xjt.newpic.view.LetoolDialog;
-import com.xjt.newpic.view.LetoolTopBar;
+import com.xjt.newpic.view.NpBottomBar;
+import com.xjt.newpic.view.NpDialog;
+import com.xjt.newpic.view.NpTopBar;
 import com.xjt.newpic.view.SingleDeleteMediaListener;
 import com.xjt.newpic.view.DetailsHelper.CloseListener;
 import com.xjt.newpic.view.DetailsHelper.DetailsSource;
-import com.xjt.newpic.view.LetoolTopBar.OnActionModeListener;
+import com.xjt.newpic.view.NpTopBar.OnActionModeListener;
 import com.xjt.newpic.view.SingleDeleteMediaListener.SingleDeleteMediaProgressListener;
 import com.xjt.newpic.views.opengl.GLESCanvas;
 
@@ -194,7 +193,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
     }
 
     private void updateActionBarMessage(final String message) {
-        final LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
+        final NpTopBar actionBar = mLetoolContext.getLetoolTopBar();
         actionBar.getActionPanel().post(new Runnable() {
 
             @Override
@@ -234,6 +233,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
     }
 
     private void overrideTransitionToEditor() {
+        //getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
         getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
@@ -292,7 +292,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
 
                     });
 
-            final LetoolDialog dlg = new LetoolDialog(getActivity());
+            final NpDialog dlg = new NpDialog(getActivity());
             dlg.setTitle(R.string.common_recommend);
             dlg.setOkBtn(R.string.common_ok, cdl,R.drawable.np_common_pressed_left_bg);
             dlg.setCancelBtn(R.string.common_cancel, cdl, R.drawable.np_common_pressed_right_bg);
@@ -433,15 +433,15 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
     }
 
     private void initBars() {
-        LetoolTopBar topBar = mLetoolContext.getLetoolTopBar();
-        topBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_FULL_IMAGE, this);
+        NpTopBar topBar = mLetoolContext.getLetoolTopBar();
+        topBar.setOnActionMode(NpTopBar.ACTION_BAR_MODE_FULL_IMAGE, this);
         topBar.setTitleIcon(R.drawable.ic_action_previous_item);
         topBar.setVisible(View.VISIBLE, false);
         ViewGroup nativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);
         nativeButtons.setVisibility(View.GONE);
         //
-        LetoolBottomBar bottomBar = mLetoolContext.getLetoolBottomBar();
-        bottomBar.setOnActionMode(LetoolBottomBar.BOTTOM_BAR_MODE_FULL_IMAGE, this);
+        NpBottomBar bottomBar = mLetoolContext.getLetoolBottomBar();
+        bottomBar.setOnActionMode(NpBottomBar.BOTTOM_BAR_MODE_FULL_IMAGE, this);
         bottomBar.setVisible(View.VISIBLE, false);
     }
 

@@ -30,14 +30,14 @@ import com.xjt.newpic.utils.Utils;
 import com.xjt.newpic.view.DetailsHelper;
 import com.xjt.newpic.view.GLView;
 import com.xjt.newpic.view.GLController;
-import com.xjt.newpic.view.LetoolBottomBar;
-import com.xjt.newpic.view.LetoolDialog;
-import com.xjt.newpic.view.LetoolTopBar;
+import com.xjt.newpic.view.NpBottomBar;
+import com.xjt.newpic.view.NpDialog;
+import com.xjt.newpic.view.NpTopBar;
 import com.xjt.newpic.view.SingleDeleteMediaListener;
 import com.xjt.newpic.view.ThumbnailView;
 import com.xjt.newpic.view.DetailsHelper.CloseListener;
 import com.xjt.newpic.view.DetailsHelper.DetailsSource;
-import com.xjt.newpic.view.LetoolTopBar.OnActionModeListener;
+import com.xjt.newpic.view.NpTopBar.OnActionModeListener;
 import com.xjt.newpic.view.SingleDeleteMediaListener.SingleDeleteMediaProgressListener;
 import com.xjt.newpic.views.layout.ThumbnailContractLayout;
 import com.xjt.newpic.views.layout.ThumbnailLayout;
@@ -129,7 +129,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         @Override
         protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
             mEyePosition.resetPosition();
-            LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
+            NpTopBar actionBar = mLetoolContext.getLetoolTopBar();
             int thumbnailViewLeft = left + mConfig.paddingLeft;
             int thumbnailViewRight = right - left - mConfig.paddingRight;
             int thumbnailViewTop = top + mConfig.paddingTop + actionBar.getHeight();
@@ -215,7 +215,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         addMenuItem(items, MENU_ITEM_SHARE, R.string.common_share);
         addMenuItem(items, MENU_ITEM_DETAIL, R.string.common_detail);
         addMenuItem(items, MENU_ITEM_DELETE, R.string.common_delete);
-        final LetoolDialog dlg = new LetoolDialog(getActivity());
+        final NpDialog dlg = new NpDialog(getActivity());
         dlg.setTitle(item.getName());
         ListView listView = dlg.setListAdapter(new MenuItemAdapter(getActivity(), items));
         listView.setOnItemClickListener(new OnItemClickListener() {
@@ -336,8 +336,8 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     }
 
     private void initBars() {
-        LetoolTopBar topBar = mLetoolContext.getLetoolTopBar();
-        topBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_BROWSE, this);
+        NpTopBar topBar = mLetoolContext.getLetoolTopBar();
+        topBar.setOnActionMode(NpTopBar.ACTION_BAR_MODE_BROWSE, this);
         topBar.setVisible(View.VISIBLE, false);
         ViewGroup nativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);
         if (mIsCameraSource) {
@@ -356,7 +356,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
             nativeButtons.setVisibility(View.GONE);
             topBar.setTitleIcon(R.drawable.ic_action_previous_item);
         }
-        LetoolBottomBar bottomBar = mLetoolContext.getLetoolBottomBar();
+        NpBottomBar bottomBar = mLetoolContext.getLetoolBottomBar();
         bottomBar.setVisible(View.GONE, false);
     }
 
@@ -479,7 +479,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
         if (v.getId() == R.id.action_navi) {
             if (mIsCameraSource) {
                 MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SLIDE_MENU);
-                mLetoolContext.getLetoolSlidingMenu().toggle();
+                mLetoolContext.getSlidingMenu().toggle();
             } else {
                 mLetoolContext.popContentFragment();
             }
@@ -526,7 +526,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
 
                 });
 
-        final LetoolDialog dlg = new LetoolDialog(getActivity());
+        final NpDialog dlg = new NpDialog(getActivity());
         dlg.setTitle(R.string.common_recommend);
         dlg.setOkBtn(R.string.common_ok, cdl,R.drawable.np_common_pressed_left_bg);
         dlg.setCancelBtn(R.string.common_cancel, cdl, R.drawable.np_common_pressed_right_bg);

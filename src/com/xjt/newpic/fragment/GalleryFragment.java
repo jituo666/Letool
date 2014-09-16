@@ -30,12 +30,12 @@ import com.xjt.newpic.view.BatchDeleteMediaListener;
 import com.xjt.newpic.view.DetailsHelper;
 import com.xjt.newpic.view.GLView;
 import com.xjt.newpic.view.GLController;
-import com.xjt.newpic.view.LetoolDialog;
-import com.xjt.newpic.view.LetoolTopBar;
+import com.xjt.newpic.view.NpDialog;
+import com.xjt.newpic.view.NpTopBar;
 import com.xjt.newpic.view.ThumbnailView;
 import com.xjt.newpic.view.BatchDeleteMediaListener.DeleteMediaProgressListener;
 import com.xjt.newpic.view.DetailsHelper.CloseListener;
-import com.xjt.newpic.view.LetoolTopBar.OnActionModeListener;
+import com.xjt.newpic.view.NpTopBar.OnActionModeListener;
 import com.xjt.newpic.views.layout.ThumbnailLayout;
 import com.xjt.newpic.views.layout.ThumbnailSetContractLayout;
 import com.xjt.newpic.views.opengl.FadeTexture;
@@ -119,7 +119,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
                 paddingBottom = config.paddingBottom;
             }
 
-            LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
+            NpTopBar actionBar = mLetoolContext.getLetoolTopBar();
             int thumbnailViewLeft = left + paddingLeft;
             int thumbnailViewRight = right - left - paddingRight;
             int thumbnailViewTop = top + paddingTop + actionBar.getHeight();
@@ -306,8 +306,8 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     }
 
     private void initBars() {
-        LetoolTopBar topBar = mLetoolContext.getLetoolTopBar();
-        topBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_BROWSE, this);
+        NpTopBar topBar = mLetoolContext.getLetoolTopBar();
+        topBar.setOnActionMode(NpTopBar.ACTION_BAR_MODE_BROWSE, this);
         topBar.setTitleIcon(R.drawable.ic_drawer);
         topBar.setTitleText("");
         mNativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);
@@ -325,8 +325,8 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     }
 
     private void initSelectionActionBar() {
-        LetoolTopBar actionBar = mLetoolContext.getLetoolTopBar();
-        actionBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_SELECTION, this);
+        NpTopBar actionBar = mLetoolContext.getLetoolTopBar();
+        actionBar.setOnActionMode(NpTopBar.ACTION_BAR_MODE_SELECTION, this);
         actionBar.setContractSelectionManager(mSelector);
         String format = getResources().getQuantityString(R.plurals.number_of_items, 0);
         actionBar.setTitleText(String.format(format, 0));
@@ -491,7 +491,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     public void onClick(View v) {
         if (v.getId() == R.id.action_navi) {
             MobclickAgent.onEvent(mLetoolContext.getActivityContext(),StatConstants.EVENT_KEY_SLIDE_MENU);
-            mLetoolContext.getLetoolSlidingMenu().toggle();
+            mLetoolContext.getSlidingMenu().toggle();
         } else {
             if (!mIsSDCardMountedCorreclty)
                 return;
@@ -518,7 +518,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
                             }
 
                         });
-                final LetoolDialog dlg = new LetoolDialog(getActivity());
+                final NpDialog dlg = new NpDialog(getActivity());
                 dlg.setTitle(R.string.common_recommend);
                 dlg.setOkBtn(R.string.common_ok, cdl,R.drawable.np_common_pressed_left_bg);
                 dlg.setCancelBtn(R.string.common_cancel, cdl, R.drawable.np_common_pressed_right_bg);

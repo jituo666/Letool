@@ -12,9 +12,9 @@ import com.xjt.newpic.fragment.CameraSourceSettingFragment;
 import com.xjt.newpic.fragment.SettingFragment;
 import com.xjt.newpic.metadata.DataManager;
 import com.xjt.newpic.view.GLController;
-import com.xjt.newpic.view.LetoolBottomBar;
-import com.xjt.newpic.view.LetoolSlidingMenu;
-import com.xjt.newpic.view.LetoolTopBar;
+import com.xjt.newpic.view.NpBottomBar;
+import com.xjt.newpic.view.NpSlidingMenu;
+import com.xjt.newpic.view.NpTopBar;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -37,8 +37,8 @@ public class NpSettingsActivity extends FragmentActivity implements NpContext {
     public static final String KEY_SOURCE_TYPE = "source_type";
     public static final String KEY_FROM_TIP = "from_tip";
 
-    private LetoolTopBar mTopBar;
-    private LetoolSlidingMenu mSlidingMenu;
+    private NpTopBar mTopBar;
+    private NpSlidingMenu mSlidingMenu;
     private boolean mIsFromTip;
 
     private void startFirstFragment() {
@@ -54,8 +54,8 @@ public class NpSettingsActivity extends FragmentActivity implements NpContext {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.app_settings);
         mIsFromTip = getIntent().getBooleanExtra(KEY_FROM_TIP, false);
-        mTopBar = new LetoolTopBar(this, (ViewGroup) findViewById(R.id.letool_top_bar_container));
-        mSlidingMenu = new LetoolSlidingMenu(this, getSupportFragmentManager(), findViewById(R.id.letool_top_bar_container));
+        mTopBar = new NpTopBar(this, (ViewGroup) findViewById(R.id.letool_top_bar_container));
+        mSlidingMenu = new NpSlidingMenu(this, getSupportFragmentManager(), findViewById(R.id.letool_top_bar_container));
         startFirstFragment();
     }
 
@@ -93,17 +93,17 @@ public class NpSettingsActivity extends FragmentActivity implements NpContext {
     }
 
     @Override
-    public LetoolTopBar getLetoolTopBar() {
+    public NpTopBar getLetoolTopBar() {
         return mTopBar;
     }
 
     @Override
-    public LetoolBottomBar getLetoolBottomBar() {
+    public NpBottomBar getLetoolBottomBar() {
         return null;
     }
 
     @Override
-    public LetoolSlidingMenu getLetoolSlidingMenu() {
+    public NpSlidingMenu getSlidingMenu() {
         return mSlidingMenu;
     }
 

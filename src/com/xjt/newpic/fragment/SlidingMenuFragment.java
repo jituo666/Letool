@@ -31,7 +31,7 @@ import com.xjt.newpic.metadata.DataManager;
 import com.xjt.newpic.metadata.MediaSetUtils;
 import com.xjt.newpic.preference.GlobalPreference;
 import com.xjt.newpic.stat.StatConstants;
-import com.xjt.newpic.view.LetoolSlidingMenu;
+import com.xjt.newpic.view.NpSlidingMenu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,7 +92,7 @@ public class SlidingMenuFragment extends Fragment {
 
             @Override
             public boolean onTouch(View v, MotionEvent m) {
-                mLetoolContext.getLetoolSlidingMenu().toggle();
+                mLetoolContext.getSlidingMenu().toggle();
                 return true;
             }
 
@@ -113,7 +113,7 @@ public class SlidingMenuFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 
                 if (position < 2) {
-                    mLetoolContext.getLetoolSlidingMenu().toggle();
+                    mLetoolContext.getSlidingMenu().toggle();
                     if (mIntents.get(position).hasExtra(NpMediaActivity.KEY_IS_IMAGE)
                             && mLetoolContext.isImageBrwosing() == mIntents.get(position).getBooleanExtra(NpMediaActivity.KEY_IS_IMAGE, true)) {
                         return;
@@ -128,7 +128,7 @@ public class SlidingMenuFragment extends Fragment {
                     }
                 } else if (position == 2) {
                     MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SLIDE_MENU_SETTING);
-                    mLetoolContext.getLetoolSlidingMenu().toggle();
+                    mLetoolContext.getSlidingMenu().toggle();
                     getActivity().startActivityForResult(mIntents.get(position), 100);
                     getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
                 } else if (position == 3) {

@@ -36,7 +36,7 @@ public class DialogDetailsView implements DetailsViewContainer {
     private MediaDetails mDetails;
     private final DetailsSource mSource;
     private int mIndex;
-    private LetoolDialog mDialog;
+    private NpDialog mDialog;
     private CloseListener mListener;
 
     public DialogDetailsView(NpContext context, DetailsSource source) {
@@ -75,7 +75,7 @@ public class DialogDetailsView implements DetailsViewContainer {
 //        String title = String.format(mLetoolContext.getActivityContext().getString(R.string.details_title), mIndex + 1, mSource.size());
         String title = mLetoolContext.getActivityContext().getString(R.string.common_detail);
 
-        mDialog = new LetoolDialog(mLetoolContext.getActivityContext());
+        mDialog = new NpDialog(mLetoolContext.getActivityContext());
         mDialog.setListAdapter(mAdapter);
         mDialog.setTitle(title);
         mDialog.setOkBtn(R.string.common_close, new View.OnClickListener() {

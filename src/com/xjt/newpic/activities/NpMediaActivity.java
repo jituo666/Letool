@@ -37,10 +37,10 @@ import com.xjt.newpic.preference.GlobalPreference;
 import com.xjt.newpic.stat.StatConstants;
 import com.xjt.newpic.view.GLController;
 import com.xjt.newpic.view.GLRootView;
-import com.xjt.newpic.view.LetoolBottomBar;
-import com.xjt.newpic.view.LetoolEmptyView;
-import com.xjt.newpic.view.LetoolSlidingMenu;
-import com.xjt.newpic.view.LetoolTopBar;
+import com.xjt.newpic.view.NpBottomBar;
+import com.xjt.newpic.view.NpEmptyView;
+import com.xjt.newpic.view.NpSlidingMenu;
+import com.xjt.newpic.view.NpTopBar;
 
 /**
  * @Author Jituo.Xuan
@@ -59,9 +59,9 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
 
     public static final int REQUEST_CODE_SETTINGS = 100;
 
-    private LetoolTopBar mTopBar;
-    private LetoolBottomBar mBottomBar;
-    private LetoolSlidingMenu mSlidingMenu;
+    private NpTopBar mTopBar;
+    private NpBottomBar mBottomBar;
+    private NpSlidingMenu mSlidingMenu;
     private ViewGroup mMainView;
     private GLRootView mGLESView;
     private Toast mExitToast;
@@ -74,9 +74,9 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
         super.onCreate(b);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.local_media_main_view);
-        mTopBar = new LetoolTopBar(this, (ViewGroup) findViewById(R.id.letool_top_bar_container));
-        mBottomBar = new LetoolBottomBar(this, (ViewGroup) findViewById(R.id.letool_bottom_bar_container));
-        mSlidingMenu = new LetoolSlidingMenu(this, getSupportFragmentManager(), findViewById(R.id.letool_top_bar_container));
+        mTopBar = new NpTopBar(this, (ViewGroup) findViewById(R.id.letool_top_bar_container));
+        mBottomBar = new NpBottomBar(this, (ViewGroup) findViewById(R.id.letool_bottom_bar_container));
+        mSlidingMenu = new NpSlidingMenu(this, getSupportFragmentManager(), findViewById(R.id.letool_top_bar_container));
         mMainView = (ViewGroup) findViewById(R.id.local_image_browse_main_view);
         mGLESView = (GLRootView) mMainView.findViewById(R.id.gl_root_view);
         mOrientationManager = new OrientationManager(this);
@@ -183,7 +183,7 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
 
     @Override
     public void showEmptyView(int iconResIcon, int messageResId) {
-        LetoolEmptyView emptyView = (LetoolEmptyView) LayoutInflater.from(this).inflate(R.layout.local_media_empty_view, null);
+        NpEmptyView emptyView = (NpEmptyView) LayoutInflater.from(this).inflate(R.layout.local_media_empty_view, null);
         emptyView.updataView(iconResIcon, messageResId);
         //
         ViewGroup normalView = (ViewGroup) mMainView.findViewById(R.id.normal_root_view);
@@ -222,7 +222,7 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
     @Override
     public void onBackPressed() {
 
-        if (getLetoolTopBar().getActionBarMode() == LetoolTopBar.ACTION_BAR_MODE_SELECTION) {
+        if (getLetoolTopBar().getActionBarMode() == NpTopBar.ACTION_BAR_MODE_SELECTION) {
             getLetoolTopBar().exitSelection();
             return;
         }
@@ -270,7 +270,7 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         LLog.i(TAG, "onKeyDown menu1:" + keyCode);
         if (keyCode == KeyEvent.KEYCODE_MENU) {
-            if (getLetoolTopBar().getActionBarMode() == LetoolTopBar.ACTION_BAR_MODE_SELECTION) {
+            if (getLetoolTopBar().getActionBarMode() == NpTopBar.ACTION_BAR_MODE_SELECTION) {
                 return true;
             } else if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
                 MobclickAgent.onEvent(this, StatConstants.EVENT_KEY_HARD_MENU_MENU);
@@ -282,17 +282,17 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
     }
 
     @Override
-    public LetoolTopBar getLetoolTopBar() {
+    public NpTopBar getLetoolTopBar() {
         return mTopBar;
     }
 
     @Override
-    public LetoolBottomBar getLetoolBottomBar() {
+    public NpBottomBar getLetoolBottomBar() {
         return mBottomBar;
     }
 
     @Override
-    public LetoolSlidingMenu getLetoolSlidingMenu() {
+    public NpSlidingMenu getSlidingMenu() {
         return mSlidingMenu;
     }
 

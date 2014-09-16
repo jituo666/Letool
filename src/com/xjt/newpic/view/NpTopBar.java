@@ -18,7 +18,7 @@ import com.xjt.newpic.selectors.SelectionManager;
  * @Date 8:18:06 PM Jul 24, 2014
  * @Comments:null
  */
-public class LetoolTopBar {
+public class NpTopBar {
 
     public static final int ACTION_BAR_MODE_NONE = -1;
     public static final int ACTION_BAR_MODE_BROWSE = 0;
@@ -74,7 +74,7 @@ public class LetoolTopBar {
     private int mCurActionBarMode;
     private SelectionManager mSelectionManager;
 
-    public LetoolTopBar(FragmentActivity activity, ViewGroup barContainer) {
+    public NpTopBar(FragmentActivity activity, ViewGroup barContainer) {
         mActivity = activity;
         mBarContainer = barContainer;
     }

@@ -1,22 +1,5 @@
 LOCAL_PATH:= $(call my-dir)
 
-include $(CLEAR_VARS)
-
-LOCAL_CFLAGS += -DEGL_EGLEXT_PROTOTYPES
-
-LOCAL_SRC_FILES := jni_egl_fence.cpp
-
-LOCAL_SDK_VERSION := 9
-
-LOCAL_LDLIBS := -llog -lEGL
-
-LOCAL_MODULE_TAGS := optional
-
-LOCAL_MODULE := libjni_eglfence
-
-
-include $(BUILD_SHARED_LIBRARY)
-
 # Filtershow
 
 include $(CLEAR_VARS)
@@ -24,7 +7,7 @@ include $(CLEAR_VARS)
 LOCAL_CPP_EXTENSION := .cc
 LOCAL_LDLIBS := -llog -ljnigraphics
 LOCAL_SDK_VERSION := 9
-LOCAL_MODULE    := libjni_filtershow_filters
+LOCAL_MODULE    := libnative_filters
 LOCAL_SRC_FILES := filters/gradient.c \
                    filters/saturated.c \
                    filters/exposure.c \

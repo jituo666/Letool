@@ -9,9 +9,9 @@ import com.xjt.newpic.common.OrientationManager;
 import com.xjt.newpic.common.ThreadPool;
 import com.xjt.newpic.metadata.DataManager;
 import com.xjt.newpic.view.GLController;
-import com.xjt.newpic.view.LetoolBottomBar;
-import com.xjt.newpic.view.LetoolSlidingMenu;
-import com.xjt.newpic.view.LetoolTopBar;
+import com.xjt.newpic.view.NpBottomBar;
+import com.xjt.newpic.view.NpSlidingMenu;
+import com.xjt.newpic.view.NpTopBar;
 
 /**
  * @Author Jituo.Xuan
@@ -32,9 +32,9 @@ public interface NpContext {
     public GLController getGLController();
 
     //
-    public LetoolTopBar getLetoolTopBar();
+    public NpTopBar getLetoolTopBar();
 
-    public LetoolBottomBar getLetoolBottomBar();
+    public NpBottomBar getLetoolBottomBar();
 
     public OrientationManager getOrientationManager();
 
@@ -49,6 +49,6 @@ public interface NpContext {
 
     public void popContentFragment();
 
-    public LetoolSlidingMenu getLetoolSlidingMenu();
+    public NpSlidingMenu getSlidingMenu();
 
 }

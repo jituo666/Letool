@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.edit.category;
 
 import android.os.Bundle;
@@ -130,9 +129,9 @@ public class CategoryMainPanel extends Fragment {
     private void setCategoryFragment(CategoryPanel category, boolean fromRight) {
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         if (fromRight) {
-            transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
+            transaction.setCustomAnimations(R.anim.slide_right_in, R.anim.slide_left_out);
         } else {
-            transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_left);
+            transaction.setCustomAnimations(R.anim.slide_left_in, R.anim.slide_right_out);
         }
         transaction.replace(R.id.category_panel_container, category, CategoryPanel.FRAGMENT_TAG);
         transaction.commitAllowingStateLoss();

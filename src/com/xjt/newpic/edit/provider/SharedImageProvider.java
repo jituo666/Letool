@@ -16,7 +16,7 @@ import java.io.FileNotFoundException;
 
 public class SharedImageProvider extends ContentProvider {
 
-    private static final String LOGTAG = "SharedImageProvider";
+    private static final String TAG = "SharedImageProvider";
 
     public static final String MIME_TYPE = "image/jpeg";
     public static final String AUTHORITY = "com.android.gallery3d.filtershow.provider.SharedImageProvider";

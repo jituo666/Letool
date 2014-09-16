@@ -71,10 +71,8 @@ public class ApiHelper {
     static {
         boolean hasFaceDetection = false;
         try {
-            Class<?> listenerClass = Class.forName(
-                    "android.hardware.Camera$FaceDetectionListener");
-            hasFaceDetection =
-                    hasMethod(Camera.class, "setFaceDetectionListener", listenerClass) &&
+            Class<?> listenerClass = Class.forName("android.hardware.Camera$FaceDetectionListener");
+            hasFaceDetection =hasMethod(Camera.class, "setFaceDetectionListener", listenerClass) &&
                             hasMethod(Camera.class, "startFaceDetection") &&
                             hasMethod(Camera.class, "stopFaceDetection") &&
                             hasMethod(Camera.Parameters.class, "getMaxNumDetectedFaces");

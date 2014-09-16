@@ -15,16 +15,16 @@ import com.xjt.newpic.R;
  * @Date 8:17:56 PM Jul 24, 2014
  * @Comments:null
  */
-public class LetoolEmptyView extends RelativeLayout {
+public class NpEmptyView extends RelativeLayout {
 
     private ImageView mImageView;
     private TextView mMsgBelowView;
 
-    public LetoolEmptyView(Context context) {
+    public NpEmptyView(Context context) {
         super(context);
     }
 
-    public LetoolEmptyView(Context context, AttributeSet attrs) {
+    public NpEmptyView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 

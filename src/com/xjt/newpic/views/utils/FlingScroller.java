@@ -1,6 +1,5 @@
 package com.xjt.newpic.views.utils;
 
-
 // This is a customized version of Scroller, with a interface similar to
 // android.widget.Scroller. It does fling only, not scroll.
 //

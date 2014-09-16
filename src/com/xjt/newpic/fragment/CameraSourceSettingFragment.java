@@ -56,10 +56,10 @@ import com.xjt.newpic.metadata.source.LocalSimpleAlbumSet;
 import com.xjt.newpic.preference.GlobalPreference;
 import com.xjt.newpic.stat.StatConstants;
 import com.xjt.newpic.utils.StorageUtils;
-import com.xjt.newpic.view.LetoolEmptyView;
-import com.xjt.newpic.view.LetoolLoadingView;
-import com.xjt.newpic.view.LetoolTopBar;
-import com.xjt.newpic.view.LetoolTopBar.OnActionModeListener;
+import com.xjt.newpic.view.NpEmptyView;
+import com.xjt.newpic.view.NpLoadingView;
+import com.xjt.newpic.view.NpTopBar;
+import com.xjt.newpic.view.NpTopBar.OnActionModeListener;
 
 /**
  * @Author Jituo.Xuan
@@ -81,8 +81,8 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
     private ItemAdapter mItemAdapter;
     private NpContext mLetoolContext;
     private LayoutInflater mLayoutInflater;
-    private LetoolLoadingView mLoadingPanel;
-    private LetoolEmptyView mEmptyView;
+    private NpLoadingView mLoadingPanel;
+    private NpEmptyView mEmptyView;
     private boolean mHasSdCard = true;
     private Toast mTipToast;
 
@@ -120,8 +120,8 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
     }
 
     private void initBrowseActionBar() {
-        LetoolTopBar topBar = mLetoolContext.getLetoolTopBar();
-        topBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_SETTINGS, CameraSourceSettingFragment.this);
+        NpTopBar topBar = mLetoolContext.getLetoolTopBar();
+        topBar.setOnActionMode(NpTopBar.ACTION_BAR_MODE_SETTINGS, CameraSourceSettingFragment.this);
         topBar.setTitleIcon(R.drawable.ic_action_previous_item);
         topBar.setTitleText(R.string.camera_source_dirs_title);
         ViewGroup nativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);
@@ -183,11 +183,11 @@ public class CameraSourceSettingFragment extends Fragment implements OnActionMod
             }
         });
 
-        mLoadingPanel = (LetoolLoadingView) rootView.findViewById(R.id.loading);
+        mLoadingPanel = (NpLoadingView) rootView.findViewById(R.id.loading);
         mSave = (Button) rootView.findViewById(R.id.save);
         mSave.setOnClickListener(this);
         mHasSdCard = StorageUtils.externalStorageAvailable();
-        mEmptyView = (LetoolEmptyView) rootView.findViewById(R.id.empty_view);
+        mEmptyView = (NpEmptyView) rootView.findViewById(R.id.empty_view);
         if (!mHasSdCard) {
             mEmptyView.updataView(R.drawable.ic_launcher, R.string.common_error_nosdcard);
             mEmptyView.setVisibility(View.VISIBLE);

@@ -14,7 +14,7 @@ import com.xjt.newpic.R;
 import com.xjt.newpic.stat.StatConstants;
 import com.xjt.newpic.utils.PackageUtils;
 import com.xjt.newpic.utils.PackageUtils.AppInfo;
-import com.xjt.newpic.view.LetoolDialog;
+import com.xjt.newpic.view.NpDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class ShareManager {
                 shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, shareUris);
             activity.startActivity(Intent.createChooser(shareIntent, activity.getString(R.string.common_share_to)));
         } else {
-            final LetoolDialog dlg = new LetoolDialog(activity);
+            final NpDialog dlg = new NpDialog(activity);
             dlg.setTitle(R.string.common_share_to);
             dlg.setCancelBtn(R.string.common_cancel, null,R.drawable.np_common_pressed_bottom_bg);
 

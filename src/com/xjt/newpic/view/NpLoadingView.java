@@ -9,11 +9,11 @@ import android.widget.TextView;
 import com.xjt.newpic.R;
 
 @SuppressWarnings("static-access")
-public class LetoolLoadingView extends RelativeLayout {
+public class NpLoadingView extends RelativeLayout {
     private TextView mMsgInsizeView;
     private TextView mMsgBelowView;
 
-    public LetoolLoadingView(Context context, AttributeSet attrs) {
+    public NpLoadingView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initViews(context);
     }

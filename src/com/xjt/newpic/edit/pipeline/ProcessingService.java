@@ -66,7 +66,7 @@ public class ProcessingService extends Service {
     }
 
     static {
-        System.loadLibrary("jni_filtershow_filters");
+        System.loadLibrary("native_filters");
     }
 
     public void setFiltershowActivity(NpEditActivity filtershowActivity) {

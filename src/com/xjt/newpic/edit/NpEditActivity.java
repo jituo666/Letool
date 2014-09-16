@@ -85,9 +85,9 @@ import com.xjt.newpic.imagedata.utils.LetoolBitmapPool;
 import com.xjt.newpic.metadata.source.LocalAlbum;
 import com.xjt.newpic.surpport.PopupMenu;
 import com.xjt.newpic.utils.LetoolUtils;
-import com.xjt.newpic.view.LetoolDialog;
-import com.xjt.newpic.view.LetoolTopBar;
-import com.xjt.newpic.view.LetoolTopBar.OnActionModeListener;
+import com.xjt.newpic.view.NpDialog;
+import com.xjt.newpic.view.NpTopBar;
+import com.xjt.newpic.view.NpTopBar.OnActionModeListener;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -143,7 +143,7 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
     private boolean mIsBound = false;
     private PopupMenu mCurrentMenu = null;
     private boolean mLoadingVisible = true;
-    private LetoolTopBar mTopBar;
+    private NpTopBar mTopBar;
     private View mReset;
     private View mSave;
 
@@ -235,8 +235,8 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
     }
 
     public void initActionBar() {
-        mTopBar = new LetoolTopBar(this, (ViewGroup) findViewById(R.id.letool_top_bar_container));
-        mTopBar.setOnActionMode(LetoolTopBar.ACTION_BAR_MODE_IMAGE_EDIT, this);
+        mTopBar = new NpTopBar(this, (ViewGroup) findViewById(R.id.letool_top_bar_container));
+        mTopBar.setOnActionMode(NpTopBar.ACTION_BAR_MODE_IMAGE_EDIT, this);
         mTopBar.setTitleIcon(R.drawable.ic_action_previous_item);
         View operationPanel = mTopBar.getActionPanel();
         ImageView undo = (ImageView) operationPanel.findViewById(R.id.action_undo);
@@ -534,7 +534,7 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
             mCurrentEditor.detach();
         }
 
-        LLog.i(TAG, "-------------showEditor3:" + representation.getEditorId() );
+        LLog.i(TAG, "-------------showEditor3:" + representation.getEditorId());
         mCurrentEditor = mEditorPlaceHolder.showEditor(representation.getEditorId());
         loadEditorPanel(representation, mCurrentEditor);
     }
@@ -753,6 +753,13 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
     }
 
     @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_left_in, R.anim.slide_right_out);
+
+    }
+
+    @Override
     protected void onDestroy() {
         if (mLoadBitmapTask != null) {
             mLoadBitmapTask.cancel(false);
@@ -922,7 +929,7 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
                         }
                     }
                 };
-                final LetoolDialog dlg = new LetoolDialog(this);
+                final NpDialog dlg = new NpDialog(this);
                 dlg.setTitle(R.string.common_recommend);
                 dlg.setOkBtn(R.string.save_and_exit, l, R.drawable.np_common_pressed_left_bg);
                 dlg.setCancelBtn(R.string.exit, l, R.drawable.np_common_pressed_right_bg);

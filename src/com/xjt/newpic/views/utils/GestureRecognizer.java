@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.views.utils;
 
 import android.content.Context;

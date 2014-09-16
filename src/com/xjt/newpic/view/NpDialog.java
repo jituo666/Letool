@@ -19,9 +19,9 @@ import com.xjt.newpic.R;
  * @Date 8:17:51 PM Jul 24, 2014
  * @Comments:null
  */
-public class LetoolDialog extends Dialog {
+public class NpDialog extends Dialog {
 
-    private static final String TAG = LetoolDialog.class.getSimpleName();
+    private static final String TAG = NpDialog.class.getSimpleName();
 
     public static final int DEFAULT_BTN_LEFT = 1;
     public static final int DEFAULT_BTN_MID = 2;
@@ -31,7 +31,7 @@ public class LetoolDialog extends Dialog {
     TextView mMessage;
     View mButtonPanel;
 
-    public LetoolDialog(Context context) {
+    public NpDialog(Context context) {
         super(context, R.style.MyDialog);
         setContentView(R.layout.common_dialog);
         mTitleView = (TextView) findViewById(R.id.title);

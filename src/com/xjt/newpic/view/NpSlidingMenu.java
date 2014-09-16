@@ -22,9 +22,9 @@ import com.xjt.newpic.stat.StatConstants;
  * @Date 8:18:01 PM Jul 24, 2014
  * @Comments:null
  */
-public class LetoolSlidingMenu {
+public class NpSlidingMenu {
 
-    private static final String TAG = LetoolSlidingMenu.class.getSimpleName();
+    private static final String TAG = NpSlidingMenu.class.getSimpleName();
 
     private FragmentManager mFragmentManager;
     private Fragment mFragment;
@@ -32,7 +32,7 @@ public class LetoolSlidingMenu {
     private View mMenuTip;
     private Context mContext;
 
-    public LetoolSlidingMenu(Context context, FragmentManager fm, View menuTip) {
+    public NpSlidingMenu(Context context, FragmentManager fm, View menuTip) {
         mFragmentManager = fm;
         mMenuTip = menuTip;
         mContext = context;
@@ -45,7 +45,7 @@ public class LetoolSlidingMenu {
             mAlphaHolder = new AlphaFragment();
             FragmentTransaction ft = mFragmentManager.beginTransaction();
             ft.setCustomAnimations(R.anim.alpha_sliding_menu_in, 0);
-            ft.add(R.id.local_image_browse_main_view, mAlphaHolder, LetoolSlidingMenu.AlphaFragment.class.getSimpleName());
+            ft.add(R.id.local_image_browse_main_view, mAlphaHolder, NpSlidingMenu.AlphaFragment.class.getSimpleName());
             ft.commit();
             FragmentTransaction ft1 = mFragmentManager.beginTransaction();
             ft1.setCustomAnimations(R.anim.slide_left_in, 0);

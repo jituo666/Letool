@@ -9,14 +9,14 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AnimationUtils;
 
 import com.xjt.newpic.R;
-import com.xjt.newpic.view.LetoolTopBar.OnActionModeListener;
+import com.xjt.newpic.view.NpTopBar.OnActionModeListener;
 
 /**
  * @Author Jituo.Xuan
  * @Date 5:44:20 PM May 13, 2014
  * @Comments:null
  */
-public class LetoolBottomBar {
+public class NpBottomBar {
 
     public static final int BOTTOM_BAR_MODE_NONE = -1;
     public static final int BOTTOM_BAR_MODE_ALBUM = 0;
@@ -45,7 +45,7 @@ public class LetoolBottomBar {
     private OnActionModeListener mOnActionModeListener;
     private int mCurBottomBarMode;
 
-    public LetoolBottomBar(FragmentActivity activity, ViewGroup barContainer) {
+    public NpBottomBar(FragmentActivity activity, ViewGroup barContainer) {
         mActivity = activity;
         mBarContainer = barContainer;
     }
