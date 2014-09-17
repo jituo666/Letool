@@ -84,7 +84,7 @@ public class NpDialog extends Dialog {
         final Button okBtn = (Button) findViewById(R.id.ok_btn);
         okBtn.setVisibility(View.VISIBLE);
         okBtn.setText(title);
-        //okBtn.setBackgroundResource(background);
+        okBtn.setBackgroundResource(background);
         okBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -106,7 +106,7 @@ public class NpDialog extends Dialog {
         final Button cancelBtn = (Button) findViewById(R.id.cancel_btn);
         cancelBtn.setVisibility(View.VISIBLE);
         cancelBtn.setText(title);
-        //cancelBtn.setBackgroundResource(background);
+        cancelBtn.setBackgroundResource(background);
         cancelBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
