@@ -33,7 +33,7 @@ import com.xjt.newpic.R;
 import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.imagedata.blobcache.BlobCacheManager;
 import com.xjt.newpic.preference.GlobalPreference;
-import com.xjt.newpic.settings.LetoolPreference;
+import com.xjt.newpic.settings.NpPreference;
 import com.xjt.newpic.stat.StatConstants;
 import com.xjt.newpic.utils.StorageUtils;
 import com.xjt.newpic.utils.StringUtils;
@@ -49,13 +49,13 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
 
     private static final String TAG = SettingFragment.class.getSimpleName();
 
-    private LetoolPreference mCameraSource;
-    private LetoolPreference mAnimSwitch;
-    private LetoolPreference mRememberUISwitch;
-    private LetoolPreference mClearCache;
-    private LetoolPreference mVersionCheck;
-    private LetoolPreference mAuthorDesc;
-    private LetoolPreference mQQGroup;
+    private NpPreference mCameraSource;
+    private NpPreference mAnimSwitch;
+    private NpPreference mRememberUISwitch;
+    private NpPreference mClearCache;
+    private NpPreference mVersionCheck;
+    private NpPreference mAuthorDesc;
+    private NpPreference mQQGroup;
     private NpContext mLetoolContext;
 
     @Override
@@ -112,13 +112,13 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.app_settings_list, container, false);
         initBrowseActionBar();
-        mCameraSource = (LetoolPreference) rootView.findViewById(R.id.camera_source);
-        mAnimSwitch = (LetoolPreference) rootView.findViewById(R.id.anim_switch);
-        mRememberUISwitch = (LetoolPreference) rootView.findViewById(R.id.remember_ui_switch);
-        mClearCache = (LetoolPreference) rootView.findViewById(R.id.clear_cache);
-        mVersionCheck = (LetoolPreference) rootView.findViewById(R.id.version_update_check);
-        mAuthorDesc = (LetoolPreference) rootView.findViewById(R.id.author_desc);
-        mQQGroup = (LetoolPreference) rootView.findViewById(R.id.communication_platform);
+        mCameraSource = (NpPreference) rootView.findViewById(R.id.camera_source);
+        mAnimSwitch = (NpPreference) rootView.findViewById(R.id.anim_switch);
+        mRememberUISwitch = (NpPreference) rootView.findViewById(R.id.remember_ui_switch);
+        mClearCache = (NpPreference) rootView.findViewById(R.id.clear_cache);
+        mVersionCheck = (NpPreference) rootView.findViewById(R.id.version_update_check);
+        mAuthorDesc = (NpPreference) rootView.findViewById(R.id.author_desc);
+        mQQGroup = (NpPreference) rootView.findViewById(R.id.communication_platform);
         initViews();
         return rootView;
     }

@@ -16,17 +16,17 @@ import com.xjt.newpic.surpport.ToggleButton;
  * @Date 5:55:36 AM Aug 1, 2014
  * @Comments:null
  */
-public class LetoolPreference extends RelativeLayout {
+public class NpPreference extends RelativeLayout {
 
     private TextView mMajorText;
     private TextView mMinorText;
     private ToggleButton mSwitch;
 
-    public LetoolPreference(Context context) {
+    public NpPreference(Context context) {
         super(context);
     }
 
-    public LetoolPreference(Context context, AttributeSet attrs) {
+    public NpPreference(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 

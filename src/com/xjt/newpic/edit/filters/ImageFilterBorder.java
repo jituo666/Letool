@@ -48,6 +48,7 @@ public class ImageFilterBorder extends ImageFilter {
         Drawable drawable = getDrawable(getParameters().getDrawableResource(), bitmap.getHeight());
         drawable.setBounds(bounds);
         drawable.draw(canvas);
+        LLog.i(TAG, " --------------bitmap:" + bitmap.getWidth() + ":" + bitmap.getHeight());
         return bitmap;
     }
 
