@@ -11,12 +11,15 @@ import android.provider.MediaStore.Video;
 import android.provider.MediaStore.Video.VideoColumns;
 
 import com.xjt.newpic.NpApp;
+import com.xjt.newpic.R;
 import com.xjt.newpic.common.LLog;
+import com.xjt.newpic.edit.tools.SaveImage;
 import com.xjt.newpic.metadata.DataManager;
 import com.xjt.newpic.metadata.DataNotifier;
 import com.xjt.newpic.metadata.MediaItem;
 import com.xjt.newpic.metadata.MediaPath;
 import com.xjt.newpic.metadata.MediaSet;
+import com.xjt.newpic.metadata.MediaSetUtils;
 import com.xjt.newpic.metadata.image.LocalImage;
 import com.xjt.newpic.metadata.image.LocalMediaItem;
 import com.xjt.newpic.metadata.video.LocalVideo;
@@ -151,7 +154,7 @@ public class LocalAlbum extends MediaSet {
 
     @Override
     public String getName() {
-        return mName;
+        return getLocalizedName(mApplication.getResources(), mName);
     }
 
     @Override
@@ -236,19 +239,14 @@ public class LocalAlbum extends MediaSet {
         return count;
     }
 
-    public static String getLocalizedName(Resources res, int bucketId, String name) {
-        //        if (bucketId == MediaSetUtils.CAMERA_BUCKET_ID) {
-        //            return res.getString(R.string.folder_camera);
-        //        } else if (bucketId == MediaSetUtils.DOWNLOAD_BUCKET_ID) {
-        //            return res.getString(R.string.folder_download);
-        //        } else if (bucketId == MediaSetUtils.IMPORTED_BUCKET_ID) {
-        //            return res.getString(R.string.folder_imported);
-        //        } else if (bucketId == MediaSetUtils.SNAPSHOT_BUCKET_ID) {
-        //            return res.getString(R.string.folder_screenshot);
-        //        } else if (bucketId == MediaSetUtils.EDITED_ONLINE_PHOTOS_BUCKET_ID) {
-        //            return res.getString(R.string.folder_edited_online_photos);
-        //        } else {
+    public static String getLocalizedName(Resources res, String name) {
+        if (SaveImage.DEFAULT_SAVE_DIRECTORY.equalsIgnoreCase(name)) {
+            return res.getString(R.string.app_name);
+        } else if (MediaSetUtils.SCREENSHOTS.equalsIgnoreCase(name)) {
+            return res.getString(R.string.common_screenshot);
+        } else if (MediaSetUtils.DOWNLOAD.equalsIgnoreCase(name)) {
+            return res.getString(R.string.common_download);
+        }
         return name;
-        //        }
     }
 }

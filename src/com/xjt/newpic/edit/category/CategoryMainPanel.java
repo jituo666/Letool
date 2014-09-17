@@ -56,7 +56,7 @@ public class CategoryMainPanel extends Fragment {
         }
     }
 
-    public void showPanel(int currentPanel) {
+    private void showPanel(int currentPanel) {
         switch (currentPanel) {
             case LOOKS: {
                 loadCategoryLookPanel(false);
@@ -137,7 +137,7 @@ public class CategoryMainPanel extends Fragment {
         transaction.commitAllowingStateLoss();
     }
 
-    public void loadCategoryLookPanel(boolean force) {
+    private void loadCategoryLookPanel(boolean force) {
         if (!force && mCurrentSelected == LOOKS) {
             return;
         }
@@ -150,7 +150,7 @@ public class CategoryMainPanel extends Fragment {
         selection(mCurrentSelected, true);
     }
 
-    public void loadCategoryBorderPanel() {
+    private void loadCategoryBorderPanel() {
         if (mCurrentSelected == BORDERS) {
             return;
         }
@@ -163,7 +163,7 @@ public class CategoryMainPanel extends Fragment {
         selection(mCurrentSelected, true);
     }
 
-    public void loadCategoryGeometryPanel() {
+    private void loadCategoryGeometryPanel() {
         if (mCurrentSelected == GEOMETRY) {
             return;
         }
@@ -179,7 +179,7 @@ public class CategoryMainPanel extends Fragment {
         selection(mCurrentSelected, true);
     }
 
-    public void loadCategoryFiltersPanel() {
+    private void loadCategoryFiltersPanel() {
         if (mCurrentSelected == FILTERS) {
             return;
         }

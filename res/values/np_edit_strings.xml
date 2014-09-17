@@ -41,7 +41,7 @@
     <!-- String displayed when saving and exiting editor [CHAR LIMIT=NONE] -->
     <string name="save_and_exit">Save</string>
     <!-- String displayed when saving and exiting editor [CHAR LIMIT=NONE] -->
-    <string name="save_and_processing">Processing full resolution image...</string>
+    <string name="save_and_processing">Processing image...</string>
     <!-- String displayed when exiting editor[CHAR LIMIT=NONE] -->
     <string name="exit">Exit</string>
 

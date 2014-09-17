@@ -81,6 +81,8 @@
     <string name="common_error_no_video">No video file found！</string>
     <string name="common_video_set">(%d Video(s))</string>
     <string name="common_error_no_dirs">No picture or video directory!</string>
+    <string name="common_screenshot">Screenshots</string>
+    <string name="common_download">Download</string>
     <string name="share_app_install_tip">Please install QQ </string>
     <string name="friendly_tips">Friendly tip</string>
     <string name="friendly_tip_cotent">1. Long press thumbnail to enter selection mode \n2. Press menu key or the upper left corner button to enter main menu</string>

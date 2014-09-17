@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.edit.tools;
 
 import android.content.ContentResolver;
@@ -8,9 +9,12 @@ import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
+import android.provider.MediaStore.Images.ImageColumns;
 import android.util.Log;
 
 import com.android.gallery3d.common.Utils;
+import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.cache.ImageLoader;
 import com.xjt.newpic.edit.filters.FiltersManager;
@@ -67,7 +71,7 @@ public class SaveImage {
     public SaveImage(Context context, Uri selectedImageUri, Bitmap previewImage, Callback callback) {
         mContext = context;
         mSelectedImageUri = selectedImageUri;
-        mDestinationFile = getNewFile(context);
+        mDestinationFile = getSavedFile(context, mSelectedImageUri);
         mCallback = callback;
     }
 
@@ -77,6 +81,12 @@ public class SaveImage {
         if (!saveDirectory.exists())
             saveDirectory.mkdirs();
         return saveDirectory;
+    }
+
+    public static File getSavedFile(Context context, Uri sourceUri) {
+        File saveDirectory = getFinalSaveDirectory(context, sourceUri);
+        String filename = new SimpleDateFormat(TIME_STAMP_NAME).format(new Date(System.currentTimeMillis()));
+        return new File(saveDirectory, PREFIX_IMG + filename + POSTFIX_JPG);
     }
 
     private static File getNewFile(Context context) {
@@ -89,7 +99,7 @@ public class SaveImage {
         boolean ret = false;
         OutputStream s = null;
         try {
-            s = new FileOutputStream(file);
+            s = new FileOutputStream(file.getAbsolutePath());
             image.compress(Bitmap.CompressFormat.JPEG, (jpegCompressQuality > 0) ? jpegCompressQuality : 1, s);
             s.flush();
             s.close();
@@ -115,9 +125,8 @@ public class SaveImage {
         }
     }
 
-
     public Uri processAndSaveImage(ImagePreset preset, int quality, float sizeFactor, boolean exit) {
-        Uri uri = null;
+        Uri result = null;
         resetProgress();
         boolean noBitmap = true;
         int num_tries = 0;
@@ -127,7 +136,7 @@ public class SaveImage {
         while (noBitmap) {
             try {
                 updateProgress();
-                // Try to do bitmap operations, downsample if low-memory
+                // Try to do bitmap operations, down sample if low-memory
                 Bitmap bitmap = ImageLoader.loadOrientedBitmapWithBackouts(mContext, mSelectedImageUri, sampleSize);
                 if (bitmap == null) {
                     return null;
@@ -148,8 +157,8 @@ public class SaveImage {
                 bitmap = pipeline.renderFinalImage(bitmap, preset);
                 updateProgress();
                 final CountDownLatch latch = new CountDownLatch(1);
+                final Uri uri[] = new Uri[1];
                 if (writeImageData(mDestinationFile, bitmap, quality)) {
-
                     MediaScannerConnection.scanFile(mContext,
                             new String[] {
                                 mDestinationFile.getAbsolutePath()
@@ -158,8 +167,9 @@ public class SaveImage {
                             new MediaScannerConnection.OnScanCompletedListener() {
 
                                 @Override
-                                public void onScanCompleted(String path, Uri uri) {
+                                public void onScanCompleted(String path, Uri u) {
                                     latch.countDown();
+                                    uri[0] = Uri.fromFile(new File(path));
                                 }
                             });
                 }
@@ -168,7 +178,7 @@ public class SaveImage {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
+                result = uri[0];
                 updateProgress();
                 noBitmap = false;
             } catch (OutOfMemoryError e) {
@@ -181,7 +191,9 @@ public class SaveImage {
                 resetProgress();
             }
         }
-        return uri;
+
+        LLog.i(TAG, "  -------processAndSaveImage:" + (result == null ? null : result.toString()));
+        return result;
     }
 
     public static void saveImage(ImagePreset preset, final NpEditActivity filterShowActivity) {
@@ -195,8 +207,8 @@ public class SaveImage {
         querySourceFromContentResolver(contentResolver, sourceUri, projection, callback);
     }
 
-    private static void querySourceFromContentResolver(
-            ContentResolver contentResolver, Uri sourceUri, String[] projection, ContentResolverQueryCallback callback) {
+    private static void querySourceFromContentResolver(ContentResolver contentResolver, Uri sourceUri, String[] projection,
+            ContentResolverQueryCallback callback) {
         Cursor cursor = null;
         try {
             cursor = contentResolver.query(sourceUri, projection, null, null, null);
@@ -212,4 +224,56 @@ public class SaveImage {
         }
     }
 
+    public static File getFinalSaveDirectory(Context context, Uri sourceUri) {
+        File saveDirectory = SaveImage.getSaveDirectory(context, sourceUri);
+        if ((saveDirectory == null) || !saveDirectory.canWrite()) {
+            saveDirectory = new File(Environment.getExternalStorageDirectory(), SaveImage.DEFAULT_SAVE_DIRECTORY);
+        }
+        // Create the directory if it doesn't exist
+        if (!saveDirectory.exists())
+            saveDirectory.mkdirs();
+        return saveDirectory;
+    }
+
+    private static File getSaveDirectory(Context context, Uri sourceUri) {
+        File file = getLocalFileFromUri(context, sourceUri);
+        if (file != null) {
+            return file.getParentFile();
+        } else {
+            return null;
+        }
+    }
+
+    private static File getLocalFileFromUri(Context context, Uri srcUri) {
+        if (srcUri == null) {
+            Log.e(TAG, "srcUri is null.");
+            return null;
+        }
+
+        String scheme = srcUri.getScheme();
+        if (scheme == null) {
+            Log.e(TAG, "scheme is null.");
+            return null;
+        }
+
+        final File[] file = new File[1];
+        // sourceUri can be a file path or a content Uri, it need to be handled differently.
+        if (scheme.equals(ContentResolver.SCHEME_CONTENT)) {
+            if (srcUri.getAuthority().equals(MediaStore.AUTHORITY)) {
+                querySource(context, srcUri, new String[] {
+                        ImageColumns.DATA
+                },
+                        new ContentResolverQueryCallback() {
+
+                            @Override
+                            public void onCursorResult(Cursor cursor) {
+                                file[0] = new File(cursor.getString(0));
+                            }
+                        });
+            }
+        } else if (scheme.equals(ContentResolver.SCHEME_FILE)) {
+            file[0] = new File(srcUri.getPath());
+        }
+        return file[0];
+    }
 }

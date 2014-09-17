@@ -132,7 +132,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
                 }
                 if (isCameraSource)
                     continue;
-                BucketEntry entry = new BucketEntry(bucketId, cursor.getString(INDEX_BUCKET_NAME));
+                BucketEntry entry = new BucketEntry(bucketId, LocalAlbum.getLocalizedName(mApplication.getResources(), cursor.getString(INDEX_BUCKET_NAME)));
                 if (!buffer.contains(entry)) {
                     buffer.add(entry);
                 }

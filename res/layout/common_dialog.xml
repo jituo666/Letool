@@ -68,7 +68,7 @@
         android:orientation="horizontal"
         android:visibility="gone" >
 
-        <TextView
+        <Button
             android:id="@+id/ok_btn"
             android:layout_width="0dp"
             android:layout_height="42dp"
@@ -88,7 +88,7 @@
             android:background="@drawable/np_slid_menu_divider_bg"
             android:visibility="gone" />
 
-        <TextView
+        <Button
             android:id="@+id/cancel_btn"
             android:layout_width="0dp"
             android:layout_height="42dp"

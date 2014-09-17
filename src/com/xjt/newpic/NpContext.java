@@ -50,5 +50,8 @@ public interface NpContext {
     public void popContentFragment();
 
     public NpSlidingMenu getSlidingMenu();
+    //
+    public boolean isAlbumDirty();
+    public void setAlbumDirty(boolean dirty);
 
 }

@@ -175,4 +175,14 @@ public class NpSettingsActivity extends FragmentActivity implements NpContext {
         return null;
     }
 
+    @Override
+    public boolean isAlbumDirty() {
+        return false;
+    }
+
+    @Override
+    public void setAlbumDirty(boolean dirty) {
+
+    }
+
 }

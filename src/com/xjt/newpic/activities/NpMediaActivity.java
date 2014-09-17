@@ -58,6 +58,7 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
     public static final String KEY_IS_IMAGE = "is_image";
 
     public static final int REQUEST_CODE_SETTINGS = 100;
+    public static final int REQUEST_CODE_EDITING = 101;
 
     private NpTopBar mTopBar;
     private NpBottomBar mBottomBar;
@@ -68,6 +69,7 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
     private OrientationManager mOrientationManager;
     private boolean mWaitingForExit = false;
     public boolean mIsImage = true;
+    public boolean mAlbumIsDirty = false;
 
     @Override
     protected void onCreate(Bundle b) {
@@ -257,11 +259,18 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            Intent it = new Intent();
-            it.setClass(this, NpMediaActivity.class);
-            it.putExtra(KEY_IS_IMAGE, mIsImage);
-            startActivity(it);
-            finish();
+            if (requestCode == REQUEST_CODE_SETTINGS) {
+                Intent it = new Intent();
+                it.setClass(this, NpMediaActivity.class);
+                it.putExtra(KEY_IS_IMAGE, mIsImage);
+                startActivity(it);
+                finish();
+            } else if (requestCode == REQUEST_CODE_EDITING) {
+                    if (data != null) {
+                        mAlbumIsDirty = true;
+                    }
+                LLog.i(TAG, "               -------onActivityResult:" + System.currentTimeMillis() + ":" + (data.getData() == null));
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -328,6 +337,16 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
     @Override
     public View getGuidTipView() {
         return findViewById(R.id.function_guide_tip);
+    }
+
+    @Override
+    public boolean isAlbumDirty() {
+        return mAlbumIsDirty;
+    }
+
+    @Override
+    public void setAlbumDirty(boolean dirty) {
+        mAlbumIsDirty = dirty;
     }
 
 }

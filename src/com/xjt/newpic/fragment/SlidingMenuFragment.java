@@ -129,7 +129,7 @@ public class SlidingMenuFragment extends Fragment {
                 } else if (position == 2) {
                     MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SLIDE_MENU_SETTING);
                     mLetoolContext.getSlidingMenu().toggle();
-                    getActivity().startActivityForResult(mIntents.get(position), 100);
+                    getActivity().startActivityForResult(mIntents.get(position), NpMediaActivity.REQUEST_CODE_SETTINGS);
                     getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
                 } else if (position == 3) {
                     MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SLIDE_MENU_EXIT);

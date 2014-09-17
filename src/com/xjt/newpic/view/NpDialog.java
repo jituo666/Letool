@@ -7,6 +7,7 @@ import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -78,57 +79,44 @@ public class NpDialog extends Dialog {
         return gridView;
     }
 
-    public void setOkBtn(int title, View.OnClickListener clickListener, int background) {
+    public void setOkBtn(int title, final View.OnClickListener clickListener, int background) {
         mButtonPanel.setVisibility(View.VISIBLE);
-        TextView okBtn = (TextView) findViewById(R.id.ok_btn);
+        final Button okBtn = (Button) findViewById(R.id.ok_btn);
         okBtn.setVisibility(View.VISIBLE);
-        if (clickListener != null) {
-            okBtn.setOnClickListener(new ExternalListener(clickListener));
-        } else {
-            okBtn.setOnClickListener(new CloseListener());
-        }
         okBtn.setText(title);
-        okBtn.setBackgroundResource(background);
+        //okBtn.setBackgroundResource(background);
+        okBtn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (clickListener != null) {
+                    clickListener.onClick(okBtn);
+                }
+                dismiss();
+            }
+        });
     }
 
-    public void setCancelBtn(int title, View.OnClickListener clickListener, int background) {
+    public void setCancelBtn(int title, final View.OnClickListener clickListener, int background) {
 
         if (findViewById(R.id.ok_btn).getVisibility() == View.VISIBLE) {
             setDividerVisible(true);
         }
         mButtonPanel.setVisibility(View.VISIBLE);
-        TextView cancelBtn = (TextView) findViewById(R.id.cancel_btn);
+        final Button cancelBtn = (Button) findViewById(R.id.cancel_btn);
         cancelBtn.setVisibility(View.VISIBLE);
         cancelBtn.setText(title);
-        if (clickListener != null) {
-            cancelBtn.setOnClickListener(new ExternalListener(clickListener));
-        } else {
-            cancelBtn.setOnClickListener(new CloseListener());
-        }
-        cancelBtn.setBackgroundResource(background);
-    }
+        //cancelBtn.setBackgroundResource(background);
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
 
-    private class CloseListener implements View.OnClickListener {
-
-        @Override
-        public void onClick(View v) {
-            cancel();
-        }
-    }
-
-    private class ExternalListener implements View.OnClickListener {
-
-        private View.OnClickListener mListener;
-
-        public ExternalListener(View.OnClickListener listener) {
-            mListener = listener;
-        }
-
-        @Override
-        public void onClick(View v) {
-            dismiss();
-            mListener.onClick(v);
-        }
+            @Override
+            public void onClick(View v) {
+                if (clickListener != null) {
+                    clickListener.onClick(cancelBtn);
+                }
+                dismiss();
+            }
+        });
     }
 
     @Override

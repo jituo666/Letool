@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.fragment;
 
 import java.util.ArrayList;
@@ -233,8 +234,8 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
     }
 
     private void overrideTransitionToEditor() {
-        //getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
-        getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
+        //getActivity().overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     private void launchPhotoEditor() {
@@ -247,7 +248,7 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
         if (getActivity().getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).size() == 0) {
             intent.setAction(Intent.ACTION_EDIT);
         }
-        getActivity().startActivity(intent);
+        getActivity().startActivityForResult(intent, NpMediaActivity.REQUEST_CODE_EDITING);
         overrideTransitionToEditor();
     }
 
@@ -294,32 +295,14 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
 
             final NpDialog dlg = new NpDialog(getActivity());
             dlg.setTitle(R.string.common_recommend);
-            dlg.setOkBtn(R.string.common_ok, cdl,R.drawable.np_common_pressed_left_bg);
+            dlg.setOkBtn(R.string.common_ok, cdl, R.drawable.np_common_pressed_left_bg);
             dlg.setCancelBtn(R.string.common_cancel, cdl, R.drawable.np_common_pressed_right_bg);
             dlg.setMessage(R.string.common_delete_cur_pic_tip);
             dlg.show();
         }
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mLetoolContext = (NpContext) getActivity();
-        mGLController = mLetoolContext.getGLController();
-        initViews();
-        initDatas();
-
-        if (mCurrentPhoto == null) {
-            mTotalCount = mMediaSet.updateMediaSet();
-            if (mTotalCount > 0) {
-                if (mCurrentIndex >= mTotalCount)
-                    mCurrentIndex = 0;
-                mCurrentPhoto = mMediaSet.getMediaItem(mCurrentIndex, 1).get(0);
-            } else {
-                return;
-            }
-        }
-
+    private void initDataMode() {
         FullImageDataAdapter pda = new FullImageDataAdapter(mLetoolContext, mFullImageView,
                 mMediaSet, mCurrentPhoto.getPath(), mCurrentIndex);
         mModel = pda;
@@ -350,6 +333,28 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
             }
 
         });
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mLetoolContext = (NpContext) getActivity();
+        mGLController = mLetoolContext.getGLController();
+        initViews();
+        initDatas();
+
+        if (mCurrentPhoto == null) {
+            mTotalCount = mMediaSet.updateMediaSet();
+            if (mTotalCount > 0) {
+                if (mCurrentIndex >= mTotalCount)
+                    mCurrentIndex = 0;
+                mCurrentPhoto = mMediaSet.getMediaItem(mCurrentIndex, 1).get(0);
+            } else {
+                return;
+            }
+        }
+
+        initDataMode();
         mHandler = new SynchronizedHandler(mGLController) {
 
             @Override
@@ -457,11 +462,17 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
         MobclickAgent.onPageStart(TAG);
         mGLController.onResume();
         if (mModel == null) {
-            //
             return;
         }
         mGLController.lockRenderThread();
         try {
+
+            LLog.i(TAG, "               -------onResume:" + System.currentTimeMillis());
+            if (mLetoolContext.isAlbumDirty()) {
+                mCurrentIndex = 0;
+                initDataMode();
+                mLetoolContext.setAlbumDirty(false);
+            }
             mGLController.freeze();
             mIsActive = true;
             mGLController.setContentPane(mRootPane);

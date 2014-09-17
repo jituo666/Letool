@@ -29,6 +29,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
@@ -287,13 +288,13 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
             mCategoryLooksAdapter.add(new CategoryAction(this, representation, CategoryAction.FULL_VIEW));
         }
 
-        Fragment panel = getSupportFragmentManager().findFragmentByTag(CategoryMainPanel.FRAGMENT_TAG);
-        if (panel != null) {
-            if (panel instanceof CategoryMainPanel) {
-                CategoryMainPanel mainPanel = (CategoryMainPanel) panel;
-                mainPanel.loadCategoryLookPanel(true);
-            }
-        }
+//        Fragment panel = getSupportFragmentManager().findFragmentByTag(CategoryMainPanel.FRAGMENT_TAG);
+//        if (panel != null) {
+//            if (panel instanceof CategoryMainPanel) {
+//                CategoryMainPanel mainPanel = (CategoryMainPanel) panel;
+//                mainPanel.loadCategoryLookPanel(true);
+//            }
+//        }
     }
 
     public void removeLook(CategoryAction action) {
@@ -581,6 +582,7 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
     public void stopLoadingIndicator() {
         final View loading = findViewById(R.id.loading);
         loading.setVisibility(View.GONE);
+        loading.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_out));
         mLoadingVisible = false;
     }
 
@@ -612,6 +614,7 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
                 return;
             }
             final View imageShow = findViewById(R.id.imageShow);
+            imageShow.startAnimation(AnimationUtils.loadAnimation(NpEditActivity.this, R.anim.fade_in));
             imageShow.setVisibility(View.VISIBLE);
             Bitmap largeBitmap = MasterImage.getImage().getOriginalBitmapLarge();
             mBoundService.setOriginalBitmap(largeBitmap);
@@ -683,7 +686,7 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
         return Math.max(outMetrics.heightPixels, outMetrics.widthPixels);
     }
 
-    private void showSavingProgress(String albumName) {
+    private void showSavingProgress(String progressText) {
         ProgressDialog progress;
         if (mSavingProgressDialog != null) {
             progress = mSavingProgressDialog.get();
@@ -691,13 +694,6 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
                 progress.show();
                 return;
             }
-        }
-        // Allow cancellation of the saving process
-        String progressText;
-        if (albumName == null) {
-            progressText = getString(R.string.common_save);
-        } else {
-            progressText = getString(R.string.common_save, albumName);
         }
         progress = ProgressDialog.show(this, "", progressText, true, false);
         mSavingProgressDialog = new WeakReference<ProgressDialog>(progress);
@@ -816,6 +812,7 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
                 done();
             } else {
 
+                final NpDialog dlg = new NpDialog(this);
                 View.OnClickListener l = new View.OnClickListener() {
 
                     @Override
@@ -827,7 +824,6 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
                         }
                     }
                 };
-                final NpDialog dlg = new NpDialog(this);
                 dlg.setTitle(R.string.common_recommend);
                 dlg.setOkBtn(R.string.save_and_exit, l, R.drawable.np_common_pressed_left_bg);
                 dlg.setCancelBtn(R.string.exit, l, R.drawable.np_common_pressed_right_bg);

@@ -6,6 +6,7 @@ import android.database.DataSetObserver;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
+
 import com.xjt.newpic.common.LLog;
 
 public class CategoryListView extends LinearLayout {

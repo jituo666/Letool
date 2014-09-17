@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.edit.category;
 
 import android.app.Activity;
@@ -6,6 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.LayoutAnimationController;
+import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 
 import com.xjt.newpic.R;
@@ -89,6 +95,19 @@ public class CategoryPanel extends Fragment implements View.OnClickListener {
             loadAdapter(selectedPanel);
         }
         CategoryListView panel = (CategoryListView) main.findViewById(R.id.listItems);
+
+//        AnimationSet set = new AnimationSet(true);
+//        Animation animation = new AlphaAnimation(0.0f, 1.0f);
+//        animation.setDuration(50);
+//        set.addAnimation(animation);
+//        animation = new TranslateAnimation(
+//                Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f,
+//                Animation.RELATIVE_TO_SELF, -1.0f, Animation.RELATIVE_TO_SELF, 0.0f
+//                );
+//        animation.setDuration(60);
+//        set.addAnimation(animation);
+//        LayoutAnimationController controller = new LayoutAnimationController(set, 0.5f);
+//        panel.setLayoutAnimation(controller);
         if (mAdapter != null) {
             mAdapter.setOrientation(CategoryView.HORIZONTAL);
             panel.setAdapter(mAdapter);
