@@ -38,14 +38,12 @@ public class FullresRenderingRequestTask extends ProcessingTask {
         if (!mPipelineIsOn) {
             return;
         }
-        Render render = new Render();
-        render.request = request;
-        postRequest(render);
+        postRequest(request);
     }
 
     @Override
     public Result doInBackground(Request message) {
-        RenderingRequest request = ((Render) message).request;
+        RenderingRequest request = (RenderingRequest) message;
         RenderResult result = null;
         mFullresPipeline.render(request);
         result = new RenderResult();

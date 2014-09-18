@@ -9,7 +9,7 @@ import com.adobe.xmp.XMPMeta;
 import com.adobe.xmp.XMPMetaFactory;
 import com.android.gallery3d.common.Utils;
 import com.xjt.newpic.utils.XmpUtilHelper;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
 import com.xjt.newpic.edit.pipeline.ImagePreset;
 
 import java.io.File;
@@ -69,7 +69,7 @@ public class XmpPresets {
         }
     }
 
-    public static XMresults extractXMPData(Context context, MasterImage mMasterImage, Uri uriToEdit) {
+    public static XMresults extractXMPData(Context context, ImageManager mMasterImage, Uri uriToEdit) {
         XMresults ret = new XMresults();
         InputStream is = null;
         XMPMeta xmpMeta = null;

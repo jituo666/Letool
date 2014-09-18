@@ -16,7 +16,7 @@ import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.edit.controller.Control;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
 import com.xjt.newpic.edit.imageshow.ImageShow;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
 import com.xjt.newpic.edit.pipeline.ImagePreset;
 import com.xjt.newpic.surpport.PopupMenu;
 import com.xjt.newpic.surpport.PopupMenuItem;
@@ -81,7 +81,7 @@ public class Editor implements OnSeekBarChangeListener {
         mEditTitle = editTitle;
         mFilterTitle = stateButton;
         mButton = editTitle;
-        MasterImage.getImage().resetGeometryImages(false);
+        ImageManager.getImage().resetGeometryImages(false);
         setUtilityPanelUI(actionButton, editControl);
     }
 
@@ -168,8 +168,8 @@ public class Editor implements OnSeekBarChangeListener {
 
     public FilterRepresentation getLocalRepresentation() {
         if (mLocalRepresentation == null) {
-            ImagePreset preset = MasterImage.getImage().getPreset();
-            FilterRepresentation filterRepresentation = MasterImage.getImage().getCurrentFilterRepresentation();
+            ImagePreset preset = ImageManager.getImage().getPreset();
+            FilterRepresentation filterRepresentation = ImageManager.getImage().getCurrentFilterRepresentation();
             mLocalRepresentation = preset.getFilterRepresentationCopyFrom(filterRepresentation);
             if (mShowParameter == SHOW_VALUE_UNDEFINED && filterRepresentation != null) {
                 boolean show = filterRepresentation.showParameterValue();
@@ -204,17 +204,17 @@ public class Editor implements OnSeekBarChangeListener {
      * This causes the preview bitmap to be regenerated.
      */
     public void commitLocalRepresentation(Collection<FilterRepresentation> reps) {
-        ImagePreset preset = MasterImage.getImage().getPreset();
+        ImagePreset preset = ImageManager.getImage().getPreset();
         preset.updateFilterRepresentations(reps);
         if (mButton != null) {
             updateText();
         }
         if (mChangesGeometry) {
             // Regenerate both the filtered and the geometry-only bitmaps
-            MasterImage.getImage().resetGeometryImages(true);
+            ImageManager.getImage().resetGeometryImages(true);
         }
         // Regenerate the filtered bitmap.
-        MasterImage.getImage().invalidateFiltersOnly();
+        ImageManager.getImage().invalidateFiltersOnly();
     }
 
     /**

@@ -20,7 +20,7 @@ import com.xjt.newpic.edit.filters.FilterUserPresetRepresentation;
 import com.xjt.newpic.edit.filters.FiltersManager;
 import com.xjt.newpic.edit.filters.ImageFilter;
 import com.xjt.newpic.edit.imageshow.GeometryMathUtils;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
 import com.xjt.newpic.surpport.JsonReader;
 import com.xjt.newpic.surpport.JsonWriter;
 
@@ -540,7 +540,7 @@ public class ImagePreset {
     }
 
     public boolean canDoPartialRendering() {
-        if (MasterImage.getImage().getZoomOrientation() != ImageLoader.ORI_NORMAL) {
+        if (ImageManager.getImage().getZoomOrientation() != ImageLoader.ORI_NORMAL) {
             return false;
         }
         for (int i = 0; i < mFilters.size(); i++) {

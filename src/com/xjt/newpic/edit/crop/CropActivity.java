@@ -250,8 +250,7 @@ public class CropActivity extends Activity {
         @Override
         protected Bitmap doInBackground(Uri... params) {
             Uri uri = params[0];
-            Bitmap bmap = ImageLoader.loadConstrainedBitmap(uri, mContext, mBitmapSize,
-                    mOriginalBounds, false);
+            Bitmap bmap = ImageLoader.loadConstrainedBitmap(uri, mContext, mBitmapSize,mOriginalBounds);
             mOrientation = ImageLoader.getMetadataRotation(mContext, uri);
             return bmap;
         }

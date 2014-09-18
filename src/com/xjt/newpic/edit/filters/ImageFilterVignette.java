@@ -7,7 +7,7 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 
 import com.xjt.newpic.R;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
 import com.xjt.newpic.edit.pipeline.FilterEnvironment;
 import com.xjt.newpic.edit.filters.ScriptC_vignette;
 
@@ -84,7 +84,7 @@ public class ImageFilterVignette extends ImageFilterRS {
         float[]c = new float[2];
         if (mParameters.isCenterSet()) {
             Matrix m = getOriginalToScreenMatrix(w, h);
-            Rect bounds = MasterImage.getImage().getOriginalBounds();
+            Rect bounds = ImageManager.getImage().getOriginalBounds();
             c[0] = bounds.right * mParameters.getCenterX();
             c[1] = bounds.bottom * mParameters.getCenterY();
             m.mapPoints(c);

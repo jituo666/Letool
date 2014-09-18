@@ -6,7 +6,7 @@ import android.support.v8.renderscript.Allocation;
 import android.support.v8.renderscript.RenderScript;
 
 import com.xjt.newpic.edit.cache.BitmapCache;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
 
 public class Buffer {
     private static final String TAG = Buffer.class.getSimpleName();
@@ -18,7 +18,7 @@ public class Buffer {
     public Buffer(Bitmap bitmap) {
         RenderScript rs = CachingPipeline.getRenderScriptContext();
         if (bitmap != null) {
-            BitmapCache cache = MasterImage.getImage().getBitmapCache();
+            BitmapCache cache = ImageManager.getImage().getBitmapCache();
             mBitmap = cache.getBitmapCopy(bitmap, BitmapCache.PREVIEW_CACHE);
         }
         if (mUseAllocation) {
@@ -69,7 +69,7 @@ public class Buffer {
     }
 
     public void remove() {
-        BitmapCache cache = MasterImage.getImage().getBitmapCache();
+        BitmapCache cache = ImageManager.getImage().getBitmapCache();
         if (cache.cache(mBitmap)) {
             mBitmap = null;
         }

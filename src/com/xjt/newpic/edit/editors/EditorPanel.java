@@ -14,7 +14,7 @@ import com.xjt.newpic.R;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.history.HistoryManager;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
 
 public class EditorPanel extends Fragment {
 
@@ -36,7 +36,7 @@ public class EditorPanel extends Fragment {
     }
 
     public void cancelCurrentFilter() {
-        MasterImage masterImage = MasterImage.getImage();
+        ImageManager masterImage = ImageManager.getImage();
         HistoryManager adapter = masterImage.getHistory();
 
         int position = adapter.undo();

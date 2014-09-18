@@ -277,7 +277,7 @@ public final class GeometryMathUtils {
     }
 
     public static void initializeHolder(GeometryHolder outHolder, FilterRepresentation currentLocal) {
-        Collection<FilterRepresentation> geometry = MasterImage.getImage().getPreset().getGeometryFilters();
+        Collection<FilterRepresentation> geometry = ImageManager.getImage().getPreset().getGeometryFilters();
         replaceInstances(geometry, currentLocal);
         unpackGeometry(outHolder, geometry);
     }
@@ -297,7 +297,7 @@ public final class GeometryMathUtils {
         Rect frame = new Rect();
         crop.roundOut(frame);
         Matrix m = getCropSelectionToScreenMatrix(null, holder, width, height, frame.width(), frame.height());
-        BitmapCache bitmapCache = MasterImage.getImage().getBitmapCache();
+        BitmapCache bitmapCache = ImageManager.getImage().getBitmapCache();
         Bitmap temp = bitmapCache.getBitmap(frame.width(), frame.height(), BitmapCache.UTIL_GEOMETRY);
         Canvas canvas = new Canvas(temp);
         Paint paint = new Paint();
@@ -351,7 +351,7 @@ public final class GeometryMathUtils {
 
     public static Matrix getOriginalToScreen(GeometryHolder holder, boolean rotate, float originalWidth,
             float originalHeight, float viewWidth, float viewHeight) {
-        int orientation = MasterImage.getImage().getZoomOrientation();
+        int orientation = ImageManager.getImage().getZoomOrientation();
         int rotation = getRotationForOrientation(orientation);
         Rotation prev = holder.rotation;
         rotation = (rotation + prev.value()) % 360;
@@ -369,7 +369,7 @@ public final class GeometryMathUtils {
         if (!holder.isNil()) {
             bmap = applyFullGeometryMatrix(bmap, holder);
             if (bmap != image) {
-                BitmapCache cache = MasterImage.getImage().getBitmapCache();
+                BitmapCache cache = ImageManager.getImage().getBitmapCache();
                 cache.cache(image);
             }
         }

@@ -16,7 +16,7 @@ import com.xjt.newpic.edit.cache.ImageLoader;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
 import com.xjt.newpic.edit.filters.FiltersManager;
 import com.xjt.newpic.edit.imageshow.GeometryMathUtils;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
 
 import java.util.Vector;
 
@@ -147,7 +147,7 @@ public class CachingPipeline implements PipelineInterface {
     private void setupEnvironment(ImagePreset preset, boolean highResPreview) {
         mEnvironment.setPipeline(this);
         mEnvironment.setFiltersManager(mFiltersManager);
-        mEnvironment.setBitmapCache(MasterImage.getImage().getBitmapCache());
+        mEnvironment.setBitmapCache(ImageManager.getImage().getBitmapCache());
         if (highResPreview) {
             mEnvironment.setScaleFactor(mHighResPreviewScaleFactor);
         } else {
@@ -161,7 +161,7 @@ public class CachingPipeline implements PipelineInterface {
     public void setOriginal(Bitmap bitmap) {
         mOriginalBitmap = bitmap;
         LLog.v(TAG, "setOriginal, size " + bitmap.getWidth() + " x " + bitmap.getHeight());
-        ImagePreset preset = MasterImage.getImage().getPreset();
+        ImagePreset preset = ImageManager.getImage().getPreset();
         setupEnvironment(preset, false);
         updateOriginalAllocation(preset);
     }
@@ -203,7 +203,7 @@ public class CachingPipeline implements PipelineInterface {
             }
             ImagePreset preset = request.getImagePreset();
             setupEnvironment(preset, false);
-            Bitmap bitmap = MasterImage.getImage().getOriginalBitmapHighres();//
+            Bitmap bitmap = ImageManager.getImage().getOriginalBitmapHighres();//
             if (bitmap == null) {
                 return;
             }
@@ -228,7 +228,7 @@ public class CachingPipeline implements PipelineInterface {
             }
             ImagePreset preset = request.getImagePreset();
             setupEnvironment(preset, false);
-            Bitmap bitmap = MasterImage.getImage().getOriginalBitmapHighres(); //
+            Bitmap bitmap = ImageManager.getImage().getOriginalBitmapHighres(); //
             if (bitmap == null) {
                 return;
             }
@@ -250,7 +250,7 @@ public class CachingPipeline implements PipelineInterface {
             }
             ImagePreset preset = request.getImagePreset();
             setupEnvironment(preset, false);
-            Bitmap bitmap = MasterImage.getImage().getOriginalBitmapHighres(); //
+            Bitmap bitmap = ImageManager.getImage().getOriginalBitmapHighres(); //
             if (bitmap == null) {
                 return;
             }
@@ -285,7 +285,7 @@ public class CachingPipeline implements PipelineInterface {
             mFiltersManager.freeFilterResources(preset);
 
             if (request.getType() == RenderingRequest.PARTIAL_RENDERING) {
-                MasterImage master = MasterImage.getImage();
+                ImageManager master = ImageManager.getImage();
                 bitmap = ImageLoader.getScaleOneImageForPreset(master.getActivity(),
                         mEnvironment.getBimapCache(), master.getUri(), request.getBounds(), request.getDestination());
                 if (bitmap == null) {
@@ -326,9 +326,9 @@ public class CachingPipeline implements PipelineInterface {
 
                 if (request.getType() == RenderingRequest.ICON_RENDERING) {
                     Rect iconBounds = request.getIconBounds();
-                    Bitmap source = MasterImage.getImage().getThumbnailBitmap(); //
+                    Bitmap source = ImageManager.getImage().getThumbnailBitmap(); //
                     if (iconBounds.width() > source.getWidth() * 2) {
-                        source = MasterImage.getImage().getLargeThumbnailBitmap(); //
+                        source = ImageManager.getImage().getLargeThumbnailBitmap(); //
                     }
                     bitmap = mEnvironment.getBitmap(iconBounds.width(), iconBounds.height(), BitmapCache.ICON);
                     Canvas canvas = new Canvas(bitmap);
@@ -367,6 +367,7 @@ public class CachingPipeline implements PipelineInterface {
         }
     }
 
+    //
     public synchronized Bitmap renderFinalImage(Bitmap bitmap, ImagePreset preset) {
         synchronized (CachingPipeline.class) {
             if (getRenderScriptContext() == null) {
@@ -398,7 +399,7 @@ public class CachingPipeline implements PipelineInterface {
     }
 
     public boolean needsRepaint() {
-        SharedBuffer buffer = MasterImage.getImage().getPreviewBuffer();
+        SharedBuffer buffer = ImageManager.getImage().getPreviewBuffer();
         return buffer.checkRepaintNeeded();
     }
 

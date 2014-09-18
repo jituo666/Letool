@@ -12,7 +12,7 @@ import com.xjt.newpic.R;
 import com.xjt.newpic.edit.filters.FilterMirrorRepresentation;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
 import com.xjt.newpic.edit.imageshow.ImageMirror;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
 
 public class EditorMirror extends Editor implements EditorInfo {
     public static final String TAG = EditorMirror.class.getSimpleName();
@@ -36,7 +36,7 @@ public class EditorMirror extends Editor implements EditorInfo {
 
     @Override
     public void reflectCurrentFilter() {
-        MasterImage master = MasterImage.getImage();
+        ImageManager master = ImageManager.getImage();
         master.setCurrentFilterRepresentation(master.getPreset()
                 .getFilterWithSerializationName(FilterMirrorRepresentation.SERIALIZATION_NAME));
         super.reflectCurrentFilter();

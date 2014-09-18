@@ -55,10 +55,11 @@
     <string name="highlight_recovery">"强光"</string>
     <string name="curvesRGB">"曲线"</string>
     <string name="vignette">"晕影"</string>
+    <string name="vignette_main">"晕影"</string>
     <string name="vignette_exposure">曝光</string>
     <string name="vignette_saturation">饱和度</string>
     <string name="vignette_contrast">对比度</string>
-    <string name="vignette_falloff">衰减</string>
+    <string name="vignette_falloff">衰减度</string>
     <string name="redeye">"红眼"</string>
     <string name="imageDraw">"涂鸦"</string>
     <string name="straighten">"拉直"</string>

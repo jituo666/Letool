@@ -49,7 +49,7 @@ public class ImageRotate extends ImageShow {
 
     @Override
     public void onDraw(Canvas canvas) {
-        MasterImage master = MasterImage.getImage();
+        ImageManager master = ImageManager.getImage();
         Bitmap image = master.getFiltersOnlyImage();
         if (image == null) {
             return;

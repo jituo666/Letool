@@ -23,7 +23,7 @@ import com.android.gallery3d.exif.ExifInterface;
 import com.android.gallery3d.exif.ExifTag;
 import com.xjt.newpic.utils.XmpUtilHelper;
 import com.xjt.newpic.common.ApiHelper;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -332,7 +332,7 @@ public final class ImageLoader {
      * @param useMin use min or max side of the original image
      * @return downsampled bitmap or null if this operation failed.
      */
-    public static Bitmap loadConstrainedBitmap(Uri uri, Context context, int maxSideLength, Rect originalBounds, boolean useMin) {
+    public static Bitmap loadConstrainedBitmap(Uri uri, Context context, int maxSideLength, Rect originalBounds) {
         if (maxSideLength <= 0 || uri == null || context == null) {
             throw new IllegalArgumentException("bad argument to getScaledBitmap");
         }
@@ -350,12 +350,7 @@ public final class ImageLoader {
         }
 
         // Find best downsampling size
-        int imageSide = 0;
-        if (useMin) {
-            imageSide = Math.min(w, h);
-        } else {
-            imageSide = Math.max(w, h);
-        }
+        int imageSide = Math.max(w, h);
         int sampleSize = 1;
         while (imageSide > maxSideLength) {
             imageSide >>>= 1;
@@ -382,9 +377,8 @@ public final class ImageLoader {
      * @param originalBounds set to the actual bounds of the stored bitmap.
      * @return downsampled bitmap or null if this operation failed.
      */
-    public static Bitmap loadOrientedConstrainedBitmap(Uri uri, Context context, int maxSideLength,
-            int orientation, Rect originalBounds) {
-        Bitmap bmap = loadConstrainedBitmap(uri, context, maxSideLength, originalBounds, false);
+    public static Bitmap loadOrientedConstrainedBitmap(Uri uri, Context context, int maxSideLength, int orientation, Rect originalBounds) {
+        Bitmap bmap = loadConstrainedBitmap(uri, context, maxSideLength, originalBounds);
         if (bmap != null) {
             bmap = orientBitmap(bmap, orientation);
             if (bmap.getConfig() != Bitmap.Config.ARGB_8888) {
@@ -449,7 +443,7 @@ public final class ImageLoader {
      * Loads an oriented bitmap that is downsampled by at least the input sample
      * size. In low-memory situations, the bitmap may be downsampled further.
      */
-    public static Bitmap loadOrientedBitmapWithBackouts(Context context, Uri sourceUri,int sampleSize) {
+    public static Bitmap loadOrientedBitmapWithBackouts(Context context, Uri sourceUri, int sampleSize) {
         Bitmap bitmap = loadBitmapWithBackouts(context, sourceUri, sampleSize);
         if (bitmap == null) {
             return null;
@@ -491,7 +485,7 @@ public final class ImageLoader {
 
     public static XMPMeta getXmpObject(Context context) {
         try {
-            InputStream is = context.getContentResolver().openInputStream(MasterImage.getImage().getUri());
+            InputStream is = context.getContentResolver().openInputStream(ImageManager.getImage().getUri());
             return XmpUtilHelper.extractXMPMeta(is);
         } catch (FileNotFoundException e) {
             return null;

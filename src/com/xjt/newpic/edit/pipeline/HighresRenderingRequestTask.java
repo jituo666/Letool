@@ -17,10 +17,6 @@ public class HighresRenderingRequestTask extends ProcessingTask {
         mHighresPreviewPipeline.setPreviewScaleFactor(previewScale);
     }
 
-    static class Render implements Request {
-        RenderingRequest request;
-    }
-
     static class RenderResult implements Result {
         RenderingRequest request;
     }
@@ -45,14 +41,12 @@ public class HighresRenderingRequestTask extends ProcessingTask {
         if (!mPipelineIsOn) {
             return;
         }
-        Render render = new Render();
-        render.request = request;
-        postRequest(render);
+        postRequest(request);
     }
 
     @Override
     public Result doInBackground(Request message) {
-        RenderingRequest request = ((Render) message).request;
+        RenderingRequest request = ((RenderingRequest) message);
         RenderResult result = null;
         mHighresPreviewPipeline.renderHighres(request);
         result = new RenderResult();

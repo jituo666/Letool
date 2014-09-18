@@ -178,8 +178,8 @@ public class ImageCurves extends ImageShow {
 
         gPaint.setAntiAlias(true);
 
-        if (getImagePreset() != mLastPreset && MasterImage.getImage().getFilteredImage() != null) {
-            new ComputeHistogramTask().execute(MasterImage.getImage().getFilteredImage());
+        if (getImagePreset() != mLastPreset && ImageManager.getImage().getFilteredImage() != null) {
+            new ComputeHistogramTask().execute(ImageManager.getImage().getFilteredImage());
             mLastPreset = getImagePreset();
         }
 

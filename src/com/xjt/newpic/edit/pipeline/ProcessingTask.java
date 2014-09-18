@@ -1,19 +1,27 @@
+
 package com.xjt.newpic.edit.pipeline;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 
 public abstract class ProcessingTask {
+
     private ProcessingTaskController mTaskController;
     private Handler mProcessingHandler;
     private Handler mResultHandler;
     private int mType;
     private static final int DELAY = 300;
 
-    static interface Request {}
-    static interface Update {}
-    static interface Result {}
+    static interface Request {
+    }
+
+    static interface Update {
+    }
+
+    static interface Result {
+    }
 
     public boolean postRequest(Request message) {
         Message msg = mProcessingHandler.obtainMessage(mType);
@@ -51,8 +59,8 @@ public abstract class ProcessingTask {
 
     public void added(ProcessingTaskController taskController) {
         mTaskController = taskController;
-        mResultHandler = taskController.getResultHandler();
-        mProcessingHandler = taskController.getProcessingHandler();
+        mResultHandler = taskController.getResultHandler(); // 主线程
+        mProcessingHandler = taskController.getProcessingHandler(); // 渲染线程
         mType = taskController.getReservedType();
     }
 
@@ -64,9 +72,23 @@ public abstract class ProcessingTask {
         return mTaskController.getContext();
     }
 
+    public void setOriginal(Bitmap bitmap) {
+
+    };
+
     public abstract Result doInBackground(Request message);
+
     public abstract void onResult(Result message);
-    public void onUpdate(Update message) {}
-    public boolean isPriorityTask() { return false; }
-    public boolean isDelayedTask() { return false; }
+
+    public void onUpdate(Update message) {
+
+    }
+
+    public boolean isPriorityTask() {
+        return false;
+    }
+
+    public boolean isDelayedTask() {
+        return false;
+    }
 }

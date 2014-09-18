@@ -5,7 +5,7 @@ import android.graphics.Rect;
 import com.xjt.newpic.R;
 import com.xjt.newpic.edit.editors.EditorGrad;
 import com.xjt.newpic.edit.imageshow.Line;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
 import com.xjt.newpic.surpport.JsonReader;
 import com.xjt.newpic.surpport.JsonWriter;
 
@@ -228,7 +228,7 @@ public class FilterGradRepresentation extends FilterRepresentation implements Li
         mBands.remove(mCurrentBand);
         trimVector();
         if (getNumberOfBands() == 0) {
-            addBand(MasterImage.getImage().getOriginalBounds());
+            addBand(ImageManager.getImage().getOriginalBounds());
         }
         mCurrentBand = mBands.get(0);
     }

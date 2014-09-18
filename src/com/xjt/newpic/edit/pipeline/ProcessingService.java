@@ -19,10 +19,8 @@ import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.filters.FiltersManager;
 import com.xjt.newpic.edit.filters.ImageFilter;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
 import com.xjt.newpic.edit.tools.SaveImage;
-
-import java.io.File;
 
 public class ProcessingService extends Service {
 
@@ -50,7 +48,7 @@ public class ProcessingService extends Service {
     private HighresRenderingRequestTask mHighresRenderingRequestTask;
     private FullresRenderingRequestTask mFullresRenderingRequestTask;
 
-    private UpdatePreviewTask mUpdatePreviewTask;
+    private PreviewRenderingRequestTask mUpdatePreviewTask;
     private ImageSavingTask mImageSavingTask;
 
     private boolean mSaving = false;
@@ -96,10 +94,10 @@ public class ProcessingService extends Service {
         mHighresRenderingRequestTask.setHighresPreviewScaleFactor(highResPreviewScale);
     }
 
-    public void updatePreviewBuffer() {
+    public void postPreviewRenderingRequest() {
         mHighresRenderingRequestTask.stop();
         mFullresRenderingRequestTask.stop();
-        mUpdatePreviewTask.updatePreview();
+        mUpdatePreviewTask.postRenderingRequest();
     }
 
     public void postRenderingRequest(RenderingRequest request) {
@@ -132,6 +130,21 @@ public class ProcessingService extends Service {
         mFullresRenderingRequestTask.postRenderingRequest(request);
     }
 
+    private void postSavingRequest(Uri selectedUri, ImagePreset preset, Bitmap previewImage, int quality, float sizeFactor, boolean exit) {
+        mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotifyMgr.cancelAll();
+        mBuilder = new NotificationCompat.Builder(this);
+        if (ApiHelper.AT_LEAST_11)
+            mBuilder.setSmallIcon(R.drawable.filtershow_button_fx);
+        mBuilder.setContentTitle(getString(R.string.filtershow_notification_label));
+        mBuilder.setContentText(getString(R.string.filtershow_notification_message));
+        startForeground(mNotificationId, mBuilder.build());
+        updateProgress(SaveImage.MAX_PROCESSING_STEPS, 0);
+
+        // Process the image
+        mImageSavingTask.postRenderingRequest(selectedUri, preset, previewImage, quality, sizeFactor, exit);
+    }
+
     public static Intent getSaveIntent(Context context, ImagePreset preset, Uri selectedImageUri,
             int quality, float sizeFactor, boolean needsExit) {
         Intent processIntent = new Intent(context, ProcessingService.class);
@@ -149,10 +162,11 @@ public class ProcessingService extends Service {
     public void onCreate() {
         mProcessingTaskController = new ProcessingTaskController(this);
         mImageSavingTask = new ImageSavingTask(this);
-        mUpdatePreviewTask = new UpdatePreviewTask();
+        mUpdatePreviewTask = new PreviewRenderingRequestTask();
         mHighresRenderingRequestTask = new HighresRenderingRequestTask();
         mFullresRenderingRequestTask = new FullresRenderingRequestTask();
         mRenderingRequestTask = new RenderingRequestTask();
+        // 添加任务到任务控制器
         mProcessingTaskController.add(mImageSavingTask);
         mProcessingTaskController.add(mUpdatePreviewTask);
         mProcessingTaskController.add(mHighresRenderingRequestTask);
@@ -188,7 +202,7 @@ public class ProcessingService extends Service {
             ImagePreset preset = new ImagePreset();
             preset.readJsonFromString(presetJson);
             mSaving = true;
-            handleSaveRequest(selectedUri, preset, MasterImage.getImage().getHighresImage(), quality, sizeFactor, exit);
+            postSavingRequest(selectedUri, preset, ImageManager.getImage().getHighresImage(), quality, sizeFactor, exit);
         }
         return START_REDELIVER_INTENT;
     }
@@ -198,27 +212,7 @@ public class ProcessingService extends Service {
         tearDownPipeline();
         mProcessingTaskController.quit();
     }
-
-    public void handleSaveRequest(Uri selectedUri, ImagePreset preset, Bitmap previewImage, int quality, float sizeFactor, boolean exit) {
-        mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        mNotifyMgr.cancelAll();
-        mBuilder = new NotificationCompat.Builder(this);
-        if (ApiHelper.AT_LEAST_11)
-            mBuilder.setSmallIcon(R.drawable.filtershow_button_fx);
-        mBuilder.setContentTitle(getString(R.string.filtershow_notification_label));
-        mBuilder.setContentText(getString(R.string.filtershow_notification_message));
-        startForeground(mNotificationId, mBuilder.build());
-        updateProgress(SaveImage.MAX_PROCESSING_STEPS, 0);
-
-        // Process the image
-        mImageSavingTask.saveImage(selectedUri, preset, previewImage, quality, sizeFactor, exit);
-    }
-
-    public void updateNotificationWithBitmap(Bitmap bitmap) {
-        mBuilder.setLargeIcon(bitmap);
-        mNotifyMgr.notify(mNotificationId, mBuilder.build());
-    }
-
+//
     public void updateProgress(int max, int current) {
         mBuilder.setProgress(max, current, false);
         mNotifyMgr.notify(mNotificationId, mBuilder.build());

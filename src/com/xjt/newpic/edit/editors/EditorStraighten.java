@@ -8,7 +8,7 @@ import com.xjt.newpic.R;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
 import com.xjt.newpic.edit.filters.FilterStraightenRepresentation;
 import com.xjt.newpic.edit.imageshow.ImageStraighten;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
 
 public class EditorStraighten extends Editor implements EditorInfo {
     public static final String TAG = EditorStraighten.class.getSimpleName();
@@ -40,7 +40,7 @@ public class EditorStraighten extends Editor implements EditorInfo {
 
     @Override
     public void reflectCurrentFilter() {
-        MasterImage master = MasterImage.getImage();
+        ImageManager master = ImageManager.getImage();
         master.setCurrentFilterRepresentation(master.getPreset().getFilterWithSerializationName(
                 FilterStraightenRepresentation.SERIALIZATION_NAME));
         super.reflectCurrentFilter();

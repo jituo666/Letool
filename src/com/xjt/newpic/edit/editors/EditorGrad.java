@@ -20,7 +20,7 @@ import com.xjt.newpic.edit.controller.ParameterActionAndInt;
 import com.xjt.newpic.edit.filters.FilterGradRepresentation;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
 import com.xjt.newpic.edit.imageshow.ImageGrad;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
 import com.xjt.newpic.surpport.PopupMenu;
 import com.xjt.newpic.surpport.PopupMenuItem;
 
@@ -330,7 +330,7 @@ public class EditorGrad extends ParametricEditor implements OnSeekBarChangeListe
         if (rep == null) {
             return;
         }
-        rep.addBand(MasterImage.getImage().getOriginalBounds());
+        rep.addBand(ImageManager.getImage().getOriginalBounds());
         updateSeekBar(rep);
 
         commitLocalRepresentation();

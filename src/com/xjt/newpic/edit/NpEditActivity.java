@@ -64,13 +64,14 @@ import com.xjt.newpic.edit.filters.FilterDrawRepresentation;
 import com.xjt.newpic.edit.filters.FilterMirrorRepresentation;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
 import com.xjt.newpic.edit.filters.FilterRotateRepresentation;
+import com.xjt.newpic.edit.filters.FilterFxRepresentation;
 import com.xjt.newpic.edit.filters.FilterUserPresetRepresentation;
 import com.xjt.newpic.edit.filters.FiltersManager;
 import com.xjt.newpic.edit.filters.ImageFilter;
 import com.xjt.newpic.edit.history.HistoryItem;
 import com.xjt.newpic.edit.history.HistoryManager;
 import com.xjt.newpic.edit.imageshow.ImageShow;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
 import com.xjt.newpic.edit.imageshow.Spline;
 import com.xjt.newpic.edit.pipeline.CachingPipeline;
 import com.xjt.newpic.edit.pipeline.ImagePreset;
@@ -96,7 +97,7 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
     public static final String FILTER_EDIT_ACTION = "com.xjt.newpic.edit";
     public static final boolean RESET_TO_LOADED = false;
 
-    private MasterImage mMasterImage = null;
+    private ImageManager mMasterImage = null;
     private ImageShow mImageShow = null;
 
     private WeakReference<ProgressDialog> mSavingProgressDialog;
@@ -128,21 +129,21 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
     private View mReset;
     private View mSave;
 
-    private ProcessingService mBoundService;
+    private ProcessingService mProcessingService;
     private LoadBitmapTask mLoadBitmapTask;
 
     private ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
-            mBoundService = ((ProcessingService.LocalBinder) service).getService();
-            mBoundService.setFiltershowActivity(NpEditActivity.this);
-            mBoundService.onStart();
+            mProcessingService = ((ProcessingService.LocalBinder) service).getService();
+            mProcessingService.setFiltershowActivity(NpEditActivity.this);
+            mProcessingService.onStart();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName className) {
-            mBoundService = null;
+            mProcessingService = null;
         }
     };
 
@@ -287,14 +288,6 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
         for (FilterRepresentation representation : filtersRepresentations) {
             mCategoryLooksAdapter.add(new CategoryAction(this, representation, CategoryAction.FULL_VIEW));
         }
-
-//        Fragment panel = getSupportFragmentManager().findFragmentByTag(CategoryMainPanel.FRAGMENT_TAG);
-//        if (panel != null) {
-//            if (panel instanceof CategoryMainPanel) {
-//                CategoryMainPanel mainPanel = (CategoryMainPanel) panel;
-//                mainPanel.loadCategoryLookPanel(true);
-//            }
-//        }
     }
 
     public void removeLook(CategoryAction action) {
@@ -409,49 +402,46 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
         if (filterRepresentation == null) {
             return;
         }
-        ImagePreset oldPreset = MasterImage.getImage().getPreset();
+        ImagePreset oldPreset = ImageManager.getImage().getPreset();
         ImagePreset copy = new ImagePreset(oldPreset);
         copy.removeFilter(filterRepresentation);
-        MasterImage.getImage().setPreset(copy, copy.getLastRepresentation(), true);
-        if (MasterImage.getImage().getCurrentFilterRepresentation() == filterRepresentation) {
+        ImageManager.getImage().setPreset(copy, copy.getLastRepresentation(), true);
+        if (ImageManager.getImage().getCurrentFilterRepresentation() == filterRepresentation) {
             FilterRepresentation lastRepresentation = copy.getLastRepresentation();
-            MasterImage.getImage().setCurrentFilterRepresentation(lastRepresentation);
+            ImageManager.getImage().setCurrentFilterRepresentation(lastRepresentation);
         }
     }
 
-    public void useFilterRepresentation(FilterRepresentation filterRepresentation) {
+    private void useFilterRepresentation(FilterRepresentation filterRepresentation) {
         if (filterRepresentation == null) {
             return;
         }
         if (!(filterRepresentation instanceof FilterRotateRepresentation)
                 && !(filterRepresentation instanceof FilterMirrorRepresentation)
-                && MasterImage.getImage().getCurrentFilterRepresentation() == filterRepresentation) {
+                && ImageManager.getImage().getCurrentFilterRepresentation() == filterRepresentation) {
             return;
         }
         if (filterRepresentation instanceof FilterUserPresetRepresentation
                 || filterRepresentation instanceof FilterRotateRepresentation
                 || filterRepresentation instanceof FilterMirrorRepresentation) {
-            MasterImage.getImage().onNewLook(filterRepresentation);
+            ImageManager.getImage().onNewLook(filterRepresentation);
         }
-        ImagePreset oldPreset = MasterImage.getImage().getPreset();
+        ImagePreset oldPreset = ImageManager.getImage().getPreset();
         ImagePreset copy = new ImagePreset(oldPreset);
         FilterRepresentation representation = copy.getRepresentation(filterRepresentation);
         if (representation == null) {
             filterRepresentation = filterRepresentation.copy();
             copy.addFilter(filterRepresentation);
-        } else {
-            if (filterRepresentation.allowsSingleInstanceOnly()) {
-                // Don't just update the filter representation. Centralize the
-                // logic in the addFilter(), such that we can keep "None" as null.
-                if (!representation.equals(filterRepresentation)) {
-                    // Only do this if the filter isn't the same (state panel clicks can lead us here)
-                    copy.removeFilter(representation);
-                    copy.addFilter(filterRepresentation);
-                }
+        } else if (filterRepresentation.allowsSingleInstanceOnly()) {
+            // Don't just update the filter representation. Centralize the logic in the addFilter(), such that we can keep "None" as null.
+            if (!representation.equals(filterRepresentation)) {
+                // Only do this if the filter isn't the same (state panel clicks can lead us here)
+                copy.removeFilter(representation);
+                copy.addFilter(filterRepresentation);
             }
         }
-        MasterImage.getImage().setPreset(copy, filterRepresentation, true);
-        MasterImage.getImage().setCurrentFilterRepresentation(filterRepresentation);
+        ImageManager.getImage().setPreset(copy, filterRepresentation, true);
+        ImageManager.getImage().setCurrentFilterRepresentation(filterRepresentation);
     }
 
     public void showRepresentation(FilterRepresentation representation) {
@@ -467,14 +457,14 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
             r.cycle();
         }
         if (representation.isBooleanFilter()) {
-            ImagePreset preset = MasterImage.getImage().getPreset();
+            ImagePreset preset = ImageManager.getImage().getPreset();
             if (preset.getRepresentation(representation) != null) {
                 // remove
                 ImagePreset copy = new ImagePreset(preset);
                 copy.removeFilter(representation);
                 FilterRepresentation filterRepresentation = representation.copy();
-                MasterImage.getImage().setPreset(copy, filterRepresentation, true);
-                MasterImage.getImage().setCurrentFilterRepresentation(null);
+                ImageManager.getImage().setPreset(copy, filterRepresentation, true);
+                ImageManager.getImage().setCurrentFilterRepresentation(null);
                 return;
             }
         }
@@ -516,7 +506,7 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
     }
 
     public ProcessingService getProcessingService() {
-        return mBoundService;
+        return mProcessingService;
     }
 
     public void onShowMenu(PopupMenu menu) {
@@ -531,42 +521,6 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
         }
         mCurrentMenu.setOnDismissListener(null);
         mCurrentMenu = null;
-    }
-
-    private class LoadHighresBitmapTask extends AsyncTask<Void, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            MasterImage master = MasterImage.getImage();
-            if (master.supportsHighRes()) {
-                Rect originalBounds = master.getOriginalBounds();
-                int highresPreviewSize = master.getOriginalBitmapLarge().getWidth() * 2;
-                if (highresPreviewSize > originalBounds.width()) {
-                    highresPreviewSize = originalBounds.width();
-                }
-                Rect bounds = new Rect();
-                Bitmap originalHires = ImageLoader.loadOrientedConstrainedBitmap(master.getUri(),
-                        master.getActivity(), highresPreviewSize,
-                        master.getOrientation(), bounds);
-                LLog.i(TAG, "--------------------------LoadHighresBitmapTask w:" + originalHires.getWidth() + ":" + " h" + originalHires.getHeight()
-                        + " size:" + originalHires.getWidth() * 4 * originalHires.getHeight());
-                master.setOriginalBounds(bounds);
-                master.setOriginalBitmapHighres(originalHires);
-                mBoundService.setOriginalBitmapHighres(originalHires);
-                master.warnListeners();
-            }
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean result) {
-            Bitmap highresBitmap = MasterImage.getImage().getOriginalBitmapHighres();
-            if (highresBitmap != null) {
-                float highResPreviewScale = (float) highresBitmap.getWidth() / (float) MasterImage.getImage().getOriginalBounds().width();
-                mBoundService.setHighresPreviewScaleFactor(highResPreviewScale);
-            }
-            MasterImage.getImage().warnListeners();
-        }
     }
 
     public boolean isLoadingVisible() {
@@ -588,15 +542,15 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
 
     private class LoadBitmapTask extends AsyncTask<Uri, Boolean, Boolean> {
 
-        int mBitmapSize;
+        int mScreenBitmapSize;
 
         public LoadBitmapTask() {
-            mBitmapSize = getScreenImageSize();
+            mScreenBitmapSize = getScreenImageSize();
         }
 
         @Override
         protected Boolean doInBackground(Uri... params) {
-            if (!MasterImage.getImage().loadBitmap(params[0], mBitmapSize)) {
+            if (!ImageManager.getImage().loadBitmap(params[0], mScreenBitmapSize)) {
                 return false;
             }
             return true;
@@ -604,7 +558,7 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
 
         @Override
         protected void onPostExecute(Boolean result) {
-            MasterImage.setMaster(mMasterImage);
+            ImageManager.setMaster(mMasterImage);
             if (isCancelled()) {
                 return;
             }
@@ -616,26 +570,59 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
             final View imageShow = findViewById(R.id.imageShow);
             imageShow.startAnimation(AnimationUtils.loadAnimation(NpEditActivity.this, R.anim.fade_in));
             imageShow.setVisibility(View.VISIBLE);
-            Bitmap largeBitmap = MasterImage.getImage().getOriginalBitmapLarge();
-            mBoundService.setOriginalBitmap(largeBitmap);
-            float previewScale = (float) largeBitmap.getWidth() / (float) MasterImage.getImage().getOriginalBounds().width();
-            mBoundService.setPreviewScaleFactor(previewScale);
+            Bitmap largeBitmap = ImageManager.getImage().getOriginalBitmapLarge();
+            mProcessingService.setOriginalBitmap(largeBitmap);
+            float previewScale = (float) largeBitmap.getWidth() / (float) ImageManager.getImage().getOriginalBounds().width();
+            mProcessingService.setPreviewScaleFactor(previewScale);
             mCategoryLooksAdapter.imageLoaded();
             mCategoryBordersAdapter.imageLoaded();
             mCategoryGeometryAdapter.imageLoaded();
             mCategoryFiltersAdapter.imageLoaded();
             mLoadBitmapTask = null;
 
-            MasterImage.getImage().warnListeners();
+            ImageManager.getImage().warnListeners();
             loadActions();
             setDefaultPreset();
-            MasterImage.getImage().resetGeometryImages(true);
+            ImageManager.getImage().resetGeometryImages(true);
             LoadHighresBitmapTask highresLoad = new LoadHighresBitmapTask();
             highresLoad.execute();
-            MasterImage.getImage().warnListeners();
+            ImageManager.getImage().warnListeners();
             super.onPostExecute(result);
         }
 
+    }
+
+    private class LoadHighresBitmapTask extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            ImageManager master = ImageManager.getImage();
+            if (master.supportsHighRes()) {
+                Rect originalBounds = master.getOriginalBounds();
+                int highresPreviewSize = Math.max(master.getOriginalBitmapLarge().getWidth(), master.getOriginalBitmapLarge().getHeight()) * 2;
+                if (highresPreviewSize > Math.max(originalBounds.width(),originalBounds.height())) {
+                    highresPreviewSize = Math.max(originalBounds.width(),originalBounds.height());
+                }
+                Rect bounds = new Rect();
+                Bitmap originalHires = ImageLoader.loadOrientedConstrainedBitmap(master.getUri(),
+                        master.getActivity(), highresPreviewSize, master.getOrientation(), bounds);
+                master.setOriginalBounds(bounds);
+                master.setOriginalBitmapHighres(originalHires);
+                mProcessingService.setOriginalBitmapHighres(originalHires);
+                master.warnListeners();
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+            Bitmap highresBitmap = ImageManager.getImage().getOriginalBitmapHighres();
+            if (highresBitmap != null) {
+                float highResPreviewScale = (float) highresBitmap.getWidth() / (float) ImageManager.getImage().getOriginalBounds().width();
+                mProcessingService.setHighresPreviewScaleFactor(highResPreviewScale);
+            }
+            ImageManager.getImage().warnListeners();
+        }
     }
 
     private void clearGalleryBitmapPool() {
@@ -726,7 +713,7 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
     }
 
     public void print() {
-        Bitmap bitmap = MasterImage.getImage().getHighresImage();
+        Bitmap bitmap = ImageManager.getImage().getHighresImage();
         PrintHelper printer = new PrintHelper(this);
         printer.printBitmap("ImagePrint", bitmap);
     }
@@ -743,7 +730,7 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
     // ////////////////////////////////////// Some utility functions ////////////////////////////////////////
     public void invalidateViews() {
         for (ImageShow views : mImageViews) {
-            views.updateImage();
+            views.invalidate();
         }
     }
 
@@ -757,8 +744,8 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
     public void setupMasterImage() {
 
         HistoryManager historyManager = new HistoryManager();
-        MasterImage.reset();
-        mMasterImage = MasterImage.getImage();
+        ImageManager.reset();
+        mMasterImage = ImageManager.getImage();
         mMasterImage.setHistoryManager(historyManager);
         mMasterImage.setActivity(this);
 
@@ -791,8 +778,8 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
     public void showDefaultImageView() {
         mEditorPlaceHolder.hide();
         mImageShow.setVisibility(View.VISIBLE);
-        MasterImage.getImage().setCurrentFilter(null);
-        MasterImage.getImage().setCurrentFilterRepresentation(null);
+        ImageManager.getImage().setCurrentFilter(null);
+        ImageManager.getImage().setCurrentFilterRepresentation(null);
     }
 
     public void backToMain() {

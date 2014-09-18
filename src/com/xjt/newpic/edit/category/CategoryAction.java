@@ -10,7 +10,7 @@ import com.xjt.newpic.R;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
 
 public class CategoryAction {
 
@@ -26,7 +26,6 @@ public class CategoryAction {
     public static final int SPACER = 3;
     private int mType = CROP_VIEW;
     private NpEditActivity mContext;
-    private ArrayAdapter mAdapter;
     private boolean mCanBeRemoved = false;
     private boolean mIsDoubleAction = false;
 
@@ -84,8 +83,8 @@ public class CategoryAction {
         mName = name;
     }
 
-    public void setAdapter(ArrayAdapter adapter) {
-        mAdapter = adapter;
+    public void setAdapter(ArrayAdapter<?> adapter) {
+
     }
 
     public void setImageFrame(Rect imageFrame, int orientation) {
@@ -95,13 +94,7 @@ public class CategoryAction {
         if (getType() == CategoryAction.ADD_ACTION) {
             return;
         }
-//        clearBitmap();
         mImageFrame = imageFrame;
-//        Bitmap temp = MasterImage.getImage().getOriginalBitmapSmall();
-//        if (temp != null) {
-//            mImage = temp;
-//        }
-//        mAdapter.notifyDataSetChanged();
     }
 
     public Bitmap getImage() {
@@ -117,8 +110,8 @@ public class CategoryAction {
     }
 
     public void clearBitmap() {
-        if (mImage != null && mImage != MasterImage.getImage().getOriginalBitmapSmall()) {
-            MasterImage.getImage().getBitmapCache().cache(mImage);
+        if (mImage != null && mImage != ImageManager.getImage().getOriginalBitmapSmall()) {
+            ImageManager.getImage().getBitmapCache().cache(mImage);
         }
         mImage = null;
     }

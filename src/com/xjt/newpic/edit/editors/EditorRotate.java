@@ -12,7 +12,7 @@ import com.xjt.newpic.R;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
 import com.xjt.newpic.edit.filters.FilterRotateRepresentation;
 import com.xjt.newpic.edit.imageshow.ImageRotate;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
 
 public class EditorRotate extends Editor implements EditorInfo {
     public static final String TAG = EditorRotate.class.getSimpleName();
@@ -36,7 +36,7 @@ public class EditorRotate extends Editor implements EditorInfo {
 
     @Override
     public void reflectCurrentFilter() {
-        MasterImage master = MasterImage.getImage();
+        ImageManager master = ImageManager.getImage();
         master.setCurrentFilterRepresentation(master.getPreset()
                 .getFilterWithSerializationName(FilterRotateRepresentation.SERIALIZATION_NAME));
         super.reflectCurrentFilter();

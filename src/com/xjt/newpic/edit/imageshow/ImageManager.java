@@ -1,7 +1,7 @@
+
 package com.xjt.newpic.edit.imageshow;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -32,19 +32,19 @@ import com.xjt.newpic.edit.pipeline.SharedPreset;
 import java.util.List;
 import java.util.Vector;
 
-public class MasterImage implements RenderingRequestCaller {
+public class ImageManager implements RenderingRequestCaller {
 
-    private static final String TAG = MasterImage.class.getSimpleName();
+    private static final String TAG = ImageManager.class.getSimpleName();
 
     private static final boolean DISABLEZOOM = false;
     public static final int SMALL_BITMAP_DIM = 160;
-    public static final int MAX_BITMAP_DIM = 900;
+    public static final int MAX_BITMAP_DIM = 800;
 
     public static final int CIRCLE_ANIMATION = 1;
     public static final int ROTATE_ANIMATION = 2;
     public static final int MIRROR_ANIMATION = 3;
 
-    private static MasterImage sMasterImage = null;
+    private static ImageManager sMasterImage = null;
 
     private NpEditActivity mActivity = null;
 
@@ -90,7 +90,7 @@ public class MasterImage implements RenderingRequestCaller {
     private FilterRepresentation mCurrentFilterRepresentation;
 
     private float mScaleFactor = 1.0f;
-    private float mMaxScaleFactor = 3.0f; // TODO: base this on the current view / image
+    private float mMaxScaleFactor = 3.0f;
     private Point mTranslation = new Point();
     private Point mOriginalTranslation = new Point();
 
@@ -106,23 +106,23 @@ public class MasterImage implements RenderingRequestCaller {
         public void run() {
             for (int i = 0; i < mLoadListeners.size(); i++) {
                 ImageShow imageShow = mLoadListeners.elementAt(i);
-                imageShow.imageLoaded();
+                imageShow.invalidate();
             }
             invalidatePreview();
         }
     };
 
-    private MasterImage() {
+    private ImageManager() {
 
     }
 
-    public static void setMaster(MasterImage master) {
+    public static void setMaster(ImageManager master) {
         sMasterImage = master;
     }
 
-    public static MasterImage getImage() {
+    public static ImageManager getImage() {
         if (sMasterImage == null) {
-            sMasterImage = new MasterImage();
+            sMasterImage = new ImageManager();
         }
         return sMasterImage;
     }
@@ -401,8 +401,7 @@ public class MasterImage implements RenderingRequestCaller {
     }
 
     public synchronized boolean hasModifications() {
-        // TODO: We need to have a better same effects check to see if two
-        // presets are functionally the same. Right now, we are relying on a stricter check as equals().
+        // TODO: We need to have a better same effects check to see if two presets are functionally the same. Right now, we are relying on a stricter check as equals().
         ImagePreset loadedPreset = getLoadedPreset();
         if (mPreset == null) {
             if (loadedPreset == null) {
@@ -447,7 +446,6 @@ public class MasterImage implements RenderingRequestCaller {
         return mPreviewPreset;
     }
 
-
     public Bitmap getFilteredImage() {
         mPreviewBuffer.swapConsumerIfNeeded(); // get latest bitmap
         Buffer consumer = mPreviewBuffer.getConsumer();
@@ -456,7 +454,7 @@ public class MasterImage implements RenderingRequestCaller {
         }
         return null;
     }
-    
+
     public Bitmap getFiltersOnlyImage() {
         return mFiltersOnlyBitmap;
     }
@@ -532,20 +530,19 @@ public class MasterImage implements RenderingRequestCaller {
         if (mPreset == null) {
             return;
         }
-        LLog.i(TAG, "-------------------------------invalidatePreview :");
         mPreviewPreset.enqueuePreset(mPreset);
         mPreviewBuffer.invalidate();
         invalidatePartialPreview();
         invalidateHighresPreview();
         needsUpdatePartialPreview();
         needsUpdateHighResPreview();
-        mActivity.getProcessingService().updatePreviewBuffer();
+        mActivity.getProcessingService().postPreviewRenderingRequest(); // 动画等,过渡显示图像
     }
 
     public void setImageShowSize(int w, int h) {
         if (mImageShowSize.x != w || mImageShowSize.y != h) {
             mImageShowSize.set(w, h);
-            LLog.i(TAG, "-------------------------------setImageShowSize :");
+            LLog.i(TAG, "-------------------------------setImageShowSize w:" + w + " h:" + h);
             float maxWidth = mOriginalBounds.width() / (float) w;
             float maxHeight = mOriginalBounds.height() / (float) h;
             mMaxScaleFactor = Math.max(3.f, Math.max(maxWidth, maxHeight));
@@ -603,6 +600,7 @@ public class MasterImage implements RenderingRequestCaller {
         mCurrentFilterRepresentation = currentFilterRepresentation;
     }
 
+    //绘制高清显示的部分
     public void needsUpdateHighResPreview() {
         if (!mSupportsHighRes || mActivity.getProcessingService() == null || mPreset == null) {
             return;
@@ -612,6 +610,7 @@ public class MasterImage implements RenderingRequestCaller {
         invalidateHighresPreview();
     }
 
+    // 绘制放大侯的部分显示区域
     public void needsUpdatePartialPreview() {
         if (mPreset == null) {
             return;
@@ -620,7 +619,7 @@ public class MasterImage implements RenderingRequestCaller {
             invalidatePartialPreview();
             return;
         }
-        Matrix originalToScreen = MasterImage.getImage().originalImageToScreen();
+        Matrix originalToScreen = ImageManager.getImage().originalImageToScreen();
         if (originalToScreen == null) {
             return;
         }
@@ -630,7 +629,8 @@ public class MasterImage implements RenderingRequestCaller {
         screenToOriginal.mapRect(bounds);
         Rect rBounds = new Rect();
         bounds.roundOut(rBounds);
-        LLog.i(TAG, "-------------------------------postFullresRenderingRequest scle factor :" + getScaleFactor());
+        LLog.i(TAG, "-------------------------------postFullresRenderingRequest scle factor :" + getScaleFactor() + " originalToScreen:" + originalToScreen
+                + " rBounds:" + rBounds);
         mActivity.getProcessingService().postFullresRenderingRequest(mPreset, getScaleFactor(), rBounds,
                 new Rect(0, 0, mImageShowSize.x, mImageShowSize.y), this);
         invalidatePartialPreview();
@@ -676,14 +676,12 @@ public class MasterImage implements RenderingRequestCaller {
             mTranslation.y = 0;
             return;
         }
-        LLog.i(TAG, "-------------------------------setTranslation :");
         mTranslation.x = translation.x;
         mTranslation.y = translation.y;
         needsUpdatePartialPreview();
     }
 
     public void resetTranslation() {
-        LLog.i(TAG, "-------------------------------resetTranslation :");
         mTranslation.x = 0;
         mTranslation.y = 0;
         needsUpdatePartialPreview();
@@ -705,6 +703,7 @@ public class MasterImage implements RenderingRequestCaller {
         return mScaleFactor;
     }
 
+    // 在预览图(imageshow)上的触摸，双击、放大缩小操作引起的mScaleFactor变化
     public void setScaleFactor(float scaleFactor) {
         if (DISABLEZOOM || scaleFactor == mScaleFactor) {
             return;

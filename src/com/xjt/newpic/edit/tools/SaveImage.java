@@ -38,9 +38,6 @@ public class SaveImage {
 
     private static final String TAG = SaveImage.class.getSimpleName();
 
-    /**
-     * Callback for updates
-     */
     public interface Callback {
 
         void onPreviewSaved(Uri uri);

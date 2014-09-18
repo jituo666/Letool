@@ -17,7 +17,7 @@ import com.xjt.newpic.edit.controller.FilterView;
 import com.xjt.newpic.edit.controller.Parameter;
 import com.xjt.newpic.edit.filters.FilterChanSatRepresentation;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
 import com.xjt.newpic.edit.pipeline.ImagePreset;
 import com.xjt.newpic.surpport.PopupMenuItem;
 import com.xjt.newpic.surpport.PopupMenu;
@@ -183,7 +183,7 @@ public class EditorChanSat extends ParametricEditor implements OnSeekBarChangeLi
         rep = (FilterChanSatRepresentation) rep.copy();
         ImagePreset preset = new ImagePreset();
         preset.addFilter(rep);
-        Bitmap src = MasterImage.getImage().getThumbnailBitmap();
+        Bitmap src = ImageManager.getImage().getThumbnailBitmap();
         caller.available(src);
     }
 

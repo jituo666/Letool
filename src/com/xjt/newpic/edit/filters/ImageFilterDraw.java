@@ -14,7 +14,7 @@ import android.graphics.PorterDuffColorFilter;
 
 import com.xjt.newpic.R;
 import com.xjt.newpic.edit.filters.FilterDrawRepresentation.StrokeData;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
 import com.xjt.newpic.edit.pipeline.FilterEnvironment;
 
 import java.util.Vector;
@@ -135,7 +135,7 @@ public class ImageFilterDraw extends ImageFilter {
             if (mBrush == null) {
                 BitmapFactory.Options opt = new BitmapFactory.Options();
                 opt.inPreferredConfig = Bitmap.Config.ALPHA_8;
-                mBrush = BitmapFactory.decodeResource(MasterImage.getImage().getActivity()
+                mBrush = BitmapFactory.decodeResource(ImageManager.getImage().getActivity()
                         .getResources(), mBrushID, opt);
                 mBrush = mBrush.extractAlpha();
             }

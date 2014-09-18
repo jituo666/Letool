@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 
 import com.xjt.newpic.R;
 import com.xjt.newpic.edit.NpEditActivity;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
 
 public class CategoryMainPanel extends Fragment {
 
@@ -167,7 +167,7 @@ public class CategoryMainPanel extends Fragment {
         if (mCurrentSelected == GEOMETRY) {
             return;
         }
-        if (MasterImage.getImage().hasTinyPlanet()) {
+        if (ImageManager.getImage().hasTinyPlanet()) {
             return;
         }
         boolean fromRight = isRightAnimation(GEOMETRY);

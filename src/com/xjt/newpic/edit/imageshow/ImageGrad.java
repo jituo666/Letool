@@ -98,7 +98,7 @@ public class ImageGrad extends ImageShow {
         float y = event.getY();
 
         mEllipse.setScrImageInfo(getScreenToImageMatrix(true),
-                MasterImage.getImage().getOriginalBounds());
+                ImageManager.getImage().getOriginalBounds());
 
         switch (mask) {
             case (MotionEvent.ACTION_DOWN): {
@@ -131,8 +131,8 @@ public class ImageGrad extends ImageShow {
         };
 
         if (c1[0] == -1) {
-            float cx = MasterImage.getImage().getOriginalBounds().width() / 2;
-            float cy = MasterImage.getImage().getOriginalBounds().height() / 2;
+            float cx = ImageManager.getImage().getOriginalBounds().width() / 2;
+            float cy = ImageManager.getImage().getOriginalBounds().height() / 2;
             float rx = Math.min(cx, cy) * .4f;
 
             mGradRep.setPoint1(cx, cy - rx);

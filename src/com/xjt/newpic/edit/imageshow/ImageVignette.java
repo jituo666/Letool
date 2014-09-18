@@ -122,8 +122,8 @@ public class ImageVignette extends ImageShow {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        int w = MasterImage.getImage().getOriginalBounds().width();
-        int h = MasterImage.getImage().getOriginalBounds().height();
+        int w = ImageManager.getImage().getOriginalBounds().width();
+        int h = ImageManager.getImage().getOriginalBounds().height();
         int mask = event.getActionMasked();
         if (mActiveHandle == -1) {
             if (MotionEvent.ACTION_DOWN != mask) {
@@ -148,7 +148,7 @@ public class ImageVignette extends ImageShow {
         float y = event.getY();
 
         mElipse.setScrImageInfo(new Matrix(),
-                MasterImage.getImage().getOriginalBounds());
+                ImageManager.getImage().getOriginalBounds());
 
         boolean didComputeEllipses = false;
         switch (mask) {
@@ -180,8 +180,8 @@ public class ImageVignette extends ImageShow {
         if (mVignetteRep == null) {
             return;
         }
-        float w = MasterImage.getImage().getOriginalBounds().width();
-        float h = MasterImage.getImage().getOriginalBounds().height();
+        float w = ImageManager.getImage().getOriginalBounds().width();
+        float h = ImageManager.getImage().getOriginalBounds().height();
         Matrix toImg = getScreenToImageMatrix(false);
         Matrix toScr = new Matrix();
         toImg.invert(toScr);
@@ -209,8 +209,8 @@ public class ImageVignette extends ImageShow {
         if (mVignetteRep == null) {
             return;
         }
-        float w = MasterImage.getImage().getOriginalBounds().width();
-        float h = MasterImage.getImage().getOriginalBounds().height();
+        float w = ImageManager.getImage().getOriginalBounds().width();
+        float h = ImageManager.getImage().getOriginalBounds().height();
         Matrix toImg = getScreenToImageMatrix(false);
         Matrix toScr = new Matrix();
         toImg.invert(toScr);

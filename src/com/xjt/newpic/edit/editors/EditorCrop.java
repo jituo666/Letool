@@ -15,7 +15,7 @@ import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.filters.FilterCropRepresentation;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
 import com.xjt.newpic.edit.imageshow.ImageCrop;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
 import com.xjt.newpic.surpport.PopupMenu;
 import com.xjt.newpic.surpport.PopupMenuItem;
 
@@ -83,7 +83,7 @@ public class EditorCrop extends Editor implements EditorInfo {
 
     @Override
     public void reflectCurrentFilter() {
-        MasterImage master = MasterImage.getImage();
+        ImageManager master = ImageManager.getImage();
         master.setCurrentFilterRepresentation(master.getPreset() .getFilterWithSerializationName(FilterCropRepresentation.SERIALIZATION_NAME));
         super.reflectCurrentFilter();
         FilterRepresentation rep = getLocalRepresentation();

@@ -3,18 +3,18 @@ package com.xjt.newpic.edit.pipeline;
 import android.graphics.Bitmap;
 
 import com.xjt.newpic.edit.filters.FiltersManager;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
 
-public class UpdatePreviewTask extends ProcessingTask {
-    private static final String TAG = UpdatePreviewTask.class.getSimpleName();
+public class PreviewRenderingRequestTask extends ProcessingTask {
+    
+    private static final String TAG = PreviewRenderingRequestTask.class.getSimpleName();
     
     private CachingPipeline mPreviewPipeline = null;
     private boolean mHasUnhandledPreviewRequest = false;
     private boolean mPipelineIsOn = false;
 
-    public UpdatePreviewTask() {
-        mPreviewPipeline = new CachingPipeline(
-                FiltersManager.getPreviewManager(), "Preview");
+    public PreviewRenderingRequestTask() {
+        mPreviewPipeline = new CachingPipeline(FiltersManager.getPreviewManager(), "Preview");
     }
 
     public void setOriginal(Bitmap bitmap) {
@@ -22,7 +22,7 @@ public class UpdatePreviewTask extends ProcessingTask {
         mPipelineIsOn = true;
     }
 
-    public void updatePreview() {
+    public void postRenderingRequest() {
         if (!mPipelineIsOn) {
             return;
         }
@@ -39,8 +39,8 @@ public class UpdatePreviewTask extends ProcessingTask {
 
     @Override
     public Result doInBackground(Request message) {
-        SharedBuffer buffer = MasterImage.getImage().getPreviewBuffer();
-        SharedPreset preset = MasterImage.getImage().getPreviewPreset();
+        SharedBuffer buffer = ImageManager.getImage().getPreviewBuffer();
+        SharedPreset preset = ImageManager.getImage().getPreviewPreset();
         ImagePreset renderingPreset = preset.dequeuePreset();
         if (renderingPreset != null) {
             mPreviewPipeline.compute(buffer, renderingPreset, 0);
@@ -54,9 +54,9 @@ public class UpdatePreviewTask extends ProcessingTask {
 
     @Override
     public void onResult(Result message) {
-        MasterImage.getImage().notifyObservers();
+        ImageManager.getImage().notifyObservers();
         if (mHasUnhandledPreviewRequest) {
-            updatePreview();
+            postRenderingRequest();
         }
     }
 

@@ -216,7 +216,7 @@ public class ImageCrop extends ImageShow {
     }
 
     private void forceStateConsistency() {
-        MasterImage master = MasterImage.getImage();
+        ImageManager master = ImageManager.getImage();
         Bitmap image = master.getFiltersOnlyImage();
         int width = image.getWidth();
         int height = image.getHeight();
@@ -243,9 +243,9 @@ public class ImageCrop extends ImageShow {
 
     @Override
     public void onDraw(Canvas canvas) {
-        Bitmap bitmap = MasterImage.getImage().getFiltersOnlyImage();
+        Bitmap bitmap = ImageManager.getImage().getFiltersOnlyImage();
         if (bitmap == null) {
-            MasterImage.getImage().invalidateFiltersOnly();
+            ImageManager.getImage().invalidateFiltersOnly();
         }
         if (!mValidDraw || bitmap == null) {
             return;

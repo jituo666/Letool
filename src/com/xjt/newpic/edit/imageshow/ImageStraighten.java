@@ -224,10 +224,10 @@ public class ImageStraighten extends ImageShow {
 
     @Override
     public void onDraw(Canvas canvas) {
-        MasterImage master = MasterImage.getImage();
+        ImageManager master = ImageManager.getImage();
         Bitmap image = master.getFiltersOnlyImage();
         if (image == null) {
-            MasterImage.getImage().invalidateFiltersOnly();
+            ImageManager.getImage().invalidateFiltersOnly();
             return;
         }
         GeometryMathUtils.initializeHolder(mDrawHolder, mLocalRep);

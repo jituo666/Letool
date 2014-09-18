@@ -6,7 +6,7 @@ import android.graphics.Rect;
 
 import com.xjt.newpic.R;
 import com.xjt.newpic.edit.cache.ImageLoader;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
 
 public class ImageFilterDownSample extends SimpleImageFilter {
     private static final String SERIALIZATION_NAME = "DOWNSAMPLE";
@@ -43,7 +43,7 @@ public class ImageFilterDownSample extends SimpleImageFilter {
         int p = getParameters().getValue();
 
         // size of original precached image
-        Rect size = MasterImage.getImage().getOriginalBounds();
+        Rect size = ImageManager.getImage().getOriginalBounds();
         int orig_w = size.width();
         int orig_h = size.height();
 

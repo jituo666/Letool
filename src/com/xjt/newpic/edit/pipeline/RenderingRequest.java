@@ -9,9 +9,10 @@ import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.cache.BitmapCache;
 import com.xjt.newpic.edit.filters.FiltersManager;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
+import com.xjt.newpic.edit.pipeline.ProcessingTask.Request;
 
-public class RenderingRequest {
+public class RenderingRequest implements Request {
 
     private static final String TAG = RenderingRequest.class.getSimpleName();
 
@@ -50,13 +51,13 @@ public class RenderingRequest {
             CachingPipeline pipeline = new CachingPipeline(FiltersManager.getManager(), "Icon");
             bitmap = pipeline.renderGeometryIcon(source, preset);
         } else if (type != PARTIAL_RENDERING && type != HIGHRES_RENDERING && type != GEOMETRY_RENDERING && type != FILTERS_RENDERING) {
-            bitmap = MasterImage.getImage().getBitmapCache().getBitmap(source.getWidth(), source.getHeight(), BitmapCache.RENDERING_REQUEST);
+            bitmap = ImageManager.getImage().getBitmapCache().getBitmap(source.getWidth(), source.getHeight(), BitmapCache.RENDERING_REQUEST);
         }
 
         request.setBitmap(bitmap);
         ImagePreset passedPreset = new ImagePreset(preset);
         request.setOriginalImagePreset(preset);
-        request.setScaleFactor(MasterImage.getImage().getScaleFactor());
+        request.setScaleFactor(ImageManager.getImage().getScaleFactor());
 
         if (type == PARTIAL_RENDERING) {
             request.setBounds(bounds);
@@ -78,7 +79,7 @@ public class RenderingRequest {
         RenderingRequest request = new RenderingRequest();
         ImagePreset passedPreset = new ImagePreset(preset);
         request.setOriginalImagePreset(preset);
-        request.setScaleFactor(MasterImage.getImage().getScaleFactor());
+        request.setScaleFactor(ImageManager.getImage().getScaleFactor());
         request.setImagePreset(passedPreset);
         request.setType(RenderingRequest.ICON_RENDERING);
         request.setCaller(caller);

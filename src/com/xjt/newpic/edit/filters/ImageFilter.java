@@ -7,7 +7,7 @@ import android.support.v8.renderscript.Allocation;
 import android.widget.Toast;
 
 import com.xjt.newpic.edit.imageshow.GeometryMathUtils;
-import com.xjt.newpic.edit.imageshow.MasterImage;
+import com.xjt.newpic.edit.imageshow.ImageManager;
 import com.xjt.newpic.edit.pipeline.FilterEnvironment;
 
 public abstract class ImageFilter implements Cloneable {
@@ -73,7 +73,7 @@ public abstract class ImageFilter implements Cloneable {
 
     protected Matrix getOriginalToScreenMatrix(int w, int h) {
         return GeometryMathUtils.getImageToScreenMatrix(getEnvironment().getImagePreset()
-                .getGeometryFilters(), true, MasterImage.getImage().getOriginalBounds(), w, h);
+                .getGeometryFilters(), true, ImageManager.getImage().getOriginalBounds(), w, h);
     }
 
     public void setEnvironment(FilterEnvironment environment) {
