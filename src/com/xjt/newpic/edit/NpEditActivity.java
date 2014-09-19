@@ -21,7 +21,6 @@ import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.print.PrintHelper;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -709,13 +708,6 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
     @Override
     public void onResume() {
         super.onResume();
-
-    }
-
-    public void print() {
-        Bitmap bitmap = ImageManager.getImage().getHighresImage();
-        PrintHelper printer = new PrintHelper(this);
-        printer.printBitmap("ImagePrint", bitmap);
     }
 
     public void enableSave(boolean enable) {

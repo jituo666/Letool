@@ -155,9 +155,7 @@ public class FilterRepresentation {
         mFilterClass = filterClass;
     }
 
-    // This same() function is different from equals(), basically it checks
-    // whether 2 FilterRepresentations are the same type. It doesn't care about
-    // the values.
+    // This same() function is different from equals(), basically it checks whether 2 FilterRepresentations are the same type. It doesn't care about the values.
     public boolean same(FilterRepresentation b) {
         if (b == null) {
             return false;

@@ -233,9 +233,9 @@ public final class ImageLoader {
     }
 
     /**
+     * 部分显示PARTIAL_RENDERING时要用到这个函数
      * Returns the bitmap for the rectangular region given by "bounds"
-     * if it is a subset of the bitmap stored at uri.  Otherwise returns
-     * null.
+     * if it is a subset of the bitmap stored at uri.  Otherwise returns null.
      */
     public static Bitmap loadRegionBitmap(Context context, BitmapCache cache, Uri uri, BitmapFactory.Options options, Rect bounds) {
         InputStream is = null;

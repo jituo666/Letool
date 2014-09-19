@@ -1,10 +1,12 @@
+
 package com.xjt.newpic.edit.controller;
 
 import android.content.Context;
 
-import com.xjt.newpic.edit.pipeline.RenderingRequestCaller;
-
 public class BasicParameterStyle implements ParameterStyles {
+
+    private final String TAG = "BasicParameterStyle";
+
     protected String mParameterName;
     protected int mSelectedStyle;
     protected int mNumberOfStyles;
@@ -12,7 +14,6 @@ public class BasicParameterStyle implements ParameterStyles {
     protected Control mControl;
     protected FilterView mEditor;
     public final int ID;
-    private final String LOGTAG = "BasicParameterStyle";
 
     @Override
     public void copyFrom(Parameter src) {

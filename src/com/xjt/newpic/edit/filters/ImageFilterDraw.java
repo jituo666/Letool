@@ -13,6 +13,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 
 import com.xjt.newpic.R;
+import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.edit.filters.FilterDrawRepresentation.StrokeData;
 import com.xjt.newpic.edit.imageshow.ImageManager;
 import com.xjt.newpic.edit.pipeline.FilterEnvironment;
@@ -135,8 +136,7 @@ public class ImageFilterDraw extends ImageFilter {
             if (mBrush == null) {
                 BitmapFactory.Options opt = new BitmapFactory.Options();
                 opt.inPreferredConfig = Bitmap.Config.ALPHA_8;
-                mBrush = BitmapFactory.decodeResource(ImageManager.getImage().getActivity()
-                        .getResources(), mBrushID, opt);
+                mBrush = BitmapFactory.decodeResource(ImageManager.getImage().getActivity().getResources(), mBrushID, opt);
                 mBrush = mBrush.extractAlpha();
             }
             return mBrush;
@@ -236,8 +236,7 @@ public class ImageFilterDraw extends ImageFilter {
                 mOverlayBitmap.getHeight() != canvas.getHeight() ||
                 mParameters.getDrawing().size() < mCachedStrokes) {
 
-            mOverlayBitmap = Bitmap.createBitmap(
-                    canvas.getWidth(), canvas.getHeight(), Bitmap.Config.ARGB_8888);
+            mOverlayBitmap = Bitmap.createBitmap(canvas.getWidth(), canvas.getHeight(), Bitmap.Config.ARGB_8888);
             mCachedStrokes = 0;
         }
 

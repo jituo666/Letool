@@ -1,28 +1,37 @@
 
 package com.xjt.newpic.edit.filters;
 
+import com.xjt.newpic.R;
 import com.xjt.newpic.common.LLog;
 
 import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
-import android.graphics.Rect;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.RectF;
+import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.util.LongSparseArray;
 
-public class ImageFilterBorder extends ImageFilter {
+public class ImageFilterImageBorder extends ImageFilter {
 
-    private static final String TAG = ImageFilterBorder.class.getSimpleName();
+    private static final String TAG = ImageFilterImageBorder.class.getSimpleName();
 
     private FilterImageBorderRepresentation mParameters = null;
     private Resources mResources = null;
+    Paint mPaint = new Paint();
+    RectF mBounds = new RectF();
+    RectF mInsideBounds = new RectF();
+    Path mBorderPath = new Path();
 
     private LongSparseArray<Drawable> mDrawables = new LongSparseArray<Drawable>();
 
-    public ImageFilterBorder() {
+    public ImageFilterImageBorder() {
         mName = "Border";
     }
 
@@ -39,28 +48,39 @@ public class ImageFilterBorder extends ImageFilter {
         mDrawables.clear();
     }
 
-    public Bitmap applyHelper(Bitmap bitmap, float scale1, float scale2) {
-        int w = bitmap.getWidth();
-        int h = bitmap.getHeight();
-        Rect bounds = new Rect(0, 0, (int) (w * scale1), (int) (h * scale1));
-        Canvas canvas = new Canvas(bitmap);
-        canvas.scale(scale2, scale2);
-        Drawable drawable = getDrawable(getParameters().getDrawableResource(), bitmap.getHeight());
-        drawable.setBounds(bounds);
-        drawable.draw(canvas);
-        LLog.i(TAG, " --------------bitmap:" + bitmap.getWidth() + ":" + bitmap.getHeight());
-        return bitmap;
+    public void applyHelper(Canvas canvas, float scale, int w, int h) {
+        if (getParameters() == null) {
+            return;
+        }
+        float size = 16;//getParameters().getBorderSize();
+        float radius = 16;//getParameters().getBorderRadius();
+
+        mPaint.reset();
+        mPaint.setShader(new BitmapShader(BitmapFactory.decodeResource(mResources, R.drawable.ic_launcher), Shader.TileMode.REPEAT,Shader.TileMode.REPEAT));
+        mPaint.setAntiAlias(true);
+        mBounds.set(0, 0, w, h);
+        mBorderPath.reset();
+        mBorderPath.moveTo(0, 0);
+        float bs = size / 100.f * mBounds.width();
+        float r = radius / 100.f * mBounds.width();
+        mInsideBounds.set(mBounds.left + bs, mBounds.top + bs, mBounds.right - bs, mBounds.bottom - bs);
+        mBorderPath.moveTo(mBounds.left, mBounds.top);
+        mBorderPath.lineTo(mBounds.right, mBounds.top);
+        mBorderPath.lineTo(mBounds.right, mBounds.bottom);
+        mBorderPath.lineTo(mBounds.left, mBounds.bottom);
+        mBorderPath.addRoundRect(mInsideBounds, r, r, Path.Direction.CCW);
+        canvas.drawPath(mBorderPath, mPaint);
+
     }
 
-    @SuppressLint("NewApi")
     @Override
     public Bitmap apply(Bitmap bitmap, float scaleFactor, int quality) {
-        if (getParameters() == null || getParameters().getDrawableResource() == 0) {
+        if (getParameters() == null) {
             return bitmap;
         }
-        float scale2 = scaleFactor * 2.0f;
-        float scale1 = 1 / scale2;
-        return applyHelper(bitmap, scale1, scale2);
+        Canvas canvas = new Canvas(bitmap);
+        applyHelper(canvas, scaleFactor,bitmap.getWidth(), bitmap.getHeight());
+        return bitmap;
     }
 
     public void setResources(Resources resources) {

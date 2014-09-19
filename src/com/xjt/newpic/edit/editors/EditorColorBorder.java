@@ -28,7 +28,7 @@ public class EditorColorBorder extends ParametricEditor {
 
     public static final int ID = R.id.editorColorBorder;
 
-    int[] mBasColors = {
+    int[] mBasicColors = {
             FilterColorBorderRepresentation.DEFAULT_MENU_COLOR1,
             FilterColorBorderRepresentation.DEFAULT_MENU_COLOR2,
             FilterColorBorderRepresentation.DEFAULT_MENU_COLOR3,
@@ -67,8 +67,8 @@ public class EditorColorBorder extends ParametricEditor {
         FilterRepresentation rep = getLocalRepresentation();
         if (rep != null && getLocalRepresentation() instanceof FilterColorBorderRepresentation) {
             FilterColorBorderRepresentation cbRep = (FilterColorBorderRepresentation) getLocalRepresentation();
-            cbRep.setPramMode(FilterColorBorderRepresentation.PARAM_SIZE);
-            mParameterString = mContext.getString(R.string.color_border_size);
+            cbRep.setPramMode(FilterColorBorderRepresentation.PARAM_COLOR);
+            mParameterString = mContext.getString(R.string.color_border_color);
             if (mEditControl != null) {
                 control(cbRep.getCurrentParam(), mEditControl);
             }
@@ -78,7 +78,7 @@ public class EditorColorBorder extends ParametricEditor {
     @Override
     public void openUtilityPanel(final LinearLayout accessoryViewList) {
         Button view = (Button) accessoryViewList.findViewById(R.id.applyEffect);
-        view.setText(mContext.getString(R.string.color_border_size));
+        view.setText(mContext.getString(R.string.color_border_color));
         view.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -134,19 +134,19 @@ public class EditorColorBorder extends ParametricEditor {
                 clearFrame();
                 break;
         }
-        if (item.getItemId() != 3) {
+        if (item.getItemId() != FilterColorBorderRepresentation.PARAM_CLEAR) {
             mParameterString = item.getTitle().toString();
         }
         if (mControl instanceof ColorChooser) {
             ColorChooser c = (ColorChooser) mControl;
-            mBasColors = c.getColorSet();
+            mBasicColors = c.getColorSet();
         }
         if (mEditControl != null) {
             control(rep.getCurrentParam(), mEditControl);
         }
         if (mControl instanceof ColorChooser) {
             ColorChooser c = (ColorChooser) mControl;
-            c.setColorSet(mBasColors);
+            c.setColorSet(mBasicColors);
         }
         updateText();
         mControl.updateUI();

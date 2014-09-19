@@ -355,9 +355,7 @@ public class ImagePreset {
             }
         } else if (representation.getFilterType() == FilterRepresentation.TYPE_BORDER) {
             removeFilter(representation);
-            if (!isNoneBorderFilter(representation)) {
-                mFilters.add(representation);
-            }
+            mFilters.add(representation);
         } else if (representation.getFilterType() == FilterRepresentation.TYPE_FX) {
             boolean replaced = false;
             for (int i = 0; i < mFilters.size(); i++) {
@@ -393,11 +391,6 @@ public class ImagePreset {
         }
     }
 
-    private boolean isNoneBorderFilter(FilterRepresentation representation) {
-        return representation instanceof FilterImageBorderRepresentation &&
-                ((FilterImageBorderRepresentation) representation).getDrawableResource() == 0;
-    }
-
     private boolean isNoneFxFilter(FilterRepresentation representation) {
         return representation instanceof FilterFxRepresentation &&
                 ((FilterFxRepresentation) representation).getNameResource() == R.string.none;
@@ -415,8 +408,8 @@ public class ImagePreset {
 
     public Bitmap apply(Bitmap original, FilterEnvironment environment) {
         Bitmap bitmap = original;
-        bitmap = applyFilters(bitmap, -1, -1, environment);
-        return applyBorder(bitmap, environment);
+        bitmap = applyFilters(bitmap, -1, -1, environment); //用特效
+        return applyBorder(bitmap, environment); // 边框
     }
 
     public Collection<FilterRepresentation> getGeometryFilters() {
@@ -474,8 +467,6 @@ public class ImagePreset {
         FilterRepresentation border = getFilterRepresentationForType(FilterRepresentation.TYPE_BORDER);
         if (border != null && mDoApplyGeometry) {
             bitmap = environment.applyRepresentation(border, bitmap);
-            if (environment.getQuality() == FilterEnvironment.QUALITY_FINAL) {
-            }
         }
         return bitmap;
     }

@@ -266,7 +266,7 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
         }
 
         Bitmap fullHighres = masterImage.getPartialImage();
-        drawHighresImage(canvas, fullHighres);
+        drawHighresPartialImage(canvas, fullHighres);
 
         drawCompareImage(canvas, masterImage.getGeometryOnlyImage());
 
@@ -297,7 +297,7 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
         }
     }
 
-    private void drawHighresImage(Canvas canvas, Bitmap fullHighres) {
+    private void drawHighresPartialImage(Canvas canvas, Bitmap fullHighres) {
         Matrix originalToScreen = ImageManager.getImage().originalImageToScreen();
         if (fullHighres != null && originalToScreen != null) {
             Matrix screenToOriginal = new Matrix();

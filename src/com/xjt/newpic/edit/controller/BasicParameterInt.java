@@ -1,8 +1,10 @@
+
 package com.xjt.newpic.edit.controller;
 
-import android.util.Log;
-
 public class BasicParameterInt implements ParameterInteger {
+
+    private final String TAG = "BasicParameterInt";
+
     protected String mParameterName;
     protected Control mControl;
     protected int mMaximum = 100;
@@ -11,19 +13,6 @@ public class BasicParameterInt implements ParameterInteger {
     protected int mValue;
     public final int ID;
     protected FilterView mEditor;
-    private final String LOGTAG = "BasicParameterInt";
-
-    @Override
-    public void copyFrom(Parameter src) {
-        if (!(src instanceof BasicParameterInt)) {
-            throw new IllegalArgumentException(src.getClass().getName());
-        }
-        BasicParameterInt p = (BasicParameterInt) src;
-        mMaximum = p.mMaximum;
-        mMinimum = p.mMinimum;
-        mDefaultValue = p.mDefaultValue;
-        mValue = p.mValue;
-    }
 
     public BasicParameterInt(int id, int value) {
         ID = id;
@@ -93,5 +82,17 @@ public class BasicParameterInt implements ParameterInteger {
     @Override
     public void setFilterView(FilterView editor) {
         mEditor = editor;
+    }
+
+    @Override
+    public void copyFrom(Parameter src) {
+        if (!(src instanceof BasicParameterInt)) {
+            throw new IllegalArgumentException(src.getClass().getName());
+        }
+        BasicParameterInt p = (BasicParameterInt) src;
+        mMaximum = p.mMaximum;
+        mMinimum = p.mMinimum;
+        mDefaultValue = p.mDefaultValue;
+        mValue = p.mValue;
     }
 }

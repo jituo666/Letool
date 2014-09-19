@@ -24,6 +24,7 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
     protected ArrayList<FilterRepresentation> mTools = new ArrayList<FilterRepresentation>();
     protected ArrayList<FilterRepresentation> mEffects = new ArrayList<FilterRepresentation>();
     private static int mImageBorderSize = 4; // in percent
+    private static int mImageCornerRidus = 0;
 
     protected void init() {
         mFilters = new HashMap<Class<?>, ImageFilter>();
@@ -122,7 +123,7 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
         filters.add(ImageFilterEdge.class);
         filters.add(ImageFilterKMeans.class);
         filters.add(ImageFilterFx.class);
-        filters.add(ImageFilterBorder.class);
+        filters.add(ImageFilterImageBorder.class);
         filters.add(ImageFilterColorBorder.class);
     }
 
@@ -239,28 +240,27 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
 
         // The "no border" implementation
         int i = 0;
-        FilterRepresentation rep = new FilterImageBorderRepresentation(0, R.drawable.effect_sample_0);
-        mBorders.add(rep);
+        FilterRepresentation rep ;
 
-        // Regular borders
+//        // Regular borders
         ArrayList<FilterRepresentation> borderList = new ArrayList<FilterRepresentation>();
+//
+//        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_4x5, sampleid[0]);
+//        borderList.add(rep);
+//
+//        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_brush, sampleid[1]);
+//        borderList.add(rep);
+//
+//        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_grunge, sampleid[2]);
+//        borderList.add(rep);
+//
+//        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_sumi_e, sampleid[3]);
+//        borderList.add(rep);
 
-        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_4x5, sampleid[0]);
+        rep = new FilterImageBorderRepresentation(FilterColorBorderRepresentation.DEFAULT_MENU_COLOR1, mImageBorderSize, mImageCornerRidus, sampleid[4]);
         borderList.add(rep);
 
-        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_brush, sampleid[1]);
-        borderList.add(rep);
-
-        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_grunge, sampleid[2]);
-        borderList.add(rep);
-
-        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_sumi_e, sampleid[3]);
-        borderList.add(rep);
-
-        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_tape, sampleid[4]);
-        borderList.add(rep);
-
-        rep = new FilterColorBorderRepresentation(Color.BLACK, mImageBorderSize, mImageBorderSize, sampleid[5]);
+        rep = new FilterColorBorderRepresentation(FilterColorBorderRepresentation.DEFAULT_MENU_COLOR1, mImageBorderSize, mImageCornerRidus, sampleid[5]);
         borderList.add(rep);
 
 //        rep = new FilterColorBorderRepresentation(Color.BLACK, mImageBorderSize, mImageBorderSize, sampleid[6]);
@@ -356,8 +356,10 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
     }
 
     public void setFilterResources(Resources resources) {
-        ImageFilterBorder filterBorder = (ImageFilterBorder) getFilter(ImageFilterBorder.class);
+        ImageFilterImageBorder filterBorder = (ImageFilterImageBorder) getFilter(ImageFilterImageBorder.class);
         filterBorder.setResources(resources);
+        ImageFilterColorBorder c = (ImageFilterColorBorder) getFilter(ImageFilterColorBorder.class);
+        c.setResources(resources);
         ImageFilterFx filterFx = (ImageFilterFx) getFilter(ImageFilterFx.class);
         filterFx.setResources(resources);
     }

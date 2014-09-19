@@ -279,13 +279,14 @@ public class CachingPipeline implements PipelineInterface {
 
             LLog.v(TAG, "render image of type " + getType(request));
 
-            Bitmap bitmap = request.getBitmap();
+            Bitmap bitmap = request.getBitmap(); //初始值
             ImagePreset preset = request.getImagePreset();
             setupEnvironment(preset, true);
             mFiltersManager.freeFilterResources(preset);
 
             if (request.getType() == RenderingRequest.PARTIAL_RENDERING) {
                 ImageManager master = ImageManager.getImage();
+                //从原图图获取部分区域的图片数据，通过bitmapregiondecoder来获取部分数据
                 bitmap = ImageLoader.getScaleOneImageForPreset(master.getActivity(),
                         mEnvironment.getBimapCache(), master.getUri(), request.getBounds(), request.getDestination());
                 if (bitmap == null) {

@@ -21,13 +21,16 @@ public class FilterColorBorderRepresentation extends FilterRepresentation {
     public static final int PARAM_SIZE = 0;
     public static final int PARAM_RADIUS = 1;
     public static final int PARAM_COLOR = 2;
-    public static int DEFAULT_MENU_COLOR1 = Color.WHITE;
-    public static int DEFAULT_MENU_COLOR2 = Color.BLACK;
-    public static int DEFAULT_MENU_COLOR3 = Color.GRAY;
-    public static int DEFAULT_MENU_COLOR4 = 0xFFFFCCAA;
-    public static int DEFAULT_MENU_COLOR5 = 0xFFAAAAAA;
-    private BasicParameterInt mParamSize = new BasicParameterInt(PARAM_SIZE, 3, 2, 30);
-    private BasicParameterInt mParamRadius = new BasicParameterInt(PARAM_RADIUS, 2, 0, 100);
+    public static final int PARAM_CLEAR = 3;
+
+    public static int DEFAULT_MENU_COLOR1 = 0XFF76C129;
+    public static int DEFAULT_MENU_COLOR2 = 0xFFFEB437;
+    public static int DEFAULT_MENU_COLOR3 = 0xFF36C4B4;
+    public static int DEFAULT_MENU_COLOR4 = Color.WHITE;
+    public static int DEFAULT_MENU_COLOR5 = Color.BLACK;
+
+    private BasicParameterInt mParamSize = new BasicParameterInt(PARAM_SIZE, 0, 0, 30);
+    private BasicParameterInt mParamRadius = new BasicParameterInt(PARAM_RADIUS, 0, 0, 100);
     private ParameterColor mParamColor = new ParameterColor(PARAM_COLOR, DEFAULT_MENU_COLOR1);
 
     private Parameter[] mAllParam = {
@@ -38,12 +41,12 @@ public class FilterColorBorderRepresentation extends FilterRepresentation {
     private int mPramMode;
 
     public FilterColorBorderRepresentation(int color, int size, int radius, int sr) {
-        super("ColorBorder", sr);
+        super(SERIALIZATION_NAME, sr);
         setSerializationName(SERIALIZATION_NAME);
         setFilterType(FilterRepresentation.TYPE_BORDER);
         setTextId(R.string.custom_border);
         setEditorId(EditorColorBorder.ID);
-        setShowParameterValue(false);
+        setShowParameterValue(true);
         setFilterClass(ImageFilterColorBorder.class);
         mParamColor.setValue(color);
         mParamSize.setValue(size);

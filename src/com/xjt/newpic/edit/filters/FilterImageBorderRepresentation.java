@@ -1,20 +1,60 @@
+
 package com.xjt.newpic.edit.filters;
 
+import java.io.IOException;
+
+import android.graphics.Color;
+
 import com.xjt.newpic.R;
-import com.xjt.newpic.edit.editors.ImageOnlyEditor;
+import com.xjt.newpic.edit.controller.BasicParameterInt;
+import com.xjt.newpic.edit.controller.Parameter;
+import com.xjt.newpic.edit.controller.ParameterColor;
+import com.xjt.newpic.edit.editors.EditorColorBorder;
+import com.xjt.newpic.surpport.JsonReader;
+import com.xjt.newpic.surpport.JsonWriter;
 
 public class FilterImageBorderRepresentation extends FilterRepresentation {
 
-    private int mDrawableResource = 0;
+    private static final String TAG = FilterImageBorderRepresentation.class.getSimpleName();
 
-    public FilterImageBorderRepresentation(int drawableResource, int sr) {
-        super("ImageBorder", sr);
-        setFilterClass(ImageFilterBorder.class);
-        mDrawableResource = drawableResource;
+    private static final String SERIALIZATION_NAME = "IMAGEBODER";
+    public static final int PARAM_SIZE = 0;
+    public static final int PARAM_RADIUS = 1;
+    public static final int PARAM_COLOR = 2;
+    public static int DEFAULT_MENU_COLOR1 = Color.WHITE;
+    public static int DEFAULT_MENU_COLOR2 = Color.BLACK;
+    public static int DEFAULT_MENU_COLOR3 = Color.GRAY;
+    public static int DEFAULT_MENU_COLOR4 = 0xFFFFCCAA;
+    public static int DEFAULT_MENU_COLOR5 = 0xFFAAAAAA;
+    private BasicParameterInt mParamSize = new BasicParameterInt(PARAM_SIZE, 3, 2, 30);
+    private BasicParameterInt mParamRadius = new BasicParameterInt(PARAM_RADIUS, 2, 0, 100);
+    private ParameterColor mParamColor = new ParameterColor(PARAM_COLOR, DEFAULT_MENU_COLOR1);
+
+    private Parameter[] mAllParam = {
+            mParamSize,
+            mParamRadius,
+            mParamColor
+    };
+    private int mPramMode;
+
+    public FilterImageBorderRepresentation(int color, int size, int radius, int sr) {
+        super(SERIALIZATION_NAME, sr);
+        setSerializationName(SERIALIZATION_NAME);
         setFilterType(FilterRepresentation.TYPE_BORDER);
         setTextId(R.string.custom_border);
-        setEditorId(ImageOnlyEditor.ID);
+        setEditorId(EditorColorBorder.ID);
         setShowParameterValue(false);
+        setFilterClass(ImageFilterColorBorder.class);
+        mParamColor.setValue(color);
+        mParamSize.setValue(size);
+        mParamRadius.setValue(radius);
+        mParamColor.setColorpalette(new int[] {
+                DEFAULT_MENU_COLOR1,
+                DEFAULT_MENU_COLOR2,
+                DEFAULT_MENU_COLOR3,
+                DEFAULT_MENU_COLOR4,
+                DEFAULT_MENU_COLOR5
+        });
     }
 
     public String toString() {
@@ -23,7 +63,7 @@ public class FilterImageBorderRepresentation extends FilterRepresentation {
 
     @Override
     public FilterRepresentation copy() {
-        FilterImageBorderRepresentation representation = new FilterImageBorderRepresentation(mDrawableResource, 0);
+        FilterColorBorderRepresentation representation = new FilterColorBorderRepresentation(0, 0, 0, 0);
         copyAllParameters(representation);
         return representation;
     }
@@ -35,10 +75,13 @@ public class FilterImageBorderRepresentation extends FilterRepresentation {
     }
 
     public void useParametersFrom(FilterRepresentation a) {
-        if (a instanceof FilterImageBorderRepresentation) {
+        if (a instanceof FilterColorBorderRepresentation) {
             FilterImageBorderRepresentation representation = (FilterImageBorderRepresentation) a;
             setName(representation.getName());
-            setDrawableResource(representation.getDrawableResource());
+            setColor(representation.getColor());
+            mParamColor.copyPalletFrom(representation.mParamColor);
+            setBorderSize(representation.getBorderSize());
+            setBorderRadius(representation.getBorderRadius());
         }
     }
 
@@ -47,29 +90,99 @@ public class FilterImageBorderRepresentation extends FilterRepresentation {
         if (!super.equals(representation)) {
             return false;
         }
-        if (representation instanceof FilterImageBorderRepresentation) {
+        if (representation instanceof FilterColorBorderRepresentation) {
             FilterImageBorderRepresentation border = (FilterImageBorderRepresentation) representation;
-            if (border.mDrawableResource == mDrawableResource) {
+            if (border.mParamColor.getValue() == mParamColor.getValue()
+                    && border.mParamRadius.getValue() == mParamRadius.getValue()
+                    && border.mParamSize.getValue() == mParamSize.getValue()) {
+
                 return true;
             }
         }
         return false;
     }
 
-    @Override
-    public int getTextId() {
-        return R.string.none;
-    }
-
     public boolean allowsSingleInstanceOnly() {
         return true;
     }
 
-    public int getDrawableResource() {
-        return mDrawableResource;
+    public Parameter getParam(int mode) {
+        return mAllParam[mode];
     }
 
-    public void setDrawableResource(int drawableResource) {
-        mDrawableResource = drawableResource;
+    @Override
+    public int getTextId() {
+        if (super.getTextId() == 0) {
+            return R.string.borders;
+        }
+        return super.getTextId();
+    }
+
+    public int getColor() {
+        return mParamColor.getValue();
+    }
+
+    public void setColor(int color) {
+        mParamColor.setValue(color);
+    }
+
+    public int getBorderSize() {
+        return mParamSize.getValue();
+    }
+
+    public void setBorderSize(int borderSize) {
+        mParamSize.setValue(borderSize);
+    }
+
+    public int getBorderRadius() {
+        return mParamRadius.getValue();
+    }
+
+    public void setBorderRadius(int borderRadius) {
+        mParamRadius.setValue(borderRadius);
+    }
+
+    public void setPramMode(int pramMode) {
+        this.mPramMode = pramMode;
+    }
+
+    public Parameter getCurrentParam() {
+        return mAllParam[mPramMode];
+    }
+
+    public String getValueString() {
+        return "";
+    }
+
+    // Serialization...
+
+    public void serializeRepresentation(JsonWriter writer) throws IOException {
+        writer.beginObject();
+        {
+            writer.name("size");
+            writer.value(mParamSize.getValue());
+            writer.name("radius");
+            writer.value(mParamRadius.getValue());
+            writer.name("color");
+            writer.value(mParamColor.getValue());
+        }
+        writer.endObject();
+    }
+
+    public void deSerializeRepresentation(JsonReader reader) throws IOException {
+        reader.beginObject();
+        while (reader.hasNext()) {
+            String name = reader.nextName();
+            if (name.equalsIgnoreCase("size")) {
+                mParamSize.setValue(reader.nextInt());
+            } else if (name.equalsIgnoreCase("radius")) {
+                mParamRadius.setValue(reader.nextInt());
+            } else if (name.equalsIgnoreCase("color")) {
+                mParamColor.setValue(reader.nextInt());
+            } else {
+                reader.skipValue();
+            }
+        }
+        reader.endObject();
     }
 }
