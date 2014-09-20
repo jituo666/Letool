@@ -99,10 +99,11 @@
     <string name="draw_style_brush_spatter">"记号笔"</string>
     <string name="draw_style_brush_marker">"喷笔"</string>
     <string name="draw_clear">"清除"</string>
-    <string name="color_border_size">边框宽度</string>
-    <string name="color_border_corner_size">圆角大小</string>
-    <string name="color_border_color">边框颜色</string>
-    <string name="color_border_clear">清除</string>
+    <string name="border_size">边框宽度</string>
+    <string name="border_corner_size">圆角大小</string>
+    <string name="border_color">边框颜色</string>
+    <string name="border_texture">边框纹理</string>
+    <string name="border_clear">清除</string>
     <string name="color_pick_select">"选择自定义颜色"</string>
     <string name="color_pick_title">"选择颜色"</string>
     <string name="draw_size_title">"选择大小"</string>

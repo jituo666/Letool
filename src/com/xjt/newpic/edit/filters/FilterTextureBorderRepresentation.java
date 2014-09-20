@@ -3,12 +3,10 @@ package com.xjt.newpic.edit.filters;
 
 import java.io.IOException;
 
-import android.graphics.Color;
-
 import com.xjt.newpic.R;
 import com.xjt.newpic.edit.controller.BasicParameterInt;
 import com.xjt.newpic.edit.controller.Parameter;
-import com.xjt.newpic.edit.controller.ParameterColor;
+import com.xjt.newpic.edit.controller.ParameterTexture;
 import com.xjt.newpic.edit.editors.EditorTextureBorder;
 import com.xjt.newpic.surpport.JsonReader;
 import com.xjt.newpic.surpport.JsonWriter;
@@ -17,28 +15,28 @@ public class FilterTextureBorderRepresentation extends FilterRepresentation {
 
     private static final String TAG = FilterTextureBorderRepresentation.class.getSimpleName();
 
-    private static final String SERIALIZATION_NAME = "IMAGEBODER";
+    private static final String SERIALIZATION_NAME = "TEXTUREBODER";
     public static final int PARAM_SIZE = 0;
     public static final int PARAM_RADIUS = 1;
-    public static final int PARAM_COLOR = 2;
+    public static final int PARAM_TEXTURE = 2;
     public static final int PARAM_CLEAR = 3;
-    public static int DEFAULT_MENU_COLOR1 = Color.WHITE;
-    public static int DEFAULT_MENU_COLOR2 = Color.BLACK;
-    public static int DEFAULT_MENU_COLOR3 = Color.GRAY;
-    public static int DEFAULT_MENU_COLOR4 = 0xFFFFCCAA;
-    public static int DEFAULT_MENU_COLOR5 = 0xFFAAAAAA;
+    public static int DEFAULT_TEXTURE1 = R.drawable.edit_border_tile11;
+    public static int DEFAULT_TEXTURE2 = R.drawable.edit_border_tile12;
+    public static int DEFAULT_TEXTURE3 = R.drawable.edit_border_tile13;
+    public static int DEFAULT_TEXTURE4 = R.drawable.edit_border_tile2;
+    public static int DEFAULT_TEXTURE5 = R.drawable.edit_border_tile5;
     private BasicParameterInt mParamSize = new BasicParameterInt(PARAM_SIZE, 3, 2, 30);
     private BasicParameterInt mParamRadius = new BasicParameterInt(PARAM_RADIUS, 2, 0, 100);
-    private ParameterColor mParamColor = new ParameterColor(PARAM_COLOR, DEFAULT_MENU_COLOR1);
+    private ParameterTexture mParamTexture = new ParameterTexture(PARAM_TEXTURE, DEFAULT_TEXTURE1);
 
     private Parameter[] mAllParam = {
             mParamSize,
             mParamRadius,
-            mParamColor
+            mParamTexture
     };
     private int mPramMode;
 
-    public FilterTextureBorderRepresentation(int color, int size, int radius, int sr) {
+    public FilterTextureBorderRepresentation(int texture, int size, int radius, int sr) {
         super(SERIALIZATION_NAME, sr);
         setSerializationName(SERIALIZATION_NAME);
         setFilterType(FilterRepresentation.TYPE_BORDER);
@@ -46,15 +44,15 @@ public class FilterTextureBorderRepresentation extends FilterRepresentation {
         setEditorId(EditorTextureBorder.ID);
         setShowParameterValue(false);
         setFilterClass(ImageFilterTextureBorder.class);
-        mParamColor.setValue(color);
+        mParamTexture.setValue(texture);
         mParamSize.setValue(size);
         mParamRadius.setValue(radius);
-        mParamColor.setColorpalette(new int[] {
-                DEFAULT_MENU_COLOR1,
-                DEFAULT_MENU_COLOR2,
-                DEFAULT_MENU_COLOR3,
-                DEFAULT_MENU_COLOR4,
-                DEFAULT_MENU_COLOR5
+        mParamTexture.setTexturePalette(new int[] {
+                DEFAULT_TEXTURE1,
+                DEFAULT_TEXTURE2,
+                DEFAULT_TEXTURE3,
+                DEFAULT_TEXTURE4,
+                DEFAULT_TEXTURE5
         });
     }
 
@@ -79,8 +77,8 @@ public class FilterTextureBorderRepresentation extends FilterRepresentation {
         if (a instanceof FilterTextureBorderRepresentation) {
             FilterTextureBorderRepresentation representation = (FilterTextureBorderRepresentation) a;
             setName(representation.getName());
-            setColor(representation.getColor());
-            mParamColor.copyPalletFrom(representation.mParamColor);
+            setTexture(representation.getTexture());
+            mParamTexture.copyPalletFrom(representation.mParamTexture);
             setBorderSize(representation.getBorderSize());
             setBorderRadius(representation.getBorderRadius());
         }
@@ -93,7 +91,7 @@ public class FilterTextureBorderRepresentation extends FilterRepresentation {
         }
         if (representation instanceof FilterTextureBorderRepresentation) {
             FilterTextureBorderRepresentation border = (FilterTextureBorderRepresentation) representation;
-            if (border.mParamColor.getValue() == mParamColor.getValue()
+            if (border.mParamTexture.getValue() == mParamTexture.getValue()
                     && border.mParamRadius.getValue() == mParamRadius.getValue()
                     && border.mParamSize.getValue() == mParamSize.getValue()) {
 
@@ -119,12 +117,12 @@ public class FilterTextureBorderRepresentation extends FilterRepresentation {
         return super.getTextId();
     }
 
-    public int getColor() {
-        return mParamColor.getValue();
+    public int getTexture() {
+        return mParamTexture.getValue();
     }
 
-    public void setColor(int color) {
-        mParamColor.setValue(color);
+    public void setTexture(int texture) {
+        mParamTexture.setValue(texture);
     }
 
     public int getBorderSize() {
@@ -162,8 +160,8 @@ public class FilterTextureBorderRepresentation extends FilterRepresentation {
             writer.value(mParamSize.getValue());
             writer.name("radius");
             writer.value(mParamRadius.getValue());
-            writer.name("color");
-            writer.value(mParamColor.getValue());
+            writer.name("texture");
+            writer.value(mParamTexture.getValue());
         }
         writer.endObject();
     }
@@ -176,8 +174,8 @@ public class FilterTextureBorderRepresentation extends FilterRepresentation {
                 mParamSize.setValue(reader.nextInt());
             } else if (name.equalsIgnoreCase("radius")) {
                 mParamRadius.setValue(reader.nextInt());
-            } else if (name.equalsIgnoreCase("color")) {
-                mParamColor.setValue(reader.nextInt());
+            } else if (name.equalsIgnoreCase("texture")) {
+                mParamTexture.setValue(reader.nextInt());
             } else {
                 reader.skipValue();
             }

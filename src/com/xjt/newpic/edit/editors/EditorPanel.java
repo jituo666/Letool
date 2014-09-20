@@ -71,6 +71,8 @@ public class EditorPanel extends Fragment {
         });
         mEditor = activity.getEditor(mEditorID);
         if (mEditor != null) {
+
+            LLog.i(TAG, "-------------showEditor:" + mEditor.getClass().getSimpleName());
             mEditor.setUpEditorUI(actionControl, editControl, editTitle, null);
             mEditor.reflectCurrentFilter();
             if (mEditor.useUtilityPanel()) {

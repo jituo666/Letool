@@ -476,7 +476,6 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
             mCurrentEditor.detach();
         }
 
-        LLog.i(TAG, "-------------showEditor3:" + representation.getEditorId());
         mCurrentEditor = mEditorPlaceHolder.showEditor(representation.getEditorId());
         loadEditorPanel(representation, mCurrentEditor);
     }

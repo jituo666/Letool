@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.edit.editors;
 
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.widget.SeekBar;
 
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.ApiHelper;
+import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.edit.controller.ActionSlider;
 import com.xjt.newpic.edit.controller.BasicSlider;
 import com.xjt.newpic.edit.controller.ColorChooser;
@@ -24,11 +26,13 @@ import com.xjt.newpic.edit.controller.ParameterInteger;
 import com.xjt.newpic.edit.controller.ParameterOpacity;
 import com.xjt.newpic.edit.controller.ParameterSaturation;
 import com.xjt.newpic.edit.controller.ParameterStyles;
+import com.xjt.newpic.edit.controller.ParameterTexture;
 import com.xjt.newpic.edit.controller.SliderBrightness;
 import com.xjt.newpic.edit.controller.SliderHue;
 import com.xjt.newpic.edit.controller.SliderOpacity;
 import com.xjt.newpic.edit.controller.SliderSaturation;
 import com.xjt.newpic.edit.controller.StyleChooser;
+import com.xjt.newpic.edit.controller.TextureChooser;
 import com.xjt.newpic.edit.filters.FilterBasicRepresentation;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
 
@@ -56,6 +60,7 @@ public class ParametricEditor extends Editor {
         portraitMap.put(ParameterOpacity.sParameterType, SliderOpacity.class);
         portraitMap.put(ParameterBrightness.sParameterType, SliderBrightness.class);
         portraitMap.put(ParameterColor.sParameterType, ColorChooser.class);
+        portraitMap.put(ParameterTexture.sParameterType, TextureChooser.class);
         portraitMap.put(ParameterInteger.sParameterType, BasicSlider.class);
         if (ApiHelper.AT_LEAST_14) {
             portraitMap.put(ParameterActionAndInt.sParameterType, ActionSlider.class);
@@ -142,7 +147,9 @@ public class ParametricEditor extends Editor {
         mActionButton = actionButton;
         mEditControl = editControl;
         FilterRepresentation rep = getLocalRepresentation();
+
         Parameter param = getParameterToEdit(rep);
+
         if (param != null) {
             control(param, editControl);
         } else {

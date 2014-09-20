@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.edit.editors;
 
 import android.content.Context;
@@ -29,11 +30,11 @@ public class EditorColorBorder extends ParametricEditor {
     public static final int ID = R.id.editorColorBorder;
 
     int[] mBasicColors = {
-            FilterColorBorderRepresentation.DEFAULT_MENU_COLOR1,
-            FilterColorBorderRepresentation.DEFAULT_MENU_COLOR2,
-            FilterColorBorderRepresentation.DEFAULT_MENU_COLOR3,
-            FilterColorBorderRepresentation.DEFAULT_MENU_COLOR4,
-            FilterColorBorderRepresentation.DEFAULT_MENU_COLOR5,
+            FilterColorBorderRepresentation.DEFAULT_COLOR1,
+            FilterColorBorderRepresentation.DEFAULT_COLOR2,
+            FilterColorBorderRepresentation.DEFAULT_COLOR3,
+            FilterColorBorderRepresentation.DEFAULT_COLOR4,
+            FilterColorBorderRepresentation.DEFAULT_COLOR5,
     };
 
     private String mParameterString;
@@ -68,7 +69,7 @@ public class EditorColorBorder extends ParametricEditor {
         if (rep != null && getLocalRepresentation() instanceof FilterColorBorderRepresentation) {
             FilterColorBorderRepresentation cbRep = (FilterColorBorderRepresentation) getLocalRepresentation();
             cbRep.setPramMode(FilterColorBorderRepresentation.PARAM_COLOR);
-            mParameterString = mContext.getString(R.string.color_border_color);
+            mParameterString = mContext.getString(R.string.border_color);
             if (mEditControl != null) {
                 control(cbRep.getCurrentParam(), mEditControl);
             }
@@ -78,7 +79,7 @@ public class EditorColorBorder extends ParametricEditor {
     @Override
     public void openUtilityPanel(final LinearLayout accessoryViewList) {
         Button view = (Button) accessoryViewList.findViewById(R.id.applyEffect);
-        view.setText(mContext.getString(R.string.color_border_color));
+        view.setText(mContext.getString(R.string.border_color));
         view.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -99,10 +100,10 @@ public class EditorColorBorder extends ParametricEditor {
             return;
         }
         final PopupMenu popupMenu = new PopupMenu(mImageShow.getActivity(), button);
-        popupMenu.add(POP_UP_MENU_ID_CORNER_SIZE, R.string.color_border_corner_size);
-        popupMenu.add(POP_UP_MENU_ID_BODER_SIZE, R.string.color_border_size);
-        popupMenu.add(POP_UP_MENU_ID_BODER_COLOR, R.string.color_border_color);
-        popupMenu.add(POP_UP_MENU_ID_BODER_CLEAR, R.string.color_border_clear);
+        popupMenu.add(POP_UP_MENU_ID_CORNER_SIZE, R.string.border_corner_size);
+        popupMenu.add(POP_UP_MENU_ID_BODER_SIZE, R.string.border_size);
+        popupMenu.add(POP_UP_MENU_ID_BODER_COLOR, R.string.border_color);
+        popupMenu.add(POP_UP_MENU_ID_BODER_CLEAR, R.string.border_clear);
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 
             @Override

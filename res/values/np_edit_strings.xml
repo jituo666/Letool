@@ -203,13 +203,15 @@
     <string name="draw_clear">Clear</string>
 
     <!-- Label for the with of the border[CHAR LIMIT=14] -->
-    <string name="color_border_size">Thickness</string>
+    <string name="border_size">Thickness</string>
     <!-- Label for the border corner size (or rounding) [CHAR LIMIT=14] -->
-    <string name="color_border_corner_size">Corner Size</string>
+    <string name="border_corner_size">Corner Size</string>
     <!-- Label for selecting the border color [CHAR LIMIT=14] -->
-    <string name="color_border_color">Color</string>
+    <string name="border_color">Color</string>
+    <!-- Label for selecting the border Texture [CHAR LIMIT=14] -->
+    <string name="border_texture">texture</string>
     <!-- Label for the removing borders [CHAR LIMIT=14] -->
-    <string name="color_border_clear">Clear</string>
+    <string name="border_clear">Clear</string>
 
     <!-- Label for the select the color [CHAR LIMIT=35] -->
     <string name="color_pick_select">Choose custom color</string>

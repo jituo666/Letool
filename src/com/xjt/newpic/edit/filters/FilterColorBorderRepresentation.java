@@ -23,15 +23,15 @@ public class FilterColorBorderRepresentation extends FilterRepresentation {
     public static final int PARAM_COLOR = 2;
     public static final int PARAM_CLEAR = 3;
 
-    public static int DEFAULT_MENU_COLOR1 = 0XFF76C129;
-    public static int DEFAULT_MENU_COLOR2 = 0xFFFEB437;
-    public static int DEFAULT_MENU_COLOR3 = 0xFF36C4B4;
-    public static int DEFAULT_MENU_COLOR4 = Color.WHITE;
-    public static int DEFAULT_MENU_COLOR5 = Color.BLACK;
+    public static int DEFAULT_COLOR1 = 0XFF76C129;
+    public static int DEFAULT_COLOR2 = 0xFFFEB437;
+    public static int DEFAULT_COLOR3 = 0xFF36C4B4;
+    public static int DEFAULT_COLOR4 = Color.WHITE;
+    public static int DEFAULT_COLOR5 = Color.BLACK;
 
     private BasicParameterInt mParamSize = new BasicParameterInt(PARAM_SIZE, 0, 0, 30);
     private BasicParameterInt mParamRadius = new BasicParameterInt(PARAM_RADIUS, 0, 0, 100);
-    private ParameterColor mParamColor = new ParameterColor(PARAM_COLOR, DEFAULT_MENU_COLOR1);
+    private ParameterColor mParamColor = new ParameterColor(PARAM_COLOR, DEFAULT_COLOR1);
 
     private Parameter[] mAllParam = {
             mParamSize,
@@ -52,11 +52,11 @@ public class FilterColorBorderRepresentation extends FilterRepresentation {
         mParamSize.setValue(size);
         mParamRadius.setValue(radius);
         mParamColor.setColorpalette(new int[] {
-                DEFAULT_MENU_COLOR1,
-                DEFAULT_MENU_COLOR2,
-                DEFAULT_MENU_COLOR3,
-                DEFAULT_MENU_COLOR4,
-                DEFAULT_MENU_COLOR5
+                DEFAULT_COLOR1,
+                DEFAULT_COLOR2,
+                DEFAULT_COLOR3,
+                DEFAULT_COLOR4,
+                DEFAULT_COLOR5
         });
     }
 

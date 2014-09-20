@@ -261,11 +261,11 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
         rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_sumi_e, sampleid[3]);
         borderList.add(rep);
 
-        rep = new FilterTextureBorderRepresentation(FilterTextureBorderRepresentation.DEFAULT_MENU_COLOR1, FILTER_BODER_DEFAULT_SIZE,
+        rep = new FilterTextureBorderRepresentation(FilterTextureBorderRepresentation.DEFAULT_TEXTURE1, FILTER_BODER_DEFAULT_SIZE,
                 FILTER_BODER_DEFAULT_RADIUS, sampleid[4]);
         borderList.add(rep);
 
-        rep = new FilterColorBorderRepresentation(FilterColorBorderRepresentation.DEFAULT_MENU_COLOR1, FILTER_BODER_DEFAULT_SIZE,
+        rep = new FilterColorBorderRepresentation(FilterColorBorderRepresentation.DEFAULT_COLOR1, FILTER_BODER_DEFAULT_SIZE,
                 FILTER_BODER_DEFAULT_RADIUS, sampleid[5]);
         borderList.add(rep);
 
