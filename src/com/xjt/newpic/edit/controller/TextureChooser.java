@@ -2,16 +2,14 @@
 package com.xjt.newpic.edit.controller;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.nineoldandroids.view.ViewHelper;
 import com.xjt.newpic.R;
+import com.xjt.newpic.edit.colorpicker.ColorListener;
 import com.xjt.newpic.edit.editors.Editor;
 
 import java.util.Vector;
@@ -57,7 +55,7 @@ public class TextureChooser implements Control {
             mTextures[i] = button;
             button.setTag(palette[i]);
             button.setImageResource(palette[i]);
-            button.getDrawable().setAlpha( mSelectedButton == i ? 255 : 80);
+            button.getDrawable().setAlpha(mSelectedButton == i ? 255 : 80);
             final int textureNo = i;
             button.setOnClickListener(new View.OnClickListener() {
 
@@ -73,7 +71,7 @@ public class TextureChooser implements Control {
 
             @Override
             public void onClick(View v) {
-                //showColorPicker();
+                showTexturePicker();
             }
         });
 
@@ -98,7 +96,7 @@ public class TextureChooser implements Control {
         for (int i = 0; i < mTexturessID.length; i++) {
             final ImageView button = mTextures[i];
             button.setImageResource(palette[i]);
-            button.getDrawable().setAlpha( mSelectedButton == i ? 255 : 80);
+            button.getDrawable().setAlpha(mSelectedButton == i ? 255 : 80);
         }
     }
 
@@ -127,36 +125,43 @@ public class TextureChooser implements Control {
             return;
         }
     }
+
     //
-    //    public void changeSelectedColor(float[] hsvo) {
-    //        int[] palette = mParameter.getTexturePalette();
-    //        int c = Color.HSVToColor((int) (hsvo[3] * 255), hsvo);
-    //        final ImageView button = mTextures[mSelectedButton];
-    //        GradientDrawable sd = ((GradientDrawable) button.getBackground());
-    //        sd.setColor(c);
-    //        palette[mSelectedButton] = c;
-    //        mParameter.setValue(Color.HSVToColor((int) (hsvo[OPACITY_OFFSET] * 255), hsvo));
-    //        button.setTag(hsvo);
-    //        mEditor.commitLocalRepresentation();
-    //        button.invalidate();
-    //    }
+    public void changeSelectedTexture(int texture) {
+        int[] palette = mParameter.getTexturePalette();
+        final ImageView button = mTextures[mSelectedButton];
+        button.setImageResource(texture);
+        palette[mSelectedButton] = texture;
+        mParameter.setValue(texture);
+        button.setTag(texture);
+        mEditor.commitLocalRepresentation();
+        button.invalidate();
+    }
+
     //
-    //    public void showColorPicker() {
-    //        ColorListener cl = new ColorListener() {
-    //
-    //            @Override
-    //            public void setColor(float[] hsvo) {
-    //                changeSelectedColor(hsvo);
-    //            }
-    //
-    //            @Override
-    //            public void addColorListener(ColorListener l) {
-    //            }
-    //        };
-    //        ColorPickerDialog cpd = new ColorPickerDialog(mContext, cl);
-    //        float[] c = (float[]) mTextures[mSelectedButton].getTag();
-    //        cpd.setColor(Arrays.copyOf(c, 4));
-    //        cpd.setOrigColor(Arrays.copyOf(c, 4));
-    //        cpd.show();
-    //    }
+    public void showTexturePicker() {
+        TextureListener cl = new TextureListener() {
+
+            @Override
+            public void setTexture(int t) {
+                changeSelectedTexture(t);
+            }
+
+            @Override
+            public void addTextureListener(ColorListener l) {
+            }
+        };
+        TexturePickerDialog tpd = new TexturePickerDialog(mContext, cl);
+        int texture = (Integer) mTextures[mSelectedButton].getTag();
+        tpd.setTexture(texture, cl);
+        tpd.show();
+    }
+
+    public static interface TextureListener {
+
+        void setTexture(int t);
+
+        public void addTextureListener(ColorListener l);
+    }
+
 }

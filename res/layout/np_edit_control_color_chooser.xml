@@ -10,6 +10,7 @@
         android:id="@+id/draw_color_button01"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:layout_weight="1"
         android:background="@drawable/filtershow_color_picker_circle" />
@@ -46,13 +47,15 @@
         android:layout_weight="1"
         android:background="@drawable/filtershow_color_picker_circle" />
 
-    <Button
+    <ImageView
         android:id="@+id/draw_color_popupbutton"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:background="@drawable/ic_action_overflow" >
-    </Button>
+        android:layout_marginRight="4dp"
+        android:background="@drawable/np_common_pressed_bg"
+        android:src="@drawable/ic_action_overflow" >
+    </ImageView>
 
 </LinearLayout>

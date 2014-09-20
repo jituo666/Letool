@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.xjt.newpic.R;
@@ -80,7 +81,7 @@ public class ColorChooser implements Control {
                 }
             });
         }
-        Button button = (Button) mTopView.findViewById(R.id.draw_color_popupbutton);
+        ImageView button = (ImageView) mTopView.findViewById(R.id.draw_color_popupbutton);
 
         button.setOnClickListener(new View.OnClickListener() {
 
