@@ -23,6 +23,7 @@
     <item type="id" name="imageZoom" />
     <item type="id" name="editorDraw" />
     <item type="id" name="editorColorBorder" />
+    <item type="id" name="editorTextureBorder" />
     <item type="id" name="editorImageBorder" />
     <item type="id" name="editorRedEye" />
     <item type="id" name="imageOnlyEditor" />

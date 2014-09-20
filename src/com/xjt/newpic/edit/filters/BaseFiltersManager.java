@@ -124,7 +124,7 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
         filters.add(ImageFilterEdge.class);
         filters.add(ImageFilterKMeans.class);
         filters.add(ImageFilterFx.class);
-        filters.add(ImageFilterImageBorder.class);
+        filters.add(ImageFilterTextureBorder.class);
         filters.add(ImageFilterColorBorder.class);
     }
 
@@ -258,7 +258,7 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
         //        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_sumi_e, sampleid[3]);
         //        borderList.add(rep);
 
-        rep = new FilterImageBorderRepresentation(FilterImageBorderRepresentation.DEFAULT_MENU_COLOR1, FILTER_BODER_DEFAULT_SIZE,
+        rep = new FilterTextureBorderRepresentation(FilterTextureBorderRepresentation.DEFAULT_MENU_COLOR1, FILTER_BODER_DEFAULT_SIZE,
                 FILTER_BODER_DEFAULT_RADIUS, sampleid[4]);
         borderList.add(rep);
 
@@ -343,7 +343,7 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
     }
 
     public void setFilterResources(Resources resources) {
-        ImageFilterImageBorder filterBorder = (ImageFilterImageBorder) getFilter(ImageFilterImageBorder.class);
+        ImageFilterTextureBorder filterBorder = (ImageFilterTextureBorder) getFilter(ImageFilterTextureBorder.class);
         filterBorder.setResources(resources);
         ImageFilterColorBorder c = (ImageFilterColorBorder) getFilter(ImageFilterColorBorder.class);
         c.setResources(resources);

@@ -11,7 +11,7 @@ import com.xjt.newpic.edit.cache.ImageLoader;
 import com.xjt.newpic.edit.filters.BaseFiltersManager;
 import com.xjt.newpic.edit.filters.FilterCropRepresentation;
 import com.xjt.newpic.edit.filters.FilterFxRepresentation;
-import com.xjt.newpic.edit.filters.FilterImageBorderRepresentation;
+import com.xjt.newpic.edit.filters.FilterTextureBorderRepresentation;
 import com.xjt.newpic.edit.filters.FilterMirrorRepresentation;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
 import com.xjt.newpic.edit.filters.FilterRotateRepresentation;

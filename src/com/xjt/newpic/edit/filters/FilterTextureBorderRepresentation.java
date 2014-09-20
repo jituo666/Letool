@@ -9,13 +9,13 @@ import com.xjt.newpic.R;
 import com.xjt.newpic.edit.controller.BasicParameterInt;
 import com.xjt.newpic.edit.controller.Parameter;
 import com.xjt.newpic.edit.controller.ParameterColor;
-import com.xjt.newpic.edit.editors.EditorImageBorder;
+import com.xjt.newpic.edit.editors.EditorTextureBorder;
 import com.xjt.newpic.surpport.JsonReader;
 import com.xjt.newpic.surpport.JsonWriter;
 
-public class FilterImageBorderRepresentation extends FilterRepresentation {
+public class FilterTextureBorderRepresentation extends FilterRepresentation {
 
-    private static final String TAG = FilterImageBorderRepresentation.class.getSimpleName();
+    private static final String TAG = FilterTextureBorderRepresentation.class.getSimpleName();
 
     private static final String SERIALIZATION_NAME = "IMAGEBODER";
     public static final int PARAM_SIZE = 0;
@@ -38,14 +38,14 @@ public class FilterImageBorderRepresentation extends FilterRepresentation {
     };
     private int mPramMode;
 
-    public FilterImageBorderRepresentation(int color, int size, int radius, int sr) {
+    public FilterTextureBorderRepresentation(int color, int size, int radius, int sr) {
         super(SERIALIZATION_NAME, sr);
         setSerializationName(SERIALIZATION_NAME);
         setFilterType(FilterRepresentation.TYPE_BORDER);
         setTextId(R.string.custom_border);
-        setEditorId(EditorImageBorder.ID);
+        setEditorId(EditorTextureBorder.ID);
         setShowParameterValue(false);
-        setFilterClass(ImageFilterImageBorder.class);
+        setFilterClass(ImageFilterTextureBorder.class);
         mParamColor.setValue(color);
         mParamSize.setValue(size);
         mParamRadius.setValue(radius);
@@ -64,7 +64,7 @@ public class FilterImageBorderRepresentation extends FilterRepresentation {
 
     @Override
     public FilterRepresentation copy() {
-        FilterImageBorderRepresentation representation = new FilterImageBorderRepresentation(0, 0, 0, 0);
+        FilterTextureBorderRepresentation representation = new FilterTextureBorderRepresentation(0, 0, 0, 0);
         copyAllParameters(representation);
         return representation;
     }
@@ -76,8 +76,8 @@ public class FilterImageBorderRepresentation extends FilterRepresentation {
     }
 
     public void useParametersFrom(FilterRepresentation a) {
-        if (a instanceof FilterImageBorderRepresentation) {
-            FilterImageBorderRepresentation representation = (FilterImageBorderRepresentation) a;
+        if (a instanceof FilterTextureBorderRepresentation) {
+            FilterTextureBorderRepresentation representation = (FilterTextureBorderRepresentation) a;
             setName(representation.getName());
             setColor(representation.getColor());
             mParamColor.copyPalletFrom(representation.mParamColor);
@@ -91,8 +91,8 @@ public class FilterImageBorderRepresentation extends FilterRepresentation {
         if (!super.equals(representation)) {
             return false;
         }
-        if (representation instanceof FilterImageBorderRepresentation) {
-            FilterImageBorderRepresentation border = (FilterImageBorderRepresentation) representation;
+        if (representation instanceof FilterTextureBorderRepresentation) {
+            FilterTextureBorderRepresentation border = (FilterTextureBorderRepresentation) representation;
             if (border.mParamColor.getValue() == mParamColor.getValue()
                     && border.mParamRadius.getValue() == mParamRadius.getValue()
                     && border.mParamSize.getValue() == mParamSize.getValue()) {

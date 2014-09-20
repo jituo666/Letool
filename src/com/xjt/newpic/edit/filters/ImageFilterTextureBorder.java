@@ -17,11 +17,11 @@ import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.support.v4.util.LongSparseArray;
 
-public class ImageFilterImageBorder extends ImageFilter {
+public class ImageFilterTextureBorder extends ImageFilter {
 
-    private static final String TAG = ImageFilterImageBorder.class.getSimpleName();
+    private static final String TAG = ImageFilterTextureBorder.class.getSimpleName();
 
-    private FilterImageBorderRepresentation mParameters = null;
+    private FilterTextureBorderRepresentation mParameters = null;
     private Resources mResources = null;
     Paint mPaint = new Paint();
     RectF mBounds = new RectF();
@@ -30,16 +30,16 @@ public class ImageFilterImageBorder extends ImageFilter {
 
     private LongSparseArray<Drawable> mDrawables = new LongSparseArray<Drawable>();
 
-    public ImageFilterImageBorder() {
+    public ImageFilterTextureBorder() {
         mName = "Border";
     }
 
     public void useRepresentation(FilterRepresentation representation) {
-        FilterImageBorderRepresentation parameters = (FilterImageBorderRepresentation) representation;
+        FilterTextureBorderRepresentation parameters = (FilterTextureBorderRepresentation) representation;
         mParameters = parameters;
     }
 
-    public FilterImageBorderRepresentation getParameters() {
+    public FilterTextureBorderRepresentation getParameters() {
         return mParameters;
     }
 
@@ -48,7 +48,7 @@ public class ImageFilterImageBorder extends ImageFilter {
     }
 
     private Bitmap scaleBitmp(Bitmap b, float scale) {
-        if (scale != 1.0f) {
+        if (scale < 1.0f) {
             Bitmap result = Bitmap.createBitmap(Math.round(b.getWidth() * scale ), Math.round(b.getHeight() * scale), Config.ARGB_8888);
             Canvas c = new Canvas(result);
             c.drawBitmap(b, new Rect(0, 0, b.getWidth(), b.getHeight()), new Rect(0, 0, result.getWidth(), result.getHeight()), null);
@@ -66,7 +66,7 @@ public class ImageFilterImageBorder extends ImageFilter {
         float radius = getParameters().getBorderRadius();
 
         mPaint.reset();
-        Bitmap b = scaleBitmp(BitmapFactory.decodeResource(mResources, R.drawable.edit_border_tile12), scale);
+        Bitmap b = scaleBitmp(BitmapFactory.decodeResource(mResources, R.drawable.edit_border_tile13), scale);
 
         mPaint.setShader(new BitmapShader(b, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
         mPaint.setAntiAlias(true);

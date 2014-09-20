@@ -15,7 +15,7 @@ public class EditorManager {
         editorPlaceHolder.addEditor(new EditorDraw());
         editorPlaceHolder.addEditor(new EditorVignette());
         editorPlaceHolder.addEditor(new EditorColorBorder());
-        editorPlaceHolder.addEditor(new EditorImageBorder());
+        editorPlaceHolder.addEditor(new EditorTextureBorder());
         editorPlaceHolder.addEditor(new EditorMirror());
         editorPlaceHolder.addEditor(new EditorRotate());
         editorPlaceHolder.addEditor(new EditorStraighten());

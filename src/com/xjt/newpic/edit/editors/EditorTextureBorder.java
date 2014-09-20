@@ -11,40 +11,40 @@ import com.xjt.newpic.R;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.controller.ColorChooser;
-import com.xjt.newpic.edit.filters.FilterImageBorderRepresentation;
+import com.xjt.newpic.edit.filters.FilterTextureBorderRepresentation;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
 import com.xjt.newpic.edit.imageshow.ImageShow;
 import com.xjt.newpic.surpport.PopupMenu;
 import com.xjt.newpic.surpport.PopupMenuItem;
 
-public class EditorImageBorder extends ParametricEditor {
+public class EditorTextureBorder extends ParametricEditor {
 
-    private static final String TAG = EditorImageBorder.class.getSimpleName();
+    private static final String TAG = EditorTextureBorder.class.getSimpleName();
 
     private static final int POP_UP_MENU_ID_CORNER_SIZE = 0;
     private static final int POP_UP_MENU_ID_BODER_SIZE = 1;
     private static final int POP_UP_MENU_ID_BODER_COLOR = 2;
     private static final int POP_UP_MENU_ID_BODER_CLEAR = 3;
 
-    public static final int ID = R.id.editorImageBorder;
+    public static final int ID = R.id.editorTextureBorder;
 
     int[] mBasicColors = {
-            FilterImageBorderRepresentation.DEFAULT_MENU_COLOR1,
-            FilterImageBorderRepresentation.DEFAULT_MENU_COLOR2,
-            FilterImageBorderRepresentation.DEFAULT_MENU_COLOR3,
-            FilterImageBorderRepresentation.DEFAULT_MENU_COLOR4,
-            FilterImageBorderRepresentation.DEFAULT_MENU_COLOR5,
+            FilterTextureBorderRepresentation.DEFAULT_MENU_COLOR1,
+            FilterTextureBorderRepresentation.DEFAULT_MENU_COLOR2,
+            FilterTextureBorderRepresentation.DEFAULT_MENU_COLOR3,
+            FilterTextureBorderRepresentation.DEFAULT_MENU_COLOR4,
+            FilterTextureBorderRepresentation.DEFAULT_MENU_COLOR5,
     };
 
     private String mParameterString;
 
-    public EditorImageBorder() {
+    public EditorTextureBorder() {
         super(ID);
     }
 
     @Override
     public String calculateUserMessage(Context context, String effectName, Object parameterValue) {
-        FilterImageBorderRepresentation rep = getColorBorderRep();
+        FilterTextureBorderRepresentation rep = getColorBorderRep();
         if (rep == null) {
             return "";
         }
@@ -65,9 +65,9 @@ public class EditorImageBorder extends ParametricEditor {
     public void reflectCurrentFilter() {
         super.reflectCurrentFilter();
         FilterRepresentation rep = getLocalRepresentation();
-        if (rep != null && getLocalRepresentation() instanceof FilterImageBorderRepresentation) {
-            FilterImageBorderRepresentation cbRep = (FilterImageBorderRepresentation) getLocalRepresentation();
-            cbRep.setPramMode(FilterImageBorderRepresentation.PARAM_COLOR);
+        if (rep != null && getLocalRepresentation() instanceof FilterTextureBorderRepresentation) {
+            FilterTextureBorderRepresentation cbRep = (FilterTextureBorderRepresentation) getLocalRepresentation();
+            cbRep.setPramMode(FilterTextureBorderRepresentation.PARAM_COLOR);
             mParameterString = mContext.getString(R.string.color_border_color);
             if (mEditControl != null) {
                 control(cbRep.getCurrentParam(), mEditControl);
@@ -116,25 +116,25 @@ public class EditorImageBorder extends ParametricEditor {
     }
 
     protected void selectMenuItem(PopupMenuItem item) {
-        FilterImageBorderRepresentation rep = getColorBorderRep();
+        FilterTextureBorderRepresentation rep = getColorBorderRep();
         if (rep == null) {
             return;
         }
         switch (item.getItemId()) {
             case POP_UP_MENU_ID_CORNER_SIZE:
-                rep.setPramMode(FilterImageBorderRepresentation.PARAM_RADIUS);
+                rep.setPramMode(FilterTextureBorderRepresentation.PARAM_RADIUS);
                 break;
             case POP_UP_MENU_ID_BODER_SIZE:
-                rep.setPramMode(FilterImageBorderRepresentation.PARAM_SIZE);
+                rep.setPramMode(FilterTextureBorderRepresentation.PARAM_SIZE);
                 break;
             case POP_UP_MENU_ID_BODER_COLOR:
-                rep.setPramMode(FilterImageBorderRepresentation.PARAM_COLOR);
+                rep.setPramMode(FilterTextureBorderRepresentation.PARAM_COLOR);
                 break;
             case POP_UP_MENU_ID_BODER_CLEAR:
                 clearFrame();
                 break;
         }
-        if (item.getItemId() != FilterImageBorderRepresentation.PARAM_CLEAR) {
+        if (item.getItemId() != FilterTextureBorderRepresentation.PARAM_CLEAR) {
             mParameterString = item.getTitle().toString();
         }
         if (mControl instanceof ColorChooser) {
@@ -163,10 +163,10 @@ public class EditorImageBorder extends ParametricEditor {
         return;
     }
 
-    FilterImageBorderRepresentation getColorBorderRep() {
+    FilterTextureBorderRepresentation getColorBorderRep() {
         FilterRepresentation rep = getLocalRepresentation();
-        if (rep instanceof FilterImageBorderRepresentation) {
-            return (FilterImageBorderRepresentation) rep;
+        if (rep instanceof FilterTextureBorderRepresentation) {
+            return (FilterTextureBorderRepresentation) rep;
         }
         return null;
     }
