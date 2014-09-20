@@ -33,7 +33,7 @@
     <color name="np_main_bg">#FF434A4E</color>
     <color name="np_menu_bg">#FF3B4145</color>
     <color name="np_main_text_color_normal">#FFDBDBDB</color>
-    <color name="np_main_text_color_selected">#FFFFEEEE</color>
+    <color name="np_main_text_color_selected">#FFFFC401</color>
     <color name="np_common_bar_bg">#FF273036</color>
     <color name="np_major_text_color">#FFc7c7c7</color>
     <color name="np_minor_text_color">#FF9F9F9F</color>

@@ -9,7 +9,7 @@ import com.xjt.newpic.R;
 import com.xjt.newpic.edit.controller.BasicParameterInt;
 import com.xjt.newpic.edit.controller.Parameter;
 import com.xjt.newpic.edit.controller.ParameterColor;
-import com.xjt.newpic.edit.editors.EditorColorBorder;
+import com.xjt.newpic.edit.editors.EditorImageBorder;
 import com.xjt.newpic.surpport.JsonReader;
 import com.xjt.newpic.surpport.JsonWriter;
 
@@ -21,6 +21,7 @@ public class FilterImageBorderRepresentation extends FilterRepresentation {
     public static final int PARAM_SIZE = 0;
     public static final int PARAM_RADIUS = 1;
     public static final int PARAM_COLOR = 2;
+    public static final int PARAM_CLEAR = 3;
     public static int DEFAULT_MENU_COLOR1 = Color.WHITE;
     public static int DEFAULT_MENU_COLOR2 = Color.BLACK;
     public static int DEFAULT_MENU_COLOR3 = Color.GRAY;
@@ -42,9 +43,9 @@ public class FilterImageBorderRepresentation extends FilterRepresentation {
         setSerializationName(SERIALIZATION_NAME);
         setFilterType(FilterRepresentation.TYPE_BORDER);
         setTextId(R.string.custom_border);
-        setEditorId(EditorColorBorder.ID);
+        setEditorId(EditorImageBorder.ID);
         setShowParameterValue(false);
-        setFilterClass(ImageFilterColorBorder.class);
+        setFilterClass(ImageFilterImageBorder.class);
         mParamColor.setValue(color);
         mParamSize.setValue(size);
         mParamRadius.setValue(radius);
@@ -63,7 +64,7 @@ public class FilterImageBorderRepresentation extends FilterRepresentation {
 
     @Override
     public FilterRepresentation copy() {
-        FilterColorBorderRepresentation representation = new FilterColorBorderRepresentation(0, 0, 0, 0);
+        FilterImageBorderRepresentation representation = new FilterImageBorderRepresentation(0, 0, 0, 0);
         copyAllParameters(representation);
         return representation;
     }
@@ -75,7 +76,7 @@ public class FilterImageBorderRepresentation extends FilterRepresentation {
     }
 
     public void useParametersFrom(FilterRepresentation a) {
-        if (a instanceof FilterColorBorderRepresentation) {
+        if (a instanceof FilterImageBorderRepresentation) {
             FilterImageBorderRepresentation representation = (FilterImageBorderRepresentation) a;
             setName(representation.getName());
             setColor(representation.getColor());
@@ -90,7 +91,7 @@ public class FilterImageBorderRepresentation extends FilterRepresentation {
         if (!super.equals(representation)) {
             return false;
         }
-        if (representation instanceof FilterColorBorderRepresentation) {
+        if (representation instanceof FilterImageBorderRepresentation) {
             FilterImageBorderRepresentation border = (FilterImageBorderRepresentation) representation;
             if (border.mParamColor.getValue() == mParamColor.getValue()
                     && border.mParamRadius.getValue() == mParamRadius.getValue()

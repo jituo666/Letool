@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.edit.filters;
 
 import android.content.Context;
@@ -15,6 +16,8 @@ import java.util.Vector;
 public abstract class BaseFiltersManager implements FiltersManagerInterface {
 
     private static final String TAG = BaseFiltersManager.class.getSimpleName();
+    private static final int FILTER_BODER_DEFAULT_SIZE = 4; // in percent
+    private static final int FILTER_BODER_DEFAULT_RADIUS = 4;
 
     protected HashMap<Class<?>, ImageFilter> mFilters = null;
     protected HashMap<String, FilterRepresentation> mRepresentationLookup = null;
@@ -23,8 +26,6 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
     protected ArrayList<FilterRepresentation> mBorders = new ArrayList<FilterRepresentation>();
     protected ArrayList<FilterRepresentation> mTools = new ArrayList<FilterRepresentation>();
     protected ArrayList<FilterRepresentation> mEffects = new ArrayList<FilterRepresentation>();
-    private static int mImageBorderSize = 4; // in percent
-    private static int mImageCornerRidus = 0;
 
     protected void init() {
         mFilters = new HashMap<Class<?>, ImageFilter>();
@@ -231,53 +232,39 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
                 R.drawable.effect_sample_14,
                 R.drawable.effect_sample_15,
                 R.drawable.effect_sample_16
-//                R.drawable.effect_sample_17,
-//                R.drawable.effect_sample_18,
-//                R.drawable.effect_sample_19,
-//                R.drawable.effect_sample_20,
-//                R.drawable.effect_sample_21
+                //                R.drawable.effect_sample_17,
+                //                R.drawable.effect_sample_18,
+                //                R.drawable.effect_sample_19,
+                //                R.drawable.effect_sample_20,
+                //                R.drawable.effect_sample_21
         };
 
         // The "no border" implementation
         int i = 0;
-        FilterRepresentation rep ;
+        FilterRepresentation rep;
 
-//        // Regular borders
+        //        // Regular borders
         ArrayList<FilterRepresentation> borderList = new ArrayList<FilterRepresentation>();
-//
-//        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_4x5, sampleid[0]);
-//        borderList.add(rep);
-//
-//        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_brush, sampleid[1]);
-//        borderList.add(rep);
-//
-//        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_grunge, sampleid[2]);
-//        borderList.add(rep);
-//
-//        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_sumi_e, sampleid[3]);
-//        borderList.add(rep);
+        //
+        //        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_4x5, sampleid[0]);
+        //        borderList.add(rep);
+        //
+        //        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_brush, sampleid[1]);
+        //        borderList.add(rep);
+        //
+        //        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_grunge, sampleid[2]);
+        //        borderList.add(rep);
+        //
+        //        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_sumi_e, sampleid[3]);
+        //        borderList.add(rep);
 
-        rep = new FilterImageBorderRepresentation(FilterColorBorderRepresentation.DEFAULT_MENU_COLOR1, mImageBorderSize, mImageCornerRidus, sampleid[4]);
+        rep = new FilterImageBorderRepresentation(FilterImageBorderRepresentation.DEFAULT_MENU_COLOR1, FILTER_BODER_DEFAULT_SIZE,
+                FILTER_BODER_DEFAULT_RADIUS, sampleid[4]);
         borderList.add(rep);
 
-        rep = new FilterColorBorderRepresentation(FilterColorBorderRepresentation.DEFAULT_MENU_COLOR1, mImageBorderSize, mImageCornerRidus, sampleid[5]);
+        rep = new FilterColorBorderRepresentation(FilterColorBorderRepresentation.DEFAULT_MENU_COLOR1, FILTER_BODER_DEFAULT_SIZE,
+                FILTER_BODER_DEFAULT_RADIUS, sampleid[5]);
         borderList.add(rep);
-
-//        rep = new FilterColorBorderRepresentation(Color.BLACK, mImageBorderSize, mImageBorderSize, sampleid[6]);
-//        borderList.add(rep);
-//
-//        rep = new FilterColorBorderRepresentation(Color.WHITE, mImageBorderSize, 0, sampleid[7]);
-//        borderList.add(rep);
-//
-//        rep = new FilterColorBorderRepresentation(Color.WHITE, mImageBorderSize, mImageBorderSize, sampleid[8]);
-//        borderList.add(rep);
-//
-//        int creamColor = Color.argb(255, 237, 237, 227);
-//        rep = new FilterColorBorderRepresentation(creamColor, mImageBorderSize, 0, sampleid[9]);
-//        borderList.add(rep);
-//
-//        rep = new FilterColorBorderRepresentation(creamColor, mImageBorderSize, mImageBorderSize, sampleid[10]);
-//        borderList.add(rep);
 
         for (FilterRepresentation filter : borderList) {
             filter.setSerializationName(serializationNames[i++]);

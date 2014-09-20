@@ -52,6 +52,7 @@ import com.xjt.newpic.edit.editors.EditorColorBorder;
 import com.xjt.newpic.edit.editors.EditorCrop;
 import com.xjt.newpic.edit.editors.EditorDraw;
 import com.xjt.newpic.edit.editors.EditorGrad;
+import com.xjt.newpic.edit.editors.EditorImageBorder;
 import com.xjt.newpic.edit.editors.EditorManager;
 import com.xjt.newpic.edit.editors.EditorMirror;
 import com.xjt.newpic.edit.editors.EditorPanel;
@@ -184,6 +185,7 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
         mEditorPlaceHolder.addEditor(new EditorGrad());
         mEditorPlaceHolder.addEditor(new EditorDraw());
         mEditorPlaceHolder.addEditor(new EditorColorBorder());
+        mEditorPlaceHolder.addEditor(new EditorImageBorder());
         mEditorPlaceHolder.addEditor(new BasicEditor());
         mEditorPlaceHolder.addEditor(new ImageOnlyEditor());
         mEditorPlaceHolder.addEditor(new EditorRedEye());
