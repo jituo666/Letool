@@ -1,6 +1,6 @@
+
 package com.xjt.newpic.edit.filters;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -34,13 +34,7 @@ public class ImageFilterColorBorder extends ImageFilter {
     public FilterColorBorderRepresentation getParameters() {
         return mParameters;
     }
-    private Resources mResources = null;
-    public void setResources(Resources resources) {
-        if (mResources != resources) {
-            mResources = resources;
-        }
-    }
-    
+
     private void applyHelper(Canvas canvas, int w, int h) {
         if (getParameters() == null) {
             return;

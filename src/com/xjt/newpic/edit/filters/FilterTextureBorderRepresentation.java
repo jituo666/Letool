@@ -42,7 +42,7 @@ public class FilterTextureBorderRepresentation extends FilterRepresentation {
         super(SERIALIZATION_NAME, sr);
         setSerializationName(SERIALIZATION_NAME);
         setFilterType(FilterRepresentation.TYPE_BORDER);
-        setTextId(R.string.custom_border);
+        setTextId(R.string.texure_border);
         setEditorId(EditorTextureBorder.ID);
         setShowParameterValue(false);
         setFilterClass(ImageFilterTextureBorder.class);
@@ -154,8 +154,6 @@ public class FilterTextureBorderRepresentation extends FilterRepresentation {
     public String getValueString() {
         return "";
     }
-
-    // Serialization...
 
     public void serializeRepresentation(JsonWriter writer) throws IOException {
         writer.beginObject();

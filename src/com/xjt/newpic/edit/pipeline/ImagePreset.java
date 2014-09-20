@@ -11,12 +11,12 @@ import com.xjt.newpic.edit.cache.ImageLoader;
 import com.xjt.newpic.edit.filters.BaseFiltersManager;
 import com.xjt.newpic.edit.filters.FilterCropRepresentation;
 import com.xjt.newpic.edit.filters.FilterFxRepresentation;
-import com.xjt.newpic.edit.filters.FilterTextureBorderRepresentation;
 import com.xjt.newpic.edit.filters.FilterMirrorRepresentation;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
 import com.xjt.newpic.edit.filters.FilterRotateRepresentation;
 import com.xjt.newpic.edit.filters.FilterStraightenRepresentation;
 import com.xjt.newpic.edit.filters.FilterUserPresetRepresentation;
+import com.xjt.newpic.edit.filters.FilterImageBorderRepresentation;
 import com.xjt.newpic.edit.filters.FiltersManager;
 import com.xjt.newpic.edit.filters.ImageFilter;
 import com.xjt.newpic.edit.imageshow.GeometryMathUtils;
@@ -304,8 +304,7 @@ public class ImagePreset {
     public void removeFilter(FilterRepresentation filterRepresentation) {
         if (filterRepresentation.getFilterType() == FilterRepresentation.TYPE_BORDER) {
             for (int i = 0; i < mFilters.size(); i++) {
-                if (mFilters.elementAt(i).getFilterType()
-                == filterRepresentation.getFilterType()) {
+                if (mFilters.elementAt(i).getFilterType() == filterRepresentation.getFilterType()) {
                     mFilters.remove(i);
                     break;
                 }
@@ -355,7 +354,9 @@ public class ImagePreset {
             }
         } else if (representation.getFilterType() == FilterRepresentation.TYPE_BORDER) {
             removeFilter(representation);
-            mFilters.add(representation);
+            if (!isNoneBorderFilter(representation)) {
+                mFilters.add(representation);
+            }
         } else if (representation.getFilterType() == FilterRepresentation.TYPE_FX) {
             boolean replaced = false;
             for (int i = 0; i < mFilters.size(); i++) {
@@ -389,6 +390,11 @@ public class ImagePreset {
         if (border != null) {
             mFilters.add(border);
         }
+    }
+
+    private boolean isNoneBorderFilter(FilterRepresentation representation) {
+        return representation instanceof FilterImageBorderRepresentation &&
+                ((FilterImageBorderRepresentation) representation).getDrawableResource() == 0;
     }
 
     private boolean isNoneFxFilter(FilterRepresentation representation) {

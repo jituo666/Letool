@@ -3,7 +3,6 @@ package com.xjt.newpic.edit.filters;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.util.Log;
 
 import com.xjt.newpic.R;
@@ -16,8 +15,8 @@ import java.util.Vector;
 public abstract class BaseFiltersManager implements FiltersManagerInterface {
 
     private static final String TAG = BaseFiltersManager.class.getSimpleName();
-    private static final int FILTER_BODER_DEFAULT_SIZE = 4; // in percent
-    private static final int FILTER_BODER_DEFAULT_RADIUS = 4;
+    private static final int FILTER_BODER_DEFAULT_SIZE = 3; // in percent
+    private static final int FILTER_BODER_DEFAULT_RADIUS = 3;
 
     protected HashMap<Class<?>, ImageFilter> mFilters = null;
     protected HashMap<String, FilterRepresentation> mRepresentationLookup = null;
@@ -104,7 +103,6 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
     }
 
     protected void addFilterClasses(Vector<Class<?>> filters) {
-        filters.add(ImageFilterRedEye.class);
         filters.add(ImageFilterWBalance.class);
         filters.add(ImageFilterExposure.class);
         filters.add(ImageFilterVignette.class);
@@ -115,7 +113,6 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
         filters.add(ImageFilterVibrance.class);
         filters.add(ImageFilterSharpen.class);
         filters.add(ImageFilterCurves.class);
-        filters.add(ImageFilterDraw.class);
         filters.add(ImageFilterHue.class);
         filters.add(ImageFilterChanSat.class);
         filters.add(ImageFilterSaturated.class);
@@ -123,9 +120,14 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
         filters.add(ImageFilterNegative.class);
         filters.add(ImageFilterEdge.class);
         filters.add(ImageFilterKMeans.class);
+
+        filters.add(ImageFilterDraw.class);
+        //looks
         filters.add(ImageFilterFx.class);
+        //boders
         filters.add(ImageFilterTextureBorder.class);
         filters.add(ImageFilterColorBorder.class);
+        filters.add(ImageFilterImageBorder.class);
     }
 
     public ArrayList<FilterRepresentation> getLooks() {
@@ -241,22 +243,23 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
 
         // The "no border" implementation
         int i = 0;
-        FilterRepresentation rep;
+        FilterRepresentation rep = new FilterImageBorderRepresentation(0, R.drawable.effect_sample_0);
+        mBorders.add(rep);
 
         //        // Regular borders
         ArrayList<FilterRepresentation> borderList = new ArrayList<FilterRepresentation>();
         //
-        //        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_4x5, sampleid[0]);
-        //        borderList.add(rep);
-        //
-        //        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_brush, sampleid[1]);
-        //        borderList.add(rep);
-        //
-        //        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_grunge, sampleid[2]);
-        //        borderList.add(rep);
-        //
-        //        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_sumi_e, sampleid[3]);
-        //        borderList.add(rep);
+        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_4x5, sampleid[0]);
+        borderList.add(rep);
+
+        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_brush, sampleid[1]);
+        borderList.add(rep);
+
+        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_grunge, sampleid[2]);
+        borderList.add(rep);
+
+        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_sumi_e, sampleid[3]);
+        borderList.add(rep);
 
         rep = new FilterTextureBorderRepresentation(FilterTextureBorderRepresentation.DEFAULT_MENU_COLOR1, FILTER_BODER_DEFAULT_SIZE,
                 FILTER_BODER_DEFAULT_RADIUS, sampleid[4]);
@@ -343,10 +346,10 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
     }
 
     public void setFilterResources(Resources resources) {
-        ImageFilterTextureBorder filterBorder = (ImageFilterTextureBorder) getFilter(ImageFilterTextureBorder.class);
-        filterBorder.setResources(resources);
-        ImageFilterColorBorder c = (ImageFilterColorBorder) getFilter(ImageFilterColorBorder.class);
-        c.setResources(resources);
+        ImageFilterImageBorder imageBorder = (ImageFilterImageBorder) getFilter(ImageFilterImageBorder.class);
+        imageBorder.setResources(resources);
+        ImageFilterTextureBorder colorBorder = (ImageFilterTextureBorder) getFilter(ImageFilterTextureBorder.class);
+        colorBorder.setResources(resources);
         ImageFilterFx filterFx = (ImageFilterFx) getFilter(ImageFilterFx.class);
         filterFx.setResources(resources);
     }

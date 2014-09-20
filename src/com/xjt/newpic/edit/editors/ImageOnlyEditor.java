@@ -11,7 +11,7 @@ import com.xjt.newpic.edit.imageshow.ImageShow;
  */
 public class ImageOnlyEditor extends Editor {
     public final static int ID = R.id.imageOnlyEditor;
-    private final String LOGTAG = "ImageOnlyEditor";
+    private final String TAG = "ImageOnlyEditor";
 
     public ImageOnlyEditor() {
         super(ID);

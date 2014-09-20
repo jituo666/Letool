@@ -12,7 +12,8 @@
     <string name="cannot_edit_original">无法编辑原图</string>
     <string name="original">原图</string>
     <string name="borders">边框</string>
-    <string name="custom_border">自由边框</string>
+    <string name="texure_border">纹理边框</string>
+    <string name="color_border">颜色边框</string>
 
     <!-- actionbar menu -->
 

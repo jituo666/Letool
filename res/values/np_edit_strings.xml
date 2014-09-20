@@ -21,7 +21,8 @@
     <!-- Text for filters that apply a border to a picture [CHAR LIMIT=20] -->
     <string name="borders">Borders</string>
     <!-- Text for the custom border filter [CHAR LIMIT=20] -->
-    <string name="custom_border">Custom</string>
+    <string name="texure_border">Texture</string>
+    <string name="color_border">Color</string>
 
     <!-- actionbar menu -->
 
