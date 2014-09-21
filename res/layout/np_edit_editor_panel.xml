@@ -51,7 +51,7 @@
             <ImageView
                 android:layout_width="2dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/np_panel_divider_bg" />
+                android:src="@drawable/filtershow_vertical_bar" />
 
             <LinearLayout
                 android:id="@+id/panelAccessoryViewList"
@@ -76,7 +76,7 @@
             <ImageView
                 android:layout_width="2dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/np_panel_divider_bg" />
+                android:src="@drawable/filtershow_vertical_bar" />
 
             <ImageButton
                 android:id="@+id/applyFilter"

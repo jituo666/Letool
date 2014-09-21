@@ -2,20 +2,15 @@ package com.xjt.newpic.edit.colorpicker;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ToggleButton;
 
 import com.xjt.newpic.R;
-import com.xjt.newpic.edit.NpEditActivity;
 
 public class ColorPickerDialog extends Dialog   {
     ToggleButton mSelectedButton;

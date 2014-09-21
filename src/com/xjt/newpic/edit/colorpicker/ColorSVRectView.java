@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.edit.colorpicker;
 
 import android.content.Context;
@@ -21,6 +22,7 @@ import com.xjt.newpic.R;
 import java.util.ArrayList;
 
 public class ColorSVRectView extends View implements ColorListener {
+
     private float mDpToPix;
 
     private float mCtrY = 100;
@@ -34,7 +36,9 @@ public class ColorSVRectView extends View implements ColorListener {
     private float mDotX = Float.NaN;
     private float mDotY;
     private int mSliderColor = 0xFF33B5E5;
-    private float[] mHSVO = new float[]{0, 1, 1, 1};
+    private float[] mHSVO = new float[] {
+            0, 1, 1, 1
+    };
     RectF mRect = new RectF();
 
     private int mWidth;
@@ -52,7 +56,6 @@ public class ColorSVRectView extends View implements ColorListener {
         mBorder = BORDER_SIZE * mDpToPix;
 
         mPaint1 = new Paint();
-
 
         mDotPaint.setStyle(Paint.Style.FILL);
         if (isInEditMode()) {
@@ -98,7 +101,6 @@ public class ColorSVRectView extends View implements ColorListener {
 
     }
 
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -115,7 +117,6 @@ public class ColorSVRectView extends View implements ColorListener {
             canvas.drawCircle(mDotX, mDotY, mDotRadus, mDotPaint);
         }
     }
-
 
     public boolean onDown(MotionEvent e) {
         return true;
@@ -159,7 +160,6 @@ public class ColorSVRectView extends View implements ColorListener {
         setUpColorPanel();
     }
 
-
     private void updateDot() {
 
         double hue = mHSVO[0];
@@ -173,10 +173,12 @@ public class ColorSVRectView extends View implements ColorListener {
     }
 
     private void updateDotPaint() {
-        int[] colors3 = new int[]{
-                mSliderColor, mSliderColor, 0x66000000, 0};
-        RadialGradient g = new RadialGradient(mDotX, mDotY, mDotRadus, colors3, new float[]{
-                0, .3f, .31f, 1}, Shader.TileMode.CLAMP);
+        int[] colors3 = new int[] {
+                mSliderColor, mSliderColor, 0x66000000, 0
+        };
+        RadialGradient g = new RadialGradient(mDotX, mDotY, mDotRadus, colors3, new float[] {
+                0, .3f, .31f, 1
+        }, Shader.TileMode.CLAMP);
         mDotPaint.setShader(g);
 
     }

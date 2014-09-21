@@ -10,8 +10,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.xjt.newpic.R;
@@ -20,7 +20,7 @@ import com.xjt.newpic.edit.controller.TextureChooser.TextureListener;
 public class TexturePickerDialog extends Dialog {
 
     private GridView mTextureGrid;
-    private Button mCancel;
+    private ImageButton mCancel;
     private TextureListener mTextureListener;
 
     private static final int[] ALL_TEXTURES = new int[] {
@@ -29,8 +29,6 @@ public class TexturePickerDialog extends Dialog {
             R.drawable.edit_border_tile3,
             R.drawable.edit_border_tile4,
             R.drawable.edit_border_tile5,
-            R.drawable.edit_border_tile6,
-            R.drawable.edit_border_tile7,
             R.drawable.edit_border_tile11,
             R.drawable.edit_border_tile12,
             R.drawable.edit_border_tile13,
@@ -40,6 +38,7 @@ public class TexturePickerDialog extends Dialog {
             R.drawable.edit_border_tile17,
             R.drawable.edit_border_tile18,
             R.drawable.edit_border_tile19,
+            R.drawable.edit_border_tile20,
             R.drawable.edit_border_tile110,
             R.drawable.edit_border_tile111,
             R.drawable.edit_border_tile112,
@@ -49,7 +48,22 @@ public class TexturePickerDialog extends Dialog {
             R.drawable.edit_border_tile117,
             R.drawable.edit_border_tile118,
             R.drawable.edit_border_tile119,
-            R.drawable.edit_border_tile120
+            R.drawable.edit_border_tile120,
+            R.drawable.edit_border_tile121,
+            R.drawable.edit_border_tile122,
+            R.drawable.edit_border_tile123,
+            R.drawable.edit_border_tile124,
+            R.drawable.edit_border_tile125,
+            R.drawable.edit_border_tile126,
+            R.drawable.edit_border_tile127,
+            R.drawable.edit_border_tile128,
+            R.drawable.edit_border_tile129,
+            R.drawable.edit_border_tile130,
+            R.drawable.edit_border_tile131,
+            R.drawable.edit_border_tile132,
+            R.drawable.edit_border_tile133,
+            R.drawable.edit_border_tile134,
+            R.drawable.edit_border_tile135
     };
 
     public TexturePickerDialog(Context context, final TextureListener cl) {
@@ -62,7 +76,7 @@ public class TexturePickerDialog extends Dialog {
         getWindow().setLayout(width, height);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.np_edit_texture_picker);
-        mCancel = (Button) findViewById(R.id.cancelTexturePick);
+        mCancel = (ImageButton) findViewById(R.id.cancelTexturePick);
         mCancel.setOnClickListener(new View.OnClickListener() {
 
             @Override

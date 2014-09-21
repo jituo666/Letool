@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.edit.colorpicker;
 
 import android.content.Context;
@@ -33,7 +34,9 @@ public class ColorHueView extends View implements ColorListener {
     private float mDotRadius;
     private float mBorder;
 
-    private float[] mHSVO = {0.f,0.f,0.f,0.f};
+    private float[] mHSVO = {
+            0.f, 0.f, 0.f, 0.f
+    };
     private int mSliderColor;
     private float mDotX = mBorder;
     private float mDotY = mBorder;
@@ -57,7 +60,6 @@ public class ColorHueView extends View implements ColorListener {
         mDotPaint.setStyle(Paint.Style.FILL);
         mDotPaint.setColor(ctx.getResources().getColor(R.color.slider_dot_color));
         mSliderColor = ctx.getResources().getColor(R.color.slider_line_color);
-
 
         mLinePaint1 = new Paint();
         mLinePaint1.setColor(Color.GRAY);
@@ -92,7 +94,6 @@ public class ColorHueView extends View implements ColorListener {
         mBitmap.setPixels(mTmpBuff, 0, w, 0, 0, w, h);
     }
 
-
     public boolean onDown(MotionEvent e) {
         return true;
     }
@@ -118,11 +119,11 @@ public class ColorHueView extends View implements ColorListener {
         notifyColorListeners(mHSVO);
         setupButton();
         fillBitmap();
-//        invalidate((int) (ox - mDotRadius), (int) (oy - mDotRadius), (int) (ox + mDotRadius),
-//                (int) (oy + mDotRadius));
-//        invalidate(
-//                (int) (mDotX - mDotRadius), (int) (mDotY - mDotRadius), (int) (mDotX + mDotRadius),
-//                (int) (mDotY + mDotRadius));
+        //        invalidate((int) (ox - mDotRadius), (int) (oy - mDotRadius), (int) (ox + mDotRadius),
+        //                (int) (oy + mDotRadius));
+        //        invalidate(
+        //                (int) (mDotX - mDotRadius), (int) (mDotY - mDotRadius), (int) (mDotX + mDotRadius),
+        //                (int) (mDotY + mDotRadius));
         invalidate();
 
         return true;
@@ -132,10 +133,12 @@ public class ColorHueView extends View implements ColorListener {
         float pos = mHSVO[0] / 360 * (mWidth - mBorder * 2);
         mDotX = pos + mBorder;
 
-        int[] colors3 = new int[]{
-                mSliderColor, mSliderColor, 0x66000000, 0};
-        RadialGradient g = new RadialGradient(mDotX, mDotY, mDotRadius, colors3, new float[]{
-                0, .3f, .31f, 1}, Shader.TileMode.CLAMP);
+        int[] colors3 = new int[] {
+                mSliderColor, mSliderColor, 0x66000000, 0
+        };
+        RadialGradient g = new RadialGradient(mDotX, mDotY, mDotRadius, colors3, new float[] {
+                0, .3f, .31f, 1
+        }, Shader.TileMode.CLAMP);
         mDotPaint.setShader(g);
     }
 
@@ -147,7 +150,6 @@ public class ColorHueView extends View implements ColorListener {
         setupButton();
     }
 
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -157,9 +159,8 @@ public class ColorHueView extends View implements ColorListener {
         mRect.right = mWidth - mBorder;
         mRect.top = 0;
         mRect.bottom = mHeight;
-        canvas.drawRect(mRect,mCheckPaint);
+        canvas.drawRect(mRect, mCheckPaint);
         canvas.drawBitmap(mBitmap, null, mRect, mPaint);
-
 
         canvas.drawLine(mDotX, mDotY, mWidth - mBorder, mDotY, mLinePaint1);
         canvas.drawLine(mBorder, mDotY, mDotX, mDotY, mLinePaint2);
@@ -168,9 +169,9 @@ public class ColorHueView extends View implements ColorListener {
         }
     }
 
-    private void makeCheckPaint(){
+    private void makeCheckPaint() {
         int block = 16;
-        int checkdim = block*2;
+        int checkdim = block * 2;
         int[] colors = new int[checkdim * checkdim];
         for (int i = 0; i < colors.length; i++) {
             int y = i / (checkdim * block);

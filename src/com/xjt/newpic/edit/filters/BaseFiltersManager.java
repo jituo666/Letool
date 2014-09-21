@@ -16,7 +16,7 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
 
     private static final String TAG = BaseFiltersManager.class.getSimpleName();
     private static final int FILTER_BODER_DEFAULT_SIZE = 3; // in percent
-    private static final int FILTER_BODER_DEFAULT_RADIUS = 3;
+    private static final int FILTER_BODER_DEFAULT_RADIUS = 0;
 
     protected HashMap<Class<?>, ImageFilter> mFilters = null;
     protected HashMap<String, FilterRepresentation> mRepresentationLookup = null;

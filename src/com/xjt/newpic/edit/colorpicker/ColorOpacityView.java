@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.edit.colorpicker;
 
 import android.content.Context;
@@ -40,8 +41,9 @@ public class ColorOpacityView extends View implements ColorListener {
     private float mDotX = mBorder;
     private float mDotY = mBorder;
     private final static float DOT_SIZE = ColorHueView.DOT_SIZE;
-    public final static float BORDER_SIZE = 20;;
-    private  int mCheckDim = 8;
+    public final static float BORDER_SIZE = 20;
+    private int mCheckDim = 8;
+
     public ColorOpacityView(Context ctx, AttributeSet attrs) {
         super(ctx, attrs);
         DisplayMetrics metrics = ctx.getResources().getDisplayMetrics();
@@ -69,8 +71,8 @@ public class ColorOpacityView extends View implements ColorListener {
         makeCheckPaint();
     }
 
-    private void makeCheckPaint(){
-        int imgdim = mCheckDim*2;
+    private void makeCheckPaint() {
+        int imgdim = mCheckDim * 2;
         int[] colors = new int[imgdim * imgdim];
         for (int i = 0; i < colors.length; i++) {
             int y = i / (imgdim * mCheckDim);
@@ -121,9 +123,11 @@ public class ColorOpacityView extends View implements ColorListener {
         mDotX = pos + mBorder;
 
         int[] colors3 = new int[] {
-                mSliderColor, mSliderColor, 0x66000000, 0 };
+                mSliderColor, mSliderColor, 0x66000000, 0
+        };
         RadialGradient g = new RadialGradient(mDotX, mDotY, mDotRadius, colors3, new float[] {
-                0, .3f, .31f, 1 }, Shader.TileMode.CLAMP);
+                0, .3f, .31f, 1
+        }, Shader.TileMode.CLAMP);
         mDotPaint.setShader(g);
     }
 

@@ -55,7 +55,7 @@ public class TextureChooser implements Control {
             mTextures[i] = button;
             button.setTag(palette[i]);
             button.setImageResource(palette[i]);
-            button.getDrawable().setAlpha(mSelectedButton == i ? 255 : 80);
+            //button.getDrawable().setAlpha(mSelectedButton == i ? 255 : 80);
             final int textureNo = i;
             button.setOnClickListener(new View.OnClickListener() {
 
@@ -96,7 +96,7 @@ public class TextureChooser implements Control {
         for (int i = 0; i < mTexturessID.length; i++) {
             final ImageView button = mTextures[i];
             button.setImageResource(palette[i]);
-            button.getDrawable().setAlpha(mSelectedButton == i ? 255 : 80);
+            //button.getDrawable().setAlpha(mSelectedButton == i ? 255 : 80);
         }
     }
 
