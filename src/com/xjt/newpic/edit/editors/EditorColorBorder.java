@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.edit.NpEditActivity;
-import com.xjt.newpic.edit.controller.ColorChooser;
+import com.xjt.newpic.edit.controller.ChoseBorderColor;
 import com.xjt.newpic.edit.filters.FilterColorBorderRepresentation;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
 import com.xjt.newpic.edit.imageshow.ImageShow;
@@ -138,15 +138,15 @@ public class EditorColorBorder extends ParametricEditor {
         if (item.getItemId() != FilterColorBorderRepresentation.PARAM_CLEAR) {
             mParameterString = item.getTitle().toString();
         }
-        if (mControl instanceof ColorChooser) {
-            ColorChooser c = (ColorChooser) mControl;
+        if (mControl instanceof ChoseBorderColor) {
+            ChoseBorderColor c = (ChoseBorderColor) mControl;
             mBasicColors = c.getColorSet();
         }
         if (mEditControl != null) {
             control(rep.getCurrentParam(), mEditControl);
         }
-        if (mControl instanceof ColorChooser) {
-            ColorChooser c = (ColorChooser) mControl;
+        if (mControl instanceof ChoseBorderColor) {
+            ChoseBorderColor c = (ChoseBorderColor) mControl;
             c.setColorSet(mBasicColors);
         }
         updateText();

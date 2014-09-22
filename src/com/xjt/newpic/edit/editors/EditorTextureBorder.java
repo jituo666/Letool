@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 
 import com.xjt.newpic.R;
 import com.xjt.newpic.edit.NpEditActivity;
-import com.xjt.newpic.edit.controller.TextureChooser;
+import com.xjt.newpic.edit.controller.ChoseBorderTexture;
 import com.xjt.newpic.edit.filters.FilterTextureBorderRepresentation;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
 import com.xjt.newpic.edit.imageshow.ImageShow;
@@ -32,7 +32,7 @@ public class EditorTextureBorder extends ParametricEditor {
             FilterTextureBorderRepresentation.DEFAULT_TEXTURE2,
             FilterTextureBorderRepresentation.DEFAULT_TEXTURE3,
             FilterTextureBorderRepresentation.DEFAULT_TEXTURE4,
-            FilterTextureBorderRepresentation.DEFAULT_TEXTURE5,
+            FilterTextureBorderRepresentation.DEFAULT_TEXTURE5
     };
 
     private String mParameterString;
@@ -136,15 +136,15 @@ public class EditorTextureBorder extends ParametricEditor {
         if (item.getItemId() != FilterTextureBorderRepresentation.PARAM_CLEAR) {
             mParameterString = item.getTitle().toString();
         }
-        if (mControl instanceof TextureChooser) {
-            TextureChooser c = (TextureChooser) mControl;
+        if (mControl instanceof ChoseBorderTexture) {
+            ChoseBorderTexture c = (ChoseBorderTexture) mControl;
             mBasicTextures = c.getTextureSet();
         }
         if (mEditControl != null) {
             control(rep.getCurrentParam(), mEditControl);
         }
-        if (mControl instanceof TextureChooser) {
-            TextureChooser c = (TextureChooser) mControl;
+        if (mControl instanceof ChoseBorderTexture) {
+            ChoseBorderTexture c = (ChoseBorderTexture) mControl;
             c.setTextureSet(mBasicTextures);
         }
         updateText();

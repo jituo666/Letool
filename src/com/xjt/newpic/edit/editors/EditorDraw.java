@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.edit.editors;
 
 import android.content.Context;
@@ -12,7 +13,8 @@ import android.widget.LinearLayout;
 import com.xjt.newpic.R;
 import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.controller.BitmapCaller;
-import com.xjt.newpic.edit.controller.ColorChooser;
+import com.xjt.newpic.edit.controller.ChoseBorderColor;
+import com.xjt.newpic.edit.controller.ChoseDrawStyle;
 import com.xjt.newpic.edit.controller.FilterView;
 import com.xjt.newpic.edit.filters.FilterDrawRepresentation;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
@@ -31,21 +33,23 @@ public class EditorDraw extends ParametricEditor implements FilterView {
 
     public static final int ID = R.id.editorDraw;
     public ImageDraw mImageDraw;
+
     int[] brushIcons = {
-            R.drawable.brush_flat,
-            R.drawable.brush_round,
-            R.drawable.brush_gauss,
-            R.drawable.brush_marker,
-            R.drawable.brush_spatter
+            FilterDrawRepresentation.DEFAULT_STYLE1,
+            FilterDrawRepresentation.DEFAULT_STYLE2,
+            FilterDrawRepresentation.DEFAULT_STYLE3,
+            FilterDrawRepresentation.DEFAULT_STYLE4,
+            FilterDrawRepresentation.DEFAULT_STYLE5
     };
 
     int[] mBasColors = {
-            FilterDrawRepresentation.DEFAULT_MENU_COLOR1,
-            FilterDrawRepresentation.DEFAULT_MENU_COLOR2,
-            FilterDrawRepresentation.DEFAULT_MENU_COLOR3,
-            FilterDrawRepresentation.DEFAULT_MENU_COLOR4,
-            FilterDrawRepresentation.DEFAULT_MENU_COLOR5,
+            FilterDrawRepresentation.DEFAULT_COLOR1,
+            FilterDrawRepresentation.DEFAULT_COLOR2,
+            FilterDrawRepresentation.DEFAULT_COLOR3,
+            FilterDrawRepresentation.DEFAULT_COLOR4,
+            FilterDrawRepresentation.DEFAULT_COLOR5
     };
+
     private String mParameterString;
     private String mDrawString = null;
 
@@ -102,7 +106,7 @@ public class EditorDraw extends ParametricEditor implements FilterView {
         view.setOnClickListener(new OnClickListener() {
 
             @Override
-            public void onClick(View arg0) {
+            public void onClick(View v) {
                 showPopupMenu(accessoryViewList);
             }
         });
@@ -115,8 +119,7 @@ public class EditorDraw extends ParametricEditor implements FilterView {
     }
 
     private void showPopupMenu(LinearLayout accessoryViewList) {
-        final Button button = (Button) accessoryViewList.findViewById(
-                R.id.applyEffect);
+        final Button button = (Button) accessoryViewList.findViewById(R.id.applyEffect);
         if (button == null) {
             return;
         }
@@ -145,11 +148,11 @@ public class EditorDraw extends ParametricEditor implements FilterView {
         }
 
         switch (item.getItemId()) {
-            case POP_UP_MENU_ID_STYLE:
-                rep.setPramMode(FilterDrawRepresentation.PARAM_STYLE);
-                break;
             case POP_UP_MENU_ID_SIZE:
                 rep.setPramMode(FilterDrawRepresentation.PARAM_SIZE);
+                break;
+            case POP_UP_MENU_ID_STYLE:
+                rep.setPramMode(FilterDrawRepresentation.PARAM_STYLE);
                 break;
             case POP_UP_MENU_ID_COLOR:
                 rep.setPramMode(FilterDrawRepresentation.PARAM_COLOR);
@@ -162,15 +165,22 @@ public class EditorDraw extends ParametricEditor implements FilterView {
             mParameterString = item.getTitle().toString();
             updateText();
         }
-        if (mControl instanceof ColorChooser) {
-            ColorChooser c = (ColorChooser) mControl;
+        if (mControl instanceof ChoseBorderColor) {
+            ChoseBorderColor c = (ChoseBorderColor) mControl;
             mBasColors = c.getColorSet();
+        } else if (mControl instanceof ChoseDrawStyle) {
+            ChoseDrawStyle c = (ChoseDrawStyle) mControl;
+            brushIcons = c.getDrawStyleSet();
         }
         control(rep.getCurrentParam(), mEditControl);
-        if (mControl instanceof ColorChooser) {
-            ColorChooser c = (ColorChooser) mControl;
+        if (mControl instanceof ChoseBorderColor) {
+            ChoseBorderColor c = (ChoseBorderColor) mControl;
             c.setColorSet(mBasColors);
+        } else if (mControl instanceof ChoseDrawStyle) {
+            ChoseDrawStyle c = (ChoseDrawStyle) mControl;
+            c.setDrawStyleSet(brushIcons);
         }
+
         mControl.updateUI();
         mView.invalidate();
     }

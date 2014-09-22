@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.edit.imageshow;
 
 import android.content.Context;
@@ -17,7 +18,6 @@ import android.view.MotionEvent;
 import com.xjt.newpic.R;
 import com.xjt.newpic.edit.editors.EditorDraw;
 import com.xjt.newpic.edit.filters.FilterDrawRepresentation;
-import com.xjt.newpic.edit.filters.ImageFilterDraw;
 
 public class ImageDraw extends ImageShow {
 
@@ -25,7 +25,7 @@ public class ImageDraw extends ImageShow {
 
     final static float INITAL_STROKE_RADIUS = 40;
     private float mCurrentSize = INITAL_STROKE_RADIUS;
-    private byte mType = 0;
+    private int mType = 0;
     private FilterDrawRepresentation mFRep;
     private EditorDraw mEditorDraw;
     private long mTimeout;
@@ -33,9 +33,8 @@ public class ImageDraw extends ImageShow {
     private Paint mIconPaint = new Paint();
     private Paint mBorderPaint = new Paint();
     private Handler mHandler;
-    private FilterDrawRepresentation.StrokeData mTmpStrokData =
-            new FilterDrawRepresentation.StrokeData();
-    private int DISPLAY_TIME = 500;
+    private FilterDrawRepresentation.StrokeData mTmpStrokData = new FilterDrawRepresentation.StrokeData();
+    private int DISPLAY_TIME = 100;
     private Matrix mRotateToScreen = new Matrix();
     private Matrix mToOrig;
     private int mBorderColor;
@@ -82,8 +81,7 @@ public class ImageDraw extends ImageShow {
 
     public void setFilterDrawRepresentation(FilterDrawRepresentation fr) {
         mFRep = fr;
-        mTmpStrokData =
-                new FilterDrawRepresentation.StrokeData();
+        mTmpStrokData = new FilterDrawRepresentation.StrokeData();
     }
 
     public Drawable getIcon(Context context) {
@@ -102,8 +100,8 @@ public class ImageDraw extends ImageShow {
         mCurrentSize = size;
     }
 
-    public void setStyle(byte style) {
-        mType = (byte) (style % ImageFilterDraw.NUMBER_OF_STYLES);
+    public void setStyle(int style) {
+        mType = style;
     }
 
     public int getStyle() {
@@ -225,16 +223,13 @@ public class ImageDraw extends ImageShow {
         int centerx = cw / 2;
         int centery = ch / 2;
 
-        //        mFRep.fillStrokeParameters(mTmpStrokData);
+        // mFRep.fillStrokeParameters(mTmpStrokData);
         mIconPaint.setAntiAlias(true);
         mIconPaint.setStyle(Paint.Style.STROKE);
         float rad = mRotateToScreen.mapRadius(mTmpStrokData.mRadius);
 
         RectF rec = new RectF();
-        rec.set(centerx - rad,
-                centery - rad,
-                centerx + rad,
-                centery + rad);
+        rec.set(centerx - rad, centery - rad, centerx + rad, centery + rad);
         mIconPaint.setColor(Color.BLACK);
         mIconPaint.setStrokeWidth(5);
         canvas.drawArc(rec, 0, 360, true, mIconPaint);

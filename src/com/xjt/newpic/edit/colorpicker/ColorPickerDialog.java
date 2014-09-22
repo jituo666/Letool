@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.edit.colorpicker;
 
 import android.app.Dialog;
@@ -12,7 +13,8 @@ import android.widget.ToggleButton;
 
 import com.xjt.newpic.R;
 
-public class ColorPickerDialog extends Dialog   {
+public class ColorPickerDialog extends Dialog {
+
     ToggleButton mSelectedButton;
     ColorHueView mColorHueView;
     ColorSVRectView mColorSVRectView;
@@ -24,10 +26,10 @@ public class ColorPickerDialog extends Dialog   {
     public ColorPickerDialog(Context context, final ColorListener cl) {
         super(context);
         DisplayMetrics metrics = new DisplayMetrics();
-        WindowManager wm =  (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         wm.getDefaultDisplay().getMetrics(metrics);
-        int height = metrics.heightPixels*8/10;
-        int width = metrics.widthPixels*8/10;
+        int height = metrics.heightPixels * 8 / 10;
+        int width = metrics.widthPixels * 8 / 10;
         getWindow().setLayout(width, height);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.np_edit_color_picker);
@@ -36,12 +38,15 @@ public class ColorPickerDialog extends Dialog   {
         mColorOpacityView = (ColorOpacityView) findViewById(R.id.colorOpacityView);
         mColorCompareView = (ColorCompareView) findViewById(R.id.btnSelect);
 
-        float[] hsvo = new float[] {123, .9f, 1, 1 };
+        float[] hsvo = new float[] {
+                123, .9f, 1, 1
+        };
 
         ImageButton apply = (ImageButton) findViewById(R.id.applyColorPick);
         ImageButton cancel = (ImageButton) findViewById(R.id.cancelColorPick);
 
         apply.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 cl.setColor(mHSVO);
@@ -49,23 +54,27 @@ public class ColorPickerDialog extends Dialog   {
             }
         });
         cancel.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 ColorPickerDialog.this.dismiss();
             }
         });
-        ColorListener [] c = {mColorCompareView,mColorSVRectView,mColorOpacityView,mColorHueView};
+        ColorListener[] c = {
+                mColorCompareView, mColorSVRectView, mColorOpacityView, mColorHueView
+        };
         for (int i = 0; i < c.length; i++) {
             c[i].setColor(hsvo);
             for (int j = 0; j < c.length; j++) {
-                if (i==j) {
-                     continue;
+                if (i == j) {
+                    continue;
                 }
-               c[i].addColorListener(c[j]);
+                c[i].addColorListener(c[j]);
             }
         }
 
-        ColorListener colorListener = new ColorListener(){
+        ColorListener colorListener = new ColorListener() {
+
             @Override
             public void setColor(float[] hsvo) {
                 System.arraycopy(hsvo, 0, mHSVO, 0, mHSVO.length);
@@ -126,7 +135,7 @@ public class ColorPickerDialog extends Dialog   {
         float[] fg = new float[] {
                 (hsv[0] + 180) % 360,
                 hsv[1],
-                        (hsv[2] > .5f) ? .1f : .9f
+                (hsv[2] > .5f) ? .1f : .9f
         };
         button.setTextColor(Color.HSVToColor(fg));
         button.setTag(hsv);

@@ -5,6 +5,8 @@ import android.graphics.Color;
 
 import java.util.Arrays;
 
+import com.xjt.newpic.edit.filters.FilterDrawRepresentation;
+
 public class ParameterColor implements Parameter {
 
     public static String sParameterType = "ParameterColor";
@@ -14,18 +16,20 @@ public class ParameterColor implements Parameter {
     String mParameterName;
     int mValue;
     public final int ID;
+
     int[] mBasColors = {
-            Color.RED & 0x80FFFFFF,
-            Color.GREEN & 0x80FFFFFF,
-            Color.BLUE & 0x80FFFFFF,
-            Color.BLACK & 0x80FFFFFF,
-            Color.WHITE & 0x80FFFFFF
+            FilterDrawRepresentation.DEFAULT_COLOR1,
+            FilterDrawRepresentation.DEFAULT_COLOR2,
+            FilterDrawRepresentation.DEFAULT_COLOR3,
+            FilterDrawRepresentation.DEFAULT_COLOR4,
+            FilterDrawRepresentation.DEFAULT_COLOR5,
     };
 
     public ParameterColor(int id, int defaultColor) {
         ID = id;
         Color.colorToHSV(defaultColor, mHSVO);
         mHSVO[3] = ((defaultColor >> 24) & 0xFF) / (float) 255;
+        mValue = Color.HSVToColor((int) (mHSVO[3] * 255), mHSVO);
     }
 
     @Override

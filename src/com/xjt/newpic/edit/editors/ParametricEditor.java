@@ -15,7 +15,7 @@ import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.edit.controller.ActionSlider;
 import com.xjt.newpic.edit.controller.BasicSlider;
-import com.xjt.newpic.edit.controller.ColorChooser;
+import com.xjt.newpic.edit.controller.ChoseBorderColor;
 import com.xjt.newpic.edit.controller.Control;
 import com.xjt.newpic.edit.controller.Parameter;
 import com.xjt.newpic.edit.controller.ParameterActionAndInt;
@@ -25,14 +25,15 @@ import com.xjt.newpic.edit.controller.ParameterHue;
 import com.xjt.newpic.edit.controller.ParameterInteger;
 import com.xjt.newpic.edit.controller.ParameterOpacity;
 import com.xjt.newpic.edit.controller.ParameterSaturation;
+import com.xjt.newpic.edit.controller.ParameterStyle;
 import com.xjt.newpic.edit.controller.ParameterStyles;
 import com.xjt.newpic.edit.controller.ParameterTexture;
 import com.xjt.newpic.edit.controller.SliderBrightness;
 import com.xjt.newpic.edit.controller.SliderHue;
 import com.xjt.newpic.edit.controller.SliderOpacity;
 import com.xjt.newpic.edit.controller.SliderSaturation;
-import com.xjt.newpic.edit.controller.StyleChooser;
-import com.xjt.newpic.edit.controller.TextureChooser;
+import com.xjt.newpic.edit.controller.ChoseDrawStyle;
+import com.xjt.newpic.edit.controller.ChoseBorderTexture;
 import com.xjt.newpic.edit.filters.FilterBasicRepresentation;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
 
@@ -59,8 +60,9 @@ public class ParametricEditor extends Editor {
         portraitMap.put(ParameterHue.sParameterType, SliderHue.class);
         portraitMap.put(ParameterOpacity.sParameterType, SliderOpacity.class);
         portraitMap.put(ParameterBrightness.sParameterType, SliderBrightness.class);
-        portraitMap.put(ParameterColor.sParameterType, ColorChooser.class);
-        portraitMap.put(ParameterTexture.sParameterType, TextureChooser.class);
+        portraitMap.put(ParameterColor.sParameterType, ChoseBorderColor.class);
+        portraitMap.put(ParameterTexture.sParameterType, ChoseBorderTexture.class);
+        portraitMap.put(ParameterStyle.sParameterType, ChoseDrawStyle.class);
         portraitMap.put(ParameterInteger.sParameterType, BasicSlider.class);
         if (ApiHelper.AT_LEAST_14) {
             portraitMap.put(ParameterActionAndInt.sParameterType, ActionSlider.class);
@@ -68,7 +70,6 @@ public class ParametricEditor extends Editor {
             portraitMap.put(ParameterActionAndInt.sParameterType, BasicSlider.class);
         }
 
-        portraitMap.put(ParameterStyles.sParameterType, StyleChooser.class);
     }
 
     static Constructor<?> getConstructor(Class<?> cl) {

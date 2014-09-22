@@ -18,17 +18,15 @@ import com.xjt.newpic.edit.colorpicker.ColorPickerDialog;
 import com.xjt.newpic.edit.editors.Editor;
 
 import java.util.Arrays;
-import java.util.Vector;
 
-public class ColorChooser implements Control {
+public class ChoseBorderColor implements Control {
 
-    private final String TAG = ColorChooser.class.getSimpleName();
+    private final String TAG = ChoseBorderColor.class.getSimpleName();
 
     protected ParameterColor mParameter;
     protected LinearLayout mLinearLayout;
     protected Editor mEditor;
     private View mTopView;
-    private Vector<Button> mIconButton = new Vector<Button>();
     protected int mLayoutID = R.layout.np_edit_control_color_chooser;
     private Context mContext;
     private int mTransparent;
@@ -56,10 +54,8 @@ public class ColorChooser implements Control {
         mParameter = (ParameterColor) parameter;
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mTopView = inflater.inflate(mLayoutID, container, true);
-        mLinearLayout = (LinearLayout) mTopView.findViewById(R.id.listStyles);
+        mLinearLayout = (LinearLayout) mTopView.findViewById(R.id.listColors);
         mTopView.setVisibility(View.VISIBLE);
-
-        mIconButton.clear();
         int[] palette = mParameter.getColorPalette();
         for (int i = 0; i < mButtonsID.length; i++) {
             final Button button = (Button) mTopView.findViewById(mButtonsID[i]);
@@ -70,7 +66,7 @@ public class ColorChooser implements Control {
             button.setTag(hsvo);
             GradientDrawable sd = ((GradientDrawable) button.getBackground());
             sd.setColor(palette[i]);
-            sd.setStroke(6, (mSelectedButton == i) ? mSelected : mTransparent);
+            sd.setStroke(4, (mSelectedButton == i) ? mSelected : mTransparent);
 
             final int buttonNo = i;
             button.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +113,7 @@ public class ColorChooser implements Control {
             final Button button = mButton[i];
             GradientDrawable sd = ((GradientDrawable) button.getBackground());
             sd.setColor(palette[i]);
-            sd.setStroke(6, (mSelectedButton == i) ? mSelected : mTransparent);
+            sd.setStroke(4, (mSelectedButton == i) ? mSelected : mTransparent);
         }
     }
 

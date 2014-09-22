@@ -2,6 +2,13 @@
 package com.xjt.newpic.edit.controller;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,17 +19,16 @@ import com.xjt.newpic.R;
 import com.xjt.newpic.edit.colorpicker.ColorListener;
 import com.xjt.newpic.edit.editors.Editor;
 
-import java.util.Vector;
+public class ChoseBorderTexture implements Control {
 
-public class TextureChooser implements Control {
+    private final String TAG = ChoseBorderTexture.class.getSimpleName();
 
-    private final String TAG = TextureChooser.class.getSimpleName();
-
+    private final static int SELECTED_BITMAP_SIZE = 64;
+    private final static int SELECTED_BORD_SIZE = 2; // dp
     protected ParameterTexture mParameter;
     protected LinearLayout mLinearLayout;
     protected Editor mEditor;
     private View mTopView;
-    private Vector<ImageView> mIconButton = new Vector<ImageView>();
     protected int mLayoutID = R.layout.np_edit_control_texture_chooser;
     private Context mContext;
     private int[] mTexturessID = {
@@ -33,8 +39,8 @@ public class TextureChooser implements Control {
             R.id.draw_texture05,
     };
     private ImageView[] mTextures = new ImageView[mTexturessID.length];
-
-    int mSelectedButton = 0;
+    private int mSelectedButton = 0;
+    private Resources mRes;
 
     @Override
     public void setUp(ViewGroup container, Parameter parameter, Editor editor) {
@@ -42,20 +48,22 @@ public class TextureChooser implements Control {
         mEditor = editor;
         mContext = container.getContext();
         mParameter = (ParameterTexture) parameter;
-
+        mRes = container.getContext().getResources();
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mTopView = inflater.inflate(mLayoutID, container, true);
-        mLinearLayout = (LinearLayout) mTopView.findViewById(R.id.listStyles);
+        mLinearLayout = (LinearLayout) mTopView.findViewById(R.id.listTextures);
         mTopView.setVisibility(View.VISIBLE);
 
-        mIconButton.clear();
         int[] palette = mParameter.getTexturePalette();
         for (int i = 0; i < mTexturessID.length; i++) {
             final ImageView button = (ImageView) mTopView.findViewById(mTexturessID[i]);
             mTextures[i] = button;
             button.setTag(palette[i]);
-            button.setImageResource(palette[i]);
-            //button.getDrawable().setAlpha(mSelectedButton == i ? 255 : 80);
+            if (mSelectedButton == i) {
+                button.setImageBitmap(createSelectedBitmap(palette[i]));
+            } else {
+                button.setImageResource(palette[i]);
+            }
             final int textureNo = i;
             button.setOnClickListener(new View.OnClickListener() {
 
@@ -66,7 +74,6 @@ public class TextureChooser implements Control {
             });
         }
         ImageView button = (ImageView) mTopView.findViewById(R.id.draw_texture_popupbutton);
-
         button.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -75,6 +82,20 @@ public class TextureChooser implements Control {
             }
         });
 
+    }
+
+    private Bitmap createSelectedBitmap(int resid) {
+        Bitmap org = BitmapFactory.decodeResource(mRes, resid);
+        int padding = Math.round(mRes.getDisplayMetrics().density * SELECTED_BORD_SIZE);
+        int size = SELECTED_BITMAP_SIZE + padding;
+        Bitmap result = Bitmap.createBitmap(size, size, Config.ARGB_8888);
+        Canvas c = new Canvas(result);
+        Drawable d = mRes.getDrawable(R.drawable.grid_pressed);
+        d.setBounds(new Rect(0, 0, size, size));
+        d.draw(c);
+        c.drawBitmap(org, new Rect(0, 0, org.getWidth(), org.getHeight()), new Rect(padding, padding,
+                result.getWidth() - padding, result.getHeight() - padding), null);
+        return result;
     }
 
     public void setTextureSet(int[] basTextures) {
@@ -96,7 +117,11 @@ public class TextureChooser implements Control {
         for (int i = 0; i < mTexturessID.length; i++) {
             final ImageView button = mTextures[i];
             button.setImageResource(palette[i]);
-            //button.getDrawable().setAlpha(mSelectedButton == i ? 255 : 80);
+            if (mSelectedButton == i) {
+                button.setImageBitmap(createSelectedBitmap(palette[i]));
+            } else {
+                button.setImageResource(palette[i]);
+            }
         }
     }
 
@@ -130,7 +155,7 @@ public class TextureChooser implements Control {
     public void changeSelectedTexture(int texture) {
         int[] palette = mParameter.getTexturePalette();
         final ImageView button = mTextures[mSelectedButton];
-        button.setImageResource(texture);
+        button.setImageBitmap(createSelectedBitmap(texture));
         palette[mSelectedButton] = texture;
         mParameter.setValue(texture);
         button.setTag(texture);
@@ -151,7 +176,7 @@ public class TextureChooser implements Control {
             public void addTextureListener(ColorListener l) {
             }
         };
-        TexturePickerDialog tpd = new TexturePickerDialog(mContext, cl);
+        PickTextureDialog tpd = new PickTextureDialog(mContext, cl);
         int texture = (Integer) mTextures[mSelectedButton].getTag();
         tpd.setTexture(texture, cl);
         tpd.show();

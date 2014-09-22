@@ -15,9 +15,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.xjt.newpic.R;
-import com.xjt.newpic.edit.controller.TextureChooser.TextureListener;
+import com.xjt.newpic.edit.controller.ChoseBorderTexture.TextureListener;
 
-public class TexturePickerDialog extends Dialog {
+public class PickTextureDialog extends Dialog {
 
     private GridView mTextureGrid;
     private ImageButton mCancel;
@@ -66,7 +66,7 @@ public class TexturePickerDialog extends Dialog {
             R.drawable.edit_border_tile135
     };
 
-    public TexturePickerDialog(Context context, final TextureListener cl) {
+    public PickTextureDialog(Context context, final TextureListener cl) {
         super(context);
         DisplayMetrics metrics = new DisplayMetrics();
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -81,7 +81,7 @@ public class TexturePickerDialog extends Dialog {
 
             @Override
             public void onClick(View v) {
-                TexturePickerDialog.this.dismiss();
+                PickTextureDialog.this.dismiss();
             }
         });
         mTextureGrid = (GridView) findViewById(R.id.texture_grid);
@@ -93,7 +93,7 @@ public class TexturePickerDialog extends Dialog {
                 if (mTextureListener != null) {
                     mTextureListener.setTexture(ALL_TEXTURES[pos]);
                 }
-                TexturePickerDialog.this.dismiss();
+                PickTextureDialog.this.dismiss();
             }
 
         });

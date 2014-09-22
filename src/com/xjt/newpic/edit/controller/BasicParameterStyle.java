@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.edit.controller;
 
 import android.content.Context;
