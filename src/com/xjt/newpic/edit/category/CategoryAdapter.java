@@ -72,7 +72,16 @@ public class CategoryAdapter extends ArrayAdapter<CategoryAction> {
         view.setOrientation(mOrientation);
         CategoryAction action = getItem(position);
         view.setAction(action, this);
-        view.setLayoutParams(new LayoutParams(mItemWidth, mItemHeight));
+        int width = mItemWidth;
+        int height = mItemHeight;
+        if (action.getType() == CategoryAction.SPACER) {
+            if (mOrientation == CategoryView.HORIZONTAL) {
+                width = width / 2;
+            } else {
+                height = height / 2;
+            }
+        }
+        view.setLayoutParams(new LayoutParams(width, height));
         view.setTag(position);
         view.invalidate();
         return view;

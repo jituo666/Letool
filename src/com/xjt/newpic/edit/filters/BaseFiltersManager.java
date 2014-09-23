@@ -149,36 +149,36 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
     public void addLooks(Context context) {
         int[] drawid = {
                 R.drawable.filtershow_fx_0000_vintage,
+                R.drawable.filtershow_fx_0003_blue_crush,
                 R.drawable.filtershow_fx_0004_bw_contrast,
                 R.drawable.filtershow_fx_0008_washout_color,
                 R.drawable.filtershow_fx_0007_washout,
                 R.drawable.filtershow_fx_0002_bleach,
                 R.drawable.filtershow_fx_0001_instant,
-                R.drawable.filtershow_fx_0003_blue_crush,
                 R.drawable.filtershow_fx_0005_punch,
                 R.drawable.filtershow_fx_0006_x_process
         };
 
         int[] sampleid = { // [0,  1~9] 10
                 R.drawable.effect_sample_2,
+                R.drawable.effect_sample_7,
                 R.drawable.effect_sample_3,
                 R.drawable.effect_sample_8,
                 R.drawable.effect_sample_6,
                 R.drawable.effect_sample_4,
                 R.drawable.effect_sample_5,
-                R.drawable.effect_sample_7,
                 R.drawable.effect_sample_1,
                 R.drawable.effect_sample_9
         };
 
         int[] fxNameid = {
                 R.string.ffx_vintage,
+                R.string.ffx_blue_crush,
                 R.string.ffx_bw_contrast,
                 R.string.ffx_washout_color,
                 R.string.ffx_washout,
                 R.string.ffx_bleach,
                 R.string.ffx_instant,
-                R.string.ffx_blue_crush,
                 R.string.ffx_punch,
                 R.string.ffx_x_process
         };
@@ -186,12 +186,12 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
         // Do not localize.
         String[] serializationNames = {
                 "LUT3D_VINTAGE",
+                "LUT3D_BLUECRUSH",
                 "LUT3D_BW",
                 "LUT3D_WASHOUT_COLOR",
                 "LUT3D_WASHOUT",
                 "LUT3D_BLEACH",
                 "LUT3D_INSTANT",
-                "LUT3D_BLUECRUSH",
                 "LUT3D_PUNCH",
                 "LUT3D_XPROCESS"
         };
@@ -214,32 +214,32 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
 
         int[] textId = { // [22~26] ,5
                 R.string.original,
+                R.string.color_border,
+                R.string.texure_border,
                 R.string.borders_cover_net,
                 R.string.borders_cover_fall,
                 R.string.borders_cover_china,
-                R.string.borders_cover_glass,
-                R.string.texure_border,
-                R.string.color_border
+                R.string.borders_cover_glass
         };
         // Do not localize
         String[] serializationNames = {
                 "FRAME_ORIGNAL",
+                "FRAME_COLOR",
+                "FRAME_TEXTURE",
                 "FRAME_NET",
                 "FRAME_GOLD",
                 "FRAME_CHINA",
-                "FRAME_GLASS",
-                "FRAME_TEXTURE",
-                "FRAME_COLOR"
+                "FRAME_GLASS"
         };
 
         int[] sampleid = { // [0, 11 ~21] 12
                 R.drawable.effect_sample_0,
+                R.drawable.effect_sample_16,
+                R.drawable.effect_sample_15,
                 R.drawable.effect_sample_11,
                 R.drawable.effect_sample_12,
                 R.drawable.effect_sample_13,
-                R.drawable.effect_sample_14,
-                R.drawable.effect_sample_15,
-                R.drawable.effect_sample_16
+                R.drawable.effect_sample_14
         };
 
         // The "no border" implementation
@@ -250,23 +250,24 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
         FilterRepresentation rep = new FilterImageBorderRepresentation(0, sampleid[0]);
         borderList.add(rep);
         //
-        rep = new FilterImageBorderRepresentation(R.drawable.edit_boder_cover_tile2, sampleid[1]);
-        borderList.add(rep);
-
-        rep = new FilterImageBorderRepresentation(R.drawable.edit_boder_cover_tile1, sampleid[2]);
-        borderList.add(rep);
-
-        rep = new FilterImageBorderRepresentation(R.drawable.edit_boder_cover_tile4, sampleid[3]);
-        borderList.add(rep);
-        rep = new FilterImageBorderRepresentation(R.drawable.edit_boder_cover_tile3, sampleid[4]);
-        borderList.add(rep);
-
-        rep = new FilterTextureBorderRepresentation(FilterTextureBorderRepresentation.DEFAULT_TEXTURE1, FILTER_BODER_DEFAULT_SIZE,
-                FILTER_BODER_DEFAULT_RADIUS, sampleid[5]);
-        borderList.add(rep);
 
         rep = new FilterColorBorderRepresentation(FilterColorBorderRepresentation.DEFAULT_COLOR1, FILTER_BODER_DEFAULT_SIZE,
-                FILTER_BODER_DEFAULT_RADIUS, sampleid[6]);
+                FILTER_BODER_DEFAULT_RADIUS, sampleid[1]);
+
+        borderList.add(rep);
+        rep = new FilterTextureBorderRepresentation(FilterTextureBorderRepresentation.DEFAULT_TEXTURE1, FILTER_BODER_DEFAULT_SIZE,
+                FILTER_BODER_DEFAULT_RADIUS, sampleid[2]);
+        borderList.add(rep);
+        //
+        rep = new FilterImageBorderRepresentation(R.drawable.edit_boder_cover_tile2, sampleid[3]);
+        borderList.add(rep);
+
+        rep = new FilterImageBorderRepresentation(R.drawable.edit_boder_cover_tile1, sampleid[4]);
+        borderList.add(rep);
+
+        rep = new FilterImageBorderRepresentation(R.drawable.edit_boder_cover_tile4, sampleid[5]);
+        borderList.add(rep);
+        rep = new FilterImageBorderRepresentation(R.drawable.edit_boder_cover_tile3, sampleid[6]);
         borderList.add(rep);
 
         int i = 0;

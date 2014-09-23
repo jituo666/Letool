@@ -64,7 +64,6 @@ import com.xjt.newpic.edit.filters.FilterDrawRepresentation;
 import com.xjt.newpic.edit.filters.FilterMirrorRepresentation;
 import com.xjt.newpic.edit.filters.FilterRepresentation;
 import com.xjt.newpic.edit.filters.FilterRotateRepresentation;
-import com.xjt.newpic.edit.filters.FilterFxRepresentation;
 import com.xjt.newpic.edit.filters.FilterUserPresetRepresentation;
 import com.xjt.newpic.edit.filters.FiltersManager;
 import com.xjt.newpic.edit.filters.ImageFilter;
@@ -239,11 +238,15 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
             mCategoryBordersAdapter.clear();
         }
         mCategoryBordersAdapter = new CategoryAdapter(this);
-        for (FilterRepresentation representation : borders) {
+        for (int i = 0; i < borders.size(); i++) {
+            FilterRepresentation representation = borders.get(i);
             if (representation.getTextId() != 0) {
                 representation.setName(getString(representation.getTextId()));
             }
             mCategoryBordersAdapter.add(new CategoryAction(this, representation, CategoryAction.FULL_VIEW));
+            if (i == 2) {
+                mCategoryBordersAdapter.add(new CategoryAction(this, CategoryAction.SPACER));
+            }
         }
     }
 
@@ -326,8 +329,12 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
         }
         mCategoryGeometryAdapter = new CategoryAdapter(this);
         boolean found = false;
-        for (FilterRepresentation representation : filtersRepresentations) {
+        for (int i = 0; i < filtersRepresentations.size(); i++) {
+            FilterRepresentation representation = filtersRepresentations.get(i);
             mCategoryGeometryAdapter.add(new CategoryAction(this, representation));
+            if (i == 3) {
+                mCategoryGeometryAdapter.add(new CategoryAction(this, CategoryAction.SPACER));
+            }
             if (representation instanceof FilterDrawRepresentation) {
                 found = true;
             }
@@ -336,6 +343,7 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
             FilterRepresentation representation = new FilterDrawRepresentation(0);
             CategoryAction action = new CategoryAction(this, representation);
             action.setIsDoubleAction(true);
+            mCategoryGeometryAdapter.add(new CategoryAction(this, CategoryAction.SPACER));
             mCategoryGeometryAdapter.add(action);
         }
     }
@@ -600,8 +608,8 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
             if (master.supportsHighRes()) {
                 Rect originalBounds = master.getOriginalBounds();
                 int highresPreviewSize = Math.max(master.getOriginalBitmapLarge().getWidth(), master.getOriginalBitmapLarge().getHeight()) * 2;
-                if (highresPreviewSize > Math.max(originalBounds.width(),originalBounds.height())) {
-                    highresPreviewSize = Math.max(originalBounds.width(),originalBounds.height());
+                if (highresPreviewSize > Math.max(originalBounds.width(), originalBounds.height())) {
+                    highresPreviewSize = Math.max(originalBounds.width(), originalBounds.height());
                 }
                 Rect bounds = new Rect();
                 Bitmap originalHires = ImageLoader.loadOrientedConstrainedBitmap(master.getUri(),

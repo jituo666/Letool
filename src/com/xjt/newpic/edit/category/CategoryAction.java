@@ -46,6 +46,12 @@ public class CategoryAction {
         }
     }
 
+    public CategoryAction(NpEditActivity context, int type) {
+        mContext = context;
+        setType(type);
+        mContext.registerAction(this);
+    }
+
     public CategoryAction(NpEditActivity context, FilterRepresentation representation) {
         this(context, representation, CROP_VIEW);
     }
