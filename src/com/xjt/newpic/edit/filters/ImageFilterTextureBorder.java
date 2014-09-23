@@ -1,6 +1,8 @@
 
 package com.xjt.newpic.edit.filters;
 
+import com.xjt.newpic.edit.imageshow.ImageManager;
+
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -56,7 +58,8 @@ public class ImageFilterTextureBorder extends ImageFilter {
         }
     }
 
-    public void applyHelper(Canvas canvas, float scale, int w, int h) {
+    public void applyHelper(Canvas canvas, int w, int h) {
+        float scale = 1.0f;
         if (getParameters() == null) {
             return;
         }
@@ -65,8 +68,16 @@ public class ImageFilterTextureBorder extends ImageFilter {
         int texture = getParameters().getTexture();
 
         mPaint.reset();
-        Bitmap b = scaleBitmp(BitmapFactory.decodeResource(mResources, texture), scale);
-        mPaint.setShader(new BitmapShader(b, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
+        Rect orig = ImageManager.getImage().getOriginalBounds();
+        Bitmap brush = BitmapFactory.decodeResource(mResources, texture);
+        int maxM = Math.max(orig.width(), orig.height());
+        if (maxM < brush.getWidth() * 4) {
+            scale = maxM / 4.f / brush.getWidth() * w * 1.f / orig.width();
+        } else {
+            scale = w * 1.f / orig.width();
+        }
+
+        mPaint.setShader(new BitmapShader(scaleBitmp(BitmapFactory.decodeResource(mResources, texture), scale), Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
         mPaint.setAntiAlias(true);
         mBounds.set(0, 0, w, h);
         mBorderPath.reset();
@@ -89,7 +100,7 @@ public class ImageFilterTextureBorder extends ImageFilter {
             return bitmap;
         }
         Canvas canvas = new Canvas(bitmap);
-        applyHelper(canvas, scaleFactor, bitmap.getWidth(), bitmap.getHeight());
+        applyHelper(canvas, bitmap.getWidth(), bitmap.getHeight());
         return bitmap;
     }
 

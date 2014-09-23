@@ -267,7 +267,6 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
 
         Bitmap fullHighres = masterImage.getPartialImage();
         drawHighresPartialImage(canvas, fullHighres);
-
         drawCompareImage(canvas, masterImage.getGeometryOnlyImage());
 
         canvas.restore();
@@ -405,8 +404,7 @@ public class ImageShow extends View implements OnGestureListener, ScaleGestureDe
                 canvas.scale(finalScale, finalScale, centerX, centerY);
             } else if (masterImage.getCurrentLookAnimation() == ImageManager.MIRROR_ANIMATION) {
                 if (masterImage.getCurrentFilterRepresentation() instanceof FilterMirrorRepresentation) {
-                    FilterMirrorRepresentation rep =
-                            (FilterMirrorRepresentation) masterImage.getCurrentFilterRepresentation();
+                    FilterMirrorRepresentation rep = (FilterMirrorRepresentation) masterImage.getCurrentFilterRepresentation();
 
                     ImagePreset preset = masterImage.getPreset();
                     ArrayList<FilterRepresentation> geometry = (ArrayList<FilterRepresentation>) preset.getGeometryFilters();

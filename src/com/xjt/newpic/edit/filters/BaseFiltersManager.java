@@ -234,17 +234,13 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
 
         int[] sampleid = { // [0, 11 ~21] 12
                 R.drawable.effect_sample_0,
+                R.drawable.effect_sample_11,
                 R.drawable.effect_sample_12,
                 R.drawable.effect_sample_13,
-                R.drawable.effect_sample_14,
                 R.drawable.effect_sample_14,
                 R.drawable.effect_sample_15,
                 R.drawable.effect_sample_16
         };
-        
-        
-        
-        
 
         // The "no border" implementation
 
@@ -262,15 +258,15 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
 
         rep = new FilterImageBorderRepresentation(R.drawable.edit_boder_cover_tile4, sampleid[3]);
         borderList.add(rep);
-        rep = new FilterImageBorderRepresentation(R.drawable.edit_boder_cover_tile3, sampleid[3]);
+        rep = new FilterImageBorderRepresentation(R.drawable.edit_boder_cover_tile3, sampleid[4]);
         borderList.add(rep);
 
         rep = new FilterTextureBorderRepresentation(FilterTextureBorderRepresentation.DEFAULT_TEXTURE1, FILTER_BODER_DEFAULT_SIZE,
-                FILTER_BODER_DEFAULT_RADIUS, sampleid[4]);
+                FILTER_BODER_DEFAULT_RADIUS, sampleid[5]);
         borderList.add(rep);
 
         rep = new FilterColorBorderRepresentation(FilterColorBorderRepresentation.DEFAULT_COLOR1, FILTER_BODER_DEFAULT_SIZE,
-                FILTER_BODER_DEFAULT_RADIUS, sampleid[5]);
+                FILTER_BODER_DEFAULT_RADIUS, sampleid[6]);
         borderList.add(rep);
 
         int i = 0;
