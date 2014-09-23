@@ -4,9 +4,12 @@ package com.xjt.newpic.edit.filters;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Shader;
+import android.graphics.Bitmap.Config;
 import android.graphics.drawable.Drawable;
 import android.support.v4.util.LongSparseArray;
 
@@ -16,6 +19,7 @@ public class ImageFilterImageBorder extends ImageFilter {
 
     private FilterImageBorderRepresentation mParameters = null;
     private Resources mResources = null;
+    private Paint mPaint = new Paint();
 
     private LongSparseArray<Drawable> mDrawables = new LongSparseArray<Drawable>();
 
@@ -36,16 +40,23 @@ public class ImageFilterImageBorder extends ImageFilter {
         mDrawables.clear();
     }
 
-    public Bitmap applyHelper(Bitmap bitmap, float scale1, float scale2) {
-        int w = bitmap.getWidth();
-        int h = bitmap.getHeight();
-        Rect bounds = new Rect(0, 0, (int) (w * scale1), (int) (h * scale1));
-        Canvas canvas = new Canvas(bitmap);
-        canvas.scale(scale2, scale2);
-        Drawable drawable = getDrawable(getParameters().getDrawableResource(), bitmap.getHeight());
-        drawable.setBounds(bounds);
-        drawable.draw(canvas);
-        return bitmap;
+    private Bitmap scaleBitmp(Bitmap b, float scale) {
+        if (scale < 1.0f) {
+            Bitmap result = Bitmap.createBitmap(Math.round(b.getWidth() * scale), Math.round(b.getHeight() * scale), Config.ARGB_8888);
+            Canvas c = new Canvas(result);
+            c.drawBitmap(b, new Rect(0, 0, b.getWidth(), b.getHeight()), new Rect(0, 0, result.getWidth(), result.getHeight()), null);
+            return result;
+        } else {
+            return b;
+        }
+    }
+
+    public void applyHelper(Canvas canvas, float scale, int w, int h) {
+        mPaint.reset();
+        Bitmap b = scaleBitmp(BitmapFactory.decodeResource(mResources, mParameters.getDrawableResource()), scale);
+        mPaint.setShader(new BitmapShader(b, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
+        mPaint.setAntiAlias(true);
+        canvas.drawRect(new Rect(0, 0, w, h), mPaint);
     }
 
     @Override
@@ -53,9 +64,9 @@ public class ImageFilterImageBorder extends ImageFilter {
         if (getParameters() == null || getParameters().getDrawableResource() == 0) {
             return bitmap;
         }
-        float scale2 = scaleFactor * 2.0f;
-        float scale1 = 1 / scale2;
-        return applyHelper(bitmap, scale1, scale2);
+        Canvas canvas = new Canvas(bitmap);
+        applyHelper(canvas, scaleFactor, bitmap.getWidth(), bitmap.getHeight());
+        return bitmap;
     }
 
     public void setResources(Resources resources) {
@@ -63,25 +74,5 @@ public class ImageFilterImageBorder extends ImageFilter {
             mResources = resources;
             mDrawables.clear();
         }
-    }
-
-    public Drawable getDrawable(int rsc, int maxHeight) {
-        Drawable drawable = mDrawables.get(rsc);
-        if (drawable == null && mResources != null && rsc != 0) {
-            BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inJustDecodeBounds = true;
-            int height = BitmapFactory.decodeResource(mResources, rsc).getHeight();
-            int sample = 1;
-            while (height > maxHeight) {
-                sample = sample * 2;
-                height = height / 2;
-            }
-            o = new BitmapFactory.Options();
-            o.inSampleSize = sample;
-            Bitmap b = BitmapFactory.decodeResource(mResources, rsc, o);
-            drawable = new BitmapDrawable(mResources, b);
-            mDrawables.put(rsc, drawable);
-        }
-        return drawable;
     }
 }

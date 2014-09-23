@@ -212,53 +212,57 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
 
     public void addBorders(Context context) {
 
+        int[] textId = { // [22~26] ,5
+                R.string.original,
+                R.string.borders_cover_net,
+                R.string.borders_cover_fall,
+                R.string.borders_cover_china,
+                R.string.borders_cover_glass,
+                R.string.texure_border,
+                R.string.color_border
+        };
         // Do not localize
         String[] serializationNames = {
-                "FRAME_4X5",
-                "FRAME_BRUSH",
-                "FRAME_GRUNGE",
-                "FRAME_SUMI_E",
-                "FRAME_TAPE",
-                "FRAME_BLACK",
-                "FRAME_BLACK_ROUNDED",
-                "FRAME_WHITE",
-                "FRAME_WHITE_ROUNDED",
-                "FRAME_CREAM",
-                "FRAME_CREAM_ROUNDED"
+                "FRAME_ORIGNAL",
+                "FRAME_NET",
+                "FRAME_GOLD",
+                "FRAME_CHINA",
+                "FRAME_GLASS",
+                "FRAME_TEXTURE",
+                "FRAME_COLOR"
         };
 
         int[] sampleid = { // [0, 11 ~21] 12
-                R.drawable.effect_sample_11,
+                R.drawable.effect_sample_0,
                 R.drawable.effect_sample_12,
                 R.drawable.effect_sample_13,
                 R.drawable.effect_sample_14,
+                R.drawable.effect_sample_14,
                 R.drawable.effect_sample_15,
                 R.drawable.effect_sample_16
-                //                R.drawable.effect_sample_17,
-                //                R.drawable.effect_sample_18,
-                //                R.drawable.effect_sample_19,
-                //                R.drawable.effect_sample_20,
-                //                R.drawable.effect_sample_21
         };
+        
+        
+        
+        
 
         // The "no border" implementation
-        int i = 0;
-        FilterRepresentation rep = new FilterImageBorderRepresentation(0, R.drawable.effect_sample_0);
-        mBorders.add(rep);
 
-        //        // Regular borders
+        // Regular borders
         ArrayList<FilterRepresentation> borderList = new ArrayList<FilterRepresentation>();
+
+        FilterRepresentation rep = new FilterImageBorderRepresentation(0, sampleid[0]);
+        borderList.add(rep);
         //
-        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_4x5, sampleid[0]);
+        rep = new FilterImageBorderRepresentation(R.drawable.edit_boder_cover_tile2, sampleid[1]);
         borderList.add(rep);
 
-        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_brush, sampleid[1]);
+        rep = new FilterImageBorderRepresentation(R.drawable.edit_boder_cover_tile1, sampleid[2]);
         borderList.add(rep);
 
-        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_grunge, sampleid[2]);
+        rep = new FilterImageBorderRepresentation(R.drawable.edit_boder_cover_tile4, sampleid[3]);
         borderList.add(rep);
-
-        rep = new FilterImageBorderRepresentation(R.drawable.filtershow_border_sumi_e, sampleid[3]);
+        rep = new FilterImageBorderRepresentation(R.drawable.edit_boder_cover_tile3, sampleid[3]);
         borderList.add(rep);
 
         rep = new FilterTextureBorderRepresentation(FilterTextureBorderRepresentation.DEFAULT_TEXTURE1, FILTER_BODER_DEFAULT_SIZE,
@@ -269,10 +273,13 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
                 FILTER_BODER_DEFAULT_RADIUS, sampleid[5]);
         borderList.add(rep);
 
+        int i = 0;
         for (FilterRepresentation filter : borderList) {
-            filter.setSerializationName(serializationNames[i++]);
+            filter.setSerializationName(serializationNames[i]);
+            filter.setTextId(textId[i]);
             addRepresentation(filter);
             mBorders.add(filter);
+            i++;
         }
 
     }

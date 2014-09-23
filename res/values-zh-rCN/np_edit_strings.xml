@@ -11,7 +11,10 @@
     <string name="cannot_load_image">"无法加载该图片！"</string>
     <string name="cannot_edit_original">无法编辑原图</string>
     <string name="original">原图</string>
-    <string name="borders">边框</string>
+    <string name="borders_cover_net">银丝网</string>
+    <string name="borders_cover_fall">金珠帘</string>
+    <string name="borders_cover_china">红灯龙</string>
+    <string name="borders_cover_glass">毛玻璃</string>
     <string name="texure_border">纹理边框</string>
     <string name="color_border">颜色边框</string>
 

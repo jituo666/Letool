@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.edit.imageshow;
 
 import android.content.Context;
@@ -11,8 +12,10 @@ import com.xjt.newpic.edit.filters.FilterRotateRepresentation;
 import com.xjt.newpic.edit.imageshow.GeometryMathUtils.GeometryHolder;
 
 public class ImageRotate extends ImageShow {
-    private EditorRotate mEditorRotate;
+
     private static final String TAG = ImageRotate.class.getSimpleName();
+
+    private EditorRotate mEditorRotate;
     private FilterRotateRepresentation mLocalRep = new FilterRotateRepresentation(0);
     private GeometryHolder mDrawHolder = new GeometryHolder();
 

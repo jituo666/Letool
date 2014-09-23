@@ -1,7 +1,6 @@
 
 package com.xjt.newpic.edit.filters;
 
-import com.xjt.newpic.R;
 import com.xjt.newpic.edit.editors.ImageOnlyEditor;
 
 public class FilterImageBorderRepresentation extends FilterRepresentation {
@@ -13,7 +12,6 @@ public class FilterImageBorderRepresentation extends FilterRepresentation {
         setFilterClass(ImageFilterImageBorder.class);
         mDrawableResource = drawableResource;
         setFilterType(FilterRepresentation.TYPE_BORDER);
-        setTextId(R.string.texure_border);
         setEditorId(ImageOnlyEditor.ID);
         setShowParameterValue(false);
     }
@@ -55,11 +53,6 @@ public class FilterImageBorderRepresentation extends FilterRepresentation {
             }
         }
         return false;
-    }
-
-    @Override
-    public int getTextId() {
-        return R.string.none;
     }
 
     public boolean allowsSingleInstanceOnly() {

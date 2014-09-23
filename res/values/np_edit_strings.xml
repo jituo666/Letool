@@ -20,6 +20,10 @@
     <string name="original">Original</string>
     <!-- Text for filters that apply a border to a picture [CHAR LIMIT=20] -->
     <string name="borders">Borders</string>
+    <string name="borders_cover_net">Net</string>
+    <string name="borders_cover_fall">Gold</string>
+    <string name="borders_cover_china">China</string>
+    <string name="borders_cover_glass">Glass</string>
     <!-- Text for the custom border filter [CHAR LIMIT=20] -->
     <string name="texure_border">Texture</string>
     <string name="color_border">Color</string>
