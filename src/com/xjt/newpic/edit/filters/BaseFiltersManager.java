@@ -234,12 +234,12 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
 
         int[] sampleid = { // [0, 11 ~21] 12
                 R.drawable.effect_sample_0,
-                R.drawable.effect_sample_16,
-                R.drawable.effect_sample_15,
                 R.drawable.effect_sample_11,
                 R.drawable.effect_sample_12,
                 R.drawable.effect_sample_13,
-                R.drawable.effect_sample_14
+                R.drawable.effect_sample_14,
+                R.drawable.effect_sample_15,
+                R.drawable.effect_sample_16
         };
 
         // The "no border" implementation

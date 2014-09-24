@@ -49,7 +49,7 @@ public class ImageFilterTextureBorder extends ImageFilter {
 
     private Bitmap scaleBitmp(Bitmap b, float scale) {
         if (scale < 1.0f) {
-            Bitmap result = Bitmap.createBitmap(Math.round(b.getWidth() * scale ), Math.round(b.getHeight() * scale), Config.ARGB_8888);
+            Bitmap result = Bitmap.createBitmap(Math.round(b.getWidth() * scale), Math.round(b.getHeight() * scale), Config.ARGB_8888);
             Canvas c = new Canvas(result);
             c.drawBitmap(b, new Rect(0, 0, b.getWidth(), b.getHeight()), new Rect(0, 0, result.getWidth(), result.getHeight()), null);
             return result;
@@ -71,12 +71,11 @@ public class ImageFilterTextureBorder extends ImageFilter {
         Rect orig = ImageManager.getImage().getOriginalBounds();
         Bitmap brush = BitmapFactory.decodeResource(mResources, texture);
         int maxM = Math.max(orig.width(), orig.height());
-        if (maxM < brush.getWidth() * 4) {
-            scale = maxM / 4.f / brush.getWidth() * w * 1.f / orig.width();
+        if (maxM < brush.getWidth() * 8f) {
+            scale = maxM / 8.f / brush.getWidth() * w * 1.f / orig.width();
         } else {
             scale = w * 1.f / orig.width();
         }
-
         mPaint.setShader(new BitmapShader(scaleBitmp(BitmapFactory.decodeResource(mResources, texture), scale), Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
         mPaint.setAntiAlias(true);
         mBounds.set(0, 0, w, h);

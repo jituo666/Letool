@@ -3,6 +3,9 @@ package com.xjt.newpic.edit.controller;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +25,8 @@ public class PickTextureDialog extends Dialog {
     private GridView mTextureGrid;
     private ImageButton mCancel;
     private TextureListener mTextureListener;
+    private Resources mResources;
+    private BitmapFactory.Options mOption = new BitmapFactory.Options();
 
     private static final int[] ALL_TEXTURES = new int[] {
             R.drawable.edit_border_tile1,
@@ -76,6 +81,7 @@ public class PickTextureDialog extends Dialog {
         getWindow().setLayout(width, height);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.np_edit_texture_picker);
+        mResources = getContext().getResources();
         mCancel = (ImageButton) findViewById(R.id.cancelTexturePick);
         mCancel.setOnClickListener(new View.OnClickListener() {
 
@@ -132,7 +138,16 @@ public class PickTextureDialog extends Dialog {
                 v = convertView;
             }
             ImageView texture = (ImageView) v.findViewById(R.id.texture_sample);
-            texture.setImageResource(ALL_TEXTURES[position]);
+            mOption.inJustDecodeBounds = true;
+            mOption.inSampleSize = 1;
+            Bitmap temp = BitmapFactory.decodeResource(mResources, ALL_TEXTURES[position], mOption);
+            if (temp.getWidth() <= 64) {
+                texture.setImageResource(ALL_TEXTURES[position]);
+            } else {
+                mOption.inJustDecodeBounds = false;
+                mOption.inSampleSize = temp.getWidth() / 64;
+                texture.setImageBitmap(BitmapFactory.decodeResource(mResources, ALL_TEXTURES[position], mOption));
+            }
 
             return v;
         }
