@@ -79,7 +79,7 @@ public class CategoryView extends CategoryIconView implements View.OnClickListen
     private void drawSpacer(Canvas canvas) {
         mPaint.reset();
         mPaint.setAntiAlias(true);
-        mPaint.setColor(mSelectionColor);
+        mPaint.setColor(mSpacerColor);
         if (getOrientation() == CategoryView.VERTICAL) {
             canvas.drawCircle(getWidth() / 2, getHeight() / 2, getHeight() / 5, mPaint);
         } else {

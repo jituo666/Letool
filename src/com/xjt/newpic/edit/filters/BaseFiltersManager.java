@@ -152,10 +152,10 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
                 R.drawable.filtershow_fx_0003_blue_crush,
                 R.drawable.filtershow_fx_0004_bw_contrast,
                 R.drawable.filtershow_fx_0008_washout_color,
+                R.drawable.filtershow_fx_0005_punch,
                 R.drawable.filtershow_fx_0007_washout,
                 R.drawable.filtershow_fx_0002_bleach,
                 R.drawable.filtershow_fx_0001_instant,
-                R.drawable.filtershow_fx_0005_punch,
                 R.drawable.filtershow_fx_0006_x_process
         };
 
@@ -164,10 +164,10 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
                 R.drawable.effect_sample_7,
                 R.drawable.effect_sample_3,
                 R.drawable.effect_sample_8,
+                R.drawable.effect_sample_1,
                 R.drawable.effect_sample_6,
                 R.drawable.effect_sample_4,
                 R.drawable.effect_sample_5,
-                R.drawable.effect_sample_1,
                 R.drawable.effect_sample_9
         };
 
@@ -176,10 +176,10 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
                 R.string.ffx_blue_crush,
                 R.string.ffx_bw_contrast,
                 R.string.ffx_washout_color,
+                R.string.ffx_punch,
                 R.string.ffx_washout,
                 R.string.ffx_bleach,
                 R.string.ffx_instant,
-                R.string.ffx_punch,
                 R.string.ffx_x_process
         };
 
@@ -189,10 +189,10 @@ public abstract class BaseFiltersManager implements FiltersManagerInterface {
                 "LUT3D_BLUECRUSH",
                 "LUT3D_BW",
                 "LUT3D_WASHOUT_COLOR",
+                "LUT3D_PUNCH",
                 "LUT3D_WASHOUT",
                 "LUT3D_BLEACH",
                 "LUT3D_INSTANT",
-                "LUT3D_PUNCH",
                 "LUT3D_XPROCESS"
         };
 

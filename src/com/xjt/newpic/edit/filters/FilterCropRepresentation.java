@@ -12,11 +12,12 @@ import java.io.IOException;
 
 public class FilterCropRepresentation extends FilterRepresentation {
 
+    private static final String TAG = FilterCropRepresentation.class.getSimpleName();
+
     public static final String SERIALIZATION_NAME = "CROP";
     public static final String[] BOUNDS = {
             "C0", "C1", "C2", "C3"
     };
-    private static final String TAG = FilterCropRepresentation.class.getSimpleName();
 
     RectF mCrop = getNil();
 
