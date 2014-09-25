@@ -1,9 +1,11 @@
 
 package com.xjt.newpic.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.umeng.analytics.AnalyticsConfig;
+import com.xjt.newpic.preference.GlobalPreference;
 import com.xjt.newpic.stat.StatConstants;
 
 /**
@@ -46,6 +48,7 @@ public class NpMainActivity extends NpMediaActivity {
         //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_WOSHOP); // "LETOOL0000001022";//联通沃商店
         //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_NOKIA); // "LETOOL0000001023";// 诺基亚
         //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_OTHERS); // "LETOOL0000001111";//其它
+
         super.onCreate(b);
     }
 
