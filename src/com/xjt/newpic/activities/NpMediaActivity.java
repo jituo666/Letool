@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.umeng.analytics.MobclickAgent;
@@ -51,6 +52,7 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
 
     private static final String TAG = NpMediaActivity.class.getSimpleName();
 
+    public static final long SPLASH_INTERVAL = 24 * 60 * 60 * 1000l;
     public static final String KEY_ALBUM_TITLE = "album_title";
     public static final String KEY_MEDIA_PATH = "media_path";
     public static final String KEY_ALBUM_ID = "album_id";
@@ -65,6 +67,7 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
     private NpSlidingMenu mSlidingMenu;
     private ViewGroup mMainView;
     private GLRootView mGLESView;
+    private ImageView mSplashScreen;
     private Toast mExitToast;
     private OrientationManager mOrientationManager;
     private boolean mWaitingForExit = false;
@@ -81,8 +84,20 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
         mSlidingMenu = new NpSlidingMenu(this, getSupportFragmentManager(), findViewById(R.id.letool_top_bar_container));
         mMainView = (ViewGroup) findViewById(R.id.local_image_browse_main_view);
         mGLESView = (GLRootView) mMainView.findViewById(R.id.gl_root_view);
+        mSplashScreen = (ImageView) findViewById(R.id.splash_screen);
         mOrientationManager = new OrientationManager(this);
         startFirstFragment();
+        if ((System.currentTimeMillis() - GlobalPreference.getLastSpashTime(this)) > SPLASH_INTERVAL) {
+            GlobalPreference.setLastSpashTime(this, System.currentTimeMillis());
+            mSplashScreen.setVisibility(View.VISIBLE);
+            mSplashScreen.postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    mSplashScreen.setVisibility(View.GONE);
+                }
+            }, 3000);
+        }
     }
 
     private void startFirstFragment() {
@@ -266,9 +281,9 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
                 startActivity(it);
                 finish();
             } else if (requestCode == REQUEST_CODE_EDITING) {
-                    if (data != null) {
-                        mAlbumIsDirty = true;
-                    }
+                if (data != null) {
+                    mAlbumIsDirty = true;
+                }
                 LLog.i(TAG, "               -------onActivityResult:" + System.currentTimeMillis() + ":" + (data.getData() == null));
             }
         }

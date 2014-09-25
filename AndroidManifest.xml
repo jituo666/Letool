@@ -43,6 +43,10 @@
             android:name="com.xjt.newpic.activities.NpSettingsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/MainTheme" >
+        </activity>        <activity
+            android:name="com.xjt.newpic.activities.AboutActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@style/MainTheme" >
         </activity>
         <activity
             android:name="com.xjt.newpic.activities.NpMoviePlayActivity"

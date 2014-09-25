@@ -19,6 +19,7 @@ public class GlobalPreference {
     private static final String PREFS_KEY_ANIMATION_SWITCH = "animation_switch";
     private static final String PREFS_KEY_REMEMBER_LAST_UI = "remember_last_ui";
     private static final String PREFS_KEY_GUIDE_TIP_SHOW = "guide_tip_shown";
+    private static final String PREFS_KEY_SPASH_TIME = "spash_time";
 
     private static final String PREFS_KEY_LAST_UI = "last_ui";
 
@@ -32,6 +33,16 @@ public class GlobalPreference {
     public static long getLastAppUpdateCheckTime(Context ctx) {
         SharedPreferences prefs = initSharedPreferences(ctx);
         return prefs.getLong(PREFS_KEY_APP_CHECK_UPDATE, 0);
+    }
+
+    public static void setLastSpashTime(Context ctx, long defTime) {
+        SharedPreferences prefs = initSharedPreferences(ctx);
+        SharedPreferencesCompat.apply(prefs.edit().putLong(PREFS_KEY_SPASH_TIME, defTime));
+    }
+
+    public static long getLastSpashTime(Context ctx) {
+        SharedPreferences prefs = initSharedPreferences(ctx);
+        return prefs.getLong(PREFS_KEY_SPASH_TIME, 0);
     }
 
     public static void setAppUpdateCheckTime(Context ctx, long defTime) {

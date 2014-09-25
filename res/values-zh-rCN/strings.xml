@@ -50,13 +50,14 @@
     <string name="common_movies">视频</string>
     <string name="common_gallery">图库</string>
     <string name="common_settings">设置</string>
+    <string name="common_about">关于</string>
     <string name="common_exit">退出</string>
     <string name="common_reset">重置</string>
     <string name="common_save">保存</string>
     <string name="common_loading">加载中</string>
     <string name="common_connect_timeout">链接超时</string>
     <string name="common_share_to">牛图分享</string>
-    <string name="common_edit">编辑</string>
+    <string name="common_edit">美化</string>
     <string name="common_share">分享</string>
     <string name="common_detail">详情</string>
     <string name="common_delete">删除</string>
@@ -86,6 +87,10 @@
     <string name="common_screenshot">截屏</string>
     <string name="common_download">下载</string>
     <string name="friendly_tips">温馨提示</string>
+    <string name="about_version">版本:牛图 %s</string>
+    <string name="about_weixin">微信号:牛图</string>
+    <string name="about_qgroup">QQ群:248706772</string>
+    <string name="about_declare">All Rights Reserved</string>
     <string name="friendly_tip_cotent">1.长按图片可进入选择模式 \n2.按下菜单键或左上角按钮可进入侧边栏</string>
     <string name="close_tip">不再提示</string>
 

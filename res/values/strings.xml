@@ -49,6 +49,7 @@
     <string name="common_movies">Movie</string>
     <string name="common_gallery">Gallery</string>
     <string name="common_settings">Setting</string>
+    <string name="common_about">About</string>
     <string name="common_exit">Exit</string>
     <string name="common_reset">Reset</string>
     <string name="common_save">Save</string>
@@ -83,6 +84,10 @@
     <string name="common_error_no_dirs">No picture or video directory!</string>
     <string name="common_screenshot">Screenshots</string>
     <string name="common_download">Download</string>
+    <string name="about_version">Version: %s</string>
+    <string name="about_weixin">WeiXin:牛图</string>
+    <string name="about_qgroup">QQ Group:248706772</string>
+    <string name="about_declare">All Rights Reserved</string>
     <string name="share_app_install_tip">Please install QQ </string>
     <string name="friendly_tips">Friendly tip</string>
     <string name="friendly_tip_cotent">1. Long press thumbnail to enter selection mode \n2. Press menu key or the upper left corner button to enter main menu</string>

@@ -49,7 +49,7 @@ public class CategoryView extends CategoryIconView implements View.OnClickListen
         mSelectionStroke = res.getDimensionPixelSize(R.dimen.thumbnail_margin);
         mSelectPaint = new Paint();
         mSelectPaint.setStyle(Paint.Style.FILL);
-        mSelectionColor = res.getColor(R.color.filtershow_category_selection);
+        mSelectionColor = res.getColor(R.color.np_main_text_color_selected);
         mSpacerColor = res.getColor(R.color.filtershow_categoryview_text);
 
         mSelectPaint.setColor(mSelectionColor);

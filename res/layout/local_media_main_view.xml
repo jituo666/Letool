@@ -19,10 +19,18 @@
         android:id="@+id/letool_bottom_bar_container"
         android:layout_width="match_parent"
         android:layout_height="@dimen/letool_bottom_bar_height"
-        android:background="@color/np_common_bar_bg"
         android:layout_gravity="bottom"
+        android:background="@color/np_common_bar_bg"
         android:orientation="horizontal"
         android:visibility="gone" >
     </FrameLayout>
+
+    <ImageView
+        android:id="@+id/splash_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/np_spash_screen"
+        android:visibility="gone" />
 
 </FrameLayout>

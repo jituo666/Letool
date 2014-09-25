@@ -96,16 +96,14 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
         mRememberUISwitch.setChecked(GlobalPreference.rememberLastUI(getActivity()));
         mClearCache.setSettingItemText(getString(R.string.clear_cache_title), x, false);
         mVersionCheck.setSettingItemText(getString(R.string.version_update_check_title), getVersion(), false);
-        mAuthorDesc.setSettingItemText(getString(R.string.author_title), getString(R.string.author_desc), false);
-        mQQGroup.setSettingItemText(getString(R.string.app_communication_platfrom), getString(R.string.app_QQ_group), false);
 
         mCameraSource.setOnClickListener(this);
         mAnimSwitch.setOnClickListener(this);
         mRememberUISwitch.setOnClickListener(this);
         mClearCache.setOnClickListener(this);
         mVersionCheck.setOnClickListener(this);
-        mAuthorDesc.setOnClickListener(this);
-        mQQGroup.setOnClickListener(this);
+        //mAuthorDesc.setOnClickListener(this);
+        //mQQGroup.setOnClickListener(this);
     }
 
     @Override
@@ -117,8 +115,6 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
         mRememberUISwitch = (NpPreference) rootView.findViewById(R.id.remember_ui_switch);
         mClearCache = (NpPreference) rootView.findViewById(R.id.clear_cache);
         mVersionCheck = (NpPreference) rootView.findViewById(R.id.version_update_check);
-        mAuthorDesc = (NpPreference) rootView.findViewById(R.id.author_desc);
-        mQQGroup = (NpPreference) rootView.findViewById(R.id.communication_platform);
         initViews();
         return rootView;
     }
@@ -177,17 +173,6 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
             progressDialog.setIndeterminate(true);
             progressDialog.setCancelable(true);
             progressDialog.show();
-        } else if (v.getId() == R.id.author_desc) {
-            if (ApiHelper.supportVersion(ApiHelper.VERSION_CODES.HONEYCOMB)) {
-                MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_QQ_ADD);
-                copyQQToClipBoard();
-            }
-        } else if (v.getId() == R.id.communication_platform) {
-            if (!joinQQGroup("pan68pjSBp1edKE0a6mUIUogCS4U-qZW")) {
-                Toast.makeText(mLetoolContext.getActivityContext(), R.string.app_QQ_group_failed, Toast.LENGTH_SHORT).show();
-            } else {
-                MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_QQ_GROUP_ADD);
-            }
         }
     }
 
