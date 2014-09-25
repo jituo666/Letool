@@ -1,6 +1,7 @@
 
 package com.xjt.newpic.edit.filters;
 
+import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.edit.imageshow.ImageManager;
 
 import android.content.res.Resources;
@@ -47,9 +48,10 @@ public class ImageFilterTextureBorder extends ImageFilter {
         mDrawables.clear();
     }
 
-    private Bitmap scaleBitmp(Bitmap b, float scale) {
-        if (scale < 1.0f) {
-            Bitmap result = Bitmap.createBitmap(Math.round(b.getWidth() * scale), Math.round(b.getHeight() * scale), Config.ARGB_8888);
+    private Bitmap scaleBitmp(Bitmap b, double sw, double sh) {
+
+        if (sw != 1.0f || sh != 1.f) {
+            Bitmap result = Bitmap.createBitmap((int) Math.round(b.getWidth() * sw), (int) Math.round(b.getHeight() * sh), Config.ARGB_8888);
             Canvas c = new Canvas(result);
             c.drawBitmap(b, new Rect(0, 0, b.getWidth(), b.getHeight()), new Rect(0, 0, result.getWidth(), result.getHeight()), null);
             return result;
@@ -59,7 +61,7 @@ public class ImageFilterTextureBorder extends ImageFilter {
     }
 
     public void applyHelper(Canvas canvas, int w, int h) {
-        float scale = 1.0f;
+        double scale = 1.0f;
         if (getParameters() == null) {
             return;
         }
@@ -68,15 +70,42 @@ public class ImageFilterTextureBorder extends ImageFilter {
         int texture = getParameters().getTexture();
 
         mPaint.reset();
+
+        LLog.i(TAG, "----------------------applyHelper:" + ImageManager.getImage().getOriginalBounds()
+                + " w:" + w + " h:" + h + " scale:" + scale);
+
         Rect orig = ImageManager.getImage().getOriginalBounds();
         Bitmap brush = BitmapFactory.decodeResource(mResources, texture);
-        int maxM = Math.max(orig.width(), orig.height());
-        if (maxM < brush.getWidth() * 8f) {
-            scale = maxM / 8.f / brush.getWidth() * w * 1.f / orig.width();
+        int minM = Math.min(orig.width(), orig.height());
+
+        double fscaleW = 1.0f, fscaleH = 1.0f;
+        if (minM < brush.getWidth() * 8f) {
+            scale = minM / 8.f / brush.getWidth();
+            LLog.i(TAG, "----0------scale:" + scale + " minM:" + minM);
+            if (minM == orig.width()) {
+                int round = Math.round(orig.height() * 1.f / (minM / 8.f));
+                fscaleW = scale;
+                fscaleH = orig.height() * 1.0f / round / brush.getHeight();
+            } else {
+                int round = Math.round(orig.width() * 1.0f / (minM / 8.f));
+                LLog.i(TAG, "----0------round:" + round + " minM:" + minM);
+                fscaleW = (orig.width() * 1.0f / round) / brush.getWidth();
+                fscaleH = scale;
+            }
         } else {
-            scale = w * 1.f / orig.width();
+            fscaleW = (orig.width() * 1.f / Math.round(orig.width() / brush.getWidth())) / brush.getWidth();
+            fscaleH = (orig.height() * 1.f / Math.round(orig.height() / brush.getHeight())) / brush.getHeight();
         }
-        mPaint.setShader(new BitmapShader(scaleBitmp(BitmapFactory.decodeResource(mResources, texture), scale), Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
+
+        LLog.i(TAG, "----1------rw:" + fscaleW + " rh:" + fscaleH);
+        fscaleW = fscaleW * (w * 1.f / orig.width());
+        fscaleH = fscaleH * (w * 1.f / orig.width());
+
+        LLog.i(TAG, "----2------sw:" + fscaleW + " sh:" + (fscaleH) + " r:" + w * 1.f / orig.width());
+        final Bitmap fb = scaleBitmp(brush, fscaleW, fscaleH);
+        LLog.i(TAG, "----3------wr:" + w * 1.f / fb.getWidth() + " hr:" + (h * 1.f / fb.getHeight()));
+        mPaint.setShader(new BitmapShader(fb, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT));
+
         mPaint.setAntiAlias(true);
         mBounds.set(0, 0, w, h);
         mBorderPath.reset();

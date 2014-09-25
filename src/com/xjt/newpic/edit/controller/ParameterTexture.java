@@ -4,6 +4,7 @@ package com.xjt.newpic.edit.controller;
 import java.util.Arrays;
 
 import com.xjt.newpic.R;
+import com.xjt.newpic.edit.filters.FilterTextureBorderRepresentation;
 
 public class ParameterTexture implements Parameter {
 
@@ -14,11 +15,11 @@ public class ParameterTexture implements Parameter {
     int mValue;
     public final int ID;
     int[] mBasTextures = {
-            R.drawable.edit_border_tile11,
-            R.drawable.edit_border_tile12,
-            R.drawable.edit_border_tile13,
-            R.drawable.edit_border_tile2,
-            R.drawable.edit_border_tile5
+            FilterTextureBorderRepresentation.DEFAULT_TEXTURE1,
+            FilterTextureBorderRepresentation.DEFAULT_TEXTURE2,
+            FilterTextureBorderRepresentation.DEFAULT_TEXTURE3,
+            FilterTextureBorderRepresentation.DEFAULT_TEXTURE4,
+            FilterTextureBorderRepresentation.DEFAULT_TEXTURE5
     };
 
     public ParameterTexture(int id, int defaultTexture) {

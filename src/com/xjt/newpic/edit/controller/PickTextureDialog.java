@@ -4,7 +4,6 @@ package com.xjt.newpic.edit.controller;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -68,7 +67,12 @@ public class PickTextureDialog extends Dialog {
             R.drawable.edit_border_tile132,
             R.drawable.edit_border_tile133,
             R.drawable.edit_border_tile134,
-            R.drawable.edit_border_tile135
+            R.drawable.edit_border_tile135,
+            R.drawable.edit_border_tile136,
+            R.drawable.edit_border_tile137,
+            R.drawable.edit_border_tile138,
+            R.drawable.edit_border_tile139,
+            R.drawable.edit_border_tile140
     };
 
     public PickTextureDialog(Context context, final TextureListener cl) {
@@ -82,6 +86,7 @@ public class PickTextureDialog extends Dialog {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.np_edit_texture_picker);
         mResources = getContext().getResources();
+        mOption.inSampleSize = 4;
         mCancel = (ImageButton) findViewById(R.id.cancelTexturePick);
         mCancel.setOnClickListener(new View.OnClickListener() {
 
@@ -138,16 +143,7 @@ public class PickTextureDialog extends Dialog {
                 v = convertView;
             }
             ImageView texture = (ImageView) v.findViewById(R.id.texture_sample);
-            mOption.inJustDecodeBounds = true;
-            mOption.inSampleSize = 1;
-            Bitmap temp = BitmapFactory.decodeResource(mResources, ALL_TEXTURES[position], mOption);
-            if (temp.getWidth() <= 64) {
-                texture.setImageResource(ALL_TEXTURES[position]);
-            } else {
-                mOption.inJustDecodeBounds = false;
-                mOption.inSampleSize = temp.getWidth() / 64;
-                texture.setImageBitmap(BitmapFactory.decodeResource(mResources, ALL_TEXTURES[position], mOption));
-            }
+            texture.setImageBitmap(BitmapFactory.decodeResource(mResources, ALL_TEXTURES[position], mOption));
 
             return v;
         }
