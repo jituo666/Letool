@@ -11,6 +11,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
@@ -116,4 +117,25 @@ public class PackageUtils {
         return false;
     }
 
+    public static String getVersionName(Context c) {
+        try {
+            PackageManager manager = c.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(c.getPackageName(), 0);
+            return info.versionName;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    public static int getVersionCode(Context c) {
+        try {
+            PackageManager manager = c.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(c.getPackageName(), 0);
+            return info.versionCode;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
 }

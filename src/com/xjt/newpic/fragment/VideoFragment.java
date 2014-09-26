@@ -235,7 +235,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
                 }
             }
         });
-        dlg.setCancelBtn(R.string.common_cancel, null,R.drawable.np_common_pressed_bottom_bg);
+        dlg.setCancelBtn(R.string.common_cancel, null, R.drawable.np_common_pressed_bottom_bg);
         dlg.setCanceledOnTouchOutside(false);
         dlg.show();
     }
@@ -528,7 +528,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
 
         final NpDialog dlg = new NpDialog(getActivity());
         dlg.setTitle(R.string.common_recommend);
-        dlg.setOkBtn(R.string.common_ok, cdl,R.drawable.np_common_pressed_left_bg);
+        dlg.setOkBtn(R.string.common_ok, cdl, R.drawable.np_common_pressed_left_bg);
         dlg.setCancelBtn(R.string.common_cancel, cdl, R.drawable.np_common_pressed_right_bg);
         dlg.setMessage(mIsCameraSource ? Html.fromHtml(getString(R.string.common_delete_cur_video_tip, item.getName()))
                 : Html.fromHtml(getString(R.string.common_delete_cur_movie_tip, item.getName())));
@@ -618,7 +618,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     }
 
     public void showGuideTip() {
-        if (GlobalPreference.IsGuideTipShown(getActivity()) && mVideoDataLoader.size() > 0) {
+        if (GlobalPreference.isGuideTipShown(getActivity()) && mVideoDataLoader.size() > 0) {
             final View tip = mLetoolContext.getGuidTipView();
             tip.setVisibility(View.VISIBLE);
             Animation a = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_bottom_in);
@@ -639,7 +639,7 @@ public class VideoFragment extends Fragment implements EyePosition.EyePositionLi
     }
 
     public void hideGuideTip() {
-        if (GlobalPreference.IsGuideTipShown(getActivity())) {
+        if (GlobalPreference.isGuideTipShown(getActivity())) {
             final View tip = mLetoolContext.getGuidTipView();
             if (tip.getVisibility() == View.VISIBLE) {
                 tip.setVisibility(View.GONE);

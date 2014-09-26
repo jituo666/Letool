@@ -15,7 +15,7 @@
         android:layout_gravity="center_horizontal"
         android:text="@string/friendly_tips"
         android:textColor="@color/np_major_text_color"
-        android:textSize="@dimen/common_text_size_large" />
+        android:textSize="@dimen/common_title_text_size" />
 
     <TextView
         android:id="@+id/tip_cotent"

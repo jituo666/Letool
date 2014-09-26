@@ -20,7 +20,7 @@ public class GlobalPreference {
     private static final String PREFS_KEY_REMEMBER_LAST_UI = "remember_last_ui";
     private static final String PREFS_KEY_GUIDE_TIP_SHOW = "guide_tip_shown";
     private static final String PREFS_KEY_SPASH_TIME = "spash_time";
-    private static final String PREFS_KEY_GUIDE_TIME = "np_guide_time";
+    private static final String PREFS_KEY_GUIDE_CODE = "np_guide_code";
 
     private static final String PREFS_KEY_LAST_UI = "last_ui";
 
@@ -46,14 +46,14 @@ public class GlobalPreference {
         return prefs.getLong(PREFS_KEY_SPASH_TIME, 0);
     }
 
-    public static void setLastGuideTime(Context ctx, long defTime) {
+    public static void setLastGuideCode(Context ctx, int defTime) {
         SharedPreferences prefs = initSharedPreferences(ctx);
-        SharedPreferencesCompat.apply(prefs.edit().putLong(PREFS_KEY_GUIDE_TIME, defTime));
+        SharedPreferencesCompat.apply(prefs.edit().putInt(PREFS_KEY_GUIDE_CODE, defTime));
     }
 
-    public static long getLastGuideTime(Context ctx) {
+    public static int getLastGuideCode(Context ctx) {
         SharedPreferences prefs = initSharedPreferences(ctx);
-        return prefs.getLong(PREFS_KEY_GUIDE_TIME, 0);
+        return prefs.getInt(PREFS_KEY_GUIDE_CODE, 0);
     }
 
     public static void setAppUpdateCheckTime(Context ctx, long defTime) {
@@ -116,7 +116,7 @@ public class GlobalPreference {
         SharedPreferencesCompat.apply(prefs.edit().putBoolean(PREFS_KEY_GUIDE_TIP_SHOW, open));
     }
 
-    public static boolean IsGuideTipShown(Context ctx) {
+    public static boolean isGuideTipShown(Context ctx) {
         SharedPreferences prefs = initSharedPreferences(ctx);
         return prefs.getBoolean(PREFS_KEY_GUIDE_TIP_SHOW, true);
     }

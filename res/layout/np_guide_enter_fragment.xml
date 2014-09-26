@@ -17,6 +17,6 @@
         android:layout_marginBottom="24dp"
         android:layout_marginRight="24dp"
         android:scaleType="fitXY"
-        android:src="@drawable/np_guide_over" />
+        android:src="@drawable/np_guide_enter_bg" />
 
 </FrameLayout>

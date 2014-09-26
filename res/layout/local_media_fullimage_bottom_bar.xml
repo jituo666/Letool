@@ -6,18 +6,31 @@
     android:layout_height="match_parent"
     android:orientation="horizontal" >
 
-    <TextView
-        android:id="@+id/action_edit"
-        style="@style/MyWidget.ActionBarIconStyle"
+    <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:drawablePadding="-3dp"
-        android:drawableTop="@drawable/ic_action_edit"
-        android:gravity="center_horizontal"
-        android:text="@string/common_edit"
-        android:textColor="@color/np_minor_button_color"
-        android:textSize="12sp" />
+        android:layout_weight="1" >
+
+        <TextView
+            android:id="@+id/action_edit"
+            style="@style/MyWidget.ActionBarIconStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:drawablePadding="-3dp"
+            android:drawableTop="@drawable/ic_action_edit"
+            android:gravity="center_horizontal"
+            android:text="@string/common_edit"
+            android:textColor="@color/np_minor_button_color"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:layout_width="32dp"
+            android:layout_height="16dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_launcher" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/action_share"

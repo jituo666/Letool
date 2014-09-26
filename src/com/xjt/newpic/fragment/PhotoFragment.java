@@ -623,7 +623,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     }
 
     public void showGuideTip() {
-        if (GlobalPreference.IsGuideTipShown(getActivity()) && mAlbumDataSetLoader.size() > 0) {
+        if (GlobalPreference.isGuideTipShown(getActivity()) && mAlbumDataSetLoader.size() > 0) {
             final View tip = mLetoolContext.getGuidTipView();
             tip.setVisibility(View.VISIBLE);
             Animation a = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_bottom_in);
@@ -634,7 +634,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
             close.setOnClickListener(new OnClickListener() {
 
                 @Override
-                public void onClick(View arg0) {
+                public void onClick(View v) {
                     tip.setVisibility(View.GONE);
                     tip.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_bottom_out));
                     GlobalPreference.setGuideTipShown(getActivity(), false);
@@ -644,7 +644,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     }
 
     public void hideGuideTip() {
-        if (GlobalPreference.IsGuideTipShown(getActivity())) {
+        if (GlobalPreference.isGuideTipShown(getActivity())) {
             final View tip = mLetoolContext.getGuidTipView();
             if (tip.getVisibility() == View.VISIBLE) {
                 tip.setVisibility(View.GONE);
