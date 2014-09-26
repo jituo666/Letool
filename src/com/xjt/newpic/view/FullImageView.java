@@ -457,8 +457,7 @@ public class FullImageView extends GLView {
     public void setCameraRelativeFrame(Rect frame) {
         mCameraRelativeFrame.set(frame);
         updateCameraRect();
-        // Originally we do
-        //     mPositionController.setConstrainedFrame(mCameraRect);
+        // Originally we do mPositionController.setConstrainedFrame(mCameraRect);
         // here, but it is moved to a parameter of the setImageSize() call, so
         // it can be updated atomically with the CameraScreenNail's size change.
     }
@@ -608,8 +607,7 @@ public class FullImageView extends GLView {
             boolean wantsCardEffect = CARD_EFFECT && !mIsCamera
                     && filmRatio != 1f && !mPictures.get(-1).isCamera()
                     && !mPositionController.inOpeningAnimation();
-            boolean wantsOffsetEffect = OFFSET_EFFECT && mIsDeletable
-                    && filmRatio == 1f && r.centerY() != viewH / 2;
+            boolean wantsOffsetEffect = OFFSET_EFFECT && mIsDeletable && filmRatio == 1f && r.centerY() != viewH / 2;
             if (wantsCardEffect) {
                 // Calculate the move-out progress value.
                 int left = r.left;
@@ -668,8 +666,7 @@ public class FullImageView extends GLView {
         }
 
         // Set the position of the tile view
-        private void setTileViewPosition(float cx, float cy,
-                int viewW, int viewH, float scale) {
+        private void setTileViewPosition(float cx, float cy, int viewW, int viewH, float scale) {
             // Find out the bitmap coordinates of the center of the view
             int imageW = mPositionController.getImageWidth();
             int imageH = mPositionController.getImageHeight();
@@ -798,8 +795,7 @@ public class FullImageView extends GLView {
         }
 
         private boolean isScreenNailAnimating() {
-            return (mScreenNail instanceof TiledScreenNail)
-                    && ((TiledScreenNail) mScreenNail).isAnimating();
+            return (mScreenNail instanceof TiledScreenNail)  && ((TiledScreenNail) mScreenNail).isAnimating();
         }
 
         @Override
@@ -1036,33 +1032,30 @@ public class FullImageView extends GLView {
             if (Math.abs(velocityX) > Math.abs(velocityY)) {
                 return mPositionController.flingFilmX(vx);
             }
-            // If we scrolled in Y direction fast enough, treat it as a delete
-            // gesture.
-            if (!mFilmMode || mTouchBoxIndex == Integer.MAX_VALUE
-                    || !mTouchBoxDeletable) {
-                return false;
-            }
-            int maxVelocity = LetoolUtils.dpToPixel(MAX_DISMISS_VELOCITY);
-            int escapeVelocity = LetoolUtils.dpToPixel(SWIPE_ESCAPE_VELOCITY);
-            int escapeDistance = LetoolUtils.dpToPixel(SWIPE_ESCAPE_DISTANCE);
-            int centerY = mPositionController.getPosition(mTouchBoxIndex)
-                    .centerY();
-            boolean fastEnough = (Math.abs(vy) > escapeVelocity)
-                    && (Math.abs(vy) > Math.abs(vx))
-                    && ((vy > 0) == (centerY > getHeight() / 2))
-                    && dY >= escapeDistance;
-            if (fastEnough) {
-                vy = Math.min(vy, maxVelocity);
-                int duration = mPositionController.flingFilmY(mTouchBoxIndex, vy);
-                if (duration >= 0) {
-                    mPositionController.setPopFromTop(vy < 0);
-                    deleteAfterAnimation(duration);
-                    // We reset mTouchBoxIndex, so up() won't check if Y
-                    // scrolled far enough to be a delete gesture.
-                    mTouchBoxIndex = Integer.MAX_VALUE;
-                    return true;
-                }
-            }
+//            // If we scrolled in Y direction fast enough, treat it as a delete gesture.
+//            if (!mFilmMode || mTouchBoxIndex == Integer.MAX_VALUE || !mTouchBoxDeletable) {
+//                return false;
+//            }
+//            int maxVelocity = LetoolUtils.dpToPixel(MAX_DISMISS_VELOCITY);
+//            int escapeVelocity = LetoolUtils.dpToPixel(SWIPE_ESCAPE_VELOCITY);
+//            int escapeDistance = LetoolUtils.dpToPixel(SWIPE_ESCAPE_DISTANCE);
+//            int centerY = mPositionController.getPosition(mTouchBoxIndex).centerY();
+//            boolean fastEnough = (Math.abs(vy) > escapeVelocity)
+//                    && (Math.abs(vy) > Math.abs(vx))
+//                    && ((vy > 0) == (centerY > getHeight() / 2))
+//                    && dY >= escapeDistance;
+//            if (fastEnough) {
+//                vy = Math.min(vy, maxVelocity);
+//                int duration = mPositionController.flingFilmY(mTouchBoxIndex, vy);
+//                if (duration >= 0) {
+//                    mPositionController.setPopFromTop(vy < 0);
+//                    //deleteAfterAnimation(duration);
+//                    // We reset mTouchBoxIndex, so up() won't check if Y
+//                    // scrolled far enough to be a delete gesture.
+//                    mTouchBoxIndex = Integer.MAX_VALUE;
+//                    return true;
+//                }
+//            }
             return false;
         }
 

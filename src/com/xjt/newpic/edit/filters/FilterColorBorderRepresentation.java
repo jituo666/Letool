@@ -24,10 +24,10 @@ public class FilterColorBorderRepresentation extends FilterRepresentation {
     public static final int PARAM_CLEAR = 3;
 
     public static int DEFAULT_COLOR1 = Color.WHITE;
-    public static int DEFAULT_COLOR2 = 0xFFFEB437;
-    public static int DEFAULT_COLOR3 = 0xFF36C4B4;
-    public static int DEFAULT_COLOR4 = 0XFF76C129;
-    public static int DEFAULT_COLOR5 = Color.BLACK;
+    public static int DEFAULT_COLOR2 = 0xFF9ED1E2;
+    public static int DEFAULT_COLOR3 = 0xFFD18BE4;
+    public static int DEFAULT_COLOR4 = 0XFFF0DA87;
+    public static int DEFAULT_COLOR5 = 0xFF361951;
 
     private BasicParameterInt mParamSize = new BasicParameterInt(PARAM_SIZE, 0, 0, 30);
     private BasicParameterInt mParamRadius = new BasicParameterInt(PARAM_RADIUS, 0, 0, 100);

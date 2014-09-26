@@ -53,7 +53,7 @@
     <string name="vibrance">"自然饱和度"</string>
     <string name="saturation">"饱和度"</string>
     <string name="bwfilter">"黑白过滤"</string>
-    <string name="wbalance">"智能调整"</string>
+    <string name="wbalance">"自动调整"</string>
     <string name="hue">"色调"</string>
     <string name="shadow_recovery">"阴影"</string>
     <string name="highlight_recovery">"强光"</string>
