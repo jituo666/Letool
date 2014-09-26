@@ -125,8 +125,6 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
     private long mSourceVersion = MediaObject.INVALID_DATA_VERSION;
     private int mSize = 0;
     private MediaPath mItemPath;
-    private boolean mIsPanorama;
-    private boolean mIsStaticCamera;
     private boolean mIsActive;
     private boolean mNeedFullImage;
     private int mFocusHintDirection = FOCUS_HINT_NEXT;
@@ -444,7 +442,7 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
 
         // Create a default ScreenNail if the real one is not available yet,
         // except for camera that a black screen is better than a gray tile.
-        if (entry.screenNail == null && !isCamera(offset)) {
+        if (entry.screenNail == null) {
             entry.screenNail = newPlaceholderScreenNail(item);
             if (offset == 0)
                 updateTileProvider(entry);
@@ -475,29 +473,6 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
     public void setNeedFullImage(boolean enabled) {
         mNeedFullImage = enabled;
         mMainHandler.sendEmptyMessage(MSG_UPDATE_IMAGE_REQUESTS);
-    }
-
-    @Override
-    public boolean isCamera(int offset) {
-        return false;
-    }
-
-    @Override
-    public boolean isPanorama(int offset) {
-        return isCamera(offset) && mIsPanorama;
-    }
-
-    @Override
-    public boolean isStaticCamera(int offset) {
-        return isCamera(offset) && mIsStaticCamera;
-    }
-
-    @Override
-    public boolean isVideo(int offset) {
-        MediaItem item = getItem(mCurrentIndex + offset);
-        return (item == null)
-                ? false
-                : item.getMediaType() == MediaItem.MEDIA_TYPE_VIDEO;
     }
 
     @Override

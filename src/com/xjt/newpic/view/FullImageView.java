@@ -21,7 +21,6 @@ import com.xjt.newpic.metadata.MediaItem;
 import com.xjt.newpic.metadata.MediaObject;
 import com.xjt.newpic.metadata.MediaPath;
 import com.xjt.newpic.stat.StatConstants;
-import com.xjt.newpic.utils.LetoolUtils;
 import com.xjt.newpic.utils.RangeArray;
 import com.xjt.newpic.utils.Utils;
 import com.xjt.newpic.views.layout.FullImageLayout;
@@ -69,18 +68,6 @@ public class FullImageView extends GLView {
 
         // Set this to true if we need the model to provide full images.
         public void setNeedFullImage(boolean enabled);
-
-        // Returns true if the item is the Camera preview.
-        public boolean isCamera(int offset);
-
-        // Returns true if the item is the Panorama.
-        public boolean isPanorama(int offset);
-
-        // Returns true if the item is a static image that represents camerapreview.
-        public boolean isStaticCamera(int offset);
-
-        // Returns true if the item is a Video.
-        public boolean isVideo(int offset);
 
         // Returns true if the item can be deleted.
         public boolean isDeletable(int offset);
@@ -131,15 +118,11 @@ public class FullImageView extends GLView {
     // (2) If we go from camera to gallery with capture animation, we show action bar.
     private static final int MSG_CANCEL_EXTRA_SCALING = 2;
     private static final int MSG_SWITCH_FOCUS = 3;
-    private static final int MSG_CAPTURE_ANIMATION_DONE = 4;
-    private static final int MSG_DELETE_ANIMATION_DONE = 5;
-    private static final int MSG_DELETE_DONE = 6;
 
     private static final float SWIPE_THRESHOLD = 300f;
 
     private static final float DEFAULT_TEXT_SIZE = 20;
     private static float TRANSITION_SCALE_FACTOR = 0.74f;
-    private static final int ICON_RATIO = 6;
 
     // whether we want to apply card deck effect in page mode.
     private static final boolean CARD_EFFECT = true;
@@ -151,19 +134,12 @@ public class FullImageView extends GLView {
     private ZInterpolator mScaleInterpolator = new ZInterpolator(0.5f);
 
     // Used to calculate the alpha factor for the fading animation.
-    private AccelerateInterpolator mAlphaInterpolator =
-            new AccelerateInterpolator(0.9f);
+    private AccelerateInterpolator mAlphaInterpolator = new AccelerateInterpolator(0.9f);
 
     // We keep this many previous ScreenNails. (also this many next ScreenNails)
     public static final int SCREEN_NAIL_MAX = 3;
 
-    // These are constants for the delete gesture.
-    private static final int SWIPE_ESCAPE_VELOCITY = 500; // dp/sec
-    private static final int MAX_DISMISS_VELOCITY = 2500; // dp/sec
-    private static final int SWIPE_ESCAPE_DISTANCE = 150; // dp
-
-    // The picture entries, the valid index is from -SCREEN_NAIL_MAX to
-    // SCREEN_NAIL_MAX.
+    // The picture entries, the valid index is from -SCREEN_NAIL_MAX to SCREEN_NAIL_MAX.
     private final RangeArray<Picture> mPictures = new RangeArray<Picture>(-SCREEN_NAIL_MAX, SCREEN_NAIL_MAX);
     private Size[] mSizes = new Size[2 * SCREEN_NAIL_MAX + 1];
 
@@ -302,13 +278,6 @@ public class FullImageView extends GLView {
                     fv.switchFocus();
                     break;
                 }
-                case MSG_CAPTURE_ANIMATION_DONE: {
-                    // message.arg1 is the offset parameter passed to switchWithCaptureAnimation().
-                    fv.captureAnimationDone(message.arg1);
-                    break;
-                }
-                default:
-                    throw new AssertionError(message.what);
             }
         }
     }
@@ -347,7 +316,7 @@ public class FullImageView extends GLView {
         //        boolean wasDeleting = mPositionController.hasDeletingBox();
 
         // Move the boxes
-        mPositionController.moveBox(fromIndex, mPrevBound < 0, mNextBound > 0, mModel.isCamera(0), mSizes);
+        mPositionController.moveBox(fromIndex, mPrevBound < 0, mNextBound > 0, false, mSizes);
 
         for (int i = -SCREEN_NAIL_MAX; i <= SCREEN_NAIL_MAX; i++) {
             setPictureSize(i);
@@ -514,7 +483,6 @@ public class FullImageView extends GLView {
         private boolean mIsCamera;
         private boolean mIsPanorama;
         private boolean mIsStaticCamera;
-        private boolean mIsVideo;
         private boolean mIsDeletable;
         private int mLoadingState = Model.LOADING_INIT;
         private Size mSize = new Size();
@@ -523,11 +491,6 @@ public class FullImageView extends GLView {
         public void reload() {
             // mImageWidth and mImageHeight will get updated
             mTileView.notifyModelInvalidated();
-
-            mIsCamera = mModel.isCamera(0);
-            mIsPanorama = mModel.isPanorama(0);
-            mIsStaticCamera = mModel.isStaticCamera(0);
-            mIsVideo = mModel.isVideo(0);
             mIsDeletable = mModel.isDeletable(0);
             mLoadingState = mModel.getLoadingState(0);
             setScreenNail(mModel.getScreenNail(0));
@@ -649,11 +612,7 @@ public class FullImageView extends GLView {
             setTileViewPosition(cx, cy, viewW, viewH, imageScale);
             renderChild(canvas, mTileView);
 
-            // Draw the play video icon and the message.
             canvas.translate((int) (cx + 0.5f), (int) (cy + 0.5f));
-            int s = (int) (scale * Math.min(r.width(), r.height()) + 0.5f);
-            if (mIsVideo)
-                drawVideoPlayIcon(canvas, s);
             if (mLoadingState == Model.LOADING_FAIL) {
                 drawLoadingFailMessage(canvas);
             }
@@ -708,7 +667,6 @@ public class FullImageView extends GLView {
         private boolean mIsCamera;
         private boolean mIsPanorama;
         private boolean mIsStaticCamera;
-        private boolean mIsVideo;
         private boolean mIsDeletable;
         private int mLoadingState = Model.LOADING_INIT;
         private Size mSize = new Size();
@@ -719,10 +677,6 @@ public class FullImageView extends GLView {
 
         @Override
         public void reload() {
-            mIsCamera = mModel.isCamera(mIndex);
-            mIsPanorama = mModel.isPanorama(mIndex);
-            mIsStaticCamera = mModel.isStaticCamera(mIndex);
-            mIsVideo = mModel.isVideo(mIndex);
             mIsDeletable = mModel.isDeletable(mIndex);
             mLoadingState = mModel.getLoadingState(mIndex);
             setScreenNail(mModel.getScreenNail(mIndex));
@@ -737,8 +691,7 @@ public class FullImageView extends GLView {
         @Override
         public void draw(GLESCanvas canvas, Rect r) {
             if (mScreenNail == null) {
-                // Draw a placeholder rectange if there should be a picture in
-                // this position (but somehow there isn't).
+                // Draw a placeholder rectange if there should be a picture inthis position (but somehow there isn't).
                 if (mIndex >= mPrevBound && mIndex <= mNextBound) {
                     drawPlaceHolder(canvas, r);
                 }
@@ -785,9 +738,6 @@ public class FullImageView extends GLView {
             if (isScreenNailAnimating()) {
                 invalidate();
             }
-            int s = Math.min(drawW, drawH);
-            if (mIsVideo)
-                drawVideoPlayIcon(canvas, s);
             if (mLoadingState == Model.LOADING_FAIL) {
                 drawLoadingFailMessage(canvas);
             }
@@ -795,7 +745,7 @@ public class FullImageView extends GLView {
         }
 
         private boolean isScreenNailAnimating() {
-            return (mScreenNail instanceof TiledScreenNail)  && ((TiledScreenNail) mScreenNail).isAnimating();
+            return (mScreenNail instanceof TiledScreenNail) && ((TiledScreenNail) mScreenNail).isAnimating();
         }
 
         @Override
@@ -847,12 +797,6 @@ public class FullImageView extends GLView {
     // Draw a gray placeholder in the specified rectangle.
     private void drawPlaceHolder(GLESCanvas canvas, Rect r) {
         canvas.fillRect(r.left, r.top, r.width(), r.height(), mPlaceholderColor);
-    }
-
-    // Draw the video play icon (in the place where the spinner was)
-    private void drawVideoPlayIcon(GLESCanvas canvas, int side) {
-        int s = side / ICON_RATIO;
-        // Draw the video play icon at the center
     }
 
     // Draw the "no thumbnail" message
@@ -1003,7 +947,7 @@ public class FullImageView extends GLView {
             if (Math.abs(delta) >= size) {
                 delta = delta > 0 ? maxScrollDistance : -maxScrollDistance;
             } else {
-                delta = maxScrollDistance * (float)Math.sin((delta / size) * (float) (Math.PI / 2));
+                delta = maxScrollDistance * (float) Math.sin((delta / size) * (float) (Math.PI / 2));
             }
             return (int) (delta + 0.5f);
         }
@@ -1032,42 +976,31 @@ public class FullImageView extends GLView {
             if (Math.abs(velocityX) > Math.abs(velocityY)) {
                 return mPositionController.flingFilmX(vx);
             }
-//            // If we scrolled in Y direction fast enough, treat it as a delete gesture.
-//            if (!mFilmMode || mTouchBoxIndex == Integer.MAX_VALUE || !mTouchBoxDeletable) {
-//                return false;
-//            }
-//            int maxVelocity = LetoolUtils.dpToPixel(MAX_DISMISS_VELOCITY);
-//            int escapeVelocity = LetoolUtils.dpToPixel(SWIPE_ESCAPE_VELOCITY);
-//            int escapeDistance = LetoolUtils.dpToPixel(SWIPE_ESCAPE_DISTANCE);
-//            int centerY = mPositionController.getPosition(mTouchBoxIndex).centerY();
-//            boolean fastEnough = (Math.abs(vy) > escapeVelocity)
-//                    && (Math.abs(vy) > Math.abs(vx))
-//                    && ((vy > 0) == (centerY > getHeight() / 2))
-//                    && dY >= escapeDistance;
-//            if (fastEnough) {
-//                vy = Math.min(vy, maxVelocity);
-//                int duration = mPositionController.flingFilmY(mTouchBoxIndex, vy);
-//                if (duration >= 0) {
-//                    mPositionController.setPopFromTop(vy < 0);
-//                    //deleteAfterAnimation(duration);
-//                    // We reset mTouchBoxIndex, so up() won't check if Y
-//                    // scrolled far enough to be a delete gesture.
-//                    mTouchBoxIndex = Integer.MAX_VALUE;
-//                    return true;
-//                }
-//            }
+            //            // If we scrolled in Y direction fast enough, treat it as a delete gesture.
+            //            if (!mFilmMode || mTouchBoxIndex == Integer.MAX_VALUE || !mTouchBoxDeletable) {
+            //                return false;
+            //            }
+            //            int maxVelocity = LetoolUtils.dpToPixel(MAX_DISMISS_VELOCITY);
+            //            int escapeVelocity = LetoolUtils.dpToPixel(SWIPE_ESCAPE_VELOCITY);
+            //            int escapeDistance = LetoolUtils.dpToPixel(SWIPE_ESCAPE_DISTANCE);
+            //            int centerY = mPositionController.getPosition(mTouchBoxIndex).centerY();
+            //            boolean fastEnough = (Math.abs(vy) > escapeVelocity)
+            //                    && (Math.abs(vy) > Math.abs(vx))
+            //                    && ((vy > 0) == (centerY > getHeight() / 2))
+            //                    && dY >= escapeDistance;
+            //            if (fastEnough) {
+            //                vy = Math.min(vy, maxVelocity);
+            //                int duration = mPositionController.flingFilmY(mTouchBoxIndex, vy);
+            //                if (duration >= 0) {
+            //                    mPositionController.setPopFromTop(vy < 0);
+            //                    //deleteAfterAnimation(duration);
+            //                    // We reset mTouchBoxIndex, so up() won't check if Y
+            //                    // scrolled far enough to be a delete gesture.
+            //                    mTouchBoxIndex = Integer.MAX_VALUE;
+            //                    return true;
+            //                }
+            //            }
             return false;
-        }
-
-        private void deleteAfterAnimation(int duration) {
-            MediaItem item = mModel.getMediaItem(mTouchBoxIndex);
-            if (item == null)
-                return;
-            mHolding |= HOLD_DELETE;
-            Message m = mHandler.obtainMessage(MSG_DELETE_ANIMATION_DONE);
-            m.obj = item.getPath();
-            m.arg1 = mTouchBoxIndex;
-            mHandler.sendMessageDelayed(m, duration);
         }
 
         @Override
@@ -1108,8 +1041,7 @@ public class FullImageView extends GLView {
 
             // If mode changes, we treat this scaling gesture has ended.
             if (mCanChangeMode && largeEnough) {
-                if ((outOfRange < 0 && !mFilmMode) ||
-                        (outOfRange > 0 && mFilmMode)) {
+                if ((outOfRange < 0 && !mFilmMode) || (outOfRange > 0 && mFilmMode)) {
                     stopExtraScalingIfNeeded();
 
                     // Removing the touch down flag allows snapback to happen for film mode change.
@@ -1146,8 +1078,7 @@ public class FullImageView extends GLView {
 
         private void startExtraScalingIfNeeded() {
             if (!mCancelExtraScalingPending) {
-                mHandler.sendEmptyMessageDelayed(
-                        MSG_CANCEL_EXTRA_SCALING, 700);
+                mHandler.sendEmptyMessageDelayed( MSG_CANCEL_EXTRA_SCALING, 700);
                 mPositionController.setExtraScalingRange(true);
                 mCancelExtraScalingPending = true;
             }
@@ -1182,11 +1113,9 @@ public class FullImageView extends GLView {
             mScrolledAfterDown = false;
             if (mFilmMode) {
                 int xi = (int) (x + 0.5f);
-                int yi = (int) (y + 0.5f);
                 // We only care about being within the x bounds, necessary for
                 // handling very wide images which are otherwise very hard to fling
                 mTouchBoxIndex = mPositionController.hitTest(xi, getHeight() / 2);
-
                 if (mTouchBoxIndex < mPrevBound || mTouchBoxIndex > mNextBound) {
                     mTouchBoxIndex = Integer.MAX_VALUE;
                 } else {
@@ -1206,26 +1135,24 @@ public class FullImageView extends GLView {
             mEdgeView.onRelease();
 
             // If we scrolled in Y direction far enough, treat it as a delete gesture.
-            if (mFilmMode && mScrolledAfterDown && !mFirstScrollX && mTouchBoxIndex != Integer.MAX_VALUE) {
-                Rect r = mPositionController.getPosition(mTouchBoxIndex);
-                int h = getHeight();
-                if (Math.abs(r.centerY() - h * 0.5f) > 0.4f * h) {
-                    int duration = mPositionController
-                            .flingFilmY(mTouchBoxIndex, 0);
-                    if (duration >= 0) {
-                        mPositionController.setPopFromTop(r.centerY() < h * 0.5f);
-                        deleteAfterAnimation(duration);
-                    }
-                }
-            }
+            //            if (mFilmMode && mScrolledAfterDown && !mFirstScrollX && mTouchBoxIndex != Integer.MAX_VALUE) {
+            //                Rect r = mPositionController.getPosition(mTouchBoxIndex);
+            //                int h = getHeight();
+            //                if (Math.abs(r.centerY() - h * 0.5f) > 0.4f * h) {
+            //                    int duration = mPositionController.flingFilmY(mTouchBoxIndex, 0);
+            //                    if (duration >= 0) {
+            //                        mPositionController.setPopFromTop(r.centerY() < h * 0.5f);
+            //                        deleteAfterAnimation(duration);
+            //                    }
+            //                }
+            //            }
 
             if (mIgnoreUpEvent) {
                 mIgnoreUpEvent = false;
                 return;
             }
 
-            if (!(mFilmMode && !mHadFling && mFirstScrollX
-            && snapToNeighborImage())) {
+            if (!(mFilmMode && !mHadFling && mFirstScrollX && snapToNeighborImage())) {
                 snapback();
             }
         }
@@ -1411,17 +1338,14 @@ public class FullImageView extends GLView {
         boolean isMinimal = controller.isAtMinimalScale();
         int edges = controller.getImageAtEdges();
         if (!isMinimal && Math.abs(velocityY) > Math.abs(velocityX))
-            if ((edges & FullImageLayout.IMAGE_AT_TOP_EDGE) == 0
-                    || (edges & FullImageLayout.IMAGE_AT_BOTTOM_EDGE) == 0)
+            if ((edges & FullImageLayout.IMAGE_AT_TOP_EDGE) == 0 || (edges & FullImageLayout.IMAGE_AT_BOTTOM_EDGE) == 0)
                 return false;
 
         // If we are at the edge of the current photo and the sweeping velocity
         // exceeds the threshold, slide to the next / previous image.
-        if (velocityX < -SWIPE_THRESHOLD && (isMinimal
-                || (edges & FullImageLayout.IMAGE_AT_RIGHT_EDGE) != 0)) {
+        if (velocityX < -SWIPE_THRESHOLD && (isMinimal|| (edges & FullImageLayout.IMAGE_AT_RIGHT_EDGE) != 0)) {
             return slideToNextPicture();
-        } else if (velocityX > SWIPE_THRESHOLD && (isMinimal
-                || (edges & FullImageLayout.IMAGE_AT_LEFT_EDGE) != 0)) {
+        } else if (velocityX > SWIPE_THRESHOLD && (isMinimal|| (edges & FullImageLayout.IMAGE_AT_LEFT_EDGE) != 0)) {
             return slideToPrevPicture();
         }
 
@@ -1544,15 +1468,7 @@ public class FullImageView extends GLView {
         } else {
             return false;
         }
-        mHolding |= HOLD_CAPTURE_ANIMATION;
-        Message m = mHandler.obtainMessage(MSG_CAPTURE_ANIMATION_DONE, offset, 0);
-        mHandler.sendMessageDelayed(m, FullImageLayout.CAPTURE_ANIMATION_TIME);
         return true;
-    }
-
-    private void captureAnimationDone(int offset) {
-        mHolding &= ~HOLD_CAPTURE_ANIMATION;
-        snapback();
     }
 
     ////////////////////////////////////////////////////////////////////////////
@@ -1608,17 +1524,14 @@ public class FullImageView extends GLView {
     // Maps a scrolling progress value to the alpha factor in the fading
     // animation.
     private float getScrollAlpha(float scrollProgress) {
-        return scrollProgress < 0 ? mAlphaInterpolator.getInterpolation(
-                1 - Math.abs(scrollProgress)) : 1.0f;
+        return scrollProgress < 0 ? mAlphaInterpolator.getInterpolation(1 - Math.abs(scrollProgress)) : 1.0f;
     }
 
     // Maps a scrolling progress value to the scaling factor in the fading
     // animation.
     private float getScrollScale(float scrollProgress) {
-        float interpolatedProgress = mScaleInterpolator.getInterpolation(
-                Math.abs(scrollProgress));
-        float scale = (1 - interpolatedProgress) +
-                interpolatedProgress * TRANSITION_SCALE_FACTOR;
+        float interpolatedProgress = mScaleInterpolator.getInterpolation( Math.abs(scrollProgress));
+        float scale = (1 - interpolatedProgress) +interpolatedProgress * TRANSITION_SCALE_FACTOR;
         return scale;
     }
 
@@ -1635,8 +1548,7 @@ public class FullImageView extends GLView {
         }
 
         public float getInterpolation(float input) {
-            return (1.0f - focalLength / (focalLength + input)) /
-                    (1.0f - focalLength / (focalLength + 1.0f));
+            return (1.0f - focalLength / (focalLength + input)) /(1.0f - focalLength / (focalLength + 1.0f));
         }
     }
 
