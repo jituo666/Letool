@@ -28,18 +28,15 @@ public class PickTextureDialog extends Dialog {
     private BitmapFactory.Options mOption = new BitmapFactory.Options();
 
     private static final int[] ALL_TEXTURES = new int[] {
-            R.drawable.edit_border_tile1,
             R.drawable.edit_border_tile2,
             R.drawable.edit_border_tile3,
             R.drawable.edit_border_tile4,
             R.drawable.edit_border_tile5,
             R.drawable.edit_border_tile11,
-            R.drawable.edit_border_tile12,
             R.drawable.edit_border_tile13,
             R.drawable.edit_border_tile14,
             R.drawable.edit_border_tile15,
             R.drawable.edit_border_tile16,
-            R.drawable.edit_border_tile17,
             R.drawable.edit_border_tile18,
             R.drawable.edit_border_tile19,
             R.drawable.edit_border_tile20,
@@ -59,20 +56,24 @@ public class PickTextureDialog extends Dialog {
             R.drawable.edit_border_tile124,
             R.drawable.edit_border_tile125,
             R.drawable.edit_border_tile126,
-            R.drawable.edit_border_tile127,
             R.drawable.edit_border_tile128,
             R.drawable.edit_border_tile129,
             R.drawable.edit_border_tile130,
             R.drawable.edit_border_tile131,
             R.drawable.edit_border_tile132,
             R.drawable.edit_border_tile133,
-            R.drawable.edit_border_tile134,
             R.drawable.edit_border_tile135,
             R.drawable.edit_border_tile136,
             R.drawable.edit_border_tile137,
             R.drawable.edit_border_tile138,
             R.drawable.edit_border_tile139,
-            R.drawable.edit_border_tile140
+            R.drawable.edit_border_tile140,
+            // initial textures
+            R.drawable.edit_border_tile1,
+            R.drawable.edit_border_tile17,
+            R.drawable.edit_border_tile134,
+            R.drawable.edit_border_tile127,
+            R.drawable.edit_border_tile12
     };
 
     public PickTextureDialog(Context context, final TextureListener cl) {
