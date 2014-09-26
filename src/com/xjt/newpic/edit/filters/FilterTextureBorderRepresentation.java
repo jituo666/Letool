@@ -20,11 +20,11 @@ public class FilterTextureBorderRepresentation extends FilterRepresentation {
     public static final int PARAM_RADIUS = 1;
     public static final int PARAM_TEXTURE = 2;
     public static final int PARAM_CLEAR = 3;
-    public static int DEFAULT_TEXTURE1 = R.drawable.edit_border_tile11;
-    public static int DEFAULT_TEXTURE2 = R.drawable.edit_border_tile12;
-    public static int DEFAULT_TEXTURE3 = R.drawable.edit_border_tile13;
-    public static int DEFAULT_TEXTURE4 = R.drawable.edit_border_tile14;
-    public static int DEFAULT_TEXTURE5 = R.drawable.edit_border_tile5;
+    public static int DEFAULT_TEXTURE1 = R.drawable.edit_border_tile12;
+    public static int DEFAULT_TEXTURE2 = R.drawable.edit_border_tile17;
+    public static int DEFAULT_TEXTURE3 = R.drawable.edit_border_tile18;
+    public static int DEFAULT_TEXTURE4 = R.drawable.edit_border_tile127;
+    public static int DEFAULT_TEXTURE5 = R.drawable.edit_border_tile1;
 
     private BasicParameterInt mParamSize = new BasicParameterInt(PARAM_SIZE, 3, 2, 30);
     private BasicParameterInt mParamRadius = new BasicParameterInt(PARAM_RADIUS, 2, 0, 100);
