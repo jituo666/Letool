@@ -246,6 +246,8 @@ public class LocalAlbum extends MediaSet {
             return res.getString(R.string.common_screenshot);
         } else if (MediaSetUtils.DOWNLOAD.equalsIgnoreCase(name)) {
             return res.getString(R.string.common_download);
+        } else if (MediaSetUtils.WEIXIN.equalsIgnoreCase(name)) {
+            return res.getString(R.string.common_weixin);
         }
         return name;
     }

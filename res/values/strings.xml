@@ -84,6 +84,7 @@
     <string name="common_error_no_dirs">No picture or video directory!</string>
     <string name="common_screenshot">Screenshots</string>
     <string name="common_download">Download</string>
+    <string name="common_weixin">微信</string>
     <string name="about_version">Version: %s</string>
     <string name="about_weixin">WeiXin:牛图</string>
     <string name="about_qgroup">QQ Group:248706772</string>

@@ -18,8 +18,9 @@ public class MediaSetUtils {
     private static final String TAG = MediaSetUtils.class.getSimpleName();
     public static final String CAMERA = "DCIM/Camera";
     public static final String IMPORTED = "Imported";
-    public static final String DOWNLOAD = "download";
+    public static final String DOWNLOAD = "downloads";
     public static final String SCREENSHOTS = "Screenshots";
+    public static final String WEIXIN = "WeiXin";
     public static final Comparator<MediaSet> NAME_COMPARATOR = new NameComparator();
 
     public static final int CAMERA_BUCKET_ID = LetoolUtils.getBucketId(

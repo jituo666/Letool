@@ -86,6 +86,7 @@
     <string name="common_error_no_dirs">没有检测到图片和视频目录!</string>
     <string name="common_screenshot">截屏</string>
     <string name="common_download">下载</string>
+    <string name="common_weixin">微信</string>
     <string name="friendly_tips">温馨提示</string>
     <string name="about_version">版本: %s</string>
     <string name="about_weixin">微信:牛图</string>
