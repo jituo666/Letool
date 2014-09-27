@@ -93,6 +93,7 @@
     <string name="friendly_tips">Friendly tip</string>
     <string name="friendly_tip_cotent">1. Long press thumbnail to enter selection mode \n2. Press menu key or the upper left corner button to enter main menu</string>
     <string name="close_tip">I known</string>
+    <string name="pic_size_tip">Sorry,this picture size  is too small to edit!</string>
 
     <!-- Text indicating the title of a media item in details window [CHAR LIMIT=14] -->
     <string name="title">Title</string>

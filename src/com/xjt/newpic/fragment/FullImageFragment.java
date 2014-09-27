@@ -243,6 +243,10 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
         if (current == null || (current.getSupportedOperations() & MediaObject.SUPPORT_EDIT) == 0) {
             return;
         }
+//        if (Math.min(current.getWidth(), current.getHeight()) < 120 || Math.max(current.getWidth(), current.getHeight()) < 180) {
+//            Toast.makeText(getActivity(), R.string.pic_size_tip, Toast.LENGTH_SHORT).show();
+//            return;
+//        }
         Intent intent = new Intent(NpEditActivity.FILTER_EDIT_ACTION);
         intent.setDataAndType(current.getContentUri(), current.getMimeType()).setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         if (getActivity().getPackageManager().queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY).size() == 0) {

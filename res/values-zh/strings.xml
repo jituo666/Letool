@@ -94,6 +94,7 @@
     <string name="about_declare">All Rights Reserved</string>
     <string name="friendly_tip_cotent">1.长按图片可进入选择模式 \n2.按下菜单键或左上角按钮可进入侧边栏</string>
     <string name="close_tip">不再提示</string>
+    <string name="pic_size_tip">抱歉,图片尺寸太小不能编辑</string>
 
     <!-- Text indicating the title of a media item in details window [CHAR LIMIT=14] -->
     <string name="title">标题</string>
