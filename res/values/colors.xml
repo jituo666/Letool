@@ -15,21 +15,12 @@
 
     <!-- =============================================================================================== -->
 
-    <drawable name="main_screen_bg">#fff8f8f8</drawable>
-    <drawable name="main_action_bar_bg">#ffdddddd</drawable>
-    <drawable name="main_btn_bg">#ffe8e8e8</drawable>
-
     <color name="darker_transparent">#C1000000</color>
-    <color name="major_text_color">#ff252525</color>
     <color name="minor_text_color">#ff656565</color>
     <color name="scroll_bar_track_color">#ffdddddd</color>
-    <color name="scroll_bar_grip_color">#ff3d5562</color>
     <color name="common_white">#ffffff</color>
     <color name="common_grey">#8496a0</color>
     <color name="common_dark">#3d5562</color>
-    <color name="common_blue">#00d8ff</color>
-    <color name="common_black">#222222</color>
-    <color name="navi_text_disabled_color">#727373</color>
     <color name="np_main_bg">#FF434A4E</color>
     <color name="np_menu_bg">#FF3B4145</color>
     <color name="np_main_text_color_normal">#FFDBDBDB</color>

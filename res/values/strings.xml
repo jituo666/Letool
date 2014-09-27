@@ -57,6 +57,7 @@
     <string name="common_connect_timeout">time out</string>
     <string name="common_share_to">Share to</string>
     <string name="common_share">Share</string>
+    <string name="common_edit">Edit</string>
     <string name="common_detail">Detail</string>
     <string name="common_delete">Delete</string>
     <string name="common_delete_tip">Are you sure to delete?</string>
@@ -84,9 +85,9 @@
     <string name="common_error_no_dirs">No picture or video directory!</string>
     <string name="common_screenshot">Screenshots</string>
     <string name="common_download">Download</string>
-    <string name="common_weixin">微信</string>
+    <string name="common_weixin">WeiXin</string>
     <string name="about_version">Version: %s</string>
-    <string name="about_weixin">WeiXin:牛图</string>
+    <string name="about_weixin">WeiXin:niutu666</string>
     <string name="about_qgroup">QQ Group:248706772</string>
     <string name="about_declare">All Rights Reserved</string>
     <string name="share_app_install_tip">Please install QQ </string>

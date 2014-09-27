@@ -1,7 +1,6 @@
 
 package com.xjt.newpic.edit.pipeline;
 
-import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -11,10 +10,6 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
-
-import com.xjt.newpic.R;
-import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.filters.FiltersManager;
@@ -26,12 +21,7 @@ public class ProcessingService extends Service {
 
     private static final String TAG = ProcessingService.class.getSimpleName();
 
-    private int mNotificationId;
-    private NotificationManager mNotifyMgr = null;
-    private NotificationCompat.Builder mBuilder = null;
-
     private static final boolean SHOW_IMAGE = false;
-
     private static final String PRESET = "preset";
     private static final String QUALITY = "quality";
     private static final String SELECTED_URI = "selectedUri";
@@ -131,14 +121,7 @@ public class ProcessingService extends Service {
     }
 
     private void postSavingRequest(Uri selectedUri, ImagePreset preset, Bitmap previewImage, int quality, float sizeFactor, boolean exit) {
-        mNotifyMgr = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        mNotifyMgr.cancelAll();
-        mBuilder = new NotificationCompat.Builder(this);
-        if (ApiHelper.AT_LEAST_11)
-            mBuilder.setSmallIcon(R.drawable.filtershow_button_fx);
-        mBuilder.setContentTitle(getString(R.string.filtershow_notification_label));
-        mBuilder.setContentText(getString(R.string.filtershow_notification_message));
-        startForeground(mNotificationId, mBuilder.build());
+
         updateProgress(SaveImage.MAX_PROCESSING_STEPS, 0);
 
         // Process the image
@@ -215,8 +198,6 @@ public class ProcessingService extends Service {
 
     //
     public void updateProgress(int max, int current) {
-        mBuilder.setProgress(max, current, false);
-        mNotifyMgr.notify(mNotificationId, mBuilder.build());
     }
 
     public void completePreviewSaveImage(Uri result, boolean exit) {
@@ -232,8 +213,6 @@ public class ProcessingService extends Service {
             viewImage.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(viewImage);
         }
-        mNotifyMgr.cancel(mNotificationId);
-
         stopForeground(true);
         stopSelf();
         // terminate now

@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.fragment;
 
 import java.util.ArrayList;

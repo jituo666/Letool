@@ -44,8 +44,7 @@ public class ImageFilterVignette extends ImageFilterRS {
         mParameters = (FilterVignetteRepresentation) representation;
     }
 
-    native protected void nativeApplyFilter(
-            Bitmap bitmap, int w, int h, int cx, int cy, float radx, float rady,
+    native protected void nativeApplyFilter( Bitmap bitmap, int w, int h, int cx, int cy, float radx, float rady,
             float strength, float finalValue);
 
     private float calcRadius(float cx, float cy, int w, int h) {

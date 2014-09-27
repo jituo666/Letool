@@ -436,7 +436,12 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
             ImageManager.getImage().onNewLook(filterRepresentation);
         }
         ImagePreset oldPreset = ImageManager.getImage().getPreset();
-        ImagePreset copy = new ImagePreset(oldPreset);
+        ImagePreset copy = null;
+        if (oldPreset != null) {
+            copy = new ImagePreset(oldPreset);
+        } else {
+            copy = new ImagePreset();
+        }
         FilterRepresentation representation = copy.getRepresentation(filterRepresentation);
         if (representation == null) {
             filterRepresentation = filterRepresentation.copy();

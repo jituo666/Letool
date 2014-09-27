@@ -1,3 +1,4 @@
+
 package com.xjt.newpic.edit.filters;
 
 import android.graphics.Bitmap;
@@ -11,7 +12,9 @@ import com.xjt.newpic.edit.pipeline.PipelineInterface;
 import com.xjt.newpic.edit.filters.ScriptC_grey;
 
 public abstract class ImageFilterRS extends ImageFilter {
-    private static final String LOGTAG = "ImageFilterRS";
+
+    private static final String TAG = "ImageFilterRS";
+
     private boolean DEBUG = false;
     private int mLastInputWidth = 0;
     private int mLastInputHeight = 0;
@@ -24,12 +27,13 @@ public abstract class ImageFilterRS extends ImageFilter {
 
     private volatile boolean mResourcesLoaded = false;
 
-    protected abstract void createFilter(android.content.res.Resources res,
-            float scaleFactor, int quality);
+    protected abstract void createFilter(android.content.res.Resources res, float scaleFactor, int quality);
 
-    protected void createFilter(android.content.res.Resources res,
-    float scaleFactor, int quality, Allocation in) {}
-    protected void bindScriptValues(Allocation in) {}
+    protected void createFilter(android.content.res.Resources res, float scaleFactor, int quality, Allocation in) {
+    }
+
+    protected void bindScriptValues(Allocation in) {
+    }
 
     protected abstract void runFilter();
 
@@ -57,19 +61,16 @@ public abstract class ImageFilterRS extends ImageFilter {
         long startOverAll = System.nanoTime();
         if (PERF_LOGGING) {
             long delay = (startOverAll - mLastTimeCalled) / 1000;
-            String msg = String.format("%s; image size %dx%d; ", getName(),
-                    in.getType().getX(), in.getType().getY());
-            msg += String.format("called after %.2f ms (%.2f FPS); ",
-                    delay / 1000.f, 1000000.f / delay);
-            Log.i(LOGTAG, msg);
+            String msg = String.format("%s; image size %dx%d; ", getName(), in.getType().getX(), in.getType().getY());
+            msg += String.format("called after %.2f ms (%.2f FPS); ", delay / 1000.f, 1000000.f / delay);
+            Log.i(TAG, msg);
         }
         mLastTimeCalled = startOverAll;
         long startFilter = 0;
         long endFilter = 0;
         if (!mResourcesLoaded) {
             PipelineInterface pipeline = getEnvironment().getPipeline();
-            createFilter(pipeline.getResources(), getEnvironment().getScaleFactor(),
-                    getEnvironment().getQuality(), in);
+            createFilter(pipeline.getResources(), getEnvironment().getScaleFactor(), getEnvironment().getQuality(), in);
             mResourcesLoaded = true;
         }
         startFilter = System.nanoTime();
@@ -79,19 +80,17 @@ public abstract class ImageFilterRS extends ImageFilter {
             getRenderScriptContext().finish();
             endFilter = System.nanoTime();
             long endOverAll = System.nanoTime();
-            String msg = String.format("%s; image size %dx%d; ", getName(),
-                    in.getType().getX(), in.getType().getY());
+            String msg = String.format("%s; image size %dx%d; ", getName(), in.getType().getX(), in.getType().getY());
             long timeOverAll = (endOverAll - startOverAll) / 1000;
             long timeFilter = (endFilter - startFilter) / 1000;
-            msg += String.format("over all %.2f ms (%.2f FPS); ",
-                    timeOverAll / 1000.f, 1000000.f / timeOverAll);
-            msg += String.format("run filter %.2f ms (%.2f FPS)",
-                    timeFilter / 1000.f, 1000000.f / timeFilter);
-            Log.i(LOGTAG, msg);
+            msg += String.format("over all %.2f ms (%.2f FPS); ", timeOverAll / 1000.f, 1000000.f / timeOverAll);
+            msg += String.format("run filter %.2f ms (%.2f FPS)", timeFilter / 1000.f, 1000000.f / timeFilter);
+            Log.i(TAG, msg);
         }
     }
 
-    protected void run(Allocation in, Allocation out) {}
+    protected void run(Allocation in, Allocation out) {
+    }
 
     @Override
     public Bitmap apply(Bitmap bitmap, float scaleFactor, int quality) {
@@ -101,17 +100,15 @@ public abstract class ImageFilterRS extends ImageFilter {
         try {
             PipelineInterface pipeline = getEnvironment().getPipeline();
             if (DEBUG) {
-                Log.v(LOGTAG, "apply filter " + getName() + " in pipeline " + pipeline.getName());
+                Log.v(TAG, "apply filter " + getName() + " in pipeline " + pipeline.getName());
             }
             Resources rsc = pipeline.getResources();
             boolean sizeChanged = false;
-            if (getInPixelsAllocation() != null
-                    && ((getInPixelsAllocation().getType().getX() != mLastInputWidth)
+            if (getInPixelsAllocation() != null && ((getInPixelsAllocation().getType().getX() != mLastInputWidth)
                     || (getInPixelsAllocation().getType().getY() != mLastInputHeight))) {
                 sizeChanged = true;
             }
-            if (pipeline.prepareRenderscriptAllocations(bitmap)
-                    || !isResourcesLoaded() || sizeChanged) {
+            if (pipeline.prepareRenderscriptAllocations(bitmap) || !isResourcesLoaded() || sizeChanged) {
                 freeResources();
                 createFilter(rsc, scaleFactor, quality);
                 setResourcesLoaded(true);
@@ -122,34 +119,33 @@ public abstract class ImageFilterRS extends ImageFilter {
             runFilter();
             update(bitmap);
             if (DEBUG) {
-                Log.v(LOGTAG, "DONE apply filter " + getName() + " in pipeline " + pipeline.getName());
+                Log.v(TAG, "DONE apply filter " + getName() + " in pipeline " + pipeline.getName());
             }
         }
-//        catch (android.renderscript.RSIllegalArgumentException e) {
-//            Log.e(LOGTAG, "Illegal argument? " + e);
-//        } catch (android.renderscript.RSRuntimeException e) {
-//            Log.e(LOGTAG, "RS runtime exception ? " + e);
-//        } 
+        //        catch (android.renderscript.RSIllegalArgumentException e) {
+        //            Log.e(TAG, "Illegal argument? " + e);
+        //        } catch (android.renderscript.RSRuntimeException e) {
+        //            Log.e(TAG, "RS runtime exception ? " + e);
+        //        } 
         catch (java.lang.OutOfMemoryError e) {
             // Many of the renderscript filters allocated large (>16Mb resources) in order to apply.
             System.gc();
             displayLowMemoryToast();
-            Log.e(LOGTAG, "not enough memory for filter " + getName(), e);
+            Log.e(TAG, "not enough memory for filter " + getName(), e);
         } catch (Exception e) {
-            
+
         }
         return bitmap;
     }
 
     protected static Allocation convertBitmap(RenderScript RS, Bitmap bitmap) {
-        return Allocation.createFromBitmap(RS, bitmap,
-                Allocation.MipmapControl.MIPMAP_NONE,
+        return Allocation.createFromBitmap(RS, bitmap, Allocation.MipmapControl.MIPMAP_NONE,
                 Allocation.USAGE_SCRIPT | Allocation.USAGE_GRAPHICS_TEXTURE);
     }
 
     private static Allocation convertRGBAtoA(RenderScript RS, Bitmap bitmap) {
         if (RS != mRScache || mGreyConvert == null) {
-            mGreyConvert = new ScriptC_grey(RS, RS.getApplicationContext().getResources(),  R.raw.grey);
+            mGreyConvert = new ScriptC_grey(RS, RS.getApplicationContext().getResources(), R.raw.grey);
             mRScache = RS;
         }
 
@@ -162,9 +158,8 @@ public abstract class ImageFilterRS extends ImageFilter {
 
         tb_a8.setX(bitmapTemp.getType().getX());
         tb_a8.setY(bitmapTemp.getType().getY());
-        Allocation bitmapAlloc = Allocation.createTyped(RS, tb_a8.create(),
-                                                        Allocation.MipmapControl.MIPMAP_NONE,
-                                                        Allocation.USAGE_SCRIPT | Allocation.USAGE_GRAPHICS_TEXTURE);
+        Allocation bitmapAlloc = Allocation.createTyped(RS, tb_a8.create(), Allocation.MipmapControl.MIPMAP_NONE,
+                Allocation.USAGE_SCRIPT | Allocation.USAGE_GRAPHICS_TEXTURE);
         mGreyConvert.forEach_RGBAtoA(bitmapTemp, bitmapAlloc);
         bitmapTemp.destroy();
         return bitmapAlloc;
@@ -173,10 +168,8 @@ public abstract class ImageFilterRS extends ImageFilter {
     public Allocation loadScaledResourceAlpha(int resource, int inSampleSize) {
         Resources res = getEnvironment().getPipeline().getResources();
         final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize      = inSampleSize;
-        Bitmap bitmap = BitmapFactory.decodeResource(
-                res,
-                resource, options);
+        options.inSampleSize = inSampleSize;
+        Bitmap bitmap = BitmapFactory.decodeResource(res, resource, options);
         Allocation ret = convertRGBAtoA(getRenderScriptContext(), bitmap);
         bitmap.recycle();
         return ret;
@@ -185,8 +178,8 @@ public abstract class ImageFilterRS extends ImageFilter {
     public Allocation loadScaledResourceAlpha(int resource, int w, int h, int inSampleSize) {
         Resources res = getEnvironment().getPipeline().getResources();
         final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize      = inSampleSize;
-        Bitmap bitmap = BitmapFactory.decodeResource( res,resource, options);
+        options.inSampleSize = inSampleSize;
+        Bitmap bitmap = BitmapFactory.decodeResource(res, resource, options);
         Bitmap resizeBitmap = Bitmap.createScaledBitmap(bitmap, w, h, true);
         Allocation ret = convertRGBAtoA(getRenderScriptContext(), resizeBitmap);
         resizeBitmap.recycle();
@@ -202,9 +195,7 @@ public abstract class ImageFilterRS extends ImageFilter {
         Resources res = getEnvironment().getPipeline().getResources();
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-        Bitmap bitmap = BitmapFactory.decodeResource(
-                res,
-                resource, options);
+        Bitmap bitmap = BitmapFactory.decodeResource(res, resource, options);
         Allocation ret = convertBitmap(getRenderScriptContext(), bitmap);
         bitmap.recycle();
         return ret;

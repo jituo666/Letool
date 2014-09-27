@@ -179,8 +179,6 @@ public class FullImageDataAdapter implements FullImageFragment.Model {
                         updateImageRequests();
                         return;
                     }
-                    default:
-                        throw new AssertionError();
                 }
             }
         };

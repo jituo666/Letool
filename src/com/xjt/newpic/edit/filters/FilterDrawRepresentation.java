@@ -47,7 +47,7 @@ public class FilterDrawRepresentation extends FilterRepresentation {
     private static final String SERIAL_PATH = "path";
 
     private ParameterColor mParamColor = new ParameterColor(PARAM_COLOR, DEFAULT_COLOR1);
-    private BasicParameterInt mParamSize = new BasicParameterInt(PARAM_SIZE, 30, 2, 300);
+    private BasicParameterInt mParamSize = new BasicParameterInt(PARAM_SIZE, 6, 2, 300);
     private ParameterStyle mParamStyle = new ParameterStyle(PARAM_STYLE, R.drawable.brush_flat);
     private int mParamMode;
 

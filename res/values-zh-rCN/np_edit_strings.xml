@@ -11,6 +11,7 @@
     <string name="cannot_load_image">"无法加载该图片！"</string>
     <string name="cannot_edit_original">无法编辑原图</string>
     <string name="original">原图</string>
+    <string name="borders">边框</string>
     <string name="borders_cover_net">银丝网</string>
     <string name="borders_cover_fall">金珠帘</string>
     <string name="borders_cover_china">红灯龙</string>
@@ -53,7 +54,7 @@
     <string name="vibrance">"自然饱和度"</string>
     <string name="saturation">"饱和度"</string>
     <string name="bwfilter">"黑白过滤"</string>
-    <string name="wbalance">"智能调整"</string>
+    <string name="wbalance">"自动调整"</string>
     <string name="hue">"色调"</string>
     <string name="shadow_recovery">"阴影"</string>
     <string name="highlight_recovery">"强光"</string>
