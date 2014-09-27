@@ -260,6 +260,8 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
         if (v.getId() == R.id.action_navi) {
             mLetoolContext.popContentFragment();
         } else if (v.getId() == R.id.action_edit) {
+
+            MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_EDIT_ENTER);
             launchPhotoEditor();
         } else if (v.getId() == R.id.action_share) {
             MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_FULL_IMAGE_SHARE);

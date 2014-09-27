@@ -1,6 +1,7 @@
 
 package com.xjt.newpic.activities;
 
+import com.umeng.analytics.MobclickAgent;
 import com.xjt.newpic.R;
 
 import android.app.Activity;
@@ -39,6 +40,18 @@ public class AboutActivity extends Activity implements android.view.View.OnClick
         super.onCreate(savedInstanceState);
     }
 
+    @Override
+    protected void onPause() {
+        MobclickAgent.onPause(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        MobclickAgent.onResume(this);
+        super.onResume();
+    }
+    
     @Override
     protected void onDestroy() {
         super.onDestroy();

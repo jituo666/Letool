@@ -1,6 +1,7 @@
 
 package com.xjt.newpic.activities;
 
+import com.umeng.analytics.MobclickAgent;
 import com.xjt.newpic.R;
 
 import android.content.Intent;
@@ -13,7 +14,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
@@ -32,6 +32,18 @@ public class NpGuideActivity extends FragmentActivity {
         mPager = (ViewPager) findViewById(R.id.pager);
         mAdapter = new PictureAdapter(getSupportFragmentManager());
         mPager.setAdapter(mAdapter);
+    }
+
+    @Override
+    protected void onPause() {
+        MobclickAgent.onPause(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        MobclickAgent.onResume(this);
+        super.onResume();
     }
 
     class PictureAdapter extends FragmentPagerAdapter {

@@ -10,7 +10,7 @@ public class StatConstants {
 
     public static final String UMENG_APP_RELEASE_KEY = "539289e956240b9f6902fa3c";
 
-    public static final String UMENG_CHANNEL_ID_WDJ = "LETOOL0000001000"; //豌豆夹
+    public static final String UMENG_CHANNEL_WDJ = "LETOOL0000001000"; //豌豆夹
     public static final String UMENG_CHANNEL_91 = "LETOOL0000001001"; //91手机助手
     public static final String UMENG_CHANNEL_TENCENT = "LETOOL0000001002";//腾讯应用宝
     public static final String UMENG_CHANNEL_BAIDU = "LETOOL0000001003";//百度
@@ -72,4 +72,17 @@ public class StatConstants {
     public static final String EVENT_KEY_UPDATE_CHECK = "update_check"; // 更新检查
     public static final String EVENT_KEY_QQ_ADD = "qq_add"; // 加QQ
     public static final String EVENT_KEY_QQ_GROUP_ADD = "qq_g_add"; // 加QQ群
+    
+    //
+
+
+    public static final String EVENT_KEY_EDIT_ENTER = "edit_enter"; // 进入编辑
+    
+    public static final String EVENT_KEY_EDIT_EFFECT = "e_effect"; // 特效
+
+    public static final String EVENT_KEY_EDIT_BORDER = "e_border"; // 边框
+
+    public static final String EVENT_KEY_EDIT_GEOMETRY = "e_geometry"; // 修剪
+
+    public static final String EVENT_KEY_EDIT_ADVANCED = "e_advnced"; // 高级
 }

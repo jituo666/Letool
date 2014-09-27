@@ -8,9 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.umeng.analytics.MobclickAgent;
 import com.xjt.newpic.R;
 import com.xjt.newpic.edit.NpEditActivity;
 import com.xjt.newpic.edit.imageshow.ImageManager;
+import com.xjt.newpic.stat.StatConstants;
 
 public class CategoryMainPanel extends Fragment {
 
@@ -88,6 +90,8 @@ public class CategoryMainPanel extends Fragment {
 
             @Override
             public void onClick(View v) {
+
+                MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_EDIT_EFFECT);
                 showPanel(LOOKS);
             }
         });
@@ -95,6 +99,8 @@ public class CategoryMainPanel extends Fragment {
 
             @Override
             public void onClick(View v) {
+
+                MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_EDIT_BORDER);
                 showPanel(BORDERS);
             }
         });
@@ -102,6 +108,8 @@ public class CategoryMainPanel extends Fragment {
 
             @Override
             public void onClick(View v) {
+
+                MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_EDIT_GEOMETRY);
                 showPanel(GEOMETRY);
             }
         });
@@ -109,6 +117,8 @@ public class CategoryMainPanel extends Fragment {
 
             @Override
             public void onClick(View v) {
+
+                MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_EDIT_ADVANCED);
                 showPanel(FILTERS);
             }
         });

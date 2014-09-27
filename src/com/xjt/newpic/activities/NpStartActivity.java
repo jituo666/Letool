@@ -1,6 +1,7 @@
 
 package com.xjt.newpic.activities;
 
+import com.umeng.analytics.MobclickAgent;
 import com.xjt.newpic.preference.GlobalPreference;
 import com.xjt.newpic.utils.PackageUtils;
 
@@ -25,6 +26,18 @@ public class NpStartActivity extends Activity {
             startActivity(intent);
         }
         finish();
+    }
+
+    @Override
+    protected void onPause() {
+        MobclickAgent.onPause(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        MobclickAgent.onResume(this);
+        super.onResume();
     }
 
 }

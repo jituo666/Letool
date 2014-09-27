@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Letool" default="help">
+<project name="NewPic" default="help">
 
     <!-- The local.properties file is created and updated by the 'android' tool.
          It contains the path to the SDK. It should *NOT* be checked into
@@ -87,12 +87,9 @@
         <echo>The target "debug" is disabled!</echo>
     </target>
 
-    <target name="-set-xjt-debugkey" >
-        <property name="key.alias" value="xjtdebugkey" />
-    </target>
 
-    <target name="-set-letool-debugkey" >
-        <property name="key.alias" value="letooldebugkey" />
+    <target name="-set-letool-releasekey" >
+        <property name="key.alias" value="letoolrelease" />
     </target>
 
     <target name="-set-mode-check">
@@ -111,9 +108,8 @@
         </exec>
     </target>
 
-    <target name="xjtdebug" depends="-set-xjt-debugkey, release" />
 
-    <target name="letooldebug" depends="-set-letool-debugkey, release" />
+    <target name="letoolrelease" depends="-set-letool-releasekey, release" />
 
     <target name="cleanp" depends="clean" />
 
