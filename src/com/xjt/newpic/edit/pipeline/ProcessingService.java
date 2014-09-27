@@ -212,7 +212,8 @@ public class ProcessingService extends Service {
         tearDownPipeline();
         mProcessingTaskController.quit();
     }
-//
+
+    //
     public void updateProgress(int max, int current) {
         mBuilder.setProgress(max, current, false);
         mNotifyMgr.notify(mNotificationId, mBuilder.build());
@@ -224,7 +225,7 @@ public class ProcessingService extends Service {
         }
     }
 
-    public void completeSaveImage(Uri result, boolean exit) {
+    public void completeSaveImage(Uri result) {
         if (SHOW_IMAGE) {
             // TODO: we should update the existing image in Gallery instead
             Intent viewImage = new Intent(Intent.ACTION_VIEW, result);
@@ -232,17 +233,11 @@ public class ProcessingService extends Service {
             startActivity(viewImage);
         }
         mNotifyMgr.cancel(mNotificationId);
-        if (!exit) {
-            stopForeground(true);
-            stopSelf();
-            return;
-        }
+
         stopForeground(true);
         stopSelf();
-        if (exit) {
-            // terminate now
-            mFiltershowActivity.completeSaveImage(result);
-        }
+        // terminate now
+        mFiltershowActivity.completeSaveImage(result);
     }
 
     private void setupPipeline() {

@@ -155,7 +155,11 @@ public class SaveImage {
                 updateProgress();
                 final CountDownLatch latch = new CountDownLatch(1);
                 final Uri uri[] = new Uri[1];
+
+                LLog.i(TAG, "  ---1----processAndSaveImage handler finished:" + (mDestinationFile.getAbsolutePath()));
                 if (writeImageData(mDestinationFile, bitmap, quality)) {
+                    updateProgress();
+                    LLog.i(TAG, "  ---2----processAndSaveImage write flush finished:" + (mDestinationFile.getAbsolutePath()));
                     MediaScannerConnection.scanFile(mContext,
                             new String[] {
                                 mDestinationFile.getAbsolutePath()
@@ -165,16 +169,21 @@ public class SaveImage {
 
                                 @Override
                                 public void onScanCompleted(String path, Uri u) {
+
+                                    LLog.i(TAG, "  ---3----processAndSaveImage onScanCompleted finished:" + (mDestinationFile.getAbsolutePath()));
                                     latch.countDown();
                                     uri[0] = Uri.fromFile(new File(path));
+                                    updateProgress();
                                 }
                             });
                 }
+
                 try {
                     latch.await();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                LLog.i(TAG, "  ---4----processAndSaveImage all finished:" + (mDestinationFile.getAbsolutePath()));
                 result = uri[0];
                 updateProgress();
                 noBitmap = false;
