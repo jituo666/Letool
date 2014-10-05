@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.fb.FeedbackAgent;
 import com.umeng.update.UmengUpdateAgent;
 import com.xjt.newpic.NpContext;
 import com.xjt.newpic.R;
@@ -50,14 +51,14 @@ public class SlidingMenuFragment extends Fragment {
     public static final int SLIDING_MENU_PICTURE = 0;
     public static final int SLIDING_MENU_VIDEO = 1;
     public static final int SLIDING_MENU_SETTING = 2;
-    public static final int SLIDING_MENU_ABOUT = 3;
+    public static final int SLIDING_MENU_FB = 3;
     public static final int SLIDING_MENU_EXIT = 4;
 
     private static final SlidingMenuItem[] SLIDING_MENUS = new SlidingMenuItem[] {
             new SlidingMenuItem(SLIDING_MENU_PICTURE, R.drawable.ic_action_picture, R.string.common_picture, true, true),
             new SlidingMenuItem(SLIDING_MENU_VIDEO, R.drawable.ic_action_video, R.string.common_movies, true, true),
             new SlidingMenuItem(SLIDING_MENU_SETTING, R.drawable.ic_action_settings, R.string.common_settings, true, true),
-            new SlidingMenuItem(SLIDING_MENU_ABOUT, R.drawable.ic_action_about, R.string.common_about, true, true),
+            new SlidingMenuItem(SLIDING_MENU_FB, R.drawable.ic_action_feedback, R.string.common_feedback, true, true),
             new SlidingMenuItem(SLIDING_MENU_EXIT, R.drawable.ic_action_exit, R.string.common_exit, true, true)
     };
 
@@ -78,8 +79,6 @@ public class SlidingMenuFragment extends Fragment {
         Intent itSetting = new Intent(getActivity(), NpSettingsActivity.class);
         itSetting.putExtra(NpSettingsActivity.KEY_FROM_TIP, false);
         mIntents.add(itSetting);
-        Intent itAbout = new Intent(getActivity(), AboutActivity.class);
-        mIntents.add(itAbout);
     }
 
     @Override
@@ -136,9 +135,12 @@ public class SlidingMenuFragment extends Fragment {
                     mLetoolContext.getSlidingMenu().toggle();
                     getActivity().startActivityForResult(mIntents.get(position), NpMediaActivity.REQUEST_CODE_SETTINGS);
                     getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
-                } else if (position == SLIDING_MENU_ABOUT) {
+                } else if (position == SLIDING_MENU_FB) {
+
+                    MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_EDIT_FEEDBACK);
                     mLetoolContext.getSlidingMenu().toggle();
-                    getActivity().startActivity(mIntents.get(position));
+                    FeedbackAgent agent = new FeedbackAgent(getActivity());
+                    agent.startFeedbackActivity();
                     getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
                 } else if (position == SLIDING_MENU_EXIT) {
                     MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SLIDE_MENU_EXIT);

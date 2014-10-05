@@ -45,7 +45,7 @@
             android:ellipsize="end"
             android:gravity="left|center_vertical"
             android:singleLine="true"
-            android:text="@string/common_about"
+            android:text="@string/app_about"
             android:textColor="@color/np_main_text_color_normal"
             android:textSize="@dimen/common_title_text_size" />
     </RelativeLayout>

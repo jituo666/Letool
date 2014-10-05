@@ -6,18 +6,13 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.umeng.analytics.MobclickAgent;
-import com.xjt.newpic.activities.NpGuideActivity;
-import com.xjt.newpic.activities.NpMainActivity;
-import com.xjt.newpic.activities.NpMediaActivity;
 import com.xjt.newpic.common.ThreadPool;
 import com.xjt.newpic.imagedata.blobcache.BlobCacheService;
 import com.xjt.newpic.metadata.DataManager;
-import com.xjt.newpic.preference.GlobalPreference;
 import com.xjt.newpic.utils.LetoolUtils;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 
 /**
  * @Author Jituo.Xuan

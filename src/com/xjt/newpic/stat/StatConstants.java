@@ -34,6 +34,7 @@ public class StatConstants {
     public static final String UMENG_CHANNEL_WOSHOP = "LETOOL0000001022";//联通沃商店
     public static final String UMENG_CHANNEL_NOKIA = "LETOOL0000001023";// 诺基亚
     public static final String UMENG_CHANNEL_OTHERS = "LETOOL0000001111";//其它
+    public static final String UMENG_CHANNEL_GOOGLE_PLAY = "LETOOL0000002222";//GP
 
     //
     public static final String UMENG_APP_DEBUG_KEY = "538f2c0456240ba4a0059794";
@@ -85,4 +86,5 @@ public class StatConstants {
     public static final String EVENT_KEY_EDIT_GEOMETRY = "e_geometry"; // 修剪
 
     public static final String EVENT_KEY_EDIT_ADVANCED = "e_advnced"; // 高级
+    public static final String EVENT_KEY_EDIT_FEEDBACK = "feedback"; // 吐槽
 }

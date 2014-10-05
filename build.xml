@@ -88,6 +88,11 @@
     </target>
 
 
+
+    <target name="-set-letool-gpkey" >
+        <property name="key.alias" value="letoolgp" />
+    </target>
+
     <target name="-set-letool-releasekey" >
         <property name="key.alias" value="letoolrelease" />
     </target>
@@ -108,6 +113,7 @@
         </exec>
     </target>
 
+    <target name="letoolgp" depends="-set-letool-gpkey, release" />
 
     <target name="letoolrelease" depends="-set-letool-releasekey, release" />
 

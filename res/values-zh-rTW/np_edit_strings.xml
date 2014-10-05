@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="np_edit_fx">特效</string>
+    <string name="np_edit_boder">边框</string>
+    <string name="np_edit_geometry">修剪</string>
+    <string name="np_edit_effect">高级</string>
+    <!-- generic strings -->
+
+    <string name="title_activity_filter_show">"照片编辑器"</string>
+    <string name="cannot_load_image">"无法加载该图片！"</string>
+    <string name="cannot_edit_original">无法编辑原图</string>
+    <string name="original">原图</string>
+    <string name="borders">边框</string>
+    <string name="borders_cover_net">银丝网</string>
+    <string name="borders_cover_fall">金珠帘</string>
+    <string name="borders_cover_china">红灯龙</string>
+    <string name="borders_cover_glass">毛玻璃</string>
+    <string name="texure_border">纹理边框</string>
+    <string name="color_border">颜色边框</string>
+
+    <!-- actionbar menu -->
+
+    <string name="filtershow_undo">撤销</string>
+    <string name="filtershow_redo">重做</string>
+    <string name="unsaved">"是否保存对此图片的更改？"</string>
+    <string name="save_before_exit">"要在退出之前保存更改吗？"</string>
+    <string name="save_and_exit">"保存"</string>
+    <string name="save_and_processing">正在保存...</string>
+    <string name="exit">"退出"</string>
+
+    <!-- Additional filters buttons -->
+
+    <string name="compare_original">"比较"</string>
+    <string name="apply_effect">"应用"</string>
+    <string name="reset_effect">"重置"</string>
+    <string name="aspect">"宽高比"</string>
+    <string name="aspect1to1_effect">1:1</string>
+    <string name="aspect4to3_effect">4:3</string>
+    <string name="aspect3to4_effect">3:4</string>
+    <string name="aspect4to6_effect">4:6</string>
+    <string name="aspect5to7_effect">5:7</string>
+    <string name="aspect7to5_effect">7:5</string>
+    <string name="aspect9to16_effect">16:9</string>
+    <string name="aspectNone_effect">自由</string>
+    <string name="aspectOriginal_effect">@string/original</string>
+    <string name="Fixed">"固定"</string>
+
+    <!-- Filters buttons -->
+
+    <string name="exposure">"曝光度"</string>
+    <string name="sharpness">"锐度"</string>
+    <string name="contrast">"对比度"</string>
+    <string name="vibrance">"自然饱和度"</string>
+    <string name="saturation">"饱和度"</string>
+    <string name="bwfilter">"黑白过滤"</string>
+    <string name="wbalance">"自动调整"</string>
+    <string name="hue">"色调"</string>
+    <string name="shadow_recovery">"阴影"</string>
+    <string name="highlight_recovery">"强光"</string>
+    <string name="curvesRGB">"曲线"</string>
+    <string name="vignette">"晕影"</string>
+    <string name="vignette_main">"晕影"</string>
+    <string name="vignette_exposure">曝光</string>
+    <string name="vignette_saturation">饱和度</string>
+    <string name="vignette_contrast">对比度</string>
+    <string name="vignette_falloff">衰减度</string>
+    <string name="redeye">"红眼"</string>
+    <string name="imageDraw">"涂鸦"</string>
+    <string name="straighten">"拉直"</string>
+    <string name="crop">"裁剪"</string>
+    <string name="rotate">"旋转"</string>
+    <string name="mirror">"镜像"</string>
+    <string name="negative">"负片"</string>
+    <string name="none">"原图"</string>
+    <string name="edge">"边缘亮化"</string>
+    <string name="kmeans">"波普效果"</string>
+    <string name="downsample">"下采样"</string>
+    <string name="grad">渐变</string>
+    <string name="editor_grad_brightness">亮度</string>
+    <string name="editor_grad_contrast">对比度</string>
+    <string name="editor_grad_saturation">饱和度</string>
+    <string name="editor_chan_sat_main">主色</string>
+    <string name="editor_chan_sat_red">红色</string>
+    <string name="editor_chan_sat_yellow">黄色</string>
+    <string name="editor_chan_sat_green">绿色</string>
+    <string name="editor_chan_sat_cyan">青色</string>
+    <string name="editor_chan_sat_blue">蓝色</string>
+    <string name="editor_chan_sat_magenta">洋红色</string>
+    <string name="editor_grad_style">样式</string>
+    <string name="editor_grad_new">新建</string>
+    <string name="curves_channel_rgb">全色</string>
+    <string name="curves_channel_red">"红色"</string>
+    <string name="curves_channel_green">"绿色"</string>
+    <string name="curves_channel_blue">"蓝色"</string>
+    <string name="draw_style">"样式"</string>
+    <string name="draw_size">"大小"</string>
+    <string name="draw_hue">色调</string>
+    <string name="draw_saturation">饱和度</string>
+    <string name="draw_value">亮度</string>
+    <string name="draw_color">"颜色"</string>
+    <string name="draw_style_line">"线条"</string>
+    <string name="draw_style_brush_spatter">"记号笔"</string>
+    <string name="draw_style_brush_marker">"喷笔"</string>
+    <string name="draw_clear">"清除"</string>
+    <string name="border_size">边框宽度</string>
+    <string name="border_corner_size">圆角大小</string>
+    <string name="border_color">边框颜色</string>
+    <string name="border_texture">边框纹理</string>
+    <string name="border_clear">清除</string>
+    <string name="color_pick_select">"选择自定义颜色"</string>
+    <string name="color_pick_title">"选择颜色"</string>
+    <string name="draw_size_title">"选择大小"</string>
+    <string name="draw_size_accept">"确定"</string>
+    <string name="state_panel_original">原图</string>
+    <string name="state_panel_result">结果</string>
+    <string name="filtershow_notification_label">保存图片</string>
+    <string name="filtershow_notification_message">处理中...</string>
+    <string name="filtershow_version_original">原始</string>
+    <string name="filtershow_version_current">当前</string>
+    <string name="ffx_original">原图</string>
+    <string name="ffx_vintage">复古</string>
+    <string name="ffx_instant">即时出相</string>
+    <string name="ffx_bleach">漂白</string>
+    <string name="ffx_blue_crush">海洋蓝</string>
+    <string name="ffx_bw_contrast">黑白</string>
+    <string name="ffx_punch">淡雅</string>
+    <string name="ffx_x_process">天空蓝</string>
+    <string name="ffx_washout">拿铁咖啡</string>
+    <string name="ffx_washout_color">版印</string>
+    <string name="select_image">选择图片</string>
+    <string name="tinyplanet">小星球</string>
+    <string name="filtershow_add_button_looks">添加</string>
+    <string name="setting_wallpaper">设置壁纸</string>
+
+</resources>

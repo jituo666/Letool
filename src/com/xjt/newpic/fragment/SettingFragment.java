@@ -30,6 +30,7 @@ import com.umeng.update.UpdateResponse;
 import com.umeng.update.UpdateStatus;
 import com.xjt.newpic.NpContext;
 import com.xjt.newpic.R;
+import com.xjt.newpic.activities.AboutActivity;
 import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.imagedata.blobcache.BlobCacheManager;
 import com.xjt.newpic.preference.GlobalPreference;
@@ -54,8 +55,7 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
     private NpPreference mRememberUISwitch;
     private NpPreference mClearCache;
     private NpPreference mVersionCheck;
-    private NpPreference mAuthorDesc;
-    private NpPreference mQQGroup;
+    private NpPreference mAppAbout;
     private NpContext mLetoolContext;
 
     @Override
@@ -96,13 +96,14 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
         mRememberUISwitch.setChecked(GlobalPreference.rememberLastUI(getActivity()));
         mClearCache.setSettingItemText(getString(R.string.clear_cache_title), x, false);
         mVersionCheck.setSettingItemText(getString(R.string.version_update_check_title), getVersion(), false);
+        mAppAbout.setSettingItemText(R.string.app_about, R.string.app_about_desc);
 
         mCameraSource.setOnClickListener(this);
         mAnimSwitch.setOnClickListener(this);
         mRememberUISwitch.setOnClickListener(this);
         mClearCache.setOnClickListener(this);
         mVersionCheck.setOnClickListener(this);
-        //mAuthorDesc.setOnClickListener(this);
+        mAppAbout.setOnClickListener(this);
         //mQQGroup.setOnClickListener(this);
     }
 
@@ -115,6 +116,7 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
         mRememberUISwitch = (NpPreference) rootView.findViewById(R.id.remember_ui_switch);
         mClearCache = (NpPreference) rootView.findViewById(R.id.clear_cache);
         mVersionCheck = (NpPreference) rootView.findViewById(R.id.version_update_check);
+        mAppAbout = (NpPreference) rootView.findViewById(R.id.app_about);
         initViews();
         return rootView;
     }
@@ -168,11 +170,15 @@ public class SettingFragment extends Fragment implements OnActionModeListener {
                 }
             });
             UmengUpdateAgent.setUpdateOnlyWifi(false);
-            UmengUpdateAgent.update(context);
+            UmengUpdateAgent.forceUpdate(context);
             progressDialog.setMessage(mLetoolContext.getActivityContext().getString(R.string.common_update_checking));
             progressDialog.setIndeterminate(true);
             progressDialog.setCancelable(true);
             progressDialog.show();
+        } else if (v.getId() == R.id.app_about) {
+            Intent itAbout = new Intent(getActivity(), AboutActivity.class);
+            getActivity().startActivity(itAbout);
+            getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
         }
     }
 

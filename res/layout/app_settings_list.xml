@@ -54,6 +54,15 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@drawable/np_list_divider_bg" />
+
+        <include
+            android:id="@+id/app_about"
+            layout="@layout/app_settings_list_item" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/np_list_divider_bg" />
     </LinearLayout>
 
 </ScrollView>

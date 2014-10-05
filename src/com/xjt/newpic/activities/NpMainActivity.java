@@ -1,10 +1,10 @@
 
 package com.xjt.newpic.activities;
 
-import android.os.Bundle;
+import com.umeng.fb.FeedbackAgent;
+import com.umeng.update.UmengUpdateAgent;
 
-import com.umeng.analytics.AnalyticsConfig;
-import com.xjt.newpic.stat.StatConstants;
+import android.os.Bundle;
 
 /**
  * @Author Jituo.Xuan
@@ -19,8 +19,8 @@ public class NpMainActivity extends NpMediaActivity {
     protected void onCreate(Bundle b) {
 
 //        AnalyticsConfig.setAppkey(StatConstants.UMENG_APP_RELEASE_KEY);
-//
 //        AnalyticsConfig.setAppkey(StatConstants.UMENG_APP_RELEASE_KEY);
+
 //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_WDJ); // "LETOOL0000001000"; //豌豆夹
 //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_91); // "LETOOL0000001001"; //91手机助手
 //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_TENCENT); // "LETOOL0000001002";//腾讯应用宝
@@ -45,7 +45,9 @@ public class NpMainActivity extends NpMediaActivity {
 //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_WOSHOP); // "LETOOL0000001022";//联通沃商店
 //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_NOKIA); // "LETOOL0000001023";// 诺基亚
 //        AnalyticsConfig.setChannel(StatConstants.UMENG_CHANNEL_OTHERS); // "LETOOL0000001111";//其它
-
+        FeedbackAgent agent = new FeedbackAgent(this);
+        agent.sync();
+        UmengUpdateAgent.silentUpdate(this);
         super.onCreate(b);
     }
 
