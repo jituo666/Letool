@@ -16,7 +16,6 @@ public class NpStartActivity extends Activity {
         super.onCreate(savedInstanceState);
         int code = PackageUtils.getVersionCode(this);
         if (GlobalPreference.getLastGuideCode(this) < code) {
-            GlobalPreference.setLastGuideCode(this, code);
             Intent intent = new Intent();
             intent.setClass(this, NpGuideActivity.class);
             startActivity(intent);

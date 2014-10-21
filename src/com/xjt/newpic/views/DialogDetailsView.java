@@ -1,5 +1,5 @@
 
-package com.xjt.newpic.view;
+package com.xjt.newpic.views;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,11 +15,11 @@ import com.xjt.newpic.NpContext;
 import com.xjt.newpic.R;
 import com.xjt.newpic.metadata.MediaDetails;
 import com.xjt.newpic.utils.Utils;
-import com.xjt.newpic.view.DetailsAddressResolver.AddressResolvingListener;
-import com.xjt.newpic.view.DetailsHelper.CloseListener;
-import com.xjt.newpic.view.DetailsHelper.DetailsSource;
-import com.xjt.newpic.view.DetailsHelper.DetailsViewContainer;
-import com.xjt.newpic.view.DetailsHelper.ResolutionResolvingListener;
+import com.xjt.newpic.views.DetailsAddressResolver.AddressResolvingListener;
+import com.xjt.newpic.views.DetailsHelper.CloseListener;
+import com.xjt.newpic.views.DetailsHelper.DetailsSource;
+import com.xjt.newpic.views.DetailsHelper.DetailsViewContainer;
+import com.xjt.newpic.views.DetailsHelper.ResolutionResolvingListener;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

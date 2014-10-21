@@ -24,7 +24,7 @@
         android:ellipsize="marquee"
         android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/minor_text_color"
+        android:textColor="@color/np_minor_text_color"
         android:textSize="@dimen/common_title_text_size" />
 
 </LinearLayout>

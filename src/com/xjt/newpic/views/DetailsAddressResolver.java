@@ -1,4 +1,4 @@
-package com.xjt.newpic.view;
+package com.xjt.newpic.views;
 
 import android.content.Context;
 import android.location.Address;

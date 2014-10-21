@@ -1,28 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- configuration for album set page -->
-    <integer name="albumset_rows_land">3</integer>
-    <integer name="albumset_rows_port">5</integer>
+    <!-- configuration for album set grid page -->
+    <integer name="albumset_grid_rows_port">2</integer>
+    <integer name="albumset_grid_gravity">0</integer>
 
-    <dimen name="albumset_label_height">36dp</dimen>
-    <dimen name="albumset_thumbnail_gap">2dp</dimen>
-    <dimen name="albumset_padding_left">2dp</dimen>
-    <dimen name="albumset_padding_top">2dp</dimen>
-    <dimen name="albumset_padding_bottom">2dp</dimen>
-    <dimen name="albumset_padding_right">2dp</dimen>
-    <dimen name="albumset_left_margin">2dp</dimen>
-    <dimen name="albumset_title_right_margin">20dp</dimen>
-    <dimen name="albumset_icon_size">25dp</dimen>
-    <dimen name="albumset_title_offset">8dp</dimen>
-    <dimen name="albumset_count_offset">8dp</dimen>
-    <dimen name="albumset_title_font_size">15sp</dimen>
-    <dimen name="albumset_count_font_size">13sp</dimen>
+    <dimen name="albumset_grid_thumbnail_padding">32dp</dimen>
+    <dimen name="albumset_grid_thumbnail_gap">2dp</dimen>
+    <dimen name="albumset_grid_padding_left">6dp</dimen>
+    <dimen name="albumset_grid_padding_top">6dp</dimen>
+    <dimen name="albumset_grid_padding_bottom">6dp</dimen>
+    <dimen name="albumset_grid_padding_right">6dp</dimen>
+    <dimen name="albumset_grid_label_height">36dp</dimen>
+    <dimen name="albumset_grid_title_font_size">15sp</dimen>
+    <dimen name="albumset_grid_count_font_size">13sp</dimen>
+    <dimen name="albumset_grid_border_size">2sp</dimen>
+
+    <!-- configuration for album set list page -->
+    <integer name="albumset_list_rows_port">1</integer>
+    <integer name="albumset_list_gravity">-1</integer>
+
+    <dimen name="albumset_list_thumbnail_padding">5.5dp</dimen>
+    <dimen name="albumset_list_thumbnail_gap">2dp</dimen>
+    <dimen name="albumset_list_padding_left">2dp</dimen>
+    <dimen name="albumset_list_padding_top">2dp</dimen>
+    <dimen name="albumset_list_padding_bottom">2dp</dimen>
+    <dimen name="albumset_list_padding_right">2dp</dimen>
+    <dimen name="albumset_list_label_height">32dp</dimen>
+    <dimen name="albumset_list_title_font_size">15sp</dimen>
+    <dimen name="albumset_list_count_font_size">13sp</dimen>
+    <dimen name="albumset_list_border_size">5dp</dimen>
 
     <!-- configuration for album page -->
 
-    <integer name="album_rows_land">3</integer>
-    <integer name="album_rows_port">5</integer>
+    <integer name="album_rows_port">3</integer>
 
     <dimen name="album_thumbnail_gap">2dp</dimen>
     <dimen name="album_padding_left">2dp</dimen>
@@ -51,15 +62,14 @@
     <dimen name="videoset_count_font_size">16sp</dimen>
 
     <!-- configuration for video page -->
-    <integer name="video_rows_land">2</integer>
-    <integer name="video_rows_port">4</integer>
+    <integer name="video_rows_port">2</integer>
 
-    <dimen name="video_label_height">36dp</dimen>
-    <dimen name="video_thumbnail_gap">4dp</dimen>
-    <dimen name="video_padding_left">4dp</dimen>
-    <dimen name="video_padding_top">4dp</dimen>
-    <dimen name="video_padding_bottom">4dp</dimen>
-    <dimen name="video_padding_right">4dp</dimen>
+    <dimen name="video_label_height">32dp</dimen>
+    <dimen name="video_thumbnail_gap">2dp</dimen>
+    <dimen name="video_padding_left">6dp</dimen>
+    <dimen name="video_padding_top">6dp</dimen>
+    <dimen name="video_padding_bottom">6dp</dimen>
+    <dimen name="video_padding_right">6dp</dimen>
     <dimen name="video_left_margin">2dp</dimen>
     <dimen name="video_title_right_margin">20dp</dimen>
     <dimen name="video_icon_size">25dp</dimen>
@@ -81,13 +91,11 @@
     <dimen name="letool_bottom_bar_height">48dp</dimen>
     <dimen name="letool_camera_source_settings_item_padding">2dp</dimen>
     <dimen name="letool_camera_source_settings_item_height">56dp</dimen>
-    
     <dimen name="common_title_text_size">18sp</dimen>
     <dimen name="common_text_size_middle">16dp</dimen>
     <dimen name="common_text_size_small">13dp</dimen>
     <dimen name="common_scroll_bar_width">10dp</dimen>
     <dimen name="common_scroll_bar_height">48dp</dimen>
-    
     <dimen name="common_action_view_width">56dp</dimen>
 
 </resources>

@@ -1,5 +1,5 @@
 
-package com.xjt.newpic.view;
+package com.xjt.newpic.views;
 
 import com.xjt.newpic.NpContext;
 import com.xjt.newpic.R;
@@ -13,6 +13,7 @@ import com.xjt.newpic.preference.GlobalPreference;
 import com.xjt.newpic.utils.RelativePosition;
 import com.xjt.newpic.utils.Utils;
 import com.xjt.newpic.views.layout.ThumbnailLayout;
+import com.xjt.newpic.views.layout.ThumbnailLayoutBase;
 import com.xjt.newpic.views.opengl.GLESCanvas;
 import com.xjt.newpic.views.utils.UIListener;
 import com.xjt.newpic.views.utils.ViewScrollerHelper;
@@ -51,7 +52,7 @@ public class ThumbnailView extends GLView {
     private UIListener mUIListener;
     private SynchronizedHandler mHandler;
     private Listener mListener;
-    private ThumbnailLayout mLayout;
+    private ThumbnailLayoutBase mLayout;
     private Renderer mRenderer;
 
     private ScrollBarView mScrollBar;
@@ -60,9 +61,9 @@ public class ThumbnailView extends GLView {
 
     //////////////////////////////////////////////////////////////Animations////////////////////////////////////////////////////////////////////
 
-    public void startScatteringAnimation(RelativePosition position) {
+    public void startScatteringAnimation(RelativePosition position,boolean scatterX, boolean scatterY, boolean scatterZ) {
         if (GlobalPreference.isAnimationOpen(mLetoolContext.getActivityContext())) {
-            mAnimation = new ThumbnailScatteringAnim(position);
+            mAnimation = new ThumbnailScatteringAnim(position, scatterX, scatterY, scatterZ);
             mAnimation.start();
             if (mLayout.getThumbnailHeight() != 0)
                 invalidate();
@@ -133,7 +134,7 @@ public class ThumbnailView extends GLView {
             int scrollLimit = mLayout.getScrollLimit();
             if (scrollLimit == 0)
                 return false;
-            float velocity = ThumbnailLayout.WIDE ? velocityX : velocityY;
+            float velocity =  velocityY;
             mScroller.fling((int) -velocity, 0, scrollLimit);
             if (mUIListener != null)
                 mUIListener.onUserInteractionBegin();
@@ -144,7 +145,7 @@ public class ThumbnailView extends GLView {
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             cancelDown(false);
-            float distance = ThumbnailLayout.WIDE ? distanceX : distanceY;
+            float distance = distanceY;
             mScroller.startScroll(Math.round(distance), 0, mLayout.getScrollLimit());
             invalidate();
             return true;
@@ -303,7 +304,7 @@ public class ThumbnailView extends GLView {
 
     ////////////////////////////////////////////////////////////Layout////////////////////////////////////////////////////////////////////
 
-    public ThumbnailView(NpContext context, ThumbnailLayout layout) {
+    public ThumbnailView(NpContext context, ThumbnailLayoutBase layout) {
         Context cxt = context.getActivityContext();
         mLetoolContext = context;
         mGestureDetector = new GestureDetector(cxt, new MyGestureListener());
@@ -311,11 +312,9 @@ public class ThumbnailView extends GLView {
         mLayout = layout;
         int w = Math.round(cxt.getResources().getDimension(R.dimen.common_scroll_bar_width));
         int h = Math.round(cxt.getResources().getDimension(R.dimen.common_scroll_bar_height));
-        if (ThumbnailLayout.WIDE) {
-            mScrollBar = new ScrollBarView(cxt, h, w);
-        } else {
+
             mScrollBar = new ScrollBarView(cxt, w, h);
-        }
+
         mScrollBar.setVisibility(View.INVISIBLE);
         addComponent(mScrollBar);
         mHandler = new SynchronizedHandler(context.getGLController());
@@ -355,7 +354,7 @@ public class ThumbnailView extends GLView {
             mStartIndex = ThumbnailLayout.INDEX_NONE;
         }
         // Reset the scroll position to avoid scrolling over the updated limit.
-        setScrollPosition(ThumbnailLayout.WIDE ? mScrollX : mScrollY);
+        setScrollPosition( mScrollY);
         showScrollBarView();
     }
 
@@ -365,17 +364,17 @@ public class ThumbnailView extends GLView {
             return;
         }
         Rect rect = mLayout.getThumbnailRect(index, mTempRect);
-        int position = ThumbnailLayout.WIDE ? (rect.left + rect.right - getWidth()) / 2 : (rect.top + rect.bottom - getHeight()) / 2;
+        int position =  (rect.top + rect.bottom - getHeight()) / 2;
         setScrollPosition(position);
     }
 
     public void resetVisibleRange(int centerIndex) {
         Rect rect = mLayout.getThumbnailRect(centerIndex, mTempRect);
-        int visibleBegin = ThumbnailLayout.WIDE ? mScrollX : mScrollY;
-        int visibleLength = ThumbnailLayout.WIDE ? getWidth() : getHeight();
+        int visibleBegin =  mScrollY;
+        int visibleLength =  getHeight();
         int visibleEnd = visibleBegin + visibleLength;
-        int thumbnailBegin = ThumbnailLayout.WIDE ? rect.left : rect.top;
-        int thumbnailEnd = ThumbnailLayout.WIDE ? rect.right : rect.bottom;
+        int thumbnailBegin = rect.top;
+        int thumbnailEnd =  rect.bottom;
 
         int position = visibleBegin;
         if (visibleLength < thumbnailEnd - thumbnailBegin) {
@@ -407,13 +406,10 @@ public class ThumbnailView extends GLView {
     }
 
     private void updateScrollPosition(int position, boolean force) {
-        if (!force && (ThumbnailLayout.WIDE ? position == mScrollX : position == mScrollY))
+        if (!force && ( position == mScrollY))
             return;
-        if (ThumbnailLayout.WIDE) {
-            mScrollX = position;
-        } else {
+
             mScrollY = position;
-        }
         mLayout.setScrollPosition(position);
         if (mListener != null) {
             mListener.onScrollPositionChanged(position, mLayout.getScrollLimit());

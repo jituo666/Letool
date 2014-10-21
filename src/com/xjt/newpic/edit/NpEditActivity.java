@@ -78,9 +78,9 @@ import com.xjt.newpic.edit.pipeline.ProcessingService;
 import com.xjt.newpic.edit.ui.FramedTextButton;
 import com.xjt.newpic.imagedata.utils.LetoolBitmapPool;
 import com.xjt.newpic.surpport.PopupMenu;
-import com.xjt.newpic.view.NpDialog;
-import com.xjt.newpic.view.NpTopBar;
-import com.xjt.newpic.view.NpTopBar.OnActionModeListener;
+import com.xjt.newpic.views.NpDialog;
+import com.xjt.newpic.views.NpTopBar;
+import com.xjt.newpic.views.NpTopBar.OnActionModeListener;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;

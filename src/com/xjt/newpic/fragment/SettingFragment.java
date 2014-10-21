@@ -38,8 +38,8 @@ import com.xjt.newpic.settings.NpPreference;
 import com.xjt.newpic.stat.StatConstants;
 import com.xjt.newpic.utils.StorageUtils;
 import com.xjt.newpic.utils.StringUtils;
-import com.xjt.newpic.view.NpTopBar;
-import com.xjt.newpic.view.NpTopBar.OnActionModeListener;
+import com.xjt.newpic.views.NpTopBar;
+import com.xjt.newpic.views.NpTopBar.OnActionModeListener;
 
 /**
  * @Author Jituo.Xuan

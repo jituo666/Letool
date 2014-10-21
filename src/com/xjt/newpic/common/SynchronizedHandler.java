@@ -1,7 +1,7 @@
 
 package com.xjt.newpic.common;
 
-import com.xjt.newpic.view.GLController;
+import com.xjt.newpic.views.GLController;
 
 import android.os.Handler;
 import android.os.Message;

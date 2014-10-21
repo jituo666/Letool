@@ -1,10 +1,10 @@
-
 package com.xjt.newpic.adapters;
+
+import java.io.File;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Message;
-
 import com.xjt.newpic.NpContext;
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.Future;
@@ -19,6 +19,7 @@ import com.xjt.newpic.metadata.MediaObject;
 import com.xjt.newpic.metadata.MediaPath;
 import com.xjt.newpic.metadata.MediaSet;
 import com.xjt.newpic.metadata.loader.ThumbnailSetDataLoader;
+import com.xjt.newpic.preference.GlobalPreference;
 import com.xjt.newpic.utils.Utils;
 import com.xjt.newpic.views.opengl.BitmapTexture;
 import com.xjt.newpic.views.opengl.TiledTexture;
@@ -69,7 +70,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataChange
         public BitmapTexture bitmapTexture;
         public MediaPath setPath;
         public String title;
-        public int totalCount;
+        public String desc;
         public int sourceType;
         public int cacheFlag;
         public int cacheStatus;
@@ -81,7 +82,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataChange
         private BitmapLoader coverLoader;
     }
 
-    public ThumbnailSetDataWindow(NpContext c, ThumbnailSetDataLoader source, ThumbnailSetRenderer.LabelSpec labelSpec, int cacheSize) {
+    public ThumbnailSetDataWindow(NpContext c, ThumbnailSetDataLoader source, ThumbnailSetRenderer.ThumbnailLabelParam labelSpec, int cacheSize) {
         source.setModelListener(this);
         mSource = source;
         mData = new AlbumSetEntry[cacheSize];
@@ -231,16 +232,15 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataChange
     }
 
     private boolean isLabelChanged(
-            AlbumSetEntry entry, String title, int totalCount, int sourceType) {
+            AlbumSetEntry entry, String title, String desc, int sourceType) {
         return !Utils.equals(entry.title, title)
-                || entry.totalCount != totalCount
+                || !Utils.equals(entry.desc, desc)
                 || entry.sourceType != sourceType;
     }
 
     private void updateAlbumSetEntry(AlbumSetEntry entry, int thumbnailIndex) {
         MediaSet album = mSource.getMediaSet(thumbnailIndex);
         MediaItem cover = mSource.getCoverItem(thumbnailIndex);
-        int totalCount = mSource.getTotalCount(thumbnailIndex);
 
         entry.album = album;
         entry.setDataVersion = getDataVersion(album);
@@ -248,11 +248,28 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataChange
         entry.cacheStatus = identifyCacheStatus(album);
         entry.setPath = (album == null) ? null : album.getPath();
 
-        String title = (album == null) ? "" : Utils.ensureNotNull(album.getName());
+        String title = "";
+        String desc = "";
+        int count = mSource.getTotalCount(thumbnailIndex);
+        Context c = mLetoolContext.getActivityContext();
+        String totalCount = String.format(c.getResources().getQuantityString(R.plurals.label_number_of_items, count), count);
+        if (mLetoolContext.isImagePicking() || (mLetoolContext.isImageBrwosing() ? GlobalPreference.isPictureGalleryListMode(mLetoolContext.getActivityContext())
+                : GlobalPreference.isVideoGalleryListMode(mLetoolContext.getActivityContext()))) {
+            title = ((album == null) ? "" : (Utils.ensureNotNull(album.getName()) + " ")) + totalCount; // 名字 + 张数
+            if (cover != null) {
+                File f = new File(cover.getFilePath());
+                if (f.exists()) {
+                    desc = f.getParent(); // 所在目录
+                }
+            }
+        } else {
+            title = (album == null) ? "" : Utils.ensureNotNull(album.getName()); // 名字
+            desc = totalCount; // 张书
+        }
         int sourceType = DataSourceType.identifySourceType(album);
-        if (isLabelChanged(entry, title, totalCount, sourceType)) {
+        if (isLabelChanged(entry, title, desc, sourceType)) {
             entry.title = title;
-            entry.totalCount = totalCount;
+            entry.desc = desc;
             entry.sourceType = sourceType;
             if (entry.labelLoader != null) {
                 entry.labelLoader.recycle();
@@ -260,7 +277,7 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataChange
                 entry.labelTexture = null;
             }
             if (album != null) {
-                entry.labelLoader = new AlbumLabelLoader(thumbnailIndex, title, totalCount);
+                entry.labelLoader = new AlbumLabelLoader(thumbnailIndex, title, desc);
             }
         }
 
@@ -390,24 +407,46 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataChange
         return set.getCacheStatus();
     }
 
+    public void onThumbnailSizeChanged(int width, int height) {
+        if (mThumbnailWidth == width)
+            return;
+
+        mThumbnailWidth = width;
+        mLoadingLabel = null;
+        mLabelMaker.setLabelWidth(mThumbnailWidth);
+
+        if (!mIsActive)
+            return;
+
+        for (int i = mContentStart, n = mContentEnd; i < n; ++i) {
+            AlbumSetEntry entry = mData[i % mData.length];
+            if (entry.labelLoader != null) {
+                entry.labelLoader.recycle();
+                entry.labelLoader = null;
+                entry.labelTexture = null;
+            }
+            if (entry.album != null) {
+                entry.labelLoader = new AlbumLabelLoader(i, entry.title, entry.desc);
+            }
+        }
+        updateAllImageRequests();
+    }
+
     private class AlbumLabelLoader extends BitmapLoader implements EntryUpdater {
 
         private final int mThumbnailIndex;
         private final String mTitle;
-        private final int mTotalCount;
+        private final String mDesc;
 
-        public AlbumLabelLoader(int thumbnailIndex, String title, int totalCount) {
+        public AlbumLabelLoader(int thumbnailIndex, String title, String desc) {
             mThumbnailIndex = thumbnailIndex;
             mTitle = title;
-            mTotalCount = totalCount;
+            mDesc = desc;
         }
 
         @Override
         protected Future<Bitmap> submitBitmapTask(FutureListener<Bitmap> l) {
-            Context c = mLetoolContext.getActivityContext();
-            String label = mLetoolContext.isImageBrwosing() ? "(" + String.format(c.getResources().getQuantityString(R.plurals.number_of_items,mTotalCount),mTotalCount) + ")" :
-                    mLetoolContext.getActivityContext().getString(R.string.common_video_set, mTotalCount);
-            return mThreadPool.submit(mLabelMaker.requestLabel(mTitle, label), l);
+            return mThreadPool.submit(mLabelMaker.requestLabel(mTitle, mDesc), l);
         }
 
         @Override
@@ -435,31 +474,6 @@ public class ThumbnailSetDataWindow implements ThumbnailSetDataLoader.DataChange
             } else {
             }
         }
-    }
-
-    public void onThumbnailSizeChanged(int width, int height) {
-        if (mThumbnailWidth == width)
-            return;
-
-        mThumbnailWidth = width;
-        mLoadingLabel = null;
-        mLabelMaker.setLabelWidth(mThumbnailWidth);
-
-        if (!mIsActive)
-            return;
-
-        for (int i = mContentStart, n = mContentEnd; i < n; ++i) {
-            AlbumSetEntry entry = mData[i % mData.length];
-            if (entry.labelLoader != null) {
-                entry.labelLoader.recycle();
-                entry.labelLoader = null;
-                entry.labelTexture = null;
-            }
-            if (entry.album != null) {
-                entry.labelLoader = new AlbumLabelLoader(i, entry.title, entry.totalCount);
-            }
-        }
-        updateAllImageRequests();
     }
 
     private class AlbumCoverLoader extends BitmapLoader implements EntryUpdater {

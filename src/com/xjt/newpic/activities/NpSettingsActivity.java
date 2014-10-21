@@ -11,10 +11,10 @@ import com.xjt.newpic.common.ThreadPool;
 import com.xjt.newpic.fragment.CameraSourceSettingFragment;
 import com.xjt.newpic.fragment.SettingFragment;
 import com.xjt.newpic.metadata.DataManager;
-import com.xjt.newpic.view.GLController;
-import com.xjt.newpic.view.NpBottomBar;
-import com.xjt.newpic.view.NpSlidingMenu;
-import com.xjt.newpic.view.NpTopBar;
+import com.xjt.newpic.views.GLController;
+import com.xjt.newpic.views.NpBottomBar;
+import com.xjt.newpic.views.NpSlidingMenu;
+import com.xjt.newpic.views.NpTopBar;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -170,10 +170,6 @@ public class NpSettingsActivity extends FragmentActivity implements NpContext {
 
     }
 
-    @Override
-    public View getGuidTipView() {
-        return null;
-    }
 
     @Override
     public boolean isAlbumDirty() {
@@ -183,6 +179,11 @@ public class NpSettingsActivity extends FragmentActivity implements NpContext {
     @Override
     public void setAlbumDirty(boolean dirty) {
 
+    }
+
+    @Override
+    public boolean isImagePicking() {
+        return false;
     }
 
 }

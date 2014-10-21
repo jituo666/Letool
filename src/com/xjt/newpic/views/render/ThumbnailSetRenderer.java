@@ -4,58 +4,53 @@ package com.xjt.newpic.views.render;
 import com.xjt.newpic.NpContext;
 import com.xjt.newpic.R;
 import com.xjt.newpic.adapters.ThumbnailSetDataWindow;
-import com.xjt.newpic.adapters.ThumbnailSetDataWindow.AlbumSetEntry;
 import com.xjt.newpic.metadata.MediaPath;
 import com.xjt.newpic.metadata.loader.ThumbnailSetDataLoader;
-import com.xjt.newpic.selectors.SelectionManager;
-import com.xjt.newpic.view.ThumbnailView;
+import com.xjt.newpic.views.ThumbnailView;
+import com.xjt.newpic.views.layout.ThumbnailLayoutParam;
 import com.xjt.newpic.views.opengl.ColorTexture;
 import com.xjt.newpic.views.opengl.GLESCanvas;
 import com.xjt.newpic.views.opengl.ResourceTexture;
-import com.xjt.newpic.views.opengl.Texture;
-import com.xjt.newpic.views.opengl.UploadedBitmapTexture;
-import com.xjt.newpic.views.utils.AlbumLabelMaker;
-import com.xjt.newpic.views.utils.ViewConfigs;
+
 
 /**
  * @Author Jituo.Xuan
  * @Date 8:17:16 PM Jul 24, 2014
  * @Comments:null
  */
-public class ThumbnailSetRenderer extends AbstractThumbnailRender {
+public abstract class ThumbnailSetRenderer extends ThumbnailBaseRender {
 
     private static final String TAG = ThumbnailSetRenderer.class.getSimpleName();
 
     private static final int CACHE_SIZE = 48;
 
-    private final ColorTexture mWaitLoadingTexture;
-    protected final ResourceTexture mVideoPlayIcon;
-    private final ResourceTexture mVideoOverlay;
-    private NpContext mLetoolContext;
+    protected NpContext mLetoolContext;
 
-    private ThumbnailView mThumbnailView;
-    private ThumbnailSetDataWindow mDataWindow;
+    protected ColorTexture mDefaulTexture;
 
-    private int mPressedIndex = -1;
-    private boolean mAnimatePressedUp;
-    private MediaPath mHighlightItemPath = null;
+    protected ResourceTexture mVideoPlayIcon;
+    protected ResourceTexture mVideoOverlay;
 
-    private LabelSpec mLabelSpec;
+    protected ThumbnailView mThumbnailView;
+    protected ThumbnailSetDataWindow mDataWindow;
 
-    public static class LabelSpec {
+    protected int mPressedIndex = -1;
+    protected boolean mAnimatePressedUp;
+    protected MediaPath mHighlightItemPath = null;
+
+    protected ThumbnailLabelParam mThumbnailLabelParam;
+    protected ThumbnailLayoutParam mThumbnailParam;
+
+    public static class ThumbnailLabelParam {
 
         public int labelHeight;
-        public int titleOffset;
-        public int countOffset;
+        public int backgroundColor;
         public int titleFontSize;
         public int countFontSize;
-        public int leftMargin;
-        public int iconSize;
-        public int titleRightMargin;
-        public int backgroundColor;
         public int titleColor;
         public int countColor;
         public int borderSize;
+        public int gravity;
     }
 
     private class MyCacheListener implements ThumbnailSetDataWindow.Listener {
@@ -71,14 +66,13 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         }
     }
 
-    public ThumbnailSetRenderer(NpContext activity, ThumbnailView thumbnailView, SelectionManager selector) {
+    protected ThumbnailSetRenderer(NpContext activity, ThumbnailView thumbnailView) {
         super(activity.getActivityContext());
         mLetoolContext = activity;
         mThumbnailView = thumbnailView;
-        mLabelSpec = ViewConfigs.AlbumSetPage.get(activity.getActivityContext()).labelSpec;
+        mDefaulTexture = new ColorTexture(activity.getActivityContext().getResources().getColor(R.color.cp_thumbnail_placehoder));
+        mDefaulTexture.setSize(1, 1);
         mVideoPlayIcon = new ResourceTexture(activity.getActivityContext(), R.drawable.ic_video_folder);
-        mWaitLoadingTexture = new ColorTexture(activity.getActivityContext().getResources().getColor(R.color.thumbnail_placehoder));
-        mWaitLoadingTexture.setSize(1, 1);
         mVideoOverlay = new ResourceTexture(activity.getActivityContext(), R.drawable.ic_video_thumb);
     }
 
@@ -89,7 +83,7 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
             mThumbnailView.setThumbnailCount(0);
         }
         if (model != null) {
-            mDataWindow = new ThumbnailSetDataWindow(mLetoolContext, model, mLabelSpec, CACHE_SIZE);
+            mDataWindow = new ThumbnailSetDataWindow(mLetoolContext, model, mThumbnailLabelParam, CACHE_SIZE);
             mDataWindow.setListener(new MyCacheListener());
             mThumbnailView.setThumbnailCount(mDataWindow.size());
         }
@@ -116,81 +110,6 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
         mThumbnailView.invalidate();
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    private static Texture checkLabelTexture(Texture texture) {
-        return ((texture instanceof UploadedBitmapTexture) && ((UploadedBitmapTexture) texture).isUploading()) ? null : texture;
-    }
-
-    @Override
-    public int renderThumbnail(GLESCanvas canvas, int index, int pass, int width, int height) {
-        AlbumSetEntry entry = mDataWindow.get(index);
-        int renderRequestFlags = 0;
-        if (entry != null) {
-            renderRequestFlags |= renderContent(canvas, entry, width, height - mLabelSpec.labelHeight);
-            renderRequestFlags |= renderLabel(canvas, entry, width, height);
-            renderRequestFlags |= renderOverlay(canvas, entry, index, width, height - mLabelSpec.labelHeight);
-        }
-        return renderRequestFlags;
-    }
-
-    protected int renderContent(GLESCanvas canvas, AlbumSetEntry entry, int width, int height) {
-        int renderRequestFlags = 0;
-        Texture content = entry.bitmapTexture;
-        if (content == null) {
-            content = mWaitLoadingTexture;
-            entry.isWaitLoadingDisplayed = true;
-        }
-        drawContent(canvas, content, width, height, entry.rotation);
-        if (!mLetoolContext.isImageBrwosing())
-            drawVideoOverlay(canvas, width, height);
-        return renderRequestFlags;
-    }
-
-    protected int renderLabel(GLESCanvas canvas, AlbumSetEntry entry, int width, int height) {
-        Texture content = checkLabelTexture(entry.labelTexture);
-        if (content == null) {
-            content = mWaitLoadingTexture;
-            return 0;
-        }
-        int b = AlbumLabelMaker.getBorderSize();
-        int h = mLabelSpec.labelHeight;
-        content.draw(canvas, -b, height - h + b, width + b + b, h);
-        return 0;
-    }
-
-    protected int renderOverlay(GLESCanvas canvas, AlbumSetEntry entry, int index, int width, int height) {
-        int renderRequestFlags = 0;
-
-        if (mPressedIndex == index) {
-            if (mAnimatePressedUp) {
-                drawPressedUpFrame(canvas, width, height);
-                renderRequestFlags |= ThumbnailView.RENDER_MORE_FRAME;
-                if (isPressedUpFrameFinished()) {
-                    mAnimatePressedUp = false;
-                    mPressedIndex = -1;
-                }
-            } else {
-                drawPressedFrame(canvas, width, height);
-            }
-        }
-        return renderRequestFlags;
-    }
-
-    protected void drawVideoOverlay(GLESCanvas canvas, int width, int height) {
-        // Scale the video overlay to the height of the thumbnail and put it  on the left side.
-        ResourceTexture v = mVideoOverlay;
-        float scale = (float) height / v.getHeight();
-        int w = Math.round(scale * v.getWidth());
-        int h = Math.round(scale * v.getHeight());
-        v.draw(canvas, 0, 0, w, h);
-
-        int s = Math.min(width, height) / 6;
-        mVideoPlayIcon.draw(canvas, (width - s) / 2, (height - s) / 2, s, s);
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     @Override
     public void prepareDrawing() {
     }
@@ -201,6 +120,18 @@ public class ThumbnailSetRenderer extends AbstractThumbnailRender {
 
     public void resume() {
         mDataWindow.resume();
+    }
+
+    protected void drawVideoOverlay(GLESCanvas canvas, int width, int height) {
+        // Scale the video overlay to the height of the thumbnail and put it  on the left side.
+//        ResourceTexture v = mVideoOverlay;
+//        float scale = (float) height / v.getHeight();
+//        int w = Math.round(scale * v.getWidth());
+//        int h = Math.round(scale * v.getHeight());
+//        v.draw(canvas, 0, 0, w, h);
+
+        int s = Math.min(width, height) / 6;
+        mVideoPlayIcon.draw(canvas, (height - s) / 2, (height - s) / 2, s, s);
     }
 
     @Override

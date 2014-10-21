@@ -39,44 +39,44 @@ public class MediaSetUtils {
     public static void initializeMyAlbumBuckets(Context context) {
         String saveCameraDirs = GlobalPreference.getPhotoDirs(context);
         MY_ALBUM_BUCKETS_ID = new int[0];
-        LLog.i(TAG, " ------initializeMyAlbumBuckets:" + saveCameraDirs);
-        if (saveCameraDirs.length() > 0) {
-            String dirs[] = saveCameraDirs.split("[|]");
-            if (dirs.length > 0) {
-                MY_ALBUM_BUCKETS_ID = new int[dirs.length];
-                int i = 0;
-                for (String s : dirs) {
-                    LLog.i(TAG, " ------initializeMyAlbumBuckets dir:" + s);
-                    MY_ALBUM_BUCKETS_ID[i++] = LetoolUtils.getBucketId(s);
-                }
-            }
-        } else {
-            ArrayList<Integer> list = new ArrayList<Integer>();
-            MY_ALBUM_BUCKETS_DIR = "";
-            String outerSdcard = UtilStorage.getInstance().getExternalSdCardPath();
-            if (outerSdcard != null) {
-                list.addAll(recurseCamerDir(outerSdcard + "/DCIM"));
-                list.addAll(recurseCamerDir(outerSdcard + "/Camera"));
-                list.addAll(recurseCamerDir(outerSdcard + "/Photo"));
-                list.addAll(recurseCamerDir(outerSdcard + "/Photos"));
-            }
-            String innnerSdCard = UtilStorage.getInstance().getInnerSdCardPath();
-            if (innnerSdCard != null) {
-                list.addAll(recurseCamerDir(innnerSdCard + "/DCIM"));
-                list.addAll(recurseCamerDir(innnerSdCard + "/Camera"));
-                list.addAll(recurseCamerDir(innnerSdCard + "/Photo"));
-                list.addAll(recurseCamerDir(innnerSdCard + "/Photos"));
-            }
-            if (list.size() == 0) {
-                list.addAll(recurseCamerDir(Environment.getExternalStorageDirectory().toString() + "/DCIM/"));
-                list.addAll(recurseCamerDir(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath().toString()));
-            }
-
-            MY_ALBUM_BUCKETS_ID = new int[list.size()];
-            for (int i = 0; i < list.size(); i++) {
-                MY_ALBUM_BUCKETS_ID[i] = list.get(i).intValue();
-            }
-        }
+//        LLog.i(TAG, " ------initializeMyAlbumBuckets:" + saveCameraDirs);
+//        if (saveCameraDirs.length() > 0) {
+//            String dirs[] = saveCameraDirs.split("[|]");
+//            if (dirs.length > 0) {
+//                MY_ALBUM_BUCKETS_ID = new int[dirs.length];
+//                int i = 0;
+//                for (String s : dirs) {
+//                    LLog.i(TAG, " ------initializeMyAlbumBuckets dir:" + s);
+//                    MY_ALBUM_BUCKETS_ID[i++] = LetoolUtils.getBucketId(s);
+//                }
+//            }
+//        } else {
+//            ArrayList<Integer> list = new ArrayList<Integer>();
+//            MY_ALBUM_BUCKETS_DIR = "";
+//            String outerSdcard = UtilStorage.getInstance().getExternalSdCardPath();
+//            if (outerSdcard != null) {
+//                list.addAll(recurseCamerDir(outerSdcard + "/DCIM"));
+//                list.addAll(recurseCamerDir(outerSdcard + "/Camera"));
+//                list.addAll(recurseCamerDir(outerSdcard + "/Photo"));
+//                list.addAll(recurseCamerDir(outerSdcard + "/Photos"));
+//            }
+//            String innnerSdCard = UtilStorage.getInstance().getInnerSdCardPath();
+//            if (innnerSdCard != null) {
+//                list.addAll(recurseCamerDir(innnerSdCard + "/DCIM"));
+//                list.addAll(recurseCamerDir(innnerSdCard + "/Camera"));
+//                list.addAll(recurseCamerDir(innnerSdCard + "/Photo"));
+//                list.addAll(recurseCamerDir(innnerSdCard + "/Photos"));
+//            }
+//            if (list.size() == 0) {
+//                list.addAll(recurseCamerDir(Environment.getExternalStorageDirectory().toString() + "/DCIM/"));
+//                list.addAll(recurseCamerDir(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM).getAbsolutePath().toString()));
+//            }
+//
+//            MY_ALBUM_BUCKETS_ID = new int[list.size()];
+//            for (int i = 0; i < list.size(); i++) {
+//                MY_ALBUM_BUCKETS_ID[i] = list.get(i).intValue();
+//            }
+//        }
         //common
 
     }

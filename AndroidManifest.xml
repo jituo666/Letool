@@ -114,11 +114,11 @@
         <!-- Umeng sdk requirement -->
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="538f2c0456240ba4a0059794" >
+            android:value="539289e956240b9f6902fa3c" >
         </meta-data>
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="test_channel_id" />
+            android:value="LETOOL0000001005" />
 
         <service
             android:name="com.umeng.update.net.DownloadingService"
@@ -130,10 +130,10 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.umeng.fb.ConversationActivity"
+            android:name="com.xjt.newpic.fb.ConversationActivity"
             android:theme="@style/MainTheme" />
         <activity
-            android:name="com.umeng.fb.ContactActivity"
+            android:name="com.xjt.newpic.fb.ContactActivity"
             android:theme="@style/MainTheme" />
 
         <!-- End Umeng sdk requirement -->

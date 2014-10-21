@@ -9,7 +9,6 @@ import com.xjt.newpic.views.ThumbnailView;
 import com.xjt.newpic.views.opengl.FadeOutTexture;
 import com.xjt.newpic.views.opengl.GLESCanvas;
 import com.xjt.newpic.views.opengl.NinePatchTexture;
-import com.xjt.newpic.views.opengl.ResourceTexture;
 import com.xjt.newpic.views.opengl.Texture;
 
 /**
@@ -17,14 +16,14 @@ import com.xjt.newpic.views.opengl.Texture;
  * @Date 8:17:02 PM Jul 24, 2014
  * @Comments:null
  */
-public abstract class AbstractThumbnailRender implements ThumbnailView.Renderer {
+public abstract class ThumbnailBaseRender implements ThumbnailView.Renderer {
 
-    private static final String TAG = AbstractThumbnailRender.class.getSimpleName();
+    private static final String TAG = ThumbnailBaseRender.class.getSimpleName();
 
     protected final NinePatchTexture mFramePressed;
     private FadeOutTexture mFramePressedUp;
 
-    protected AbstractThumbnailRender(Context context) {
+    protected ThumbnailBaseRender(Context context) {
         mFramePressed = new NinePatchTexture(context, R.drawable.grid_pressed);
     }
 

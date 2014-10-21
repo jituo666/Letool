@@ -1,5 +1,5 @@
 
-package com.xjt.newpic.view;
+package com.xjt.newpic.views;
 
 import com.xjt.newpic.animations.CanvasAnim;
 import com.xjt.newpic.common.OrientationSource;

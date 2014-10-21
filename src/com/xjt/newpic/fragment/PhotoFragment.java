@@ -29,17 +29,16 @@ import com.xjt.newpic.utils.LetoolUtils;
 import com.xjt.newpic.utils.RelativePosition;
 import com.xjt.newpic.utils.StorageUtils;
 import com.xjt.newpic.utils.Utils;
-import com.xjt.newpic.view.BatchDeleteMediaListener;
-import com.xjt.newpic.view.DetailsHelper;
-import com.xjt.newpic.view.GLView;
-import com.xjt.newpic.view.GLController;
-import com.xjt.newpic.view.NpBottomBar;
-import com.xjt.newpic.view.NpDialog;
-import com.xjt.newpic.view.NpTopBar;
-import com.xjt.newpic.view.ThumbnailView;
-import com.xjt.newpic.view.BatchDeleteMediaListener.DeleteMediaProgressListener;
-import com.xjt.newpic.view.NpTopBar.OnActionModeListener;
-import com.xjt.newpic.views.layout.ThumbnailContractLayout;
+import com.xjt.newpic.views.BatchDeleteMediaListener;
+import com.xjt.newpic.views.DetailsHelper;
+import com.xjt.newpic.views.GLController;
+import com.xjt.newpic.views.GLView;
+import com.xjt.newpic.views.NpBottomBar;
+import com.xjt.newpic.views.NpDialog;
+import com.xjt.newpic.views.NpTopBar;
+import com.xjt.newpic.views.ThumbnailView;
+import com.xjt.newpic.views.BatchDeleteMediaListener.DeleteMediaProgressListener;
+import com.xjt.newpic.views.NpTopBar.OnActionModeListener;
 import com.xjt.newpic.views.layout.ThumbnailLayout;
 import com.xjt.newpic.views.opengl.FadeTexture;
 import com.xjt.newpic.views.opengl.GLESCanvas;
@@ -59,11 +58,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 /**
@@ -78,6 +73,12 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     private static final int BIT_LOADING_RELOAD = 1;
     private static final int MSG_LAYOUT_CONFIRMED = 0;
     private static final int MSG_PICK_PHOTO = 1;
+
+    private static final int CURRENT_MODE_BROWSE = 0;
+    private static final int CURRENT_MODE_DELETE = 1;
+    private static final int CURRENT_MODE_SHARE = 2;
+
+    private int mCurrentOperationMode = CURRENT_MODE_BROWSE;
 
     private NpContext mLetoolContext;
 
@@ -166,7 +167,6 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                 mLetoolContext.showEmptyView(R.drawable.ic_no_picture, mIsCameraSource ? R.string.common_error_no_photos : R.string.common_error_no_gallery);
             } else {
                 mLetoolContext.hideEmptyView();
-                showGuideTip();
             }
         }
     }
@@ -202,17 +202,9 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     }
 
     public void onLongTap(int thumbnailIndex) {
-        hideGuideTip();
         MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_PHOTO_LONG_PRESSED);
         if (mGetContent)
             return;
-        MediaItem item = mAlbumDataSetLoader.get(thumbnailIndex);
-        if (item == null)
-            return;
-        MediaPath p = item.getPath();
-        p.setFilePath(item.getFilePath());
-        mSelector.toggle(p);
-        mThumbnailView.invalidate();
     }
 
     @Override
@@ -249,7 +241,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
             }
         };
         mEyePosition = new EyePosition(mLetoolContext.getActivityContext(), this);
-        mThumbnailView.startScatteringAnimation(mOpenCenter);
+        mThumbnailView.startScatteringAnimation(mOpenCenter, true, true, true);
     }
 
     private void initializeData() {
@@ -284,7 +276,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         mSelector.setSelectionListener(this);
         mConfig = ViewConfigs.AlbumPage.get(mLetoolContext.getActivityContext());
         ThumbnailLayout layout;
-        layout = new ThumbnailContractLayout(mConfig.albumSpec);
+        layout = new ThumbnailLayout(mConfig.albumSpec);
         mThumbnailView = new ThumbnailView(mLetoolContext, layout);
         mThumbnailView.setBackgroundColor(LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.gl_background_color)));
         mThumbnailView.setListener(new ThumbnailView.SimpleListener() {
@@ -321,33 +313,36 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         topBar.setOnActionMode(NpTopBar.ACTION_BAR_MODE_BROWSE, this);
         topBar.setVisible(View.VISIBLE, false);
         ViewGroup nativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);
-        if (mIsCameraSource) {
-            topBar.setTitleText("");
-            nativeButtons.setVisibility(View.VISIBLE);
-            topBar.setTitleIcon(R.drawable.ic_drawer);
-            TextView naviToPhoto = (TextView) nativeButtons.findViewById(R.id.navi_to_photo);
-            naviToPhoto.setText(R.string.common_photo);
-            naviToPhoto.setEnabled(false);
-            TextView naviToGallery = (TextView) nativeButtons.findViewById(R.id.navi_to_gallery);
-            naviToGallery.setText(mLetoolContext.isImageBrwosing() ? R.string.common_gallery : R.string.common_movies);
-            naviToGallery.setEnabled(true);
-            naviToGallery.setOnClickListener(this);
-        } else {
-            topBar.setTitleText(mAlbumTitle);
-            nativeButtons.setVisibility(View.GONE);
-            topBar.setTitleIcon(R.drawable.ic_action_previous_item);
-        }
+
+        topBar.setTitleText(mAlbumTitle);
+        topBar.setTitleIcon(R.drawable.ic_action_previous_item);
+        nativeButtons.setVisibility(View.VISIBLE);
+        ImageView shareBUtton = (ImageView) nativeButtons.findViewById(R.id.action_action1);
+        shareBUtton.setImageResource(R.drawable.ic_action_delete);
+
+        ImageView deleteButton = (ImageView) nativeButtons.findViewById(R.id.action_action2);
+        deleteButton.setImageResource(R.drawable.ic_action_share);
+
         NpBottomBar bottomBar = mLetoolContext.getLetoolBottomBar();
         bottomBar.setVisible(View.GONE, false);
+        mCurrentOperationMode = CURRENT_MODE_BROWSE;
     }
 
     private void initSelectionBar() {
-        NpTopBar actionBar = mLetoolContext.getLetoolTopBar();
-        actionBar.setOnActionMode(NpTopBar.ACTION_BAR_MODE_SELECTION, this);
-        actionBar.setContractSelectionManager(mSelector);
-        actionBar.getActionPanel().findViewById(R.id.operation_multi_share).setVisibility(View.VISIBLE);
+        NpTopBar topBar = mLetoolContext.getLetoolTopBar();
+        topBar.setOnActionMode(NpTopBar.ACTION_BAR_MODE_SELECTION, this);
+        topBar.setContractSelectionManager(mSelector);
+        ViewGroup nativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);
+        nativeButtons.findViewById(R.id.action_action3).setVisibility(View.VISIBLE);
+        nativeButtons.findViewById(R.id.action_action2).setVisibility(View.GONE);
+        nativeButtons.findViewById(R.id.action_action1).setVisibility(View.GONE);
         String format = getResources().getQuantityString(R.plurals.number_of_items, 0);
-        actionBar.setTitleText(String.format(format, 0));
+        if (mCurrentOperationMode == CURRENT_MODE_SHARE) {
+            topBar.setTitleText(getResources().getString(R.string.common_share) + String.format(format, 0));
+        } else if (mCurrentOperationMode == CURRENT_MODE_DELETE) {
+            topBar.setTitleText(getResources().getString(R.string.common_delete) + String.format(format, 0));
+        }
+        topBar.setTitleIcon(R.drawable.ic_action_previous_item);
     }
 
     @Override
@@ -373,7 +368,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                     startActivityForResult(it, NpMediaActivity.REQUEST_CODE_SETTINGS);
                     getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
                 }
-            },R.drawable.np_common_pressed_left_bg);
+            }, R.drawable.np_common_pressed_left_bg);
 
             dlg.setCancelBtn(R.string.common_cancel, new View.OnClickListener() {
 
@@ -381,7 +376,7 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
                 public void onClick(View v) {
                     dlg.dismiss();
                 }
-            },R.drawable.np_common_pressed_right_bg);
+            }, R.drawable.np_common_pressed_right_bg);
             dlg.setMessage(R.string.camera_source_dirs_tip);
             dlg.show();
         } else {
@@ -452,7 +447,6 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        hideGuideTip();
         LLog.i(TAG, "onDestroyView");
     }
 
@@ -486,78 +480,77 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
 
     @Override
     public void onClick(View v) {
-        hideGuideTip();
         if (v.getId() == R.id.action_navi) {
-            if (mIsCameraSource) {
-                MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SLIDE_MENU);
-                mLetoolContext.getSlidingMenu().toggle();
-            } else {
+
                 mLetoolContext.popContentFragment();
-            }
         } else {
             if (!mIsSDCardMountedCorreclty)
                 return;
-            if (v.getId() == R.id.operation_delete) {
-                int count = mSelector.getSelectedCount();
-                if (count <= 0) {
-                    Toast t = Toast.makeText(getActivity(), R.string.common_selection_tip, Toast.LENGTH_SHORT);
-                    t.setGravity(Gravity.CENTER, 0, 0);
-                    t.show();
-                    return;
-                }
-                BatchDeleteMediaListener cdl = new BatchDeleteMediaListener(
-                        getActivity(), mLetoolContext.getDataManager(),
-                        new DeleteMediaProgressListener() {
-
-                            @Override
-                            public void onConfirmDialogDismissed(boolean confirmed) {
-                                if (confirmed) {
-                                    MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_PHOTO_DELETE);
-                                    mSelector.leaveSelectionMode();
-                                }
-                            }
-
-                            @Override
-                            public ArrayList<MediaPath> onGetDeleteItem() {
-                                return mSelector.getSelected(false);
-                            }
-
-                        });
-                final NpDialog dlg = new NpDialog(getActivity());
-                dlg.setTitle(R.string.common_recommend);
-                dlg.setOkBtn(R.string.common_ok, cdl,R.drawable.np_common_pressed_left_bg);
-                dlg.setCancelBtn(R.string.common_cancel, cdl, R.drawable.np_common_pressed_right_bg);
-                dlg.setMessage(R.string.common_delete_tip);
-                dlg.show();
-
-            } else if (v.getId() == R.id.navi_to_gallery) {
-                MobclickAgent.onEvent(mLetoolContext.getActivityContext(), mLetoolContext.isImageBrwosing() ? StatConstants.EVENT_KEY_CLICK_PICTURE :
-                        StatConstants.EVENT_KEY_CLICK_MOVIE);
-                GalleryFragment f = new GalleryFragment();
-                Bundle data = new Bundle();
-                data.putString(NpMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
-                        .getTopSetPath(mLetoolContext.isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
-                f.setArguments(data);
-                mLetoolContext.pushContentFragment(f, this, false);
-            } else if (v.getId() == R.id.selection_finished) {
+            if (v.getId() == R.id.action_action1) {
+                mCurrentOperationMode = CURRENT_MODE_DELETE;
+                mSelector.enterSelectionMode();
+            } else if (v.getId() == R.id.action_action2) {
+                mCurrentOperationMode = CURRENT_MODE_SHARE;
+                mSelector.enterSelectionMode();
+            } else if (v.getId() == R.id.action_action3) {
                 MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SELECT_OK);
-                mSelector.leaveSelectionMode();
-            } else if (v.getId() == R.id.operation_multi_share) {
-                ArrayList<Uri> uris = new ArrayList<Uri>();
-                for (MediaPath p : mSelector.getSelected(false)) {
-                    if (p.getFilePath().length() > 0) {
-                        uris.add(Uri.parse("file://" + p.getFilePath()));
+                if (mCurrentOperationMode == CURRENT_MODE_DELETE) {
+                    int count = mSelector.getSelectedCount();
+                    if (count <= 0) {
+                        Toast t = Toast.makeText(getActivity(), R.string.common_selection_delete_tip, Toast.LENGTH_SHORT);
+                        t.setGravity(Gravity.CENTER, 0, 0);
+                        t.show();
+                        return;
                     }
-                }
-                ShareManager.showAllShareDialog(getActivity(), GlobalConstants.MIMI_TYPE_IMAGE, uris,
-                        new ShareListener() {
+                    BatchDeleteMediaListener cdl = new BatchDeleteMediaListener(
+                            getActivity(), mLetoolContext.getDataManager(),
+                            new DeleteMediaProgressListener() {
 
-                            @Override
-                            public void shareTriggered() {
-                                if (mSelector.inSelectionMode())
-                                    mSelector.leaveSelectionMode();
-                            }
-                        });
+                                @Override
+                                public void onConfirmDialogDismissed(boolean confirmed) {
+                                    if (confirmed) {
+                                        MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_PHOTO_DELETE);
+                                        mSelector.leaveSelectionMode();
+                                    }
+                                }
+
+                                @Override
+                                public ArrayList<MediaPath> onGetDeleteItem() {
+                                    return mSelector.getSelected(false);
+                                }
+
+                            });
+                    final NpDialog dlg = new NpDialog(getActivity());
+                    dlg.setTitle(R.string.common_recommend);
+                    dlg.setOkBtn(R.string.common_ok, cdl, R.drawable.np_common_pressed_left_bg);
+                    dlg.setCancelBtn(R.string.common_cancel, cdl, R.drawable.np_common_pressed_right_bg);
+                    dlg.setMessage(R.string.common_delete_tip);
+                    dlg.show();
+                } else if (mCurrentOperationMode == CURRENT_MODE_SHARE) {
+                    int count = mSelector.getSelectedCount();
+                    if (count <= 0) {
+                        Toast t = Toast.makeText(getActivity(), R.string.common_selection_share_tip, Toast.LENGTH_SHORT);
+                        t.setGravity(Gravity.CENTER, 0, 0);
+                        t.show();
+                        return;
+                    }
+                    ArrayList<Uri> uris = new ArrayList<Uri>();
+                    for (MediaPath p : mSelector.getSelected(false)) {
+                        if (p.getFilePath().length() > 0) {
+                            uris.add(Uri.parse("file://" + p.getFilePath()));
+                        }
+                    }
+                    ShareManager.showAllShareDialog(getActivity(), GlobalConstants.MIMI_TYPE_IMAGE, uris,
+                            new ShareListener() {
+
+                                @Override
+                                public void shareTriggered() {
+                                    if (mSelector.inSelectionMode()) {
+                                        mSelector.leaveSelectionMode();
+                                    }
+                                }
+                            });
+                }
             }
         }
     }
@@ -586,7 +579,11 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
     public void onSelectionChange(MediaPath path, boolean selected) {
         int count = mSelector.getSelectedCount();
         String format = getResources().getQuantityString(R.plurals.number_of_items, count);
-        mLetoolContext.getLetoolTopBar().setTitleText(String.format(format, count));
+        if (mCurrentOperationMode == CURRENT_MODE_SHARE) {
+            mLetoolContext.getLetoolTopBar().setTitleText(getResources().getString(R.string.common_share) + String.format(format, count));
+        } else if (mCurrentOperationMode == CURRENT_MODE_DELETE) {
+            mLetoolContext.getLetoolTopBar().setTitleText(getResources().getString(R.string.common_delete) + String.format(format, count));
+        }
     }
 
     private Rect getThumbnailRect(int index) {
@@ -595,14 +592,10 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         int x = (int) mOpenCenter.getX();
         int y = (int) mOpenCenter.getY();
         r.set(x, y, x + rx.width(), y + rx.height());
-        //        mRootPane.getBoundsOf(mThumbnailView, offset);
-        //        Rect r = mThumbnailView.getThumbnailRect(index);
-        //        r.offset(offset.left - mThumbnailView.getScrollX(), offset.top - mThumbnailView.getScrollY());
         return r;
     }
 
     private void pickPhoto(int index) {
-        hideGuideTip();
         Bundle data = new Bundle();
         if (mIsCameraSource) {
             data.putString(NpMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
@@ -622,34 +615,4 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         mLetoolContext.pushContentFragment(fragment, this, true);
     }
 
-    public void showGuideTip() {
-        if (GlobalPreference.isGuideTipShown(getActivity()) && mAlbumDataSetLoader.size() > 0) {
-            final View tip = mLetoolContext.getGuidTipView();
-            tip.setVisibility(View.VISIBLE);
-            Animation a = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_bottom_in);
-            a.setStartOffset(600);
-            a.setDuration(600);
-            tip.startAnimation(a);
-            Button close = (Button) tip.findViewById(R.id.close_tip);
-            close.setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    tip.setVisibility(View.GONE);
-                    tip.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_bottom_out));
-                    GlobalPreference.setGuideTipShown(getActivity(), false);
-                }
-            });
-        }
-    }
-
-    public void hideGuideTip() {
-        if (GlobalPreference.isGuideTipShown(getActivity())) {
-            final View tip = mLetoolContext.getGuidTipView();
-            if (tip.getVisibility() == View.VISIBLE) {
-                tip.setVisibility(View.GONE);
-                tip.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.slide_bottom_out));
-            }
-        }
-    }
 }

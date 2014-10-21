@@ -1,4 +1,4 @@
-package com.xjt.newpic.view;
+package com.xjt.newpic.views;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,7 +8,7 @@ import android.view.View.MeasureSpec;
 import com.xjt.newpic.NpContext;
 import com.xjt.newpic.R;
 import com.xjt.newpic.metadata.MediaDetails;
-import com.xjt.newpic.view.DetailsAddressResolver.AddressResolvingListener;
+import com.xjt.newpic.views.DetailsAddressResolver.AddressResolvingListener;
 
 public class DetailsHelper {
     private static DetailsAddressResolver sAddressResolver;

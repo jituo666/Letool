@@ -14,7 +14,7 @@ import com.xjt.newpic.R;
 import com.xjt.newpic.stat.StatConstants;
 import com.xjt.newpic.utils.PackageUtils;
 import com.xjt.newpic.utils.PackageUtils.AppInfo;
-import com.xjt.newpic.view.NpDialog;
+import com.xjt.newpic.views.NpDialog;
 
 import java.util.ArrayList;
 import java.util.List;

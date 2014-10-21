@@ -12,12 +12,14 @@
 
         <include
             android:id="@+id/camera_source"
-            layout="@layout/app_settings_list_item" />
+            layout="@layout/app_settings_list_item"
+            android:visibility="gone" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@drawable/np_list_divider_bg" />
+            android:background="@drawable/np_list_divider_bg"
+            android:visibility="gone" />
 
         <include
             android:id="@+id/anim_switch"

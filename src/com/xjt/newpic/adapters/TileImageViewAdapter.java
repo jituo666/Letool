@@ -12,7 +12,7 @@ import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.imagedata.utils.LetoolBitmapPool;
 import com.xjt.newpic.utils.Utils;
-import com.xjt.newpic.view.TiledImageView;
+import com.xjt.newpic.views.TiledImageView;
 import com.xjt.newpic.views.opengl.ScreenNail;
 
 public class TileImageViewAdapter implements TiledImageView.TileSource {

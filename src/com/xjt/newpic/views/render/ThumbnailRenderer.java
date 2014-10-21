@@ -8,7 +8,7 @@ import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.metadata.MediaPath;
 import com.xjt.newpic.metadata.loader.ThumbnailDataLoader;
 import com.xjt.newpic.selectors.SelectionManager;
-import com.xjt.newpic.view.ThumbnailView;
+import com.xjt.newpic.views.ThumbnailView;
 import com.xjt.newpic.views.opengl.ColorTexture;
 import com.xjt.newpic.views.opengl.GLESCanvas;
 import com.xjt.newpic.views.opengl.ResourceTexture;
@@ -35,7 +35,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
 
     private int mPressedIndex = -1;
     private boolean mAnimatePressedUp;
-    private SelectionManager mMediaSelector;
+    private SelectionManager mSelector;
     private boolean mInSelectionMode;
     private NpContext mFragment;
 
@@ -61,7 +61,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
         super(context.getActivityContext());
         mFragment = context;
         mThumbnailView = slotView;
-        mMediaSelector = selector;
+        mSelector = selector;
         mWaitLoadingTexture = new ColorTexture(context.getActivityContext().getResources().getColor(R.color.thumbnail_placehoder));
         mWaitLoadingTexture.setSize(1, 1);
         mFramePreSelected = new ResourceTexture(context.getActivityContext(), R.drawable.common_check_off);
@@ -95,7 +95,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
 
     @Override
     public void prepareDrawing() {
-        mInSelectionMode = mMediaSelector.inSelectionMode();
+        mInSelectionMode = mSelector.inSelectionMode();
     }
 
     @Override
@@ -149,7 +149,7 @@ public class ThumbnailRenderer extends AbstractThumbnailRender {
         } else if ((entry.path != null) && (mHighlightItemPath == entry.path)) {
             drawSelectedFrame(canvas, width, height);
         } else if (mInSelectionMode) {
-            if (mMediaSelector.isItemSelected(entry.path)) {
+            if (mSelector.isItemSelected(entry.path)) {
                 drawSelectedFrame(canvas, width, height);
             } else {
                 drawPreSelectedFrame(canvas, width, height);

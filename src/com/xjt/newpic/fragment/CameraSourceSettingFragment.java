@@ -56,10 +56,10 @@ import com.xjt.newpic.metadata.source.LocalSimpleAlbumSet;
 import com.xjt.newpic.preference.GlobalPreference;
 import com.xjt.newpic.stat.StatConstants;
 import com.xjt.newpic.utils.StorageUtils;
-import com.xjt.newpic.view.NpEmptyView;
-import com.xjt.newpic.view.NpLoadingView;
-import com.xjt.newpic.view.NpTopBar;
-import com.xjt.newpic.view.NpTopBar.OnActionModeListener;
+import com.xjt.newpic.views.NpEmptyView;
+import com.xjt.newpic.views.NpLoadingView;
+import com.xjt.newpic.views.NpTopBar;
+import com.xjt.newpic.views.NpTopBar.OnActionModeListener;
 
 /**
  * @Author Jituo.Xuan

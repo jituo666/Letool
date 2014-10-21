@@ -13,7 +13,10 @@
         android:layout_height="42dp"
         android:gravity="center_vertical"
         android:paddingLeft="8dp"
-        android:textColor="@color/np_major_text_color"
+        android:paddingRight="8dp"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:textColor="@color/np_minor_text_color"
         android:textSize="18sp" />
 
     <View
@@ -39,6 +42,7 @@
         style="@style/MyWidget.ListView"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:divider="@drawable/np_slid_menu_divider_bg"
         android:visibility="gone" />
 
     <GridView

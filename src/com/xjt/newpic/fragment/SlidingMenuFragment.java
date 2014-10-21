@@ -29,11 +29,12 @@ import com.xjt.newpic.activities.AboutActivity;
 import com.xjt.newpic.activities.NpMediaActivity;
 import com.xjt.newpic.activities.NpSettingsActivity;
 import com.xjt.newpic.common.LLog;
+import com.xjt.newpic.fb.ConversationActivity;
 import com.xjt.newpic.metadata.DataManager;
 import com.xjt.newpic.metadata.MediaSetUtils;
 import com.xjt.newpic.preference.GlobalPreference;
 import com.xjt.newpic.stat.StatConstants;
-import com.xjt.newpic.view.NpSlidingMenu;
+import com.xjt.newpic.views.NpSlidingMenu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -139,8 +140,9 @@ public class SlidingMenuFragment extends Fragment {
 
                     MobclickAgent.onEvent(getActivity(), StatConstants.EVENT_KEY_EDIT_FEEDBACK);
                     mLetoolContext.getSlidingMenu().toggle();
-                    FeedbackAgent agent = new FeedbackAgent(getActivity());
-                    agent.startFeedbackActivity();
+                    Intent it = new Intent();
+                    it.setClass(getActivity(), ConversationActivity.class);
+                    startActivity(it);
                     getActivity().overridePendingTransition(R.anim.slide_right_in, R.anim.slide_left_out);
                 } else if (position == SLIDING_MENU_EXIT) {
                     MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SLIDE_MENU_EXIT);

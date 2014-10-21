@@ -3,8 +3,8 @@ package com.xjt.newpic.views.opengl;
 
 import java.util.ArrayDeque;
 
-import com.xjt.newpic.view.GLController;
-import com.xjt.newpic.view.GLController.OnGLIdleListener;
+import com.xjt.newpic.views.GLController;
+import com.xjt.newpic.views.GLController.OnGLIdleListener;
 
 public class TextureUploader implements OnGLIdleListener {
     private static final int INIT_CAPACITY = 64;

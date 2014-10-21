@@ -1,4 +1,4 @@
-package com.xjt.newpic.view;
+package com.xjt.newpic.views;
 
 
 import android.support.v4.app.FragmentActivity;
@@ -9,7 +9,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AnimationUtils;
 
 import com.xjt.newpic.R;
-import com.xjt.newpic.view.NpTopBar.OnActionModeListener;
+import com.xjt.newpic.views.NpTopBar.OnActionModeListener;
 
 /**
  * @Author Jituo.Xuan

@@ -23,8 +23,9 @@ import com.xjt.newpic.utils.StringUtils;
 import com.xjt.newpic.utils.Utils;
 import com.xjt.newpic.views.opengl.BitmapTexture;
 import com.xjt.newpic.views.opengl.TiledTexture;
+import com.xjt.newpic.views.render.ThumbnailSetRenderer.ThumbnailLabelParam;
 import com.xjt.newpic.views.render.ThumbnailVideoRenderer;
-import com.xjt.newpic.views.utils.VideoLabelMaker;
+import com.xjt.newpic.views.utils.AlbumLabelMaker;
 
 public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChangedListener {
 
@@ -52,7 +53,7 @@ public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChanged
     private final VideoEntry mData[];
     private final SynchronizedHandler mHandler;
     private final ThreadPool mThreadPool;
-    private final VideoLabelMaker mLabelMaker;
+    private final AlbumLabelMaker mLabelMaker;
     private final String mLoadingText;
     //
     private int mActiveRequestCount = 0;
@@ -77,14 +78,14 @@ public class ThumbnailVideoDataWindow implements ThumbnailDataLoader.DataChanged
         private BitmapLoader coverLoader;
     }
 
-    public ThumbnailVideoDataWindow(NpContext context, ThumbnailDataLoader source, ThumbnailVideoRenderer.LabelSpec labelSpec, int cacheSize) {
+    public ThumbnailVideoDataWindow(NpContext context, ThumbnailDataLoader source, ThumbnailLabelParam labelSpec, int cacheSize) {
         source.setDataChangedListener(this);
         mSource = source;
         mData = new VideoEntry[cacheSize];
         mSize = source.size();
         mThreadPool = context.getThreadPool();
         mContext = context.getActivityContext();
-        mLabelMaker = new VideoLabelMaker(context.getActivityContext(), labelSpec);
+        mLabelMaker = new AlbumLabelMaker(context.getActivityContext(), labelSpec);
         mLoadingText = context.getActivityContext().getString(R.string.loading);
 
         mHandler = new SynchronizedHandler(context.getGLController()) {

@@ -3,6 +3,23 @@ package com.xjt.newpic.fragment;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Rect;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.provider.MediaStore;
+import android.support.v4.app.Fragment;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
+
 import com.umeng.analytics.MobclickAgent;
 import com.xjt.newpic.NpApp;
 import com.xjt.newpic.NpContext;
@@ -26,37 +43,25 @@ import com.xjt.newpic.stat.StatConstants;
 import com.xjt.newpic.utils.LetoolUtils;
 import com.xjt.newpic.utils.RelativePosition;
 import com.xjt.newpic.utils.StorageUtils;
-import com.xjt.newpic.view.BatchDeleteMediaListener;
-import com.xjt.newpic.view.DetailsHelper;
-import com.xjt.newpic.view.GLView;
-import com.xjt.newpic.view.GLController;
-import com.xjt.newpic.view.NpDialog;
-import com.xjt.newpic.view.NpTopBar;
-import com.xjt.newpic.view.ThumbnailView;
-import com.xjt.newpic.view.BatchDeleteMediaListener.DeleteMediaProgressListener;
-import com.xjt.newpic.view.DetailsHelper.CloseListener;
-import com.xjt.newpic.view.NpTopBar.OnActionModeListener;
-import com.xjt.newpic.views.layout.ThumbnailLayout;
-import com.xjt.newpic.views.layout.ThumbnailSetContractLayout;
+import com.xjt.newpic.views.BatchDeleteMediaListener;
+import com.xjt.newpic.views.BatchDeleteMediaListener.DeleteMediaProgressListener;
+import com.xjt.newpic.views.DetailsHelper;
+import com.xjt.newpic.views.DetailsHelper.CloseListener;
+import com.xjt.newpic.views.GLController;
+import com.xjt.newpic.views.GLView;
+import com.xjt.newpic.views.NpDialog;
+import com.xjt.newpic.views.NpTopBar;
+import com.xjt.newpic.views.NpTopBar.OnActionModeListener;
+import com.xjt.newpic.views.ThumbnailView;
+import com.xjt.newpic.views.layout.ThumbnailLayoutBase;
+import com.xjt.newpic.views.layout.ThumbnailLayoutParam;
+import com.xjt.newpic.views.layout.ThumbnailSetLayout;
 import com.xjt.newpic.views.opengl.FadeTexture;
 import com.xjt.newpic.views.opengl.GLESCanvas;
+import com.xjt.newpic.views.render.ThumbnailSetGridRenderer;
+import com.xjt.newpic.views.render.ThumbnailSetListRenderer;
 import com.xjt.newpic.views.render.ThumbnailSetRenderer;
 import com.xjt.newpic.views.utils.ViewConfigs;
-
-import android.app.Activity;
-import android.graphics.Rect;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.support.v4.app.Fragment;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * @Author Jituo.Xuan
@@ -71,6 +76,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     private static final int MSG_PICK_ALBUM = 1;
 
     private static final int BIT_LOADING_RELOAD = 1;
+    public static final String GALLERY_AINMATION_FROM_CENTER = "g_anim_center";
 
     private ViewGroup mNativeButtons;
     private NpContext mLetoolContext;
@@ -105,14 +111,15 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
             mEyePosition.resetPosition();
             int paddingLeft = 0, paddingRight = 0, paddingTop = 0, paddingBottom = 0;
-            if (mLetoolContext.isImageBrwosing()) {
-                ViewConfigs.AlbumSetPage config = ViewConfigs.AlbumSetPage.get(mLetoolContext.getActivityContext());
+            if (mLetoolContext.isImagePicking() || (mLetoolContext.isImageBrwosing() ? GlobalPreference.isPictureGalleryListMode(getActivity())
+                    : GlobalPreference.isVideoGalleryListMode(getActivity()))) {
+                ViewConfigs.AlbumSetListPage config = ViewConfigs.AlbumSetListPage.get(mLetoolContext.getActivityContext());
                 paddingLeft = config.paddingLeft;
                 paddingRight = config.paddingRight;
                 paddingTop = config.paddingTop;
                 paddingBottom = config.paddingBottom;
             } else {
-                ViewConfigs.VideoSetPage config = ViewConfigs.VideoSetPage.get(mLetoolContext.getActivityContext());
+                ViewConfigs.AlbumSetGridPage config = ViewConfigs.AlbumSetGridPage.get(mLetoolContext.getActivityContext());
                 paddingLeft = config.paddingLeft;
                 paddingRight = config.paddingRight;
                 paddingTop = config.paddingTop;
@@ -245,29 +252,33 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         initializeViews();
         initializeData();
         mEyePosition = new EyePosition(mLetoolContext.getActivityContext(), this);
-        if (mLetoolContext.isImageBrwosing())
-            mThumbnailView.startScatteringAnimation(mOpenCenter);
-        else {
-            mThumbnailView.startRisingAnimation();
-        }
+        mThumbnailView.startScatteringAnimation(mOpenCenter, false, true, false);
     }
 
     private void initializeViews() {
         mSelector = new SelectionManager(mLetoolContext, true);
         mSelector.setSelectionListener(this);
-        ThumbnailLayout layout = null;
-        if (mLetoolContext.isImageBrwosing()) {
-            ViewConfigs.AlbumSetPage config = ViewConfigs.AlbumSetPage.get(mLetoolContext.getActivityContext());
-            layout = new ThumbnailSetContractLayout(config.albumSetSpec);
+        boolean isListView = mLetoolContext.isImagePicking();
+        ThumbnailLayoutBase layout = null;
+        ThumbnailLayoutParam layoutParam = null;
+        if (isListView || (mLetoolContext.isImageBrwosing() ? GlobalPreference.isPictureGalleryListMode(getActivity())
+                : GlobalPreference.isVideoGalleryListMode(getActivity()))) {
+            layoutParam = ViewConfigs.AlbumSetListPage.get(mLetoolContext.getActivityContext()).albumSetListSpec;
+            layout = new ThumbnailSetLayout(layoutParam, true);
         } else {
-            ViewConfigs.VideoSetPage config = ViewConfigs.VideoSetPage.get(mLetoolContext.getActivityContext());
-            layout = new ThumbnailSetContractLayout(config.videoSetSpec);
+            layoutParam = ViewConfigs.AlbumSetGridPage.get(mLetoolContext.getActivityContext()).albumSetGridSpec;
+            layout = new ThumbnailSetLayout(layoutParam, false);
         }
         mThumbnailView = new ThumbnailView(mLetoolContext, layout);
         mThumbnailView.setBackgroundColor(
-                LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.gl_background_color))
+                LetoolUtils.intColorToFloatARGBArray(getResources().getColor(R.color.cp_main_background_color))
                 );
-        mThumbnailViewRenderer = new ThumbnailSetRenderer(mLetoolContext, mThumbnailView, mSelector);
+        if (isListView || (mLetoolContext.isImageBrwosing() ? GlobalPreference.isPictureGalleryListMode(getActivity())
+                : GlobalPreference.isVideoGalleryListMode(getActivity()))) {
+            mThumbnailViewRenderer = new ThumbnailSetListRenderer(mLetoolContext, mThumbnailView, mSelector);
+        } else {
+            mThumbnailViewRenderer = new ThumbnailSetGridRenderer(mLetoolContext, mThumbnailView, mSelector);
+        }
         layout.setRenderer(mThumbnailViewRenderer);
         mThumbnailView.setThumbnailRenderer(mThumbnailViewRenderer);
         mRootPane.addComponent(mThumbnailView);
@@ -309,19 +320,32 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         NpTopBar topBar = mLetoolContext.getLetoolTopBar();
         topBar.setOnActionMode(NpTopBar.ACTION_BAR_MODE_BROWSE, this);
         topBar.setTitleIcon(R.drawable.ic_drawer);
-        topBar.setTitleText("");
+        topBar.setTitleText(mLetoolContext.isImageBrwosing() ? R.string.common_gallery : R.string.common_movies);
         mNativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);
-        mNativeButtons.setVisibility(View.VISIBLE);
-
-        TextView naviToPhoto = (TextView) mNativeButtons.findViewById(R.id.navi_to_photo);
-        naviToPhoto.setText(mLetoolContext.isImageBrwosing() ? R.string.common_photo : R.string.common_video);
-        naviToPhoto.setEnabled(true);
-        naviToPhoto.setOnClickListener(this);
-
-        TextView naviToGallery = (TextView) mNativeButtons.findViewById(R.id.navi_to_gallery);
-        naviToGallery.setText(mLetoolContext.isImageBrwosing() ? R.string.common_gallery : R.string.common_movies);
-        naviToGallery.setEnabled(false);
-
+        if (mLetoolContext.isImagePicking()) {
+            mNativeButtons.setVisibility(View.INVISIBLE);
+        } else {
+            mNativeButtons.setVisibility(View.VISIBLE);
+            ImageView changeStyle = (ImageView) mNativeButtons.findViewById(R.id.action_action1);
+            if (mLetoolContext.isImageBrwosing()) {
+                if (GlobalPreference.isPictureGalleryListMode(getActivity())) {
+                    changeStyle.setImageResource(R.drawable.ic_gallery_show_grid);
+                } else {
+                    changeStyle.setImageResource(R.drawable.ic_gallery_show_list);
+                }
+            } else {
+                if (GlobalPreference.isVideoGalleryListMode(getActivity())) {
+                    changeStyle.setImageResource(R.drawable.ic_gallery_show_grid);
+                } else {
+                    changeStyle.setImageResource(R.drawable.ic_gallery_show_list);
+                }
+            }
+            changeStyle.setVisibility(View.VISIBLE);
+            changeStyle.setOnClickListener(this);
+        }
+        //
+        ImageView naviToGallery = (ImageView) mNativeButtons.findViewById(R.id.action_action2);
+        naviToGallery.setOnClickListener(this);
     }
 
     private void initSelectionActionBar() {
@@ -330,16 +354,6 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         actionBar.setContractSelectionManager(mSelector);
         String format = getResources().getQuantityString(R.plurals.number_of_items, 0);
         actionBar.setTitleText(String.format(format, 0));
-    }
-
-    private void getThumbnailCenter(int thumbnailIndex, int center[]) {
-        Rect offset = new Rect();
-        mRootPane.getBoundsOf(mThumbnailView, offset);
-        Rect r = mThumbnailView.getThumbnailRect(thumbnailIndex);
-        int scrollX = mThumbnailView.getScrollX();
-        int scrollY = mThumbnailView.getScrollY();
-        center[0] = offset.left + (r.left + r.right) / 2 - scrollX;
-        center[1] = offset.top + (r.top + r.bottom) / 2 - scrollY;
     }
 
     @Override
@@ -430,7 +444,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         }
         if (GlobalPreference.rememberLastUI(getActivity())) {
             GlobalPreference.setLastUI(getActivity(), mLetoolContext.isImageBrwosing() ?
-                    GlobalConstants.UI_TYPE_IMAGE_SETS :GlobalConstants.UI_TYPE_VIDEO_SETS);
+                    GlobalConstants.UI_TYPE_IMAGE_SETS : GlobalConstants.UI_TYPE_VIDEO_SETS);
         }
         LLog.i(TAG, "onDestroy");
     }
@@ -490,52 +504,60 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.action_navi) {
-            MobclickAgent.onEvent(mLetoolContext.getActivityContext(),StatConstants.EVENT_KEY_SLIDE_MENU);
+            MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_SLIDE_MENU);
             mLetoolContext.getSlidingMenu().toggle();
         } else {
             if (!mIsSDCardMountedCorreclty)
                 return;
-            if (v.getId() == R.id.operation_delete) {
-                int count = mSelector.getSelectedCount();
-                if (count <= 0) {
-                    Toast t = Toast.makeText(getActivity(), R.string.common_selection_tip, Toast.LENGTH_SHORT);
-                    t.setGravity(Gravity.CENTER, 0, 0);
-                    t.show();
-                    return;
-                }
-                BatchDeleteMediaListener cdl = new BatchDeleteMediaListener(getActivity(), mLetoolContext.getDataManager(),
-                        new DeleteMediaProgressListener() {
-
-                            @Override
-                            public void onConfirmDialogDismissed(boolean confirmed) {
-                                if (confirmed)
-                                    mSelector.leaveSelectionMode();
-                            }
-
-                            @Override
-                            public ArrayList<MediaPath> onGetDeleteItem() {
-                                return mSelector.getSelected(false);
-                            }
-
-                        });
-                final NpDialog dlg = new NpDialog(getActivity());
-                dlg.setTitle(R.string.common_recommend);
-                dlg.setOkBtn(R.string.common_ok, cdl,R.drawable.np_common_pressed_left_bg);
-                dlg.setCancelBtn(R.string.common_cancel, cdl, R.drawable.np_common_pressed_right_bg);
-                dlg.setMessage(R.string.common_delete_tip);
-                dlg.show();
-            } else if (v.getId() == R.id.selection_finished) {
+            //            if (v.getId() == R.id.action_action1) {
+            //                int count = mSelector.getSelectedCount();
+            //                if (count <= 0) {
+            //                    Toast t = Toast.makeText(getActivity(), R.string.common_selection_tip, Toast.LENGTH_SHORT);
+            //                    t.setGravity(Gravity.CENTER, 0, 0);
+            //                    t.show();
+            //                    return;
+            //                }
+            //                BatchDeleteMediaListener cdl = new BatchDeleteMediaListener(getActivity(), mLetoolContext.getDataManager(),
+            //                        new DeleteMediaProgressListener() {
+            //
+            //                            @Override
+            //                            public void onConfirmDialogDismissed(boolean confirmed) {
+            //                                if (confirmed)
+            //                                    mSelector.leaveSelectionMode();
+            //                            }
+            //
+            //                            @Override
+            //                            public ArrayList<MediaPath> onGetDeleteItem() {
+            //                                return mSelector.getSelected(false);
+            //                            }
+            //
+            //                        });
+            //                final NpDialog dlg = new NpDialog(getActivity());
+            //                dlg.setTitle(R.string.common_recommend);
+            //                dlg.setOkBtn(R.string.common_ok, cdl, R.drawable.np_common_pressed_left_bg);
+            //                dlg.setCancelBtn(R.string.common_cancel, cdl, R.drawable.np_common_pressed_right_bg);
+            //                dlg.setMessage(R.string.common_delete_tip);
+            //                dlg.show();
+            //            } else 
+            if (v.getId() == R.id.action_action3) {
                 mSelector.leaveSelectionMode();
-            } else if (v.getId() == R.id.navi_to_photo) {
-                MobclickAgent.onEvent(mLetoolContext.getActivityContext(),mLetoolContext.isImageBrwosing() ?StatConstants.EVENT_KEY_CLICK_PHOTO:
-                    StatConstants.EVENT_KEY_CLICK_VIDEO);
-                Fragment f = mLetoolContext.isImageBrwosing() ? new PhotoFragment() : new VideoFragment();
+            } else if (v.getId() == R.id.action_action1) {
+                if (mLetoolContext.isImageBrwosing())
+                    GlobalPreference.setPictureGalleryListMode(getActivity(), !GlobalPreference.isPictureGalleryListMode(getActivity()));
+                else
+                    GlobalPreference.setVideoGalleryListMode(getActivity(), !GlobalPreference.isVideoGalleryListMode(getActivity()));
+                GalleryFragment f = new GalleryFragment();
                 Bundle data = new Bundle();
-                data.putString(NpMediaActivity.KEY_MEDIA_PATH, mLetoolContext.getDataManager()
-                        .getTopSetPath(mLetoolContext.isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
-                data.putBoolean(NpMediaActivity.KEY_IS_CAMERA_SOURCE, true);
+                data.putBoolean(GALLERY_AINMATION_FROM_CENTER, false);
                 f.setArguments(data);
                 mLetoolContext.pushContentFragment(f, this, false);
+            } else if (v.getId() == R.id.action_action2) {
+                Intent it = new Intent();
+                if (mLetoolContext.isImageBrwosing())
+                    it.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+                else
+                    it.setAction(MediaStore.ACTION_VIDEO_CAPTURE);
+                getActivity().startActivity(it);
             }
         }
     }

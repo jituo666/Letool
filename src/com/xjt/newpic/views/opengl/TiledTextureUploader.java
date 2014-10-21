@@ -5,8 +5,8 @@ import java.util.ArrayDeque;
 import android.os.SystemClock;
 
 import com.xjt.newpic.common.LLog;
-import com.xjt.newpic.view.GLController;
-import com.xjt.newpic.view.GLController.OnGLIdleListener;
+import com.xjt.newpic.views.GLController;
+import com.xjt.newpic.views.GLController.OnGLIdleListener;
 
 public class TiledTextureUploader implements OnGLIdleListener {
 

@@ -31,7 +31,7 @@ import com.xjt.newpic.metadata.MediaPath;
 import com.xjt.newpic.metadata.MediaSet;
 import com.xjt.newpic.metadata.loader.DataLoadingListener;
 import com.xjt.newpic.utils.Utils;
-import com.xjt.newpic.view.FullImageView;
+import com.xjt.newpic.views.FullImageView;
 import com.xjt.newpic.views.opengl.ScreenNail;
 import com.xjt.newpic.views.opengl.TiledScreenNail;
 import com.xjt.newpic.views.opengl.TiledTexture;

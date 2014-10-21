@@ -1,6 +1,6 @@
 package com.xjt.newpic.animations;
 
-import com.xjt.newpic.view.GLView;
+import com.xjt.newpic.views.GLView;
 import com.xjt.newpic.views.opengl.GLESCanvas;
 import com.xjt.newpic.views.opengl.RawTexture;
 

@@ -13,8 +13,8 @@ import android.os.SystemClock;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
-import com.xjt.newpic.view.GLController;
-import com.xjt.newpic.view.GLController.OnGLIdleListener;
+import com.xjt.newpic.views.GLController;
+import com.xjt.newpic.views.GLController.OnGLIdleListener;
 
 // This class is similar to BitmapTexture, except the bitmap is
 // split into tiles. By doing so, we may increase the time required to

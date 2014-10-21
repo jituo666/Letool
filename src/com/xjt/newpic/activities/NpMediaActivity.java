@@ -27,21 +27,19 @@ import com.xjt.newpic.common.LLog;
 import com.xjt.newpic.common.OrientationManager;
 import com.xjt.newpic.common.ThreadPool;
 import com.xjt.newpic.fragment.GalleryFragment;
-import com.xjt.newpic.fragment.PhotoFragment;
 import com.xjt.newpic.fragment.SlidingMenuFragment;
-import com.xjt.newpic.fragment.VideoFragment;
 import com.xjt.newpic.imagedata.utils.LetoolBitmapPool;
 import com.xjt.newpic.metadata.DataManager;
 import com.xjt.newpic.metadata.MediaItem;
 import com.xjt.newpic.metadata.MediaSetUtils;
 import com.xjt.newpic.preference.GlobalPreference;
 import com.xjt.newpic.stat.StatConstants;
-import com.xjt.newpic.view.GLController;
-import com.xjt.newpic.view.GLRootView;
-import com.xjt.newpic.view.NpBottomBar;
-import com.xjt.newpic.view.NpEmptyView;
-import com.xjt.newpic.view.NpSlidingMenu;
-import com.xjt.newpic.view.NpTopBar;
+import com.xjt.newpic.views.GLController;
+import com.xjt.newpic.views.GLRootView;
+import com.xjt.newpic.views.NpBottomBar;
+import com.xjt.newpic.views.NpEmptyView;
+import com.xjt.newpic.views.NpSlidingMenu;
+import com.xjt.newpic.views.NpTopBar;
 
 /**
  * @Author Jituo.Xuan
@@ -58,6 +56,7 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
     public static final String KEY_ALBUM_ID = "album_id";
     public static final String KEY_IS_CAMERA_SOURCE = "is_camera_source";
     public static final String KEY_IS_IMAGE = "is_image";
+    public static final String KEY_PICKING = "picking_pic";
 
     public static final int REQUEST_CODE_SETTINGS = 100;
     public static final int REQUEST_CODE_EDITING = 101;
@@ -73,12 +72,14 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
     private boolean mWaitingForExit = false;
     public boolean mIsImage = true;
     public boolean mAlbumIsDirty = false;
+    public boolean mImagePicking = false; // 是否是选择模式
 
     @Override
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.local_media_main_view);
+        mImagePicking = this.getIntent().getBooleanExtra(KEY_PICKING, false);
         mTopBar = new NpTopBar(this, (ViewGroup) findViewById(R.id.letool_top_bar_container));
         mBottomBar = new NpBottomBar(this, (ViewGroup) findViewById(R.id.letool_bottom_bar_container));
         mSlidingMenu = new NpSlidingMenu(this, getSupportFragmentManager(), findViewById(R.id.letool_top_bar_container));
@@ -109,56 +110,58 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
                 GlobalPreference.getLastUI(getActivityContext()).length() > 0) {
             String lastUI = GlobalPreference.getLastUI(getActivityContext());
             LLog.i(TAG, "----------remember last ui:" + lastUI);
-            if (lastUI.equals(GlobalConstants.UI_TYPE_VIDEO_ITEMS)) {
-                LLog.i(TAG, "----------remember last ui 1:" + lastUI);
-                mIsImage = false;
-                fragment = new VideoFragment();
-                Bundle data = new Bundle();
-                data.putString(NpMediaActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
-                data.putBoolean(NpMediaActivity.KEY_IS_CAMERA_SOURCE, true);
-                fragment.setArguments(data);
-            } else if (lastUI.equals(GlobalConstants.UI_TYPE_VIDEO_SETS)) {
+            //            if (lastUI.equals(GlobalConstants.UI_TYPE_VIDEO_ITEMS)) {
+            //                LLog.i(TAG, "----------remember last ui 1:" + lastUI);
+            //                mIsImage = false;
+            //                fragment = new VideoFragment();
+            //                Bundle data = new Bundle();
+            //                data.putString(NpMediaActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
+            //                data.putBoolean(NpMediaActivity.KEY_IS_CAMERA_SOURCE, true);
+            //                fragment.setArguments(data);
+            //            } else 
+            if (lastUI.equals(GlobalConstants.UI_TYPE_VIDEO_SETS)) {
                 LLog.i(TAG, "----------remember last ui 2:" + lastUI);
                 mIsImage = false;
                 fragment = new GalleryFragment();
                 Bundle data = new Bundle();
                 data.putString(NpMediaActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
                 fragment.setArguments(data);
-            } else if (lastUI.equals(GlobalConstants.UI_TYPE_IMAGE_SETS)) {
+            } else {
                 LLog.i(TAG, "----------remember last ui 3:" + lastUI);
                 mIsImage = true;
                 fragment = new GalleryFragment();
                 Bundle data = new Bundle();
                 data.putString(NpMediaActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY));
                 fragment.setArguments(data);
-            } else {
-                LLog.i(TAG, "----------remember last ui 4:" + lastUI);
-                mIsImage = true;
-                fragment = new PhotoFragment();
-                Bundle data = new Bundle();
-                data.putString(NpMediaActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
-                data.putBoolean(NpMediaActivity.KEY_IS_CAMERA_SOURCE, true);
-                fragment.setArguments(data);
             }
+            //            else {
+            //                LLog.i(TAG, "----------remember last ui 4:" + lastUI);
+            //                mIsImage = true;
+            //                fragment = new PhotoFragment();
+            //                Bundle data = new Bundle();
+            //                data.putString(NpMediaActivity.KEY_MEDIA_PATH, getDataManager().getTopSetPath(DataManager.INCLUDE_LOCAL_IMAGE_ONLY));
+            //                data.putBoolean(NpMediaActivity.KEY_IS_CAMERA_SOURCE, true);
+            //                fragment.setArguments(data);
+            //            }
         } else {
 
             LLog.i(TAG, "----------remember last ui: 100");
             mIsImage = getIntent().getBooleanExtra(KEY_IS_IMAGE, true);
-            if (MediaSetUtils.getBucketsIds().length <= 0) {
-                fragment = new GalleryFragment();
-                Bundle data = new Bundle();
-                data.putString(NpMediaActivity.KEY_MEDIA_PATH, getDataManager()
-                        .getTopSetPath(isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
-                fragment.setArguments(data);
-            } else {
-                fragment = mIsImage ? new PhotoFragment() : new VideoFragment();
-                Bundle data = new Bundle();
-                data.putString(NpMediaActivity.KEY_MEDIA_PATH, getDataManager()
-                        .getTopSetPath(isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
-                data.putBoolean(NpMediaActivity.KEY_IS_CAMERA_SOURCE, true);
-                fragment.setArguments(data);
-
-            }
+            //            if (MediaSetUtils.getBucketsIds().length <= 0) {
+            fragment = new GalleryFragment();
+            Bundle data = new Bundle();
+            data.putString(NpMediaActivity.KEY_MEDIA_PATH, getDataManager()
+                    .getTopSetPath(isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_SET_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_SET_ONLY));
+            fragment.setArguments(data);
+            //            } else {
+            //                fragment = mIsImage ? new PhotoFragment() : new VideoFragment();
+            //                Bundle data = new Bundle();
+            //                data.putString(NpMediaActivity.KEY_MEDIA_PATH, getDataManager()
+            //                        .getTopSetPath(isImageBrwosing() ? DataManager.INCLUDE_LOCAL_IMAGE_ONLY : DataManager.INCLUDE_LOCAL_VIDEO_ONLY));
+            //                data.putBoolean(NpMediaActivity.KEY_IS_CAMERA_SOURCE, true);
+            //                fragment.setArguments(data);
+            //
+            //            }
             LLog.i(TAG, "----------remember last ui: 5");
         }
 
@@ -349,10 +352,6 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
         return mIsImage;
     }
 
-    @Override
-    public View getGuidTipView() {
-        return findViewById(R.id.function_guide_tip);
-    }
 
     @Override
     public boolean isAlbumDirty() {
@@ -362,6 +361,11 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
     @Override
     public void setAlbumDirty(boolean dirty) {
         mAlbumIsDirty = dirty;
+    }
+
+    @Override
+    public boolean isImagePicking() {
+        return mImagePicking;
     }
 
 }

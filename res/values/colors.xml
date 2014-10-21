@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="gl_background_color">#FF43494E</color>
-    <color name="thumbnail_placehoder">#FF4C5357</color>
-    <color name="full_image_placeholder">#FF4C5357</color>
+    <color name="gl_background_color">#FFF4F4F4</color>
+    <color name="thumbnail_placehoder">#FFEEEEEE</color>
+    <color name="full_image_placeholder">#FFEEEEEE</color>
 
     <!-- configuration for album set page -->
-    <color name="albumset_label_background">#EE414143</color>
+    <color name="albumset_label_background">#00000000</color>
     <color name="albumset_label_title">#FBFBFB</color>
     <color name="albumset_label_count">#A9ABAD</color>
-    <color name="video_label_background">#EE414143</color>
+    <color name="video_label_background">#00000000</color>
     <color name="video_label_title">#FBFBFB</color>
     <color name="video_label_count">#A9ABAD</color>
 
@@ -21,19 +21,29 @@
     <color name="common_white">#ffffff</color>
     <color name="common_grey">#8496a0</color>
     <color name="common_dark">#3d5562</color>
-    <color name="np_main_bg">#FF434A4E</color>
+    <color name="np_main_bg">#FFF4F4F4</color>
     <color name="np_menu_bg">#FF3B4145</color>
     <color name="np_main_text_color_normal">#FFDBDBDB</color>
     <color name="np_main_text_color_selected">#FFFFC401</color>
     <color name="np_common_bar_bg">#FF273036</color>
-    <color name="np_major_text_color">#FFc7c7c7</color>
-    <color name="np_minor_text_color">#FF9F9F9F</color>
+    <color name="np_major_text_color">#FF383030</color>
+    <color name="np_minor_text_color">#FF8C8C8C</color>
     <color name="np_minor_button_color">#FFb9b9b9</color>
     <color name="np_dialog_bg_color">#FF3B4145</color>
     <drawable name="np_pressed_drawable">#337492A0</drawable>
-    <drawable name="np_list_divider_bg">#FF3C4447</drawable>
+    <drawable name="np_list_divider_bg">#FFE7D1D7</drawable>
     <drawable name="np_panel_divider_bg">#FF171F26</drawable>
     <drawable name="np_slid_menu_divider_bg">#FF363B3F</drawable>
 
-
+    <drawable name="cp_navi_bar_bg_color">#FF413024</drawable>
+    <color name="cp_list_divider_color">#FFE7D1D7</color>
+    <color name="cp_edit_divider_color">#FF2F2319</color>
+    <color name="cp_gallery_list_item_border">#FF413024</color>
+    <color name="cp_navi_text_color">#FFFFFFFF</color>
+    <color name="cp_navi_text_disabled_color">#88FFFFFF</color>
+    <color name="cp_text_major_color">#FF383030</color>
+    <color name="cp_text_minor_color">#FF8C8C8C</color>
+    <color name="cp_main_background_color">#FFF4F4F4</color>
+    <color name="cp_thumbnail_placehoder">#FFEEEEEE</color>
+    <color name="cp_dialog_background">#FF413024</color>
 </resources>

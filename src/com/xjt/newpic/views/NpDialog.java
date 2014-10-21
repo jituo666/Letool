@@ -1,5 +1,5 @@
 
-package com.xjt.newpic.view;
+package com.xjt.newpic.views;
 
 import android.app.Dialog;
 import android.content.Context;

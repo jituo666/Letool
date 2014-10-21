@@ -3,6 +3,8 @@ package com.xjt.newpic.activities;
 
 import com.umeng.analytics.MobclickAgent;
 import com.xjt.newpic.R;
+import com.xjt.newpic.preference.GlobalPreference;
+import com.xjt.newpic.utils.PackageUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -55,7 +57,6 @@ public class NpGuideActivity extends FragmentActivity {
         @Override
         public Fragment getItem(int index) {
             if (index == NP_GUIDE_PAGE_RES.length - 1) {
-
                 return GuideFragmentEnter.newInstance(NP_GUIDE_PAGE_RES[index]);
             } else {
 
@@ -120,6 +121,7 @@ public class NpGuideActivity extends FragmentActivity {
                     Intent intent = new Intent();
                     intent.setClass(getActivity(), NpMainActivity.class);
                     startActivity(intent);
+                    GlobalPreference.setLastGuideCode(getActivity(), PackageUtils.getVersionCode(getActivity()));
                 }
             });
             return rootView;

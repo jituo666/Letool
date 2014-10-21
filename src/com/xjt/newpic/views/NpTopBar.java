@@ -1,5 +1,5 @@
 
-package com.xjt.newpic.view;
+package com.xjt.newpic.views;
 
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -38,7 +38,7 @@ public class NpTopBar {
 
     public static final int ACTION_MODE_LAYOUT_ID[] = {
             R.layout.local_media_browse_top_bar,
-            R.layout.local_media_selection_top_bar,
+            R.layout.local_media_browse_top_bar,
             R.layout.local_media_browse_top_bar,
             R.layout.local_media_browse_top_bar,
             R.layout.local_media_edit_top_bar
@@ -46,18 +46,16 @@ public class NpTopBar {
 
     public static final int ACTION_MODE_TITLE_VIEW_ID[] = {
             R.id.navi_text,
-            R.id.selection_counter,
+            R.id.navi_text,
             R.id.navi_text,
             R.id.navi_text
     };
 
     public static final int ACTION_BUTTON_IDS[] = {
             R.id.action_navi,
-            R.id.operation_multi_share,
-            R.id.operation_delete,
-            R.id.action_navi,
-            R.id.action_navi,
-            R.id.selection_finished,
+            R.id.action_action1,
+            R.id.action_action2,
+            R.id.action_action3,
             R.id.action_undo,
             R.id.action_redo,
             R.id.action_reset,
@@ -104,10 +102,8 @@ public class NpTopBar {
     }
 
     public void setTitleIcon(int resId) {
-        if (mCurActionBarMode != ACTION_BAR_MODE_SELECTION) {
-            ImageView natviButton = (ImageView) mActionModePanel.findViewById(R.id.action_navi_tip);
-            natviButton.setImageResource(resId);
-        }
+        ImageView natviButton = (ImageView) mActionModePanel.findViewById(R.id.action_navi_tip);
+        natviButton.setImageResource(resId);
     }
 
     public void setTitleText(CharSequence title) {

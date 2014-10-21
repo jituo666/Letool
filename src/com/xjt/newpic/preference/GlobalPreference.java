@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.preference;
 
 import android.content.Context;
@@ -21,6 +20,8 @@ public class GlobalPreference {
     private static final String PREFS_KEY_GUIDE_TIP_SHOW = "guide_tip_shown";
     private static final String PREFS_KEY_SPASH_TIME = "spash_time";
     private static final String PREFS_KEY_GUIDE_CODE = "np_guide_code";
+    private static final String PREFS_KEY_PICTURE_GALLERY_LIST_SHOW = "pic_gallery_list_shown";
+    private static final String PREFS_KEY_VIDEO_GALLERY_LIST_SHOW = "vid_gallery_list_shown";
 
     private static final String PREFS_KEY_LAST_UI = "last_ui";
 
@@ -119,5 +120,25 @@ public class GlobalPreference {
     public static boolean isGuideTipShown(Context ctx) {
         SharedPreferences prefs = initSharedPreferences(ctx);
         return prefs.getBoolean(PREFS_KEY_GUIDE_TIP_SHOW, true);
+    }
+    
+    public static void setPictureGalleryListMode(Context ctx, boolean listMode) {
+        SharedPreferences prefs = initSharedPreferences(ctx);
+        SharedPreferencesCompat.apply(prefs.edit().putBoolean(PREFS_KEY_PICTURE_GALLERY_LIST_SHOW, listMode));
+    }
+
+    public static boolean isPictureGalleryListMode(Context ctx) {
+        SharedPreferences prefs = initSharedPreferences(ctx);
+        return prefs.getBoolean(PREFS_KEY_PICTURE_GALLERY_LIST_SHOW, false);
+    }
+    
+    public static void setVideoGalleryListMode(Context ctx, boolean listMode) {
+        SharedPreferences prefs = initSharedPreferences(ctx);
+        SharedPreferencesCompat.apply(prefs.edit().putBoolean(PREFS_KEY_VIDEO_GALLERY_LIST_SHOW, listMode));
+    }
+
+    public static boolean isVideoGalleryListMode(Context ctx) {
+        SharedPreferences prefs = initSharedPreferences(ctx);
+        return prefs.getBoolean(PREFS_KEY_VIDEO_GALLERY_LIST_SHOW, false);
     }
 }

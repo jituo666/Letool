@@ -50,7 +50,7 @@
     <string name="common_movies">视频</string>
     <string name="common_gallery">图库</string>
     <string name="common_settings">设置</string>
-    <string name="common_feedback">吐槽</string>
+    <string name="common_feedback">反馈</string>
     <string name="common_exit">退出</string>
     <string name="common_reset">重置</string>
     <string name="common_save">保存</string>
@@ -67,7 +67,8 @@
     <string name="common_delete_cur_movie_tip">确定删除视频文件[&lt;font color=\"#e62e2e\"&gt;%1$s&lt;/font&gt;] ?</string>
     <string name="common_delete_waiting">"正在删除,请稍候\u2026"</string>
     <string name="common_update_checking">"正在检查更新\u2026"</string>
-    <string name="common_selection_tip">请选择所要删除的内容!</string>
+    <string name="common_selection_delete_tip">请选择所要删除的图片!</string>
+    <string name="common_selection_share_tip">请选择所要分享的图片!</string>
     <string name="common_clear_cache">清理缓存</string>
     <string name="common_clear_cache_waitting">正在清理缓存,请稍候\u2026</string>
     <string name="common_exit_tip">再按一次退出牛图？</string>
@@ -150,7 +151,7 @@
     <string name="test_channel_id">测试渠道</string>
 
     <plurals name="number_of_items">
-        <item quantity="other"> %1$d 张</item>
+        <item quantity="other">" %1$d 张"</item>
     </plurals>
 
     <string-array name="share_to_title">
@@ -163,4 +164,5 @@
         <item>"腾讯微博"</item>
     </string-array>
 
+    <string name="fb_default_first_words">您好，欢迎对本软件提出建议？</string>
 </resources>

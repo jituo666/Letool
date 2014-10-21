@@ -6,7 +6,7 @@
     android:background="@color/np_main_bg"
     android:orientation="vertical" >
 
-    <com.xjt.newpic.view.GLRootView
+    <com.xjt.newpic.views.GLRootView
         android:id="@+id/gl_root_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -17,13 +17,5 @@
         android:layout_height="match_parent"
         android:visibility="gone" >
     </FrameLayout>
-
-    <include
-        android:id="@+id/function_guide_tip"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        layout="@layout/letool_function_guide"
-        android:visibility="gone" />
 
 </FrameLayout>

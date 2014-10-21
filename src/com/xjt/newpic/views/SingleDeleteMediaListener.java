@@ -1,5 +1,5 @@
 
-package com.xjt.newpic.view;
+package com.xjt.newpic.views;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
