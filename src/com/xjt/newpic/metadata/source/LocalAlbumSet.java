@@ -132,7 +132,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
                 }
                 if (isCameraSource)
                     continue;
-                BucketEntry entry = new BucketEntry(bucketId, LocalAlbum.getLocalizedName(mApplication.getResources(), cursor.getString(INDEX_BUCKET_NAME)));
+                BucketEntry entry = new BucketEntry(bucketId, MediaSetUtils.getLocalizedName(mApplication.getResources(), cursor.getString(INDEX_BUCKET_NAME)));
                 if (!buffer.contains(entry)) {
                     buffer.add(entry);
                 }
@@ -146,14 +146,6 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
         return buffer.toArray(new BucketEntry[buffer.size()]);
     }
 
-    private static int findBucket(BucketEntry entries[], int bucketId) {
-        for (int i = 0, n = entries.length; i < n; ++i) {
-            if (entries[i].bucketId == bucketId)
-                return i;
-        }
-        return -1;
-    }
-
     private class AlbumsLoader implements ThreadPool.Job<ArrayList<MediaSet>> {
 
         @Override
@@ -163,11 +155,54 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
             if (jc.isCancelled())
                 return null;
             int offset = 0;
-            int index = findBucket(entries, MediaSetUtils.DOWNLOAD_BUCKET_ID);
+            int index = MediaSetUtils.findBucket(entries, MediaSetUtils.CAMERA_BUCKET_ID0);
             if (index != -1) {
                 circularShiftRight(entries, offset++, index);
             }
-
+            index = MediaSetUtils.findBucket(entries, MediaSetUtils.CAMERA_BUCKET_ID1);
+            if (index != -1) {
+                circularShiftRight(entries, offset++, index);
+            }
+            index = MediaSetUtils.findBucket(entries, MediaSetUtils.SNAPSHOT_BUCKET_ID);
+            if (index != -1) {
+                circularShiftRight(entries, offset++, index);
+            }
+            index = MediaSetUtils.findBucket(entries, MediaSetUtils.DOWNLOAD_BUCKET_ID);
+            if (index != -1) {
+                circularShiftRight(entries, offset++, index);
+            }
+            index = MediaSetUtils.findBucket(entries, MediaSetUtils.WEIXIN_BUCKET_ID);
+            if (index != -1) {
+                circularShiftRight(entries, offset++, index);
+            }
+            index = MediaSetUtils.findBucket(entries, MediaSetUtils.XUNLEI_BUCKET_ID);
+            if (index != -1) {
+                circularShiftRight(entries, offset++, index);
+            }
+            index = MediaSetUtils.findBucket(entries, MediaSetUtils.QQ_RECEIVE_BUCKET_ID);
+            if (index != -1) {
+                circularShiftRight(entries, offset++, index);
+            }
+            index = MediaSetUtils.findBucket(entries, MediaSetUtils.QQ_CHAT_BUCKET_ID);
+            if (index != -1) {
+                circularShiftRight(entries, offset++, index);
+            }
+            index = MediaSetUtils.findBucket(entries, MediaSetUtils.SINA_WEIBO_BUCKET_ID);
+            if (index != -1) {
+                circularShiftRight(entries, offset++, index);
+            }
+            index = MediaSetUtils.findBucket(entries, MediaSetUtils.PHOTOS_BUCKET_ID);
+            if (index != -1) {
+                circularShiftRight(entries, offset++, index);
+            }
+            index = MediaSetUtils.findBucket(entries, MediaSetUtils.QQ_IMAGE_BUCKET_ID);
+            if (index != -1) {
+                circularShiftRight(entries, offset++, index);
+            }
+            index = MediaSetUtils.findBucket(entries, MediaSetUtils.IMPORTED_BUCKET_ID);
+            if (index != -1) {
+                circularShiftRight(entries, offset++, index);
+            }
             ArrayList<MediaSet> albums = new ArrayList<MediaSet>();
             DataManager dataManager = mApplication.getDataManager();
             for (BucketEntry entry : entries) {
@@ -266,7 +301,7 @@ public class LocalAlbumSet extends MediaSet implements FutureListener<ArrayList<
         mDataNotifier.fakeChange();
     }
 
-    private static class BucketEntry {
+    public static class BucketEntry {
 
         public String bucketName;
         public int bucketId;

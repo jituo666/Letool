@@ -2,7 +2,6 @@
 package com.xjt.newpic.metadata.source;
 
 import android.content.ContentResolver;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore.Images;
@@ -11,9 +10,6 @@ import android.provider.MediaStore.Video;
 import android.provider.MediaStore.Video.VideoColumns;
 
 import com.xjt.newpic.NpApp;
-import com.xjt.newpic.R;
-import com.xjt.newpic.common.LLog;
-import com.xjt.newpic.edit.tools.SaveImage;
 import com.xjt.newpic.metadata.DataManager;
 import com.xjt.newpic.metadata.DataNotifier;
 import com.xjt.newpic.metadata.MediaItem;
@@ -154,7 +150,7 @@ public class LocalAlbum extends MediaSet {
 
     @Override
     public String getName() {
-        return getLocalizedName(mApplication.getResources(), mName);
+        return MediaSetUtils.getLocalizedName(mApplication.getResources(), mName);
     }
 
     @Override
@@ -239,16 +235,4 @@ public class LocalAlbum extends MediaSet {
         return count;
     }
 
-    public static String getLocalizedName(Resources res, String name) {
-        if (SaveImage.DEFAULT_SAVE_DIRECTORY.equalsIgnoreCase(name)) {
-            return res.getString(R.string.app_name);
-        } else if (MediaSetUtils.SCREENSHOTS.equalsIgnoreCase(name)) {
-            return res.getString(R.string.common_screenshot);
-        } else if (MediaSetUtils.DOWNLOAD.equalsIgnoreCase(name)) {
-            return res.getString(R.string.common_download);
-        } else if (MediaSetUtils.WEIXIN.equalsIgnoreCase(name)) {
-            return res.getString(R.string.common_weixin);
-        }
-        return name;
-    }
 }

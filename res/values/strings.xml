@@ -88,6 +88,14 @@
     <string name="common_screenshot">Screenshots</string>
     <string name="common_download">Download</string>
     <string name="common_weixin">WeiXin</string>
+    
+    <string name="common_camera_source">Camera</string>
+    <string name="common_sina_weibo">weibo</string>
+    <string name="common_qq_recv">QQ receives</string>
+    <string name="common_qq_favor">QQ favorite</string>
+    <string name="common_qq_images">QQ images</string>
+    <string name="common_xunlei">thunder</string>
+    <string name="common_import">imported</string>
     <string name="about_version">Version: %s</string>
     <string name="about_weixin">WeiXin:niutu666</string>
     <string name="about_qgroup">QQ Group:248706772</string>
@@ -172,5 +180,5 @@
         <item>"Tencent weibO"</item>
     </string-array>
 
-    <string name="fb_default_first_words">You givie this app some advices,thanks</string>
+    <string name="fb_default_first_words">You can give us some advices,thanks.</string>
 </resources>
