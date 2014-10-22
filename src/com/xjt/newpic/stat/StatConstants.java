@@ -33,6 +33,7 @@ public class StatConstants {
     public static final String UMENG_CHANNEL_YIDONGMM = "LETOOL0000001021";//移动MM
     public static final String UMENG_CHANNEL_WOSHOP = "LETOOL0000001022";//联通沃商店
     public static final String UMENG_CHANNEL_NOKIA = "LETOOL0000001023";// 诺基亚
+    public static final String UMENG_CHANNEL_KEKE = "LETOOL0000001024";//可可
     public static final String UMENG_CHANNEL_OTHERS = "LETOOL0000001111";//其它
     public static final String UMENG_CHANNEL_GOOGLE_PLAY = "LETOOL0000002222";//GP
 
@@ -73,18 +74,14 @@ public class StatConstants {
     public static final String EVENT_KEY_UPDATE_CHECK = "update_check"; // 更新检查
     public static final String EVENT_KEY_QQ_ADD = "qq_add"; // 加QQ
     public static final String EVENT_KEY_QQ_GROUP_ADD = "qq_g_add"; // 加QQ群
-    
+
     //
-
-
     public static final String EVENT_KEY_EDIT_ENTER = "edit_enter"; // 进入编辑
-    
     public static final String EVENT_KEY_EDIT_EFFECT = "e_effect"; // 特效
-
     public static final String EVENT_KEY_EDIT_BORDER = "e_border"; // 边框
-
     public static final String EVENT_KEY_EDIT_GEOMETRY = "e_geometry"; // 修剪
-
     public static final String EVENT_KEY_EDIT_ADVANCED = "e_advnced"; // 高级
     public static final String EVENT_KEY_EDIT_FEEDBACK = "feedback"; // 吐槽
+    public static final String EVENT_KEY_NAVI_CAMERA = "to_camera"; // 照相
+    public static final String EVENT_KEY_LIST_GRID = "show_style"; // 样式
 }

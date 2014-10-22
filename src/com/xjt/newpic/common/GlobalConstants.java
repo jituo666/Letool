@@ -3,7 +3,7 @@ package com.xjt.newpic.common;
 
 public class GlobalConstants {
 
-    public static boolean DEBUG_LOG = true;
+    public static boolean DEBUG_LOG = false;
 
     public static long APP_VERSION_CHECK_INTERVAL = 24 * 60 * 60 * 1000l;
 

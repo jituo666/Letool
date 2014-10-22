@@ -19,9 +19,9 @@ public class MediaSetUtils {
     private static final String TAG = MediaSetUtils.class.getSimpleName();
 
     public static final int[] BUCKETIDS = new int[] {
+            LetoolUtils.getBucketId(Environment.getExternalStorageDirectory().toString() + "/" + "DCIM/Camera"),
             LetoolUtils.getBucketId("/storage/sdcard1" + "/" + "DCIM/Camera"),
             LetoolUtils.getBucketId("/storage/extSdCard" + "/" + "DCIM/Camera"),
-            LetoolUtils.getBucketId(Environment.getExternalStorageDirectory().toString() + "/" + "DCIM/Camera"),
             LetoolUtils.getBucketId(Environment.getExternalStorageDirectory().toString() + "/" + "Camera"),
             LetoolUtils.getBucketId(Environment.getExternalStorageDirectory().toString() + "/" + "Photos"),
             LetoolUtils.getBucketId(Environment.getExternalStorageDirectory().toString() + "/" + "Pictures/Screenshots"),

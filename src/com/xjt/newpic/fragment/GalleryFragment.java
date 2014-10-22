@@ -510,6 +510,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
             if (v.getId() == R.id.action_action3) {
                 mSelector.leaveSelectionMode();
             } else if (v.getId() == R.id.action_action1) {
+                MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_LIST_GRID);
                 if (mLetoolContext.isImageBrwosing())
                     GlobalPreference.setPictureGalleryListMode(getActivity(), !GlobalPreference.isPictureGalleryListMode(getActivity()));
                 else
@@ -520,6 +521,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
                 f.setArguments(data);
                 mLetoolContext.pushContentFragment(f, this, false);
             } else if (v.getId() == R.id.action_action2) {
+                MobclickAgent.onEvent(mLetoolContext.getActivityContext(), StatConstants.EVENT_KEY_NAVI_CAMERA);
                 Intent it = new Intent();
                 File f = new File(Environment.getExternalStorageDirectory().toString() + "/DCIM/Camera/");
                 if (!f.exists()) {
