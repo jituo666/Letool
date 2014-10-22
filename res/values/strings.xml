@@ -85,17 +85,6 @@
     <string name="common_error_no_video">No video file found！</string>
     <string name="common_video_set">(%d Video(s))</string>
     <string name="common_error_no_dirs">No picture or video directory!</string>
-    <string name="common_screenshot">Screenshots</string>
-    <string name="common_download">Download</string>
-    <string name="common_weixin">WeiXin</string>
-    
-    <string name="common_camera_source">Camera</string>
-    <string name="common_sina_weibo">weibo</string>
-    <string name="common_qq_recv">QQ receives</string>
-    <string name="common_qq_favor">QQ favorite</string>
-    <string name="common_qq_images">QQ images</string>
-    <string name="common_xunlei">thunder</string>
-    <string name="common_import">imported</string>
     <string name="about_version">Version: %s</string>
     <string name="about_weixin">WeiXin:niutu666</string>
     <string name="about_qgroup">QQ Group:248706772</string>
@@ -179,6 +168,35 @@
         <item>"Sina weibo"</item>
         <item>"Tencent weibO"</item>
     </string-array>
+    <string-array name="album_names">
+        <item>"Camera"</item>
+        <item>"Photos"</item>
+        <item>"Screenshots"</item>
+        <item>"WeiXin"</item>
+        <item>"QQfile_recv"</item>
+        <item>"QQ_Favorite"</item>
+        <item>"QQ_Images"</item>
+        <item>"weibo"</item>
+        <item>"ThunderDownload"</item>
+        <item>"downloads"</item>
+        <item>"Imported"</item>
+        <item>"bluetooth"</item>
+    </string-array>
+    <string-array name="album_alias">
+        <item>"Camera"</item>
+        <item>"Photos"</item>
+        <item>"Screenshots"</item>
+        <item>"WeiXin"</item>
+        <item>"QQfile_recv"</item>
+        <item>"QQ_Favorite"</item>
+        <item>"QQ_Images"</item>
+        <item>"weibo"</item>
+        <item>"ThunderDownload"</item>
+        <item>"downloads"</item>
+        <item>"Imported"</item>
+        <item>"bluetooth"</item>
+    </string-array>
 
     <string name="fb_default_first_words">You can give us some advices,thanks.</string>
+
 </resources>

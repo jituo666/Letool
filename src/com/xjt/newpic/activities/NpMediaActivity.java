@@ -1,10 +1,14 @@
 
 package com.xjt.newpic.activities;
 
+import java.io.File;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -73,6 +77,7 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
     public boolean mIsImage = true;
     public boolean mAlbumIsDirty = false;
     public boolean mImagePicking = false; // 是否是选择模式
+    private Uri mCapturedUri;
 
     @Override
     protected void onCreate(Bundle b) {
@@ -276,6 +281,7 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mGLESView.lockRenderThread();
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CODE_SETTINGS) {
                 Intent it = new Intent();
@@ -287,9 +293,22 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
                 if (data != null) {
                     mAlbumIsDirty = true;
                 }
-                LLog.i(TAG, "               -------onActivityResult:" + System.currentTimeMillis() + ":" + (data.getData() == null));
+                LLog.i(TAG, "-------onActivityResult:" + System.currentTimeMillis() + ":" + (data.getData() == null));
+            } else if (requestCode == GalleryFragment.RESULT_CAPTURE_IMAGE) {
+
+                Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                scanIntent.setData(mCapturedUri);
+                sendBroadcast(scanIntent);
+                LLog.i(TAG, "  onActivityResult capture image ok:" + System.currentTimeMillis() + ":" + (data == null));
+            } else if (requestCode == GalleryFragment.RESULT_CAPTURE_VIDEO) {
+                Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                scanIntent.setData(mCapturedUri);
+                sendBroadcast(scanIntent);
+                LLog.i(TAG, "  onActivityResult capture video ok:" + System.currentTimeMillis() + ":" + (data == null));
             }
         }
+
+        mGLESView.unlockRenderThread();
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -352,7 +371,6 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
         return mIsImage;
     }
 
-
     @Override
     public boolean isAlbumDirty() {
         return mAlbumIsDirty;
@@ -366,6 +384,11 @@ public class NpMediaActivity extends FragmentActivity implements NpContext {
     @Override
     public boolean isImagePicking() {
         return mImagePicking;
+    }
+
+    @Override
+    public void setCapturedMediaUri(Uri uri) {
+        mCapturedUri = uri;
     }
 
 }

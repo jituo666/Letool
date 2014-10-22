@@ -2,6 +2,7 @@
 package com.xjt.newpic;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
@@ -48,6 +49,7 @@ public interface NpContext {
     public void pushContentFragment(Fragment newFragment, Fragment oldFragment, boolean backup);
 
     public void popContentFragment();
+    public void setCapturedMediaUri(Uri uri);
 
     public NpSlidingMenu getSlidingMenu();
     //

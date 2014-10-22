@@ -85,16 +85,6 @@
     <string name="common_error_no_movies">没有视频文件.</string>
     <string name="common_error_no_video">没有录像文件.</string>
     <string name="common_error_no_dirs">没有检测到图片和视频目录!</string>
-    <string name="common_screenshot">屏幕截图</string>
-    <string name="common_download">下载</string>
-    <string name="common_weixin">微信</string>
-    <string name="common_camera_source">相机拍摄</string>
-    <string name="common_sina_weibo">新浪微博</string>
-    <string name="common_qq_recv">QQ接收文件</string>
-    <string name="common_qq_favor">QQ保存文件</string>
-    <string name="common_qq_images">QQ图片</string>
-    <string name="common_xunlei">迅雷下载</string>
-    <string name="common_import">导入文件</string>
     <string name="friendly_tips">温馨提示</string>
     <string name="about_version">版本: %s</string>
     <string name="about_weixin">微信: niutu666</string>
@@ -169,6 +159,23 @@
         <item>"QQ空间"</item>
         <item>"新浪微博"</item>
         <item>"腾讯微博"</item>
+    </string-array>
+    
+    
+        
+    <string-array name="album_alias">
+        <item>相机拍摄</item>
+        <item>"照片"</item>
+        <item>"屏幕截图"</item>
+        <item>微信</item>
+        <item>"QQ接收文件"</item>
+        <item>"QQ保存文件"</item>
+        <item>"QQ图片"</item>
+        <item>"新浪微博"</item>
+        <item>"迅雷下载"</item>
+        <item>下载</item>
+        <item>"导入文件"</item>
+        <item>"蓝牙传输"</item>
     </string-array>
 
     <string name="fb_default_first_words">您好，欢迎对【牛图】提出建议!</string>

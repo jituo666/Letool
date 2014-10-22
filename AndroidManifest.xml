@@ -23,10 +23,12 @@
         android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:largeHeap="true" >
+        android:largeHeap="true"
+        android:screenOrientation="portrait" >
         <activity
             android:name="com.xjt.newpic.activities.NpStartActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
             android:theme="@style/MainTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,26 +39,31 @@
         <activity
             android:name="com.xjt.newpic.activities.NpMainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
             android:theme="@style/MainTheme" >
         </activity>
         <activity
             android:name="com.xjt.newpic.activities.NpMediaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
             android:theme="@style/MainTheme" >
         </activity>
         <activity
             android:name="com.xjt.newpic.activities.NpSettingsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
             android:theme="@style/MainTheme" >
         </activity>
         <activity
             android:name="com.xjt.newpic.activities.AboutActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
             android:theme="@style/MainTheme" >
         </activity>
         <activity
             android:name="com.xjt.newpic.activities.NpGuideActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
             android:theme="@style/MainTheme" >
         </activity>
         <activity
@@ -132,9 +139,11 @@
         </activity>
         <activity
             android:name="com.xjt.newpic.fb.ConversationActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/MainTheme" />
         <activity
             android:name="com.xjt.newpic.fb.ContactActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/MainTheme" />
 
         <!-- End Umeng sdk requirement -->

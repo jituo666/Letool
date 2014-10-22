@@ -160,7 +160,6 @@ public class CachingPipeline implements PipelineInterface {
 
     public void setOriginal(Bitmap bitmap) {
         mOriginalBitmap = bitmap;
-        LLog.v(TAG, "setOriginal, size " + bitmap.getWidth() + " x " + bitmap.getHeight());
         ImagePreset preset = ImageManager.getImage().getPreset();
         setupEnvironment(preset, false);
         updateOriginalAllocation(preset);

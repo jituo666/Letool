@@ -117,20 +117,22 @@ public class LocalImage extends LocalMediaItem {
     }
 
     private void loadFromCursor(Cursor cursor) {
-        id = cursor.getInt(INDEX_ID);
-        caption = cursor.getString(INDEX_CAPTION);
-        mimeType = cursor.getString(INDEX_MIME_TYPE);
-        latitude = cursor.getDouble(INDEX_LATITUDE);
-        longitude = cursor.getDouble(INDEX_LONGITUDE);
-        dateTakenInMs = cursor.getLong(INDEX_DATE_TAKEN);
-        dateAddedInSec = cursor.getLong(INDEX_DATE_ADDED);
-        dateModifiedInSec = cursor.getLong(INDEX_DATE_MODIFIED);
-        filePath = cursor.getString(INDEX_DATA);
-        rotation = cursor.getInt(INDEX_ORIENTATION);
-        bucketId = cursor.getInt(INDEX_BUCKET_ID);
-        fileSize = cursor.getLong(INDEX_SIZE);
-        width = cursor.getInt(INDEX_WIDTH);
-        height = cursor.getInt(INDEX_HEIGHT);
+        if (!cursor.isClosed()) {
+            id = cursor.getInt(INDEX_ID);
+            caption = cursor.getString(INDEX_CAPTION);
+            mimeType = cursor.getString(INDEX_MIME_TYPE);
+            latitude = cursor.getDouble(INDEX_LATITUDE);
+            longitude = cursor.getDouble(INDEX_LONGITUDE);
+            dateTakenInMs = cursor.getLong(INDEX_DATE_TAKEN);
+            dateAddedInSec = cursor.getLong(INDEX_DATE_ADDED);
+            dateModifiedInSec = cursor.getLong(INDEX_DATE_MODIFIED);
+            filePath = cursor.getString(INDEX_DATA);
+            rotation = cursor.getInt(INDEX_ORIENTATION);
+            bucketId = cursor.getInt(INDEX_BUCKET_ID);
+            fileSize = cursor.getLong(INDEX_SIZE);
+            width = cursor.getInt(INDEX_WIDTH);
+            height = cursor.getInt(INDEX_HEIGHT);
+        }
     }
 
     @Override

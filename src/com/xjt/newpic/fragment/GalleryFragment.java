@@ -1,17 +1,16 @@
 
 package com.xjt.newpic.fragment;
 
-import java.util.ArrayList;
-
+import java.io.File;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,13 +42,10 @@ import com.xjt.newpic.stat.StatConstants;
 import com.xjt.newpic.utils.LetoolUtils;
 import com.xjt.newpic.utils.RelativePosition;
 import com.xjt.newpic.utils.StorageUtils;
-import com.xjt.newpic.views.BatchDeleteMediaListener;
-import com.xjt.newpic.views.BatchDeleteMediaListener.DeleteMediaProgressListener;
 import com.xjt.newpic.views.DetailsHelper;
 import com.xjt.newpic.views.DetailsHelper.CloseListener;
 import com.xjt.newpic.views.GLController;
 import com.xjt.newpic.views.GLView;
-import com.xjt.newpic.views.NpDialog;
 import com.xjt.newpic.views.NpTopBar;
 import com.xjt.newpic.views.NpTopBar.OnActionModeListener;
 import com.xjt.newpic.views.ThumbnailView;
@@ -77,6 +73,8 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
 
     private static final int BIT_LOADING_RELOAD = 1;
     public static final String GALLERY_AINMATION_FROM_CENTER = "g_anim_center";
+    public static final int RESULT_CAPTURE_IMAGE = 1112;
+    public static final int RESULT_CAPTURE_VIDEO = 1113;
 
     private ViewGroup mNativeButtons;
     private NpContext mLetoolContext;
@@ -229,26 +227,7 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         super.onCreate(savedInstanceState);
         LLog.i(TAG, "onCreate");
         mLetoolContext = (NpContext) getActivity();
-        mGLController = mLetoolContext.getGLController();
 
-        mHandler = new SynchronizedHandler(mGLController) {
-
-            @Override
-            public void handleMessage(Message message) {
-                switch (message.what) {
-                    case MSG_LAYOUT_CONFIRMED: {
-                        //                        mLoadingInsie.setVisibility(View.GONE);
-                        break;
-                    }
-                    case MSG_PICK_ALBUM: {
-                        pickAlbum(message.arg1);
-                        break;
-                    }
-                    default:
-                        throw new AssertionError(message.what);
-                }
-            }
-        };
         initializeViews();
         initializeData();
         mEyePosition = new EyePosition(mLetoolContext.getActivityContext(), this);
@@ -371,6 +350,25 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         } else {
             mLetoolContext.hideEmptyView();
         }
+        mGLController = mLetoolContext.getGLController();
+        mHandler = new SynchronizedHandler(mGLController) {
+
+            @Override
+            public void handleMessage(Message message) {
+                switch (message.what) {
+                    case MSG_LAYOUT_CONFIRMED: {
+                        //                        mLoadingInsie.setVisibility(View.GONE);
+                        break;
+                    }
+                    case MSG_PICK_ALBUM: {
+                        pickAlbum(message.arg1);
+                        break;
+                    }
+                    default:
+                        throw new AssertionError(message.what);
+                }
+            }
+        };
         return null;
     }
 
@@ -509,36 +507,6 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
         } else {
             if (!mIsSDCardMountedCorreclty)
                 return;
-            //            if (v.getId() == R.id.action_action1) {
-            //                int count = mSelector.getSelectedCount();
-            //                if (count <= 0) {
-            //                    Toast t = Toast.makeText(getActivity(), R.string.common_selection_tip, Toast.LENGTH_SHORT);
-            //                    t.setGravity(Gravity.CENTER, 0, 0);
-            //                    t.show();
-            //                    return;
-            //                }
-            //                BatchDeleteMediaListener cdl = new BatchDeleteMediaListener(getActivity(), mLetoolContext.getDataManager(),
-            //                        new DeleteMediaProgressListener() {
-            //
-            //                            @Override
-            //                            public void onConfirmDialogDismissed(boolean confirmed) {
-            //                                if (confirmed)
-            //                                    mSelector.leaveSelectionMode();
-            //                            }
-            //
-            //                            @Override
-            //                            public ArrayList<MediaPath> onGetDeleteItem() {
-            //                                return mSelector.getSelected(false);
-            //                            }
-            //
-            //                        });
-            //                final NpDialog dlg = new NpDialog(getActivity());
-            //                dlg.setTitle(R.string.common_recommend);
-            //                dlg.setOkBtn(R.string.common_ok, cdl, R.drawable.np_common_pressed_left_bg);
-            //                dlg.setCancelBtn(R.string.common_cancel, cdl, R.drawable.np_common_pressed_right_bg);
-            //                dlg.setMessage(R.string.common_delete_tip);
-            //                dlg.show();
-            //            } else 
             if (v.getId() == R.id.action_action3) {
                 mSelector.leaveSelectionMode();
             } else if (v.getId() == R.id.action_action1) {
@@ -553,11 +521,30 @@ public class GalleryFragment extends Fragment implements OnActionModeListener, E
                 mLetoolContext.pushContentFragment(f, this, false);
             } else if (v.getId() == R.id.action_action2) {
                 Intent it = new Intent();
-                if (mLetoolContext.isImageBrwosing())
-                    it.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-                else
-                    it.setAction(MediaStore.ACTION_VIDEO_CAPTURE);
-                getActivity().startActivity(it);
+                File f = new File(Environment.getExternalStorageDirectory().toString() + "/DCIM/Camera/");
+                if (!f.exists()) {
+                    f.mkdirs();
+                }
+                if (mLetoolContext.isImageBrwosing()) {
+                    if (f.exists()) {
+                        Uri uri = Uri.fromFile(new File(f.getAbsolutePath() + "/NP_IMG_" + String.valueOf(System.currentTimeMillis()) + ".jpg"));
+                        it.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+                        it.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                        LLog.i(TAG, "        s1:" + uri.toString());
+                        getActivity().startActivityForResult(it, RESULT_CAPTURE_IMAGE);
+                        mLetoolContext.setCapturedMediaUri(uri);
+                    }
+                } else {
+                    if (f.exists()) {
+
+                        Uri uri = Uri.fromFile(new File(f.getAbsolutePath() + "/NP_VID_" + String.valueOf(System.currentTimeMillis()) + ".mp4"));
+                        it.setAction(MediaStore.ACTION_VIDEO_CAPTURE);
+                        it.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+                        LLog.i(TAG, "        s2:" + uri.toString());
+                        getActivity().startActivityForResult(it, RESULT_CAPTURE_VIDEO);
+                        mLetoolContext.setCapturedMediaUri(uri);
+                    }
+                }
             }
         }
     }

@@ -116,6 +116,7 @@ public class LocalAlbum extends MediaSet {
 
     private static MediaItem loadOrUpdateItem(MediaPath path, Cursor cursor, DataManager dataManager, NpApp app, boolean isImage) {
         LocalMediaItem item = (LocalMediaItem) path.getObject();
+        if (cursor.isClosed()) return item;
         if (item == null) {
             if (isImage) {
                 item = new LocalImage(path, app, cursor);

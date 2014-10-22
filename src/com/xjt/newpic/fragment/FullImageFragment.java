@@ -344,7 +344,6 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mLetoolContext = (NpContext) getActivity();
-        mGLController = mLetoolContext.getGLController();
         initViews();
         initDatas();
 
@@ -360,6 +359,57 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
         }
 
         initDataMode();
+       
+        mFullImageView.setOpenAnimationRect((Rect) getArguments().getParcelable(KEY_OPEN_ANIMATION_RECT));
+        mFullImageView.setFilmMode(mStartInFilmstrip && mMediaSet.updateMediaSet() > 1);
+    }
+
+    private void initViews() {
+        mSelectionManager = new SelectionManager(mLetoolContext, false);
+        mFullImageView = new FullImageView(mLetoolContext);
+        mFullImageView.setListener(this);
+        mRootPane.addComponent(mFullImageView);
+        mOrientationManager = mLetoolContext.getOrientationManager();
+    }
+
+    private void initDatas() {
+        Bundle data = this.getArguments();
+        mIsCameraSource = data.getBoolean(NpMediaActivity.KEY_IS_CAMERA_SOURCE);
+        if (!mIsCameraSource) {
+            String albumTitle = data.getString(NpMediaActivity.KEY_ALBUM_TITLE);
+            int albumId = data.getInt(NpMediaActivity.KEY_ALBUM_ID, 0);
+            String albumMediaPath = data.getString(NpMediaActivity.KEY_MEDIA_PATH);
+            LLog.i(TAG, " photo fragment onCreateView id:" + albumId + " albumTitle:" + albumTitle + " albumMediaPath:" + albumMediaPath + " mIsCameraSource:");
+            mMediaSet = mLetoolContext.getDataManager().getMediaSet(new MediaPath(albumMediaPath, albumId));
+        } else {
+            boolean isImage = mLetoolContext.isImageBrwosing();
+            mMediaSet = new LocalAlbum(new MediaPath(data.getString(NpMediaActivity.KEY_MEDIA_PATH), MediaSetUtils.getBucketsIds()[0]),
+                    (NpApp) getActivity().getApplication(),
+                    MediaSetUtils.getBucketsIds(), isImage, getString(isImage ? R.string.common_picture : R.string.common_video));
+        }
+        mStartInFilmstrip = data.getBoolean(KEY_START_IN_FILMSTRIP, false);
+        mCurrentIndex = data.getInt(KEY_INDEX_HINT, 0);
+        mSelectionManager.setSourceMediaSet(mMediaSet);
+    }
+
+    private void initBars() {
+        NpTopBar topBar = mLetoolContext.getLetoolTopBar();
+        topBar.setOnActionMode(NpTopBar.ACTION_BAR_MODE_FULL_IMAGE, this);
+        topBar.setTitleIcon(R.drawable.ic_action_previous_item);
+        topBar.setVisible(View.VISIBLE, false);
+        ViewGroup nativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);
+        nativeButtons.setVisibility(View.GONE);
+        //
+        NpBottomBar bottomBar = mLetoolContext.getLetoolBottomBar();
+        bottomBar.setOnActionMode(NpBottomBar.BOTTOM_BAR_MODE_FULL_IMAGE, this);
+        bottomBar.setVisible(View.VISIBLE, false);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        initBars();
+        mGLController = mLetoolContext.getGLController();
+        mGLController.setOrientationSource(mOrientationManager);
         mHandler = new SynchronizedHandler(mGLController) {
 
             @Override
@@ -409,55 +459,6 @@ public class FullImageFragment extends Fragment implements OnActionModeListener,
                 }
             }
         };
-        mFullImageView.setOpenAnimationRect((Rect) getArguments().getParcelable(KEY_OPEN_ANIMATION_RECT));
-        mFullImageView.setFilmMode(mStartInFilmstrip && mMediaSet.updateMediaSet() > 1);
-    }
-
-    private void initViews() {
-        mSelectionManager = new SelectionManager(mLetoolContext, false);
-        mFullImageView = new FullImageView(mLetoolContext);
-        mFullImageView.setListener(this);
-        mRootPane.addComponent(mFullImageView);
-        mOrientationManager = mLetoolContext.getOrientationManager();
-        mGLController.setOrientationSource(mOrientationManager);
-    }
-
-    private void initDatas() {
-        Bundle data = this.getArguments();
-        mIsCameraSource = data.getBoolean(NpMediaActivity.KEY_IS_CAMERA_SOURCE);
-        if (!mIsCameraSource) {
-            String albumTitle = data.getString(NpMediaActivity.KEY_ALBUM_TITLE);
-            int albumId = data.getInt(NpMediaActivity.KEY_ALBUM_ID, 0);
-            String albumMediaPath = data.getString(NpMediaActivity.KEY_MEDIA_PATH);
-            LLog.i(TAG, " photo fragment onCreateView id:" + albumId + " albumTitle:" + albumTitle + " albumMediaPath:" + albumMediaPath + " mIsCameraSource:");
-            mMediaSet = mLetoolContext.getDataManager().getMediaSet(new MediaPath(albumMediaPath, albumId));
-        } else {
-            boolean isImage = mLetoolContext.isImageBrwosing();
-            mMediaSet = new LocalAlbum(new MediaPath(data.getString(NpMediaActivity.KEY_MEDIA_PATH), MediaSetUtils.getBucketsIds()[0]),
-                    (NpApp) getActivity().getApplication(),
-                    MediaSetUtils.getBucketsIds(), isImage, getString(isImage ? R.string.common_picture : R.string.common_video));
-        }
-        mStartInFilmstrip = data.getBoolean(KEY_START_IN_FILMSTRIP, false);
-        mCurrentIndex = data.getInt(KEY_INDEX_HINT, 0);
-        mSelectionManager.setSourceMediaSet(mMediaSet);
-    }
-
-    private void initBars() {
-        NpTopBar topBar = mLetoolContext.getLetoolTopBar();
-        topBar.setOnActionMode(NpTopBar.ACTION_BAR_MODE_FULL_IMAGE, this);
-        topBar.setTitleIcon(R.drawable.ic_action_previous_item);
-        topBar.setVisible(View.VISIBLE, false);
-        ViewGroup nativeButtons = (ViewGroup) topBar.getActionPanel().findViewById(R.id.navi_buttons);
-        nativeButtons.setVisibility(View.GONE);
-        //
-        NpBottomBar bottomBar = mLetoolContext.getLetoolBottomBar();
-        bottomBar.setOnActionMode(NpBottomBar.BOTTOM_BAR_MODE_FULL_IMAGE, this);
-        bottomBar.setVisible(View.VISIBLE, false);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        initBars();
         return null;
     }
 

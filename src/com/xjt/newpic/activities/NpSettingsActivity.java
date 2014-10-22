@@ -17,6 +17,7 @@ import com.xjt.newpic.views.NpSlidingMenu;
 import com.xjt.newpic.views.NpTopBar;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -184,6 +185,11 @@ public class NpSettingsActivity extends FragmentActivity implements NpContext {
     @Override
     public boolean isImagePicking() {
         return false;
+    }
+
+    @Override
+    public void setCapturedMediaUri(Uri uri) {
+        
     }
 
 }

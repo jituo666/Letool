@@ -218,28 +218,9 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         super.onCreate(savedInstanceState);
         LLog.i(TAG, "onCreate");
         mLetoolContext = (NpContext) getActivity();
-        mGLController = mLetoolContext.getGLController();
 
         initializeData();
         initializeViews();
-        mHandler = new SynchronizedHandler(mGLController) {
-
-            @Override
-            public void handleMessage(Message message) {
-                switch (message.what) {
-                    case MSG_LAYOUT_CONFIRMED: {
-                        // mLoadingInsie.setVisibility(View.GONE);
-                        break;
-                    }
-                    case MSG_PICK_PHOTO: {
-                        pickPhoto(message.arg1);
-                        break;
-                    }
-                    default:
-                        throw new AssertionError(message.what);
-                }
-            }
-        };
         mEyePosition = new EyePosition(mLetoolContext.getActivityContext(), this);
         mThumbnailView.startScatteringAnimation(mOpenCenter, true, true, true);
     }
@@ -382,6 +363,25 @@ public class PhotoFragment extends Fragment implements EyePosition.EyePositionLi
         } else {
             mLetoolContext.hideEmptyView();
         }
+        mGLController = mLetoolContext.getGLController();
+        mHandler = new SynchronizedHandler(mGLController) {
+
+            @Override
+            public void handleMessage(Message message) {
+                switch (message.what) {
+                    case MSG_LAYOUT_CONFIRMED: {
+                        // mLoadingInsie.setVisibility(View.GONE);
+                        break;
+                    }
+                    case MSG_PICK_PHOTO: {
+                        pickPhoto(message.arg1);
+                        break;
+                    }
+                    default:
+                        throw new AssertionError(message.what);
+                }
+            }
+        };
         return null;
     }
 
