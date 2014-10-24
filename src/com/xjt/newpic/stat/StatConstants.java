@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.stat;
 
 /**
@@ -84,4 +83,6 @@ public class StatConstants {
     public static final String EVENT_KEY_EDIT_FEEDBACK = "feedback"; // 吐槽
     public static final String EVENT_KEY_NAVI_CAMERA = "to_camera"; // 照相
     public static final String EVENT_KEY_LIST_GRID = "show_style"; // 样式
+    public static final String EVENT_KEY_EDIT_SAVE = "edit_save"; // 编辑保存
+    public static final String EVENT_KEY_EDIT_RESET = "edit_reset"; // 编辑重置
 }

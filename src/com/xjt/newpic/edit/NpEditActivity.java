@@ -36,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.nineoldandroids.view.ViewHelper;
+import com.umeng.analytics.MobclickAgent;
 import com.xjt.newpic.R;
 import com.xjt.newpic.common.ApiHelper;
 import com.xjt.newpic.common.LLog;
@@ -77,6 +78,7 @@ import com.xjt.newpic.edit.pipeline.ImagePreset;
 import com.xjt.newpic.edit.pipeline.ProcessingService;
 import com.xjt.newpic.edit.ui.FramedTextButton;
 import com.xjt.newpic.imagedata.utils.LetoolBitmapPool;
+import com.xjt.newpic.stat.StatConstants;
 import com.xjt.newpic.surpport.PopupMenu;
 import com.xjt.newpic.views.NpDialog;
 import com.xjt.newpic.views.NpTopBar;
@@ -715,12 +717,14 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
 
     @Override
     public void onPause() {
+        MobclickAgent.onPause(this);
         super.onPause();
 
     }
 
     @Override
     public void onResume() {
+        MobclickAgent.onResume(this);
         super.onResume();
     }
 
@@ -996,10 +1000,12 @@ public class NpEditActivity extends FragmentActivity implements OnItemClickListe
                 break;
             }
             case R.id.action_reset: {
+                MobclickAgent.onEvent(this, StatConstants.EVENT_KEY_EDIT_RESET);
                 resetHistory();
                 break;
             }
             case R.id.action_save: {
+                MobclickAgent.onEvent(this, StatConstants.EVENT_KEY_EDIT_SAVE);
                 saveImage();
                 break;
             }

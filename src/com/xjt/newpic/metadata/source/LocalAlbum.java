@@ -1,4 +1,3 @@
-
 package com.xjt.newpic.metadata.source;
 
 import android.content.ContentResolver;
@@ -101,7 +100,7 @@ public class LocalAlbum extends MediaSet {
         if (mCursor == null || mCursor.isClosed()) {
             return null;
         }
-        if (mCursor.moveToPosition(start)) {
+        if (!mCursor.isClosed() && mCursor.moveToPosition(start)) {
             int i = 0;
             do {
                 int id = mCursor.getInt(0);
@@ -116,7 +115,8 @@ public class LocalAlbum extends MediaSet {
 
     private static MediaItem loadOrUpdateItem(MediaPath path, Cursor cursor, DataManager dataManager, NpApp app, boolean isImage) {
         LocalMediaItem item = (LocalMediaItem) path.getObject();
-        if (cursor.isClosed()) return item;
+        if (cursor.isClosed())
+            return item;
         if (item == null) {
             if (isImage) {
                 item = new LocalImage(path, app, cursor);
@@ -131,7 +131,6 @@ public class LocalAlbum extends MediaSet {
 
     @Override
     public int updateMediaSet() {
-
         long time = System.currentTimeMillis();
         if (mCursor == null || mCursor.isClosed()) {
             if (!isMergedAlbum) {
